@@ -623,6 +623,7 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log("Waitlist: handleSubmit fired");
     if (!email.trim() || !validate(email)) {
       setErrMsg("⚠️ Please enter a valid email address.");
       return;
@@ -630,30 +631,46 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
     setErrMsg("");
     setLoading(true);
     const captured = email.trim();
-    const params = new URLSearchParams({ email: captured, source: "placementdo-live" });
-    console.log("Waitlist: submitting for", captured.replace(/(?<=.{2}).(?=.*@)/g, "*"));
+    const payload = new URLSearchParams({ email: captured, source: "placementdo-live" });
+    console.log("Waitlist: sending to Apps Script for", captured.replace(/(?<=.{2}).(?=.*@)/g, "*"));
     let sent = false;
     try {
-      // POST with URL-encoded body — a "simple request" (no CORS preflight).
-      // Apps Script doPost reads the values via e.parameter.email / e.parameter.source.
-      await fetch(WAITLIST_API_URL, {
+      // Primary: POST with explicit Content-Type so Apps Script reads e.parameter reliably.
+      // Not using no-cors here so we can read the response and detect errors.
+      const res = await fetch(WAITLIST_API_URL, {
         method: "POST",
-        mode: "no-cors",
-        body: params,
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: payload.toString(),
       });
-      // no-cors → response is opaque; assume success if fetch completes without throwing.
+      const text = await res.text();
+      console.log("Waitlist response:", res.status, text.length, "chars");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       sent = true;
-    } catch (postErr) {
-      console.warn("Waitlist POST failed, trying GET fallback:", postErr);
+    } catch (corsOrErr) {
+      // CORS policy or network error — fall back to no-cors (opaque response but request still reaches server).
+      console.warn("Waitlist primary POST failed (may be CORS), trying no-cors fallback:", corsOrErr.message);
       try {
-        // GET fallback — Apps Script doGet reads via e.parameter as well.
-        await fetch(
-          `${WAITLIST_API_URL}?email=${encodeURIComponent(captured)}&source=${encodeURIComponent("placementdo-live")}`,
-          { method: "GET", mode: "no-cors" }
-        );
+        await fetch(WAITLIST_API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: payload,
+        });
+        // no-cors → opaque response; assume success if fetch completes without throwing.
         sent = true;
-      } catch (getErr) {
-        console.error("Waitlist GET fallback also failed:", getErr);
+        console.log("Waitlist: no-cors POST sent (opaque response, assumed success)");
+      } catch (nocorsErr) {
+        console.warn("Waitlist no-cors POST failed, trying GET fallback:", nocorsErr.message);
+        try {
+          // Last resort: GET with query params — Apps Script doGet reads via e.parameter.
+          await fetch(
+            `${WAITLIST_API_URL}?${payload.toString()}`,
+            { method: "GET", mode: "no-cors" }
+          );
+          sent = true;
+          console.log("Waitlist: GET fallback sent (opaque response, assumed success)");
+        } catch (getErr) {
+          console.error("Waitlist: all request attempts failed:", getErr.message);
+        }
       }
     }
     if (sent) {
