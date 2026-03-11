@@ -633,7 +633,7 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
     try {
       const res = await fetch(WAITLIST_API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({ email: captured, source: "placementdo-live" }),
       });
       const text = await res.text();
