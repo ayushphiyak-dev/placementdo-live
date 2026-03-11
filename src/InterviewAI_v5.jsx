@@ -630,26 +630,40 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
     setErrMsg("");
     setLoading(true);
     const captured = email.trim();
+    const params = new URLSearchParams({ email: captured, source: "placementdo-live" });
+    console.log("Waitlist: submitting for", captured.replace(/(?<=.{2}).(?=.*@)/g, "*"));
+    let sent = false;
     try {
-      // Use no-cors to avoid CORS preflight issues with Google Apps Script.
-      // The response will be opaque (status 0, empty body), but if fetch does
-      // not throw, the request was delivered and Apps Script will process it.
-      const res = await fetch(WAITLIST_API_URL, {
+      // POST with URL-encoded body — a "simple request" (no CORS preflight).
+      // Apps Script doPost reads the values via e.parameter.email / e.parameter.source.
+      await fetch(WAITLIST_API_URL, {
         method: "POST",
         mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ email: captured, source: "placementdo-live" }),
+        body: params,
       });
-      console.log("Waitlist: request sent, response type:", res.type, "status:", res.status);
+      // no-cors → response is opaque; assume success if fetch completes without throwing.
+      sent = true;
+    } catch (postErr) {
+      console.warn("Waitlist POST failed, trying GET fallback:", postErr);
+      try {
+        // GET fallback — Apps Script doGet reads via e.parameter as well.
+        await fetch(
+          `${WAITLIST_API_URL}?email=${encodeURIComponent(captured)}&source=${encodeURIComponent("placementdo-live")}`,
+          { method: "GET", mode: "no-cors" }
+        );
+        sent = true;
+      } catch (getErr) {
+        console.error("Waitlist GET fallback also failed:", getErr);
+      }
+    }
+    if (sent) {
       setSubmittedEmail(captured);
       setEmail("");
       setSubmitted(true);
-    } catch (err) {
-      console.error("Waitlist submit error:", err);
+    } else {
       setErrMsg("⚠️ Something went wrong. Please try again in a moment.");
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handleClose = () => { setSubmitted(false); setSubmittedEmail(""); };
