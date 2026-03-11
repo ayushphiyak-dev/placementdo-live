@@ -631,17 +631,16 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
     setLoading(true);
     const captured = email.trim();
     try {
+      // Use no-cors to avoid CORS preflight issues with Google Apps Script.
+      // The response will be opaque (status 0, empty body), but if fetch does
+      // not throw, the request was delivered and Apps Script will process it.
       const res = await fetch(WAITLIST_API_URL, {
         method: "POST",
+        mode: "no-cors",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({ email: captured, source: "placementdo-live" }),
       });
-      const text = await res.text();
-      let data = {};
-      try { data = JSON.parse(text); } catch (parseErr) { console.warn("Waitlist: non-JSON response", parseErr); }
-      if (!res.ok || data.ok !== true) {
-        throw new Error(data.error || `Failed to save email (status ${res.status})`);
-      }
+      console.log("Waitlist: request sent, response type:", res.type, "status:", res.status);
       setSubmittedEmail(captured);
       setEmail("");
       setSubmitted(true);
