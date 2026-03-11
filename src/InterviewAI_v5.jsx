@@ -630,32 +630,37 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
     setErrMsg("");
     setLoading(true);
     const captured = email.trim();
-    const params = new URLSearchParams({ email: captured, source: "placementdo-live" });
-    console.log("Waitlist: submitting for", captured.replace(/(?<=.{2}).(?=.*@)/g, "*"));
+    const body = new URLSearchParams({ email: captured, source: "placementdo-live" }).toString();
+    console.log("[Waitlist] submitting…");
     let sent = false;
     try {
-      // POST with URL-encoded body — a "simple request" (no CORS preflight).
-      // Apps Script doPost reads the values via e.parameter.email / e.parameter.source.
-      await fetch(WAITLIST_API_URL, {
+      // Attempt a normal (CORS-enabled) POST first so we can read the response.
+      // Apps Script doPost reads values via e.parameter.email / e.parameter.source.
+      const res = await fetch(WAITLIST_API_URL, {
         method: "POST",
-        mode: "no-cors",
-        body: params,
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body,
       });
-      // no-cors → response is opaque; assume success if fetch completes without throwing.
-      sent = true;
-    } catch (postErr) {
-      console.warn("Waitlist POST failed, trying GET fallback:", postErr);
+      console.log("[Waitlist] response status:", res.status);
+      sent = res.ok;
+      if (!sent) console.warn("[Waitlist] non-ok status:", res.status);
+    } catch (corsErr) {
+      // CORS blocked reading the response — re-send with no-cors so the
+      // request still reaches Apps Script even though we can't read the reply.
+      console.warn("[Waitlist] CORS read blocked, retrying with no-cors:", corsErr.message);
       try {
-        // GET fallback — Apps Script doGet reads via e.parameter as well.
-        await fetch(
-          `${WAITLIST_API_URL}?email=${encodeURIComponent(captured)}&source=${encodeURIComponent("placementdo-live")}`,
-          { method: "GET", mode: "no-cors" }
-        );
+        await fetch(WAITLIST_API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: new URLSearchParams({ email: captured, source: "placementdo-live" }).toString(),
+        });
+        // no-cors → opaque response; assume success if fetch completes without throwing.
         sent = true;
-      } catch (getErr) {
-        console.error("Waitlist GET fallback also failed:", getErr);
+      } catch (noCorsErr) {
+        console.error("[Waitlist] no-cors fallback also failed:", noCorsErr);
       }
     }
+    setLoading(false);
     if (sent) {
       setSubmittedEmail(captured);
       setEmail("");
@@ -663,7 +668,6 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
     } else {
       setErrMsg("⚠️ Something went wrong. Please try again in a moment.");
     }
-    setLoading(false);
   };
 
   const handleClose = () => { setSubmitted(false); setSubmittedEmail(""); };
