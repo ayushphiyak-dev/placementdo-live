@@ -2508,18 +2508,30 @@ const InterviewRoom = ({ onNav, persona }) => {
   const captionsRef = useRef(null);
   const activePersona = persona || PERSONAS[2]; // default to Stress-Tester
 
+  // Stable callback — never changes across re-renders, so InterviewLoading's
+  // useEffect (which lists onReady as a dep) won't reset its timers every second.
+  const handleRoomReady = useCallback(() => setRoomLoading(false), []);
+
+  // Prevent body scroll and register keyboard shortcuts for the whole session.
   useEffect(() => {
-    const t = setInterval(() => setElapsed(e => e+1), 1000);
     document.body.style.overflow = "hidden";
-    // Keyboard shortcuts: Space=mute, →=next, Esc=end
     const onKey = e => {
       if (e.code === "Space")      { e.preventDefault(); setMuted(m=>!m); }
       if (e.code === "ArrowRight") { setQIdx(q => Math.min(q+1, QUESTIONS.length-1)); }
       if (e.code === "Escape")     { setEnding(true); }
     };
     window.addEventListener("keydown", onKey);
-    return () => { clearInterval(t); document.body.style.overflow = ""; window.removeEventListener("keydown", onKey); };
+    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", onKey); };
   }, []);
+
+  // Start the interview timer only after the loading screen completes so it
+  // doesn't count loading time and — crucially — doesn't trigger re-renders
+  // (which would create a new inline onReady reference) while loading is active.
+  useEffect(() => {
+    if (roomLoading) return;
+    const t = setInterval(() => setElapsed(e => e+1), 1000);
+    return () => clearInterval(t);
+  }, [roomLoading]);
 
   // Auto-scroll captions to bottom when question changes
   useEffect(() => {
@@ -2543,7 +2555,7 @@ const InterviewRoom = ({ onNav, persona }) => {
   ];
 
   if (roomLoading) {
-    return <InterviewLoading persona={activePersona} onReady={() => setRoomLoading(false)} />;
+    return <InterviewLoading persona={activePersona} onReady={handleRoomReady} />;
   }
 
   return (
