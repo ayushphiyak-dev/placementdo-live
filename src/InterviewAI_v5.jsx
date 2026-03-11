@@ -609,7 +609,7 @@ const WaitlistThanksModal = ({ email, onClose }) => {
 
 /* ── Waitlist Form + Popup ── */
 const WAITLIST_API_URL =
-  "https://script.google.com/macros/s/AKfycbz1Cw1qz_lMjqL-BGUgrf0IlOHajq11ZPl7cQTsEj8tyC0lP9WBGiwocD4fPKow7qKz/exec";
+  "https://script.google.com/macros/s/AKfycbz4rHlYQhyopUDpwLGOzdesm6ZfkDgQFFEroZiyUJ_nK7BG-UGX4JUWqVOojXK1QGOJ/exec";
 
 const WaitlistForm = ({ size="lg", dark=false }) => {
   const [email,          setEmail]          = useState("");
@@ -631,15 +631,14 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
     setLoading(true);
     const captured = email.trim();
     const params = new URLSearchParams({ email: captured, source: "placementdo-live" });
-    console.log("Waitlist: submitting for", captured.replace(/(?<=.{2}).(?=.*@)/g, "*"));
     let sent = false;
     try {
-      // POST with URL-encoded body — a "simple request" (no CORS preflight).
-      // Apps Script doPost reads the values via e.parameter.email / e.parameter.source.
+      // POST with URL-encoded body — Apps Script doPost reads via e.parameter.email / e.parameter.source.
       await fetch(WAITLIST_API_URL, {
         method: "POST",
         mode: "no-cors",
-        body: params,
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: params.toString(),
       });
       // no-cors → response is opaque; assume success if fetch completes without throwing.
       sent = true;
