@@ -80,16 +80,14 @@ const G = () => (
     .sidebar-item.active { background: var(--teal-light); color: var(--teal-dark); font-weight: 600; }
     .sidebar-item.active:hover { transform: none; }
 
-    /* Feature cards — strict equal-height uniform grid */
-    .feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; align-items: stretch; }
+    /* Feature cards — auto-fill equal-height grid adapts to any viewport */
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(min(290px,100%),1fr)); gap: 20px; align-items: stretch; }
     .feature-card { padding: 28px; border-radius: 16px; border: 1.5px solid var(--border); background: var(--ivory); transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s, background 0.25s; display: flex; flex-direction: column; height: 100%; }
     .feature-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); background: var(--white); border-color: var(--border-strong); }
     .feature-card .fc-icon { width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; flex-shrink: 0; border-width: 1px; border-style: solid; transition: transform 0.25s, background 0.25s; }
     .feature-card:hover .fc-icon { transform: scale(1.12) rotate(-3deg); }
     .feature-card h3 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15.5px; font-weight: 700; color: var(--slate); margin-bottom: 8px; letter-spacing: -0.01em; line-height: 1.25; }
     .feature-card p { font-size: 13.5px; color: var(--slate-500); line-height: 1.7; flex: 1; }
-    @media (max-width: 1024px) { .feature-grid { grid-template-columns: repeat(2,1fr); } }
-    @media (max-width: 640px)  { .feature-grid { grid-template-columns: 1fr; } }
 
     /* Pricing */
     .pricing-card { border-radius: 20px; padding: 32px 28px; position: relative; transition: transform 0.25s, box-shadow 0.25s; display: flex; flex-direction: column; }
@@ -162,32 +160,27 @@ const G = () => (
     .border-glow-active { animation: border-glow 2.5s ease-in-out infinite; }
 
     /* Grids */
-    .step-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
-    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; align-items: stretch; }
-    .dash-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; }
-    .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    .stats-row { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
-    .report-top { display: grid; grid-template-columns: 260px 1fr; gap: 20px; }
-    .report-mid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .step-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(200px,100%),1fr)); gap: 20px; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(260px,100%),1fr)); gap: 22px; align-items: stretch; }
+    .dash-grid { display: grid; grid-template-columns: 1fr clamp(280px,30%,380px); gap: 24px; }
+    .config-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(220px,100%),1fr)); gap: 18px; }
+    .stats-row { display: flex; gap: clamp(14px,4vw,32px); justify-content: center; flex-wrap: wrap; }
+    .report-top { display: grid; grid-template-columns: clamp(200px,27%,280px) 1fr; gap: 20px; }
+    .report-mid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(280px,100%),1fr)); gap: 20px; }
 
     /* ── Layout utilities ── */
-    .hero-pad { padding: 120px clamp(20px,5vw,60px) 80px; }
-    .sec-pad { padding: 96px clamp(20px,5vw,60px); }
-    .dash-main { padding: 80px clamp(20px,3vw,40px) 40px; min-height: 100vh; box-sizing: border-box; }
+    .hero-pad { padding: clamp(80px,12vh,120px) clamp(20px,5vw,60px) clamp(48px,8vh,80px); }
+    .sec-pad { padding: clamp(56px,8vh,96px) clamp(20px,5vw,60px); }
+    .dash-main { padding: clamp(72px,10vh,88px) clamp(16px,3vw,40px) clamp(32px,5vh,48px); min-height: 100vh; box-sizing: border-box; }
     .card-constrain { max-width: 900px; margin-left: auto; margin-right: auto; width: 100%; }
     .step-grid > * { display: flex; flex-direction: column; }
     .pricing-grid { align-items: stretch !important; }
     .pricing-card { height: 100%; box-sizing: border-box; }
 
     @media(max-width:768px){
-      .hero-pad { padding: 96px 20px 60px !important; }
-      .sec-pad { padding: 64px 20px !important; }
       .report-top { grid-template-columns: 1fr !important; }
-      .report-mid { grid-template-columns: 1fr !important; }
     }
     @media(max-width:480px){
-      .hero-pad { padding: 80px 16px 48px !important; }
-      .sec-pad { padding: 48px 16px !important; }
       .config-grid { gap: 12px; }
       .feature-grid { gap: 12px; }
     }
@@ -257,26 +250,17 @@ const G = () => (
     }
 
     @media (max-width: 1024px) {
-      .step-grid { grid-template-columns: repeat(2,1fr); }
-      .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; width: 100%; }
       .dash-grid { grid-template-columns: 1fr; }
-      .report-top { grid-template-columns: 1fr; }
-      .report-mid { grid-template-columns: 1fr; }
     }
     @media (max-width: 768px) {
-      .step-grid { grid-template-columns: 1fr; }
-      .config-grid { grid-template-columns: 1fr; }
       .nav-links-desk { display: none !important; }
       .hamburger { display: flex !important; }
       .sidebar-desk { display: none !important; }
-      .dash-main { padding: 80px 18px 40px !important; }
-      .hero-pad { padding: 96px 20px 60px !important; }
-      .sec-pad { padding: 64px 20px !important; }
+      .dash-main { padding: clamp(72px,10vh,88px) 18px clamp(32px,5vh,48px) !important; }
       .hero-mock-side { display: none !important; }
       .hero-preview { display: none !important; }
     }
     @media (max-width: 480px) {
-      .stats-row { gap: 18px; }
       .wl-row { flex-direction: column; }
       .wl-row button { width: 100%; justify-content: center; }
     }
@@ -331,8 +315,7 @@ const G = () => (
     .kbd { display:inline-flex; align-items:center; justify-content:center; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); border-radius:5px; padding:1px 6px; font-size:10px; font-weight:700; color:rgba(255,255,255,.6); font-family:'DM Sans',sans-serif; letter-spacing:0.02em; line-height:1.5; }
 
     /* ── Testimonials grid ── */
-    .testi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
-    @media(max-width:900px){ .testi-grid { grid-template-columns:1fr; } }
+    .testi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:22px; }
     @media(max-width:640px){ .testi-grid { gap:14px; } }
 
     /* ── FAQ accordion ── */
@@ -343,7 +326,7 @@ const G = () => (
     .faq-chevron { transition:transform 0.25s, color 0.2s; color:var(--slate-400); flex-shrink:0; }
 
     /* ── Footer ── */
-    .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; padding:64px clamp(20px,5vw,60px) 40px; max-width:1200px; margin:0 auto; }
+    .footer-grid { display:grid; grid-template-columns:2fr repeat(3,1fr); gap:clamp(28px,4vw,48px); padding:clamp(40px,8vh,64px) clamp(20px,5vw,60px) 40px; max-width:1200px; margin:0 auto; }
     .footer-link { font-size:13.5px; color:rgba(255,255,255,.45); background:none; border:none; cursor:pointer; padding:5px 0; display:block; text-align:left; font-family:'DM Sans',sans-serif; transition:color 0.18s; width:fit-content; }
     .footer-link:hover { color:rgba(255,255,255,.85); }
     .footer-social { width:36px; height:36px; border-radius:9px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; color:rgba(255,255,255,.5); }
@@ -364,10 +347,14 @@ const G = () => (
     .streak-badge { background:linear-gradient(135deg,rgba(217,119,6,.18),rgba(251,191,36,.1)); border:1px solid rgba(217,119,6,.32); border-radius:12px; padding:11px 14px; }
 
     /* ── pf-outer layout (Persona Feature block in Landing) ── */
-    .pf-outer { display:grid; grid-template-columns:1fr 230px; gap:40px; padding:40px 44px; align-items:center; position:relative; z-index:1; }
+    .pf-outer { display:grid; grid-template-columns:1fr clamp(180px,22%,230px); gap:40px; padding:40px 44px; align-items:center; position:relative; z-index:1; }
     .pf-right { display:flex; flex-direction:column; gap:9px; }
     @media(max-width:900px){ .pf-outer{ grid-template-columns:1fr; gap:0; padding:32px 28px; } .pf-right{ display:none; } }
     @media(max-width:580px){ .pf-outer{ padding:26px 20px; } }
+
+    /* ── Code editor panel responsive grid ── */
+    .code-panel-grid { display:grid; grid-template-columns:clamp(260px,30%,340px) 1fr; flex:1; min-height:0; overflow:hidden; }
+    @media(max-width:768px){ .code-panel-grid { grid-template-columns:1fr; grid-template-rows:auto 1fr; } }
 
     /* ── Monthly progress bar chart ── */
     .mth-bar { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:default; }
@@ -1033,7 +1020,7 @@ const DashboardShell = ({ activeTab, onNav, onUpgrade, children }) => {
           </motion.aside>
         </>)}
       </AnimatePresence>
-      <main className="dash-main" style={{ flex:1, padding:"88px 44px 60px", overflowY:"auto", minWidth:0 }}>
+      <main className="dash-main" style={{ flex:1, overflowY:"auto", minWidth:0 }}>
         <button id="dash-menu-btn" className="btn-ghost" onClick={()=>setSideOpen(true)} style={{ display:"none", marginBottom:16, fontSize:13, padding:"8px 12px" }}>
           <Menu size={16}/> Menu
         </button>
@@ -1048,7 +1035,7 @@ const DashboardShell = ({ activeTab, onNav, onUpgrade, children }) => {
 const Landing = ({ onNav, onCheckout }) => (
   <div style={{ background:"var(--ivory)" }}>
     {/* HERO */}
-    <section className="hero-pad" style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"100px clamp(20px,5vw,60px) 80px", textAlign:"center", position:"relative", overflow:"hidden" }}>
+    <section className="hero-pad" style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", textAlign:"center", position:"relative", overflow:"hidden" }}>
       <div style={{ position:"absolute", top:"30%", left:"50%", transform:"translate(-50%,-50%)", width:900, height:600, background:"radial-gradient(ellipse,rgba(13,148,136,.08) 0%,transparent 70%)", pointerEvents:"none" }}/>
       <motion.div initial={{ opacity:0,y:24 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.5 }}>
         <Tag color="teal"><Sparkles size={11}/> Coming Soon · Join the Waitlist</Tag>
@@ -1124,7 +1111,7 @@ const Landing = ({ onNav, onCheckout }) => (
     </section>
 
     {/* HOW IT WORKS */}
-    <section className="sec-pad" style={{ padding:"100px clamp(20px,5vw,60px)", maxWidth:1100, margin:"0 auto" }}>
+    <section className="sec-pad" style={{ maxWidth:1100, margin:"0 auto" }}>
       <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }} style={{ textAlign:"center", marginBottom:56 }}>
         <Tag color="teal">Process</Tag>
         <h2 className="brig" style={{ fontSize:"clamp(26px,4.5vw,50px)", fontWeight:700, color:"var(--slate)", letterSpacing:"-0.03em", marginTop:14, lineHeight:1.1 }}>From zero to hired in four steps</h2>
@@ -2297,7 +2284,7 @@ const CodePanel = ({ activePersona, qIdx, elapsed }) => {
   const submitCode = () => { setRunning(true); setTimeout(() => { setSubmitted(true); setRunning(false); setOutput("🏆 All test cases passed!\n\n✅ 72/72 test cases\n⏱ Runtime beats 94% of solutions\n📦 Memory beats 87% of solutions"); }, 1800); };
 
   return (
-    <div style={{ display:"grid", gridTemplateColumns:"340px 1fr", flex:1, minHeight:0, overflow:"hidden" }}>
+    <div className="code-panel-grid">
       {/* ── Question Panel ── */}
       <div style={{ borderRight:"1px solid rgba(255,255,255,.08)", display:"flex", flexDirection:"column", overflowY:"auto", background:"rgba(0,0,0,.2)" }}>
         {/* Question selector */}
