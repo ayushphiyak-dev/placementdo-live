@@ -608,6 +608,9 @@ const WaitlistThanksModal = ({ email, onClose }) => {
 };
 
 /* ── Waitlist Form + Popup ── */
+const WAITLIST_API_URL =
+  "https://script.google.com/macros/s/AKfycbz1Cw1qz_lMjqL-BGUgrf0IlOHajq11ZPl7cQTsEj8tyC0lP9WBGiwocD4fPKow7qKz/exec";
+
 const WaitlistForm = ({ size="lg", dark=false }) => {
   const [email,          setEmail]          = useState("");
   const [errMsg,         setErrMsg]         = useState("");
@@ -618,7 +621,7 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
   const validate = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
   const lg = size === "lg";
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if (!email.trim() || !validate(email)) {
       setErrMsg("⚠️ Please enter a valid email address.");
@@ -627,7 +630,27 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
     setErrMsg("");
     setLoading(true);
     const captured = email.trim();
-    setTimeout(() => { setLoading(false); setSubmittedEmail(captured); setEmail(""); setSubmitted(true); }, 800);
+    try {
+      const res = await fetch(WAITLIST_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: captured, source: "placementdo-live" }),
+      });
+      const text = await res.text();
+      let data = {};
+      try { data = JSON.parse(text); } catch (parseErr) { console.warn("Waitlist: non-JSON response", parseErr); }
+      if (!res.ok || data.ok !== true) {
+        throw new Error(data.error || `Failed to save email (status ${res.status})`);
+      }
+      setSubmittedEmail(captured);
+      setEmail("");
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Waitlist submit error:", err);
+      setErrMsg("⚠️ Something went wrong. Please try again in a moment.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClose = () => { setSubmitted(false); setSubmittedEmail(""); };
