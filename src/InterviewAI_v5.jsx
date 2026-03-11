@@ -609,7 +609,7 @@ const WaitlistThanksModal = ({ email, onClose }) => {
 
 /* ── Waitlist Form + Popup ── */
 const WAITLIST_API_URL =
-  "https://script.google.com/macros/s/AKfycbz1Cw1qz_lMjqL-BGUgrf0IlOHajq11ZPl7cQTsEj8tyC0lP9WBGiwocD4fPKow7qKz/exec";
+  "https://script.google.com/macros/s/AKfycbz4rHlYQhyopUDpwLGOzdesm6ZfkDgQFFEroZiyUJ_nK7BG-UGX4JUWqVOojXK1QGOJ/exec";
 
 const WaitlistForm = ({ size="lg", dark=false }) => {
   const [email,          setEmail]          = useState("");
@@ -639,6 +639,7 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
       await fetch(WAITLIST_API_URL, {
         method: "POST",
         mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
         body: params,
       });
       // no-cors → response is opaque; assume success if fetch completes without throwing.
