@@ -264,6 +264,16 @@ const G = () => (
       .wl-row { flex-direction: column; }
       .wl-row button { width: 100%; justify-content: center; }
     }
+    /* ── Hero section: compact vertical spacing on short screens (e.g. 1366×768 laptops)
+       so the interview mock preview stays visible above the fold ── */
+    @media (max-height: 880px) and (min-width: 769px) {
+      .stats-row  { margin-top: 24px !important; }
+      .hero-preview { margin-top: 28px !important; }
+    }
+    /* Hide the interview preview entirely on very short landscape screens */
+    @media (max-height: 680px) and (min-width: 769px) {
+      .hero-preview { display: none !important; }
+    }
     :focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 4px; }
 
     /* ── Responsive report/history table rows ── */
@@ -1072,7 +1082,7 @@ const Landing = ({ onNav, onCheckout }) => (
   <div style={{ background:"var(--ivory)" }}>
     {/* HERO */}
     <section className="hero-pad" style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", textAlign:"center", position:"relative", overflow:"hidden" }}>
-      <div style={{ position:"absolute", top:"30%", left:"50%", transform:"translate(-50%,-50%)", width:900, height:600, background:"radial-gradient(ellipse,rgba(13,148,136,.08) 0%,transparent 70%)", pointerEvents:"none" }}/>
+      <div style={{ position:"absolute", top:"30%", left:"50%", transform:"translate(-50%,-50%)", width:"min(900px,100%)", height:"min(600px,100%)", background:"radial-gradient(ellipse,rgba(13,148,136,.08) 0%,transparent 70%)", pointerEvents:"none" }}/>
       <motion.div initial={{ opacity:0,y:24 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.5 }}>
         <Tag color="teal"><Sparkles size={11}/> Coming Soon · Join the Waitlist</Tag>
       </motion.div>
@@ -1357,7 +1367,7 @@ const Landing = ({ onNav, onCheckout }) => (
       {/* Animated background blobs */}
       <div style={{ position:"absolute", top:"20%", left:"10%", width:400, height:400, background:"radial-gradient(circle,rgba(13,148,136,.14) 0%,transparent 70%)", pointerEvents:"none", animation:"float-anim 8s ease-in-out infinite" }}/>
       <div style={{ position:"absolute", bottom:"10%", right:"8%", width:300, height:300, background:"radial-gradient(circle,rgba(124,58,237,.1) 0%,transparent 70%)", pointerEvents:"none", animation:"float-anim 10s ease-in-out infinite reverse" }}/>
-      <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:900, height:600, background:"radial-gradient(ellipse,rgba(13,148,136,.18) 0%,transparent 65%)", pointerEvents:"none" }}/>
+      <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:"min(900px,100%)", height:"min(600px,100%)", background:"radial-gradient(ellipse,rgba(13,148,136,.18) 0%,transparent 65%)", pointerEvents:"none" }}/>
 
       <motion.div initial={{ opacity:0,y:24 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.65 }} viewport={{ once:true }}
         style={{ position:"relative", zIndex:1, maxWidth:660, margin:"0 auto" }}>
