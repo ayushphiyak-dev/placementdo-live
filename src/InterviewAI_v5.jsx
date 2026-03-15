@@ -189,27 +189,34 @@ const G = () => (
     .int-room { position: fixed; inset: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; background: var(--slate); color: #fff; overflow: hidden; z-index: 200; }
 
     /* Desktop top-bar */
-    .int-topbar { height:60px; flex-shrink:0; background:rgba(15,23,42,.98); border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; padding:0 20px; gap:10px; z-index:10; backdrop-filter:blur(12px); overflow:hidden; }
+    .int-topbar { height:60px; flex-shrink:0; background:rgba(15,23,42,.98); border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; padding:0 20px; gap:16px; z-index:10; backdrop-filter:blur(12px); overflow:hidden; }
     .int-topbar-logo { display:flex; flex-shrink:0; }
     .int-topbar-persona { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:22px; padding:5px 13px; flex-shrink:0; white-space:nowrap; }
     .int-topbar-qprog { display:flex; gap:5px; align-items:center; flex-shrink:0; }
     .int-topbar-timer { display:flex; align-items:center; gap:6px; background:rgba(220,38,38,.18); border:1px solid rgba(220,38,38,.35); border-radius:22px; padding:5px 13px; flex-shrink:0; white-space:nowrap; }
+    .int-topbar-timer-phase { display:inline; }
     .int-topbar-divider { width:1px; height:20px; background:rgba(255,255,255,.1); flex-shrink:0; margin:0 2px; }
     /* Hide overflow items at narrower widths */
     @media (max-width:1100px) { .int-topbar-persona { display:none; } }
     @media (max-width:860px)  { .int-topbar-qprog   { display:none; } }
+    @media (max-width:600px)  { .int-topbar-timer-phase { display:none; } }
 
     /* Q-progress strip (mobile only, hidden on desktop) */
     .int-qstrip { display:none; }
 
-    .int-body { flex: 1; display: grid; grid-template-columns: 1fr 300px; gap: 0; min-height: 0; overflow: hidden; }
+    .int-body { flex: 1; display: grid; grid-template-columns: 1fr minmax(260px, 300px); gap: 0; min-height: 0; overflow: hidden; }
     .int-main { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
     .int-video-area { flex: 1; position: relative; min-height: 0; overflow: hidden; }
     .int-captions { height: 192px; flex-shrink: 0; overflow-y: auto; border-top: 1px solid rgba(255,255,255,.07); }
-    .int-side { display: flex; flex-direction: column; gap: 0; border-left: 1px solid rgba(255,255,255,.07); overflow: hidden; }
+    .int-side { display: flex; flex-direction: column; gap: 0; border-left: 1px solid rgba(255,255,255,.07); overflow: hidden; min-width: 0; }
 
     /* Mobile bottom control bar (hidden on desktop) */
     .int-mob-bar { display: none; }
+
+    /* ── MEDIUM ≤ 900px — narrower sidebar ── */
+    @media (max-width: 900px) {
+      .int-body { grid-template-columns: 1fr minmax(220px, 260px); }
+    }
 
     /* ── TABLET ≤ 768px — hide sidebar ── */
     @media (max-width: 768px) {
@@ -361,6 +368,10 @@ const G = () => (
     .pf-right { display:flex; flex-direction:column; gap:9px; }
     @media(max-width:900px){ .pf-outer{ grid-template-columns:1fr; gap:0; padding:32px 28px; } .pf-right{ display:none; } }
     @media(max-width:580px){ .pf-outer{ padding:26px 20px; } }
+
+    /* ── Hero preview mock: inner grid collapses on medium screens ── */
+    .hero-preview-mock-grid { display:grid; grid-template-columns:2fr 1fr; }
+    @media(max-width:900px){ .hero-preview-mock-grid { grid-template-columns:1fr; } .hero-preview-mock-side { display:none; } }
 
     /* ── Code editor panel responsive grid ── */
     .code-panel-grid { display:grid; grid-template-columns:clamp(260px,30%,340px) 1fr; flex:1; min-height:0; overflow:hidden; }
@@ -1120,7 +1131,7 @@ const Landing = ({ onNav, onCheckout }) => (
               <span style={{ fontSize:11, fontWeight:600, color:"#DC2626" }}>LIVE</span>
             </div>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"2fr 1fr", background:"var(--white)" }}>
+          <div className="hero-preview-mock-grid" style={{ background:"var(--white)" }}>
             <div style={{ padding:"26px 28px 22px", borderRight:"1px solid var(--border)" }}>
               <Tag color="slate" size="xs">The Stress-Tester · Active</Tag>
               <p style={{ marginTop:14, fontSize:14.5, color:"var(--slate)", lineHeight:1.72, fontStyle:"italic" }}>
@@ -1133,7 +1144,7 @@ const Landing = ({ onNav, onCheckout }) => (
                 <span style={{ fontSize:12, color:"var(--teal)", fontWeight:600 }}>You're speaking…</span>
               </div>
             </div>
-            <div className="hero-mock-side tilt-in" style={{ background:"var(--slate-50)", display:"flex", alignItems:"center", justifyContent:"center", minHeight:150 }}>
+            <div className="hero-mock-side hero-preview-mock-side tilt-in" style={{ background:"var(--slate-50)", display:"flex", alignItems:"center", justifyContent:"center", minHeight:150 }}>
               <div style={{ textAlign:"center" }}><div style={{ fontSize:48 }}>👩‍💻</div><div style={{ fontSize:11, color:"var(--slate-300)", marginTop:5 }}>Your camera</div></div>
             </div>
           </div>
@@ -2609,7 +2620,7 @@ const InterviewRoom = ({ onNav, persona }) => {
     <div className="int-room">
 
       {/* ── TOP BAR ─────────────────────────────────────────────────── */}
-      <div className="int-topbar" style={{ background:"rgba(15,23,42,.98)", borderBottom:"1px solid rgba(255,255,255,.08)", display:"flex", alignItems:"center", padding:"0 20px", gap:16, flexShrink:0, zIndex:10, backdropFilter:"blur(12px)" }}>
+      <div className="int-topbar">
 
         {/* Logo — hidden on phone via .int-topbar-logo */}
         <div className="int-topbar-logo">
@@ -2674,7 +2685,7 @@ const InterviewRoom = ({ onNav, persona }) => {
             {fmt(elapsed)}
           </span>
           {/* Phase label */}
-          <span style={{ fontSize:10, fontWeight:700, letterSpacing:"0.06em", textTransform:"uppercase", color: elapsed > 2700 ? "rgba(252,165,165,.7)" : elapsed > 1800 ? "rgba(253,230,138,.7)" : "rgba(255,255,255,.4)", marginLeft:2 }}>
+          <span className="int-topbar-timer-phase" style={{ fontSize:10, fontWeight:700, letterSpacing:"0.06em", textTransform:"uppercase", color: elapsed > 2700 ? "rgba(252,165,165,.7)" : elapsed > 1800 ? "rgba(253,230,138,.7)" : "rgba(255,255,255,.4)", marginLeft:2 }}>
             {elapsed > 2700 ? "⚠ OVERTIME" : elapsed > 1800 ? "WRAPPING UP" : elapsed > 900 ? "IN PROGRESS" : "STARTING"}
           </span>
         </div>
