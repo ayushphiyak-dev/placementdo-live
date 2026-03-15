@@ -420,7 +420,24 @@ const G = () => (
 
     /* ── Code editor panel responsive grid ── */
     .code-panel-grid { display:grid; grid-template-columns:clamp(260px,30%,340px) 1fr; flex:1; min-height:0; overflow:hidden; }
-    @media(max-width:768px){ .code-panel-grid { grid-template-columns:1fr; grid-template-rows:auto 1fr; } }
+    /* On mobile the grid stacks; cap the question panel at 42 % of the available
+       height so the code editor always gets meaningful vertical space. */
+    @media(max-width:768px){ .code-panel-grid { grid-template-columns:1fr; grid-template-rows:42% 1fr; } }
+
+    /* ── Code toolbar: wraps lang-selector and run/submit on narrow screens ── */
+    .code-toolbar { flex-wrap:wrap; }
+    @media(max-width:600px) {
+      /* Tighten vertical padding */
+      .code-toolbar { padding:8px 12px !important; row-gap:6px; }
+      /* Language buttons row: stretch to full width */
+      .code-toolbar > div:nth-child(1) { flex:0 0 100%; }
+      /* Flex-1 spacer: not needed when toolbar wraps */
+      .code-toolbar > div:nth-child(2) { display:none; }
+      /* "N lines" counter: hide on mobile to save space */
+      .code-toolbar > span { display:none; }
+      /* Run / Submit buttons: split remaining width equally */
+      .code-toolbar > button { flex:1; justify-content:center; }
+    }
 
     /* ── Monthly progress bar chart ── */
     .mth-bar { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:default; }
@@ -2451,7 +2468,7 @@ const CodePanel = ({ activePersona, qIdx, elapsed }) => {
       {/* ── Editor + Output Panel ── */}
       <div style={{ display:"flex", flexDirection:"column", minHeight:0 }}>
         {/* Editor Toolbar */}
-        <div style={{ padding:"10px 16px", borderBottom:"1px solid rgba(255,255,255,.07)", display:"flex", alignItems:"center", gap:10, flexShrink:0, background:"rgba(0,0,0,.15)" }}>
+        <div className="code-toolbar" style={{ padding:"10px 16px", borderBottom:"1px solid rgba(255,255,255,.07)", display:"flex", alignItems:"center", gap:10, flexShrink:0, background:"rgba(0,0,0,.15)" }}>
           <div style={{ display:"flex", gap:5 }}>
             {LANGS.map(l => (
               <button key={l} onClick={()=>handleLangChange(l)}
@@ -2741,8 +2758,8 @@ const InterviewRoom = ({ onNav, persona }) => {
         </button>
       </div>
 
-      {/* ── PHONE Q-PROGRESS STRIP (phone-only, hidden on desktop) ── */}
-      <div className="int-qstrip">
+      {/* ── PHONE Q-PROGRESS STRIP (phone-only, interview tab only) ── */}
+      {roomTab !== "code" && <div className="int-qstrip">
         <span style={{ fontSize:10, fontWeight:700, color:"rgba(255,255,255,.35)", letterSpacing:"0.08em", textTransform:"uppercase" }}>Q{qIdx+1}/{QUESTIONS.length}</span>
         <div style={{ display:"flex", gap:5, alignItems:"center", flex:1, justifyContent:"center" }}>
           {QUESTIONS.map((_,i) => (
@@ -2750,7 +2767,7 @@ const InterviewRoom = ({ onNav, persona }) => {
           ))}
         </div>
         <span style={{ fontSize:10, fontWeight:700, color:"rgba(255,255,255,.35)", letterSpacing:"0.08em" }}>{activePersona.difficulty}</span>
-      </div>
+      </div>}
 
       {/* ── BODY ──────────────────────────────────────────────────────── */}
       <AnimatePresence mode="wait">
@@ -2960,8 +2977,8 @@ const InterviewRoom = ({ onNav, persona }) => {
       )}
       </AnimatePresence>
 
-      {/* ── MOBILE BOTTOM CONTROLS BAR (tablet + phone only, hidden on desktop) ── */}
-      <div className="int-mob-bar">
+      {/* ── MOBILE BOTTOM CONTROLS BAR (interview tab only — hidden in code tab and on desktop) ── */}
+      {roomTab !== "code" && <div className="int-mob-bar">
         {/* Mute */}
         <button onClick={()=>setMuted(m=>!m)}
           style={{ flex:1, height:50, borderRadius:14, border:"none", background:muted?"var(--red)":"rgba(255,255,255,.1)", cursor:"pointer", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:3, color:"#fff", transition:"all 0.2s" }}>
@@ -2988,7 +3005,7 @@ const InterviewRoom = ({ onNav, persona }) => {
             <PhoneOff size={16}/> End & Report
           </button>
         )}
-      </div>
+      </div>}
 
       {/* ── END INTERVIEW MODAL ─────────────────────────────── */}
       <AnimatePresence>
