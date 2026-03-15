@@ -186,7 +186,8 @@ const G = () => (
     }
 
     /* ── Interview room — strict flex column, never scrolls ── */
-    .int-room { position: fixed; inset: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; background: var(--slate); color: #fff; overflow: hidden; z-index: 200; }
+    /* 100dvh = dynamic viewport height: avoids iOS Safari address-bar overlap */
+    .int-room { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; display: flex; flex-direction: column; background: var(--slate); color: #fff; overflow: hidden; z-index: 200; }
 
     /* Desktop top-bar */
     .int-topbar { height:60px; flex-shrink:0; background:rgba(15,23,42,.98); border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; padding:0 20px; gap:16px; z-index:10; backdrop-filter:blur(12px); overflow:hidden; }
@@ -200,6 +201,25 @@ const G = () => (
     @media (max-width:1100px) { .int-topbar-persona { display:none; } }
     @media (max-width:860px)  { .int-topbar-qprog   { display:none; } }
     @media (max-width:600px)  { .int-topbar-timer-phase { display:none; } }
+
+    /* Topbar persona-info (emoji + name beside logo) — hide on ≤640 px */
+    .int-topbar-persona-info { display:flex; align-items:center; gap:7px; padding-left:4px; border-left:1px solid rgba(255,255,255,.1); margin-left:4px; flex-shrink:0; }
+    /* Tab-switcher label text — inline by default, hideable */
+    .int-tab-label { display:inline; }
+    /* End-button label text — inline by default, hideable */
+    .int-end-label { display:inline; }
+
+    /* ── 640 px: slim down topbar to avoid crowding ── */
+    @media (max-width:640px) {
+      .int-topbar { gap:8px; padding:0 14px; }
+      /* Hide logo wordmark, keep the icon square */
+      .int-room .int-topbar-logo button > span.brig { display:none; }
+      /* Hide persona name + separator */
+      .int-topbar-persona-info { display:none; }
+    }
+
+    /* ── 520 px: drop tab text labels so buttons become icon-only ── */
+    @media (max-width:520px) { .int-tab-label { display:none; } }
 
     /* Q-progress strip (mobile only, hidden on desktop) */
     .int-qstrip { display:none; }
@@ -254,6 +274,31 @@ const G = () => (
         padding: 10px 16px env(safe-area-inset-bottom,10px);
         gap: 8px;
       }
+
+      /* Hide "End" text so only the icon remains */
+      .int-end-label { display: none; }
+      /* Tighten End button padding to icon-only size */
+      .int-room .btn-danger { padding: 8px 10px; }
+    }
+
+    /* ── LANDSCAPE PHONE / SHORT VIEWPORT ── */
+    /* When height < 500 px (landscape phones, small embeds) reduce vertical chrome */
+    /* These rules come after the 480px block in source so cascade order takes care of
+       non-!important overrides; !important is only kept where the phone block already
+       uses it on the same property. */
+    @media (max-height: 500px) {
+      .int-topbar { height: 44px; }
+      /* Hide Q-strip — cascade order wins over the 480px display:flex rule */
+      .int-qstrip { display: none; }
+      /* Shrink captions so the video area always gets meaningful space.
+         Must use !important to beat the 480px block which already uses !important. */
+      .int-captions { height: 80px !important; }
+      .int-mob-bar { padding: 6px 16px env(safe-area-inset-bottom, 6px); }
+    }
+    @media (max-height: 380px) {
+      /* Very short (e.g., old landscape phones): shrink captions further */
+      .int-captions { height: 56px !important; }
+      .int-mob-bar { padding: 4px 12px env(safe-area-inset-bottom, 4px); }
     }
 
     @media (max-width: 1024px) {
@@ -2628,7 +2673,7 @@ const InterviewRoom = ({ onNav, persona }) => {
         </div>
 
         {/* Persona emoji + name (always visible) */}
-        <div style={{ display:"flex", alignItems:"center", gap:7, paddingLeft:4, borderLeft:"1px solid rgba(255,255,255,.1)", marginLeft:4, flexShrink:0 }}>
+        <div className="int-topbar-persona-info">
           <span style={{ fontSize:18, lineHeight:1 }}>{activePersona.emoji}</span>
           <span style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,.8)", whiteSpace:"nowrap" }}
             className="int-topbar-logo">{activePersona.title}</span>
@@ -2659,7 +2704,7 @@ const InterviewRoom = ({ onNav, persona }) => {
           {[{ id:"interview", label:"Interview", icon:"🎙️" },{ id:"code", label:"Code", icon:"⌨️" }].map(tab => (
             <button key={tab.id} onClick={()=>setRoomTab(tab.id)}
               style={{ display:"flex", alignItems:"center", gap:5, padding:"5px 11px", borderRadius:7, border:"none", background:roomTab===tab.id?"rgba(13,148,136,.85)":"transparent", color:roomTab===tab.id?"#fff":"rgba(255,255,255,.4)", fontSize:11.5, fontWeight:700, cursor:"pointer", transition:"all 0.2s", fontFamily:"'DM Sans',sans-serif", whiteSpace:"nowrap", lineHeight:1 }}>
-              <span style={{ fontSize:12 }}>{tab.icon}</span> {tab.label}
+              <span style={{ fontSize:12 }}>{tab.icon}</span> <span className="int-tab-label">{tab.label}</span>
             </button>
           ))}
         </div>
@@ -2692,7 +2737,7 @@ const InterviewRoom = ({ onNav, persona }) => {
 
         {/* End button */}
         <button onClick={()=>setEnding(true)} className="btn-danger" style={{ fontSize:13, padding:"8px 16px", borderRadius:22, flexShrink:0 }}>
-          <PhoneOff size={14}/> End
+          <PhoneOff size={14}/> <span className="int-end-label">End</span>
         </button>
       </div>
 
