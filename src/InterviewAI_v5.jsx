@@ -252,9 +252,10 @@ const G = () => (
 
     /* ── PHONE ≤ 480px — compact everything ── */
     @media (max-width: 480px) {
-      /* Slim topbar to 48px, hide logo text + persona pill + Q dots */
+      /* Slim topbar to 48px; hide persona pill + Q dots; keep logo icon visible */
       .int-topbar { height: 48px; padding: 0 12px; gap: 8px; }
-      .int-topbar-logo { display: none; }
+      /* Logo wordmark already hidden at 640px — keep the icon always visible */
+      .int-topbar-logo { display: flex; flex-shrink: 0; }
       .int-topbar-persona { display: none; }
       .int-topbar-qprog { display: none; }
       .int-topbar-timer { padding: 4px 10px; }
@@ -2684,7 +2685,7 @@ const InterviewRoom = ({ onNav, persona }) => {
       {/* ── TOP BAR ─────────────────────────────────────────────────── */}
       <div className="int-topbar">
 
-        {/* Logo — hidden on phone via .int-topbar-logo */}
+        {/* Logo — always visible; wordmark hidden on ≤640px via CSS, icon always shown */}
         <div className="int-topbar-logo">
           <Logo onClick={()=>onNav("landing")} light/>
         </div>
