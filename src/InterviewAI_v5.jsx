@@ -1042,7 +1042,7 @@ const Navbar = ({ view, onNav }) => {
           </>)}
           {!isLanding && <button className="btn-ghost" onClick={() => onNav("landing")}>← Home</button>}
           <button className="btn-secondary" onClick={() => onNav("signin")} style={{ fontSize: 13 }}><LogIn size={14} /> Sign in</button>
-          <button className="btn-primary" onClick={() => onNav("signup")} style={{ fontSize: 13 }}>Get started <ArrowUpRight size={14} /></button>
+          <button className="btn-primary" onClick={() => onNav("dashboard")} style={{ fontSize: 13 }}>Get started <ArrowUpRight size={14} /></button>
         </div>
         <button className="hamburger btn-ghost" style={{ display: "none", padding: 8 }} onClick={() => setMob(o => !o)}>
           {mob ? <X size={22} /> : <Menu size={22} />}
@@ -1060,7 +1060,7 @@ const Navbar = ({ view, onNav }) => {
             </>)}
             {!isLanding && <button className="nav-link" style={{ textAlign: "left" }} onClick={() => onNav("landing")}>← Home</button>}
             <button className="btn-secondary" onClick={() => { onNav("signin"); setMob(false); }} style={{ justifyContent: "center" }}><LogIn size={14} /> Sign in</button>
-            <button className="btn-primary" onClick={() => { onNav("signup"); setMob(false); }} style={{ justifyContent: "center" }}>Get started <ArrowUpRight size={14} /></button>
+            <button className="btn-primary" onClick={() => { onNav("dashboard"); setMob(false); }} style={{ justifyContent: "center" }}>Get started <ArrowUpRight size={14} /></button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1597,7 +1597,7 @@ const SignIn = ({ onNav }) => {
             style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.65)", backdropFilter: "blur(10px)", zIndex: 999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}
             onClick={e => e.target === e.currentTarget && setShowComingSoon(false)}>
             <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 12 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              style={{ background: "var(--card)", borderRadius: 20, boxShadow: "0 32px 80px rgba(15,23,42,.25)", width: "100%", maxWidth: 400, textAlign: "center", padding: "56px 40px 48px" }}>
+              style={{ background: "var(--white)", border: "1px solid var(--border)", borderRadius: 20, boxShadow: "0 32px 80px rgba(15,23,42,.35)", width: "100%", maxWidth: 400, textAlign: "center", padding: "56px 40px 48px" }}>
               <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 280, damping: 18, delay: 0.1 }}
                 style={{ width: 72, height: 72, borderRadius: "50%", background: "var(--teal-light)", border: "2px solid var(--teal)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", boxShadow: "0 8px 24px rgba(20,184,166,.25)" }}>
                 <LogIn size={32} style={{ color: "var(--teal)" }} strokeWidth={2.5} />
