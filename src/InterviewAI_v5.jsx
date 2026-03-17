@@ -255,12 +255,14 @@ const G = () => (
     /* ── PHONE ≤ 480px — compact everything ── */
     @media (max-width: 480px) {
       /* Slim topbar to 48px; hide persona pill + Q dots; keep logo icon visible */
-      .int-topbar { height: 48px; padding: 0 12px; gap: 8px; }
+      .int-topbar { height: 48px; padding: 0 12px; gap: 6px; }
       /* Logo wordmark already hidden at 640px — keep the icon always visible */
       .int-topbar-logo { display: flex; flex-shrink: 0; }
       .int-topbar-persona { display: none; }
       .int-topbar-qprog { display: none; }
-      .int-topbar-timer { padding: 4px 10px; }
+      .int-topbar-timer { padding: 4px 8px; gap: 5px; }
+      /* Hide the dividers on very small screens to save space */
+      .int-topbar-divider { display: none; }
 
       /* Show the slim Q-progress strip below topbar */
       .int-qstrip {
@@ -282,6 +284,13 @@ const G = () => (
       .int-end-label { display: none; }
       /* Tighten End button padding to icon-only size */
       .int-room .btn-danger { padding: 8px 10px; }
+    }
+
+    /* ── VERY SMALL PHONE ≤ 360px — ultra-compact topbar ── */
+    @media (max-width: 360px) {
+      .int-topbar { padding: 0 8px; gap: 4px; }
+      .int-topbar-timer { padding: 4px 6px; gap: 4px; }
+      .int-room .btn-danger { padding: 6px 8px; }
     }
 
     /* ── LANDSCAPE PHONE / SHORT VIEWPORT ── */
@@ -422,10 +431,10 @@ const G = () => (
     @media(max-width:900px){ .hero-preview-mock-grid { grid-template-columns:1fr; } .hero-preview-mock-side { display:none; } }
 
     /* ── Code editor panel responsive grid ── */
-    .code-panel-grid { display:grid; grid-template-columns:clamp(260px,30%,340px) 1fr; flex:1; min-height:0; overflow:hidden; }
-    /* On mobile the grid stacks; cap the question panel at 42 % of the available
+    .code-panel-grid { display:grid; grid-template-columns:clamp(260px,30%,340px) 1fr; flex:1; min-height:0; overflow:hidden; height:100%; width:100%; }
+    /* On mobile the grid stacks; cap the question panel at 40 % of the available
        height so the code editor always gets meaningful vertical space. */
-    @media(max-width:768px){ .code-panel-grid { grid-template-columns:1fr; grid-template-rows:42% 1fr; } }
+    @media(max-width:768px){ .code-panel-grid { grid-template-columns:1fr; grid-template-rows:40% 1fr; } }
 
     /* ── Code toolbar: wraps lang-selector and run/submit on narrow screens ── */
     .code-toolbar { display:flex; align-items:center; column-gap:10px; flex-shrink:0; padding:10px 16px; border-bottom:1px solid rgba(255,255,255,.07); background:rgba(0,0,0,.15); flex-wrap:wrap; }
@@ -2452,7 +2461,7 @@ const CodePanel = ({ activePersona, qIdx, elapsed }) => {
       </div>
 
       {/* ── Editor + Output Panel ── */}
-      <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
+      <div style={{ display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
         {/* Editor Toolbar */}
         <div className="code-toolbar">
           <div style={{ display:"flex", gap:5 }}>
@@ -2669,7 +2678,7 @@ const InterviewRoom = ({ onNav, persona }) => {
     <div className="int-room">
 
       {/* ── TOP BAR ─────────────────────────────────────────────────── */}
-      <div className="int-topbar" style={{ background:"rgba(15,23,42,.98)", borderBottom:"1px solid rgba(255,255,255,.08)", display:"flex", alignItems:"center", padding:"0 20px", gap:16, flexShrink:0, zIndex:10, backdropFilter:"blur(12px)" }}>
+      <div className="int-topbar">
 
         {/* Logo — always visible; wordmark hidden on ≤640px via CSS, icon always shown */}
         <div className="int-topbar-logo">
@@ -2718,10 +2727,9 @@ const InterviewRoom = ({ onNav, persona }) => {
 
         {/* Enhanced timer */}
         <div className="int-topbar-timer" style={{
-          display: "flex", alignItems: "center", gap: 8,
           background: elapsed > 2700 ? "rgba(220,38,38,.25)" : elapsed > 1800 ? "rgba(217,119,6,.2)" : "rgba(13,148,136,.15)",
           border: `1px solid ${elapsed > 2700 ? "rgba(220,38,38,.5)" : elapsed > 1800 ? "rgba(217,119,6,.45)" : "rgba(13,148,136,.35)"}`,
-          borderRadius: 22, padding: "5px 14px", flexShrink: 0, transition: "all 1s ease",
+          transition: "all 1s ease",
         }}>
           {/* Animated dot */}
           <div style={{
@@ -2740,7 +2748,7 @@ const InterviewRoom = ({ onNav, persona }) => {
         </div>
 
         {/* End button */}
-        <button onClick={()=>setEnding(true)} className="btn-danger" style={{ fontSize:13, padding:"8px 16px", borderRadius:22, flexShrink:0 }}>
+        <button onClick={()=>setEnding(true)} className="btn-danger" style={{ fontSize:13, borderRadius:22, flexShrink:0 }}>
           <PhoneOff size={14}/> <span className="int-end-label">End</span>
         </button>
       </div>
@@ -2760,7 +2768,7 @@ const InterviewRoom = ({ onNav, persona }) => {
       <AnimatePresence mode="wait">
         {roomTab === "code" ? (
           <motion.div key="code" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }}
-            style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
+            style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
             <CodePanel activePersona={activePersona} qIdx={qIdx} elapsed={elapsed} />
           </motion.div>
         ) : (
