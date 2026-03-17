@@ -702,7 +702,7 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
   const validate = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
   const lg = size === "lg";
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if (!email.trim() || !validate(email)) {
       setErrMsg("⚠️ Please enter a valid email address.");
@@ -712,7 +712,26 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
     setErrMsg("");
     setLoading(true);
     const captured = email.trim();
-    setTimeout(() => { setLoading(false); setSubmittedEmail(captured); setEmail(""); setSubmitted(true); }, 800);
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: captured }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setErrMsg(data.error || "Something went wrong. Please try again.");
+        return;
+      }
+      setSubmittedEmail(captured);
+      setEmail("");
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Waitlist submission error:", err);
+      setErrMsg("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
 const handleClose = () => { setSubmitted(false); setSubmittedEmail(""); };
