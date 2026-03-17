@@ -2720,7 +2720,6 @@ const InterviewRoom = ({ onNav, persona }) => {
 
   // Prevent body scroll and register keyboard shortcuts for the whole session.
   useEffect(() => {
-    const t = setInterval(() => setElapsed(e => e+1), 1000);
     document.body.style.overflow = "hidden";
     const onKey = e => {
       if (e.code === "Space") { e.preventDefault(); setMuted(m => !m); }
