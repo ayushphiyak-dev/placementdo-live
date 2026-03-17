@@ -208,6 +208,8 @@ const G = () => (
     .int-tab-label { display:inline; }
     /* End-button label text — inline by default, hideable */
     .int-end-label { display:inline; }
+    /* Timer phase label — visible by default, hidden on narrow screens */
+    .int-topbar-timer-phase { display:inline; font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; margin-left:2px; }
 
     /* ── 640 px: slim down topbar to avoid crowding ── */
     @media (max-width:640px) {
@@ -426,7 +428,7 @@ const G = () => (
     @media(max-width:768px){ .code-panel-grid { grid-template-columns:1fr; grid-template-rows:42% 1fr; } }
 
     /* ── Code toolbar: wraps lang-selector and run/submit on narrow screens ── */
-    .code-toolbar { flex-wrap:wrap; }
+    .code-toolbar { display:flex; align-items:center; column-gap:10px; flex-shrink:0; padding:10px 16px; border-bottom:1px solid rgba(255,255,255,.07); background:rgba(0,0,0,.15); flex-wrap:wrap; }
     @media(max-width:600px) {
       /* Tighten vertical padding */
       .code-toolbar { padding:8px 12px !important; row-gap:6px; }
@@ -2388,7 +2390,7 @@ const CodePanel = ({ activePersona, qIdx, elapsed }) => {
   const submitCode = () => { setRunning(true); setTimeout(() => { setSubmitted(true); setRunning(false); setOutput("🏆 All test cases passed!\n\n✅ 72/72 test cases\n⏱ Runtime beats 94% of solutions\n📦 Memory beats 87% of solutions"); }, 1800); };
 
   return (
-    <div style={{ display:"grid", gridTemplateColumns:"340px 1fr", flex:1, minHeight:0, overflow:"hidden" }}>
+    <div className="code-panel-grid">
       {/* ── Question Panel ── */}
       <div style={{ borderRight: "1px solid rgba(255,255,255,.08)", display: "flex", flexDirection: "column", overflowY: "auto", background: "rgba(0,0,0,.2)" }}>
         {/* Question selector */}
@@ -2452,7 +2454,7 @@ const CodePanel = ({ activePersona, qIdx, elapsed }) => {
       {/* ── Editor + Output Panel ── */}
       <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
         {/* Editor Toolbar */}
-        <div style={{ padding:"10px 16px", borderBottom:"1px solid rgba(255,255,255,.07)", display:"flex", alignItems:"center", gap:10, flexShrink:0, background:"rgba(0,0,0,.15)" }}>
+        <div className="code-toolbar">
           <div style={{ display:"flex", gap:5 }}>
             {LANGS.map(l => (
               <button key={l} onClick={() => handleLangChange(l)}
@@ -2675,7 +2677,7 @@ const InterviewRoom = ({ onNav, persona }) => {
         </div>
 
         {/* Persona emoji + name (always visible) */}
-        <div style={{ display:"flex", alignItems:"center", gap:7, paddingLeft:4, borderLeft:"1px solid rgba(255,255,255,.1)", marginLeft:4, flexShrink:0 }}>
+        <div className="int-topbar-persona-info">
           <span style={{ fontSize:18, lineHeight:1 }}>{activePersona.emoji}</span>
           <span style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,.8)", whiteSpace:"nowrap" }}
             className="int-topbar-logo">{activePersona.title}</span>
@@ -2706,7 +2708,7 @@ const InterviewRoom = ({ onNav, persona }) => {
           {[{ id:"interview", label:"Interview", icon:"🎙️" },{ id:"code", label:"Code", icon:"⌨️" }].map(tab => (
             <button key={tab.id} onClick={()=>setRoomTab(tab.id)}
               style={{ display:"flex", alignItems:"center", gap:5, padding:"5px 11px", borderRadius:7, border:"none", background:roomTab===tab.id?"rgba(13,148,136,.85)":"transparent", color:roomTab===tab.id?"#fff":"rgba(255,255,255,.4)", fontSize:11.5, fontWeight:700, cursor:"pointer", transition:"all 0.2s", fontFamily:"'DM Sans',sans-serif", whiteSpace:"nowrap", lineHeight:1 }}>
-              <span style={{ fontSize:12 }}>{tab.icon}</span> {tab.label}
+              <span style={{ fontSize:12 }}>{tab.icon}</span> <span className="int-tab-label">{tab.label}</span>
             </button>
           ))}
         </div>
@@ -2732,14 +2734,14 @@ const InterviewRoom = ({ onNav, persona }) => {
             {fmt(elapsed)}
           </span>
           {/* Phase label */}
-          <span style={{ fontSize:10, fontWeight:700, letterSpacing:"0.06em", textTransform:"uppercase", color: elapsed > 2700 ? "rgba(252,165,165,.7)" : elapsed > 1800 ? "rgba(253,230,138,.7)" : "rgba(255,255,255,.4)", marginLeft:2 }}>
+          <span className="int-topbar-timer-phase" style={{ color: elapsed > 2700 ? "rgba(252,165,165,.7)" : elapsed > 1800 ? "rgba(253,230,138,.7)" : "rgba(255,255,255,.4)" }}>
             {elapsed > 2700 ? "⚠ OVERTIME" : elapsed > 1800 ? "WRAPPING UP" : elapsed > 900 ? "IN PROGRESS" : "STARTING"}
           </span>
         </div>
 
         {/* End button */}
         <button onClick={()=>setEnding(true)} className="btn-danger" style={{ fontSize:13, padding:"8px 16px", borderRadius:22, flexShrink:0 }}>
-          <PhoneOff size={14}/> End
+          <PhoneOff size={14}/> <span className="int-end-label">End</span>
         </button>
       </div>
 
