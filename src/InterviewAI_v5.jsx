@@ -782,8 +782,7 @@ const CheckoutModal = ({ plan, onClose }) => {
   const [cvc, setCvc] = useState("");
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({});
-  const [paying, setPaying] = useState(false);
-  const [paid, setPaid] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
   const cardInputRef = useRef(null);
 
   useEffect(() => { const t = setTimeout(() => setStep("form"), 1800); return () => clearTimeout(t); }, []);
@@ -819,8 +818,7 @@ const CheckoutModal = ({ plan, onClose }) => {
   const handlePay = () => {
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
-    setPaying(true);
-    setTimeout(() => { setPaying(false); setPaid(true); setTimeout(onClose, 2400); }, 1600);
+    setShowComingSoon(true);
   };
 
   return (
@@ -857,7 +855,7 @@ const CheckoutModal = ({ plan, onClose }) => {
           )}
 
           {/* ── Payment form ── */}
-          {step === "form" && !paid && (
+          {step === "form" && !showComingSoon && (
             <motion.div key="f" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.32 }}>
               {/* Header */}
               <div style={{ padding: "24px 28px 20px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 14 }}>
@@ -965,9 +963,9 @@ const CheckoutModal = ({ plan, onClose }) => {
                 </div>
 
                 {/* Pay button */}
-                <button className="btn-primary" onClick={handlePay} disabled={paying}
+                <button className="btn-primary" onClick={handlePay}
                   style={{ width: "100%", justifyContent: "center", fontSize: 15, padding: "15px", borderRadius: 13, marginTop: 4 }}>
-                  {paying ? <><span className="spin"><RefreshCw size={16} /></span> Processing…</> : <><Check size={16} /> Pay {PX[plan]} · Complete Purchase</>}
+                  <><Check size={16} /> Pay {PX[plan]} · Complete Purchase</>
                 </button>
 
                 {/* Trust bar */}
@@ -980,18 +978,23 @@ const CheckoutModal = ({ plan, onClose }) => {
             </motion.div>
           )}
 
-          {/* ── Success state ── */}
-          {paid && (
-            <motion.div key="success" initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          {/* ── Coming Soon state ── */}
+          {showComingSoon && (
+            <motion.div key="coming-soon" initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               style={{ textAlign: "center", padding: "56px 40px 48px" }}>
               <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 280, damping: 18, delay: 0.1 }}
-                style={{ width: 72, height: 72, borderRadius: "50%", background: "var(--green-light)", border: "2px solid var(--green)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", boxShadow: "0 8px 24px rgba(22,163,74,.25)" }}>
-                <Check size={32} style={{ color: "var(--green)" }} strokeWidth={2.5} />
+                style={{ width: 72, height: 72, borderRadius: "50%", background: "var(--teal-light)", border: "2px solid var(--teal)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", boxShadow: "0 8px 24px rgba(20,184,166,.25)" }}>
+                <CreditCard size={32} style={{ color: "var(--teal)" }} strokeWidth={2.5} />
               </motion.div>
-              <h2 className="brig" style={{ fontSize: 24, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", marginBottom: 10 }}>Payment Successful! 🎉</h2>
-              <p style={{ fontSize: 14.5, color: "var(--slate-500)", lineHeight: 1.65 }}>
-                Your <strong style={{ color: "var(--slate)" }}>{plan} Plan</strong> is active.<br />Check your email for your receipt.
+              <h2 className="brig" style={{ fontSize: 22, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", marginBottom: 10 }}>Payment Coming Soon 🚀</h2>
+              <p style={{ fontSize: 14.5, color: "var(--slate-500)", lineHeight: 1.65, marginBottom: 28 }}>
+                The payment function will be available after our launch date.<br />
+                <strong style={{ color: "var(--slate)" }}>Kindly wait — we'll notify you!</strong>
               </p>
+              <button className="btn-primary" onClick={onClose}
+                style={{ width: "100%", justifyContent: "center", fontSize: 15, padding: "13px 24px", borderRadius: 13 }}>
+                Got it
+              </button>
             </motion.div>
           )}
 
