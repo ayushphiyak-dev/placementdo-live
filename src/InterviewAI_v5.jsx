@@ -1552,7 +1552,8 @@ const SignIn = ({ onNav }) => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
-  const submit = e => { e.preventDefault(); setLoading(true); setTimeout(() => { setLoading(false); onNav("dashboard"); }, 1200); };
+  const [showComingSoon, setShowComingSoon] = useState(false);
+  const submit = e => { e.preventDefault(); setLoading(true); setTimeout(() => { setLoading(false); setShowComingSoon(true); }, 1200); };
   const handleForgot = () => { setResetSent(true); setTimeout(() => setResetSent(false), 4000); };
   return (
     <div style={{ minHeight: "100vh", background: "var(--slate-50)", display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 20px" }}>
@@ -1588,6 +1589,32 @@ const SignIn = ({ onNav }) => {
           </p>
         </div>
       </motion.div>
+
+      {/* ── Coming Soon popup ── */}
+      <AnimatePresence>
+        {showComingSoon && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.65)", backdropFilter: "blur(10px)", zIndex: 999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}
+            onClick={e => e.target === e.currentTarget && setShowComingSoon(false)}>
+            <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 12 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              style={{ background: "var(--card)", borderRadius: 20, boxShadow: "0 32px 80px rgba(15,23,42,.25)", width: "100%", maxWidth: 400, textAlign: "center", padding: "56px 40px 48px" }}>
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 280, damping: 18, delay: 0.1 }}
+                style={{ width: 72, height: 72, borderRadius: "50%", background: "var(--teal-light)", border: "2px solid var(--teal)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", boxShadow: "0 8px 24px rgba(20,184,166,.25)" }}>
+                <LogIn size={32} style={{ color: "var(--teal)" }} strokeWidth={2.5} />
+              </motion.div>
+              <h2 className="brig" style={{ fontSize: 22, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", marginBottom: 10 }}>Sign In Coming Soon 🚀</h2>
+              <p style={{ fontSize: 14.5, color: "var(--slate-500)", lineHeight: 1.65, marginBottom: 28 }}>
+                The sign-in function will be available after our launch date.<br />
+                <strong style={{ color: "var(--slate)" }}>Kindly wait — we'll notify you!</strong>
+              </p>
+              <button className="btn-primary" onClick={() => setShowComingSoon(false)}
+                style={{ width: "100%", justifyContent: "center", fontSize: 15, padding: "13px 24px", borderRadius: 13 }}>
+                Got it
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
