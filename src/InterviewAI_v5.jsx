@@ -80,16 +80,14 @@ const G = () => (
     .sidebar-item.active { background: var(--teal-light); color: var(--teal-dark); font-weight: 600; }
     .sidebar-item.active:hover { transform: none; }
 
-    /* Feature cards — strict equal-height uniform grid */
-    .feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; align-items: stretch; }
+    /* Feature cards — auto-fill equal-height grid adapts to any viewport */
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(min(290px,100%),1fr)); gap: 20px; align-items: stretch; }
     .feature-card { padding: 28px; border-radius: 16px; border: 1.5px solid var(--border); background: var(--ivory); transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s, background 0.25s; display: flex; flex-direction: column; height: 100%; }
     .feature-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); background: var(--white); border-color: var(--border-strong); }
     .feature-card .fc-icon { width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; flex-shrink: 0; border-width: 1px; border-style: solid; transition: transform 0.25s, background 0.25s; }
     .feature-card:hover .fc-icon { transform: scale(1.12) rotate(-3deg); }
     .feature-card h3 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15.5px; font-weight: 700; color: var(--slate); margin-bottom: 8px; letter-spacing: -0.01em; line-height: 1.25; }
     .feature-card p { font-size: 13.5px; color: var(--slate-500); line-height: 1.7; flex: 1; }
-    @media (max-width: 1024px) { .feature-grid { grid-template-columns: repeat(2,1fr); } }
-    @media (max-width: 640px)  { .feature-grid { grid-template-columns: 1fr; } }
 
     /* Pricing */
     .pricing-card { border-radius: 20px; padding: 32px 28px; position: relative; transition: transform 0.25s, box-shadow 0.25s; display: flex; flex-direction: column; }
@@ -162,61 +160,83 @@ const G = () => (
     .border-glow-active { animation: border-glow 2.5s ease-in-out infinite; }
 
     /* Grids */
-    .step-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
-    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; align-items: stretch; }
-    .dash-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; }
-    .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    .stats-row { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
-    .report-top { display: grid; grid-template-columns: 260px 1fr; gap: 20px; }
-    .report-mid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .step-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(200px,100%),1fr)); gap: 20px; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(260px,100%),1fr)); gap: 22px; align-items: stretch; }
+    .dash-grid { display: grid; grid-template-columns: 1fr clamp(280px,30%,380px); gap: 24px; }
+    .config-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(220px,100%),1fr)); gap: 18px; }
+    .stats-row { display: flex; gap: clamp(14px,4vw,32px); justify-content: center; flex-wrap: wrap; }
+    .report-top { display: grid; grid-template-columns: clamp(200px,27%,280px) 1fr; gap: 20px; }
+    .report-mid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(280px,100%),1fr)); gap: 20px; }
 
     /* ── Layout utilities ── */
-    .hero-pad { padding: 120px clamp(20px,5vw,60px) 80px; }
-    .sec-pad { padding: 96px clamp(20px,5vw,60px); }
-    .dash-main { padding: 80px clamp(20px,3vw,40px) 40px; min-height: 100vh; box-sizing: border-box; }
+    .hero-pad { padding: clamp(80px,12vh,120px) clamp(20px,5vw,60px) clamp(48px,8vh,80px); }
+    .sec-pad { padding: clamp(56px,8vh,96px) clamp(20px,5vw,60px); }
+    .dash-main { padding: clamp(72px,10vh,88px) clamp(16px,3vw,40px) clamp(32px,5vh,48px); min-height: 100vh; box-sizing: border-box; }
     .card-constrain { max-width: 900px; margin-left: auto; margin-right: auto; width: 100%; }
     .step-grid > * { display: flex; flex-direction: column; }
     .pricing-grid { align-items: stretch !important; }
     .pricing-card { height: 100%; box-sizing: border-box; }
 
     @media(max-width:768px){
-      .hero-pad { padding: 96px 20px 60px !important; }
-      .sec-pad { padding: 64px 20px !important; }
       .report-top { grid-template-columns: 1fr !important; }
-      .report-mid { grid-template-columns: 1fr !important; }
     }
     @media(max-width:480px){
-      .hero-pad { padding: 80px 16px 48px !important; }
-      .sec-pad { padding: 48px 16px !important; }
       .config-grid { gap: 12px; }
       .feature-grid { gap: 12px; }
     }
 
     /* ── Interview room — strict flex column, never scrolls ── */
-    .int-room { position: fixed; inset: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; background: var(--slate); color: #fff; overflow: hidden; z-index: 200; }
+    /* 100dvh = dynamic viewport height: avoids iOS Safari address-bar overlap */
+    .int-room { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; display: flex; flex-direction: column; background: var(--slate); color: #fff; overflow: hidden; z-index: 200; }
 
     /* Desktop top-bar */
-    .int-topbar { height:60px; flex-shrink:0; background:rgba(15,23,42,.98); border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; padding:0 20px; gap:10px; z-index:10; backdrop-filter:blur(12px); overflow:hidden; }
+    .int-topbar { height:60px; flex-shrink:0; background:rgba(15,23,42,.98); border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; padding:0 20px; gap:16px; z-index:10; backdrop-filter:blur(12px); overflow:hidden; }
     .int-topbar-logo { display:flex; flex-shrink:0; }
     .int-topbar-persona { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:22px; padding:5px 13px; flex-shrink:0; white-space:nowrap; }
     .int-topbar-qprog { display:flex; gap:5px; align-items:center; flex-shrink:0; }
     .int-topbar-timer { display:flex; align-items:center; gap:6px; background:rgba(220,38,38,.18); border:1px solid rgba(220,38,38,.35); border-radius:22px; padding:5px 13px; flex-shrink:0; white-space:nowrap; }
+    .int-topbar-timer-phase { display:inline; }
     .int-topbar-divider { width:1px; height:20px; background:rgba(255,255,255,.1); flex-shrink:0; margin:0 2px; }
     /* Hide overflow items at narrower widths */
     @media (max-width:1100px) { .int-topbar-persona { display:none; } }
     @media (max-width:860px)  { .int-topbar-qprog   { display:none; } }
+    @media (max-width:600px)  { .int-topbar-timer-phase { display:none; } }
+
+    /* Topbar persona-info (emoji + name beside logo) — hide on ≤640 px */
+    .int-topbar-persona-info { display:flex; align-items:center; gap:7px; padding-left:4px; border-left:1px solid rgba(255,255,255,.1); margin-left:4px; flex-shrink:0; }
+    /* Tab-switcher label text — inline by default, hideable */
+    .int-tab-label { display:inline; }
+    /* End-button label text — inline by default, hideable */
+    .int-end-label { display:inline; }
+
+    /* ── 640 px: slim down topbar to avoid crowding ── */
+    @media (max-width:640px) {
+      .int-topbar { gap:8px; padding:0 14px; }
+      /* Hide logo wordmark, keep the icon square */
+      .int-room .int-topbar-logo button > span.brig { display:none; }
+      /* Hide persona name + separator */
+      .int-topbar-persona-info { display:none; }
+    }
+
+    /* ── 520 px: drop tab text labels so buttons become icon-only ── */
+    @media (max-width:520px) { .int-tab-label { display:none; } }
 
     /* Q-progress strip (mobile only, hidden on desktop) */
     .int-qstrip { display:none; }
 
-    .int-body { flex: 1; display: grid; grid-template-columns: 1fr 300px; gap: 0; min-height: 0; overflow: hidden; }
+    .int-body { flex: 1; display: grid; grid-template-columns: 1fr minmax(260px, 300px); gap: 0; min-height: 0; overflow: hidden; }
     .int-main { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
     .int-video-area { flex: 1; position: relative; min-height: 0; overflow: hidden; }
     .int-captions { height: 192px; flex-shrink: 0; overflow-y: auto; border-top: 1px solid rgba(255,255,255,.07); }
-    .int-side { display: flex; flex-direction: column; gap: 0; border-left: 1px solid rgba(255,255,255,.07); overflow: hidden; }
+    .int-side { display: flex; flex-direction: column; gap: 0; border-left: 1px solid rgba(255,255,255,.07); overflow: hidden; min-width: 0; }
 
     /* Mobile bottom control bar (hidden on desktop) */
     .int-mob-bar { display: none; }
+
+    /* ── MEDIUM ≤ 900px — narrower sidebar ── */
+    @media (max-width: 900px) {
+      .int-body { grid-template-columns: 1fr minmax(220px, 260px); }
+    }
 
     /* ── TABLET ≤ 768px — hide sidebar ── */
     @media (max-width: 768px) {
@@ -232,9 +252,10 @@ const G = () => (
 
     /* ── PHONE ≤ 480px — compact everything ── */
     @media (max-width: 480px) {
-      /* Slim topbar to 48px, hide logo text + persona pill + Q dots */
+      /* Slim topbar to 48px; hide persona pill + Q dots; keep logo icon visible */
       .int-topbar { height: 48px; padding: 0 12px; gap: 8px; }
-      .int-topbar-logo { display: none; }
+      /* Logo wordmark already hidden at 640px — keep the icon always visible */
+      .int-topbar-logo { display: flex; flex-shrink: 0; }
       .int-topbar-persona { display: none; }
       .int-topbar-qprog { display: none; }
       .int-topbar-timer { padding: 4px 10px; }
@@ -254,31 +275,57 @@ const G = () => (
         padding: 10px 16px env(safe-area-inset-bottom,10px);
         gap: 8px;
       }
+
+      /* Hide "End" text so only the icon remains */
+      .int-end-label { display: none; }
+      /* Tighten End button padding to icon-only size */
+      .int-room .btn-danger { padding: 8px 10px; }
+    }
+
+    /* ── LANDSCAPE PHONE / SHORT VIEWPORT ── */
+    /* When height < 500 px (landscape phones, small embeds) reduce vertical chrome */
+    /* These rules come after the 480px block in source so cascade order takes care of
+       non-!important overrides; !important is only kept where the phone block already
+       uses it on the same property. */
+    @media (max-height: 500px) {
+      .int-topbar { height: 44px; }
+      /* Hide Q-strip — cascade order wins over the 480px display:flex rule */
+      .int-qstrip { display: none; }
+      /* Shrink captions so the video area always gets meaningful space.
+         Must use !important to beat the 480px block which already uses !important. */
+      .int-captions { height: 80px !important; }
+      .int-mob-bar { padding: 6px 16px env(safe-area-inset-bottom, 6px); }
+    }
+    @media (max-height: 380px) {
+      /* Very short (e.g., old landscape phones): shrink captions further */
+      .int-captions { height: 56px !important; }
+      .int-mob-bar { padding: 4px 12px env(safe-area-inset-bottom, 4px); }
     }
 
     @media (max-width: 1024px) {
-      .step-grid { grid-template-columns: repeat(2,1fr); }
-      .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; width: 100%; }
       .dash-grid { grid-template-columns: 1fr; }
-      .report-top { grid-template-columns: 1fr; }
-      .report-mid { grid-template-columns: 1fr; }
     }
     @media (max-width: 768px) {
-      .step-grid { grid-template-columns: 1fr; }
-      .config-grid { grid-template-columns: 1fr; }
       .nav-links-desk { display: none !important; }
       .hamburger { display: flex !important; }
       .sidebar-desk { display: none !important; }
-      .dash-main { padding: 80px 18px 40px !important; }
-      .hero-pad { padding: 96px 20px 60px !important; }
-      .sec-pad { padding: 64px 20px !important; }
+      .dash-main { padding: clamp(72px,10vh,88px) 18px clamp(32px,5vh,48px) !important; }
       .hero-mock-side { display: none !important; }
       .hero-preview { display: none !important; }
     }
     @media (max-width: 480px) {
-      .stats-row { gap: 18px; }
       .wl-row { flex-direction: column; }
       .wl-row button { width: 100%; justify-content: center; }
+    }
+    /* ── Hero section: compact vertical spacing on short screens (e.g. 1366×768 laptops)
+       so the interview mock preview stays visible above the fold ── */
+    @media (max-height: 880px) and (min-width: 769px) {
+      .stats-row  { margin-top: 24px !important; }
+      .hero-preview { margin-top: 28px !important; }
+    }
+    /* Hide the interview preview entirely on very short landscape screens */
+    @media (max-height: 680px) and (min-width: 769px) {
+      .hero-preview { display: none !important; }
     }
     :focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 4px; }
 
@@ -331,8 +378,7 @@ const G = () => (
     .kbd { display:inline-flex; align-items:center; justify-content:center; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); border-radius:5px; padding:1px 6px; font-size:10px; font-weight:700; color:rgba(255,255,255,.6); font-family:'DM Sans',sans-serif; letter-spacing:0.02em; line-height:1.5; }
 
     /* ── Testimonials grid ── */
-    .testi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
-    @media(max-width:900px){ .testi-grid { grid-template-columns:1fr; } }
+    .testi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:22px; }
     @media(max-width:640px){ .testi-grid { gap:14px; } }
 
     /* ── FAQ accordion ── */
@@ -343,7 +389,7 @@ const G = () => (
     .faq-chevron { transition:transform 0.25s, color 0.2s; color:var(--slate-400); flex-shrink:0; }
 
     /* ── Footer ── */
-    .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; padding:64px clamp(20px,5vw,60px) 40px; max-width:1200px; margin:0 auto; }
+    .footer-grid { display:grid; grid-template-columns:2fr repeat(3,1fr); gap:clamp(28px,4vw,48px); padding:clamp(40px,8vh,64px) clamp(20px,5vw,60px) 40px; max-width:1200px; margin:0 auto; }
     .footer-link { font-size:13.5px; color:rgba(255,255,255,.45); background:none; border:none; cursor:pointer; padding:5px 0; display:block; text-align:left; font-family:'DM Sans',sans-serif; transition:color 0.18s; width:fit-content; }
     .footer-link:hover { color:rgba(255,255,255,.85); }
     .footer-social { width:36px; height:36px; border-radius:9px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; color:rgba(255,255,255,.5); }
@@ -364,10 +410,35 @@ const G = () => (
     .streak-badge { background:linear-gradient(135deg,rgba(217,119,6,.18),rgba(251,191,36,.1)); border:1px solid rgba(217,119,6,.32); border-radius:12px; padding:11px 14px; }
 
     /* ── pf-outer layout (Persona Feature block in Landing) ── */
-    .pf-outer { display:grid; grid-template-columns:1fr 230px; gap:40px; padding:40px 44px; align-items:center; position:relative; z-index:1; }
+    .pf-outer { display:grid; grid-template-columns:1fr clamp(180px,22%,230px); gap:40px; padding:40px 44px; align-items:center; position:relative; z-index:1; }
     .pf-right { display:flex; flex-direction:column; gap:9px; }
     @media(max-width:900px){ .pf-outer{ grid-template-columns:1fr; gap:0; padding:32px 28px; } .pf-right{ display:none; } }
     @media(max-width:580px){ .pf-outer{ padding:26px 20px; } }
+
+    /* ── Hero preview mock: inner grid collapses on medium screens ── */
+    .hero-preview-mock-grid { display:grid; grid-template-columns:2fr 1fr; }
+    @media(max-width:900px){ .hero-preview-mock-grid { grid-template-columns:1fr; } .hero-preview-mock-side { display:none; } }
+
+    /* ── Code editor panel responsive grid ── */
+    .code-panel-grid { display:grid; grid-template-columns:clamp(260px,30%,340px) 1fr; flex:1; min-height:0; overflow:hidden; }
+    /* On mobile the grid stacks; cap the question panel at 42 % of the available
+       height so the code editor always gets meaningful vertical space. */
+    @media(max-width:768px){ .code-panel-grid { grid-template-columns:1fr; grid-template-rows:42% 1fr; } }
+
+    /* ── Code toolbar: wraps lang-selector and run/submit on narrow screens ── */
+    .code-toolbar { flex-wrap:wrap; }
+    @media(max-width:600px) {
+      /* Tighten vertical padding */
+      .code-toolbar { padding:8px 12px !important; row-gap:6px; }
+      /* Language buttons row: stretch to full width */
+      .code-toolbar > div:nth-child(1) { flex:0 0 100%; }
+      /* Flex-1 spacer: not needed when toolbar wraps */
+      .code-toolbar > div:nth-child(2) { display:none; }
+      /* "N lines" counter: hide on mobile to save space */
+      .code-toolbar > span { display:none; }
+      /* Run / Submit buttons: split remaining width equally */
+      .code-toolbar > button { flex:1; justify-content:center; }
+    }
 
     /* ── Monthly progress bar chart ── */
     .mth-bar { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:default; }
@@ -620,21 +691,18 @@ const WaitlistThanksModal = ({ email, onClose }) => {
   );
 };
 
-/* ✅ Waitlist Form + Popup ✅ */
-const WaitlistForm = ({ size = "lg", dark = false }) => {
-  const [email, setEmail] = useState("");
-  const [errMsg, setErrMsg] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+/* ── Waitlist Form + Popup ── */
+const WaitlistForm = ({ size="lg", dark=false }) => {
+  const [email,          setEmail]          = useState("");
+  const [errMsg,         setErrMsg]         = useState("");
+  const [submitted,      setSubmitted]      = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const validate = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
   const lg = size === "lg";
 
-  const WAITLIST_API_URL =
-    "/api/waitlist";
-
-  const handleSubmit = async e => {
+  const handleSubmit = e => {
     e.preventDefault();
     if (!email.trim() || !validate(email)) {
       setErrMsg("⚠️ Please enter a valid email address.");
@@ -644,37 +712,8 @@ const WaitlistForm = ({ size = "lg", dark = false }) => {
     setErrMsg("");
     setLoading(true);
     const captured = email.trim();
-
-    try {
-      await fetch(WAITLIST_API_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ email: captured, source: "placementdo-live" }),
-      });
-
-      // no-cors => response is opaque; assume success if fetch completes
-      setSubmittedEmail(captured);
-      setEmail("");
-      setSubmitted(true);
-    } catch (err) {
-      console.error("Waitlist submit error:", err);
-      setErrMsg("⚠️ Something went wrong. Please try again in a moment.");
-    } finally {
-      setLoading(false);
-    }
+    setTimeout(() => { setLoading(false); setSubmittedEmail(captured); setEmail(""); setSubmitted(true); }, 800);
   };
-
-  const handleClose = () => {
-    setSubmitted(false);
-    setSubmittedEmail("");
-  };
-
-  return (
-    // ... keep your existing JSX below exactly as it is
-    null
-  );
-};
 
 const handleClose = () => { setSubmitted(false); setSubmittedEmail(""); };
 
@@ -1066,9 +1105,9 @@ const DashboardShell = ({ activeTab, onNav, onUpgrade, children }) => {
           </motion.aside>
         </>)}
       </AnimatePresence>
-      <main className="dash-main" style={{ flex: 1, padding: "88px 44px 60px", overflowY: "auto", minWidth: 0 }}>
-        <button id="dash-menu-btn" className="btn-ghost" onClick={() => setSideOpen(true)} style={{ display: "none", marginBottom: 16, fontSize: 13, padding: "8px 12px" }}>
-          <Menu size={16} /> Menu
+      <main className="dash-main" style={{ flex:1, padding:"88px 44px 60px", overflowY:"auto", minWidth:0 }}>
+        <button id="dash-menu-btn" className="btn-ghost" onClick={()=>setSideOpen(true)} style={{ display:"none", marginBottom:16, fontSize:13, padding:"8px 12px" }}>
+          <Menu size={16}/> Menu
         </button>
         {children}
       </main>
@@ -1081,10 +1120,10 @@ const DashboardShell = ({ activeTab, onNav, onUpgrade, children }) => {
 const Landing = ({ onNav, onCheckout }) => (
   <div style={{ background: "var(--ivory)" }}>
     {/* HERO */}
-    <section className="hero-pad" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "100px clamp(20px,5vw,60px) 80px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: 900, height: 600, background: "radial-gradient(ellipse,rgba(13,148,136,.08) 0%,transparent 70%)", pointerEvents: "none" }} />
-      <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-        <Tag color="teal"><Sparkles size={11} /> Coming Soon · Join the Waitlist</Tag>
+    <section className="hero-pad" style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"100px clamp(20px,5vw,60px) 80px", textAlign:"center", position:"relative", overflow:"hidden" }}>
+      <div style={{ position:"absolute", top:"30%", left:"50%", transform:"translate(-50%,-50%)", width:900, height:600, background:"radial-gradient(ellipse,rgba(13,148,136,.08) 0%,transparent 70%)", pointerEvents:"none" }}/>
+      <motion.div initial={{ opacity:0,y:24 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.5 }}>
+        <Tag color="teal"><Sparkles size={11}/> Coming Soon · Join the Waitlist</Tag>
       </motion.div>
       <motion.h1 initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.1 }} className="brig"
         style={{ fontSize: "clamp(36px,6vw,82px)", fontWeight: 800, lineHeight: 1.06, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 22, marginBottom: 20, maxWidth: 900, wordBreak: "break-word" }}>
@@ -1119,8 +1158,8 @@ const Landing = ({ onNav, onCheckout }) => (
               <span style={{ fontSize: 11, fontWeight: 600, color: "#DC2626" }}>LIVE</span>
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", background: "var(--white)" }}>
-            <div style={{ padding: "26px 28px 22px", borderRight: "1px solid var(--border)" }}>
+          <div style={{ display:"grid", gridTemplateColumns:"2fr 1fr", background:"var(--white)" }}>
+            <div style={{ padding:"26px 28px 22px", borderRight:"1px solid var(--border)" }}>
               <Tag color="slate" size="xs">The Stress-Tester · Active</Tag>
               <p style={{ marginTop: 14, fontSize: 14.5, color: "var(--slate)", lineHeight: 1.72, fontStyle: "italic" }}>
                 "Given the scale you mentioned — 10M rps — walk me through the consistency vs. availability trade-offs in your caching layer."
@@ -1132,8 +1171,8 @@ const Landing = ({ onNav, onCheckout }) => (
                 <span style={{ fontSize: 12, color: "var(--teal)", fontWeight: 600 }}>You're speaking…</span>
               </div>
             </div>
-            <div className="hero-mock-side tilt-in" style={{ background: "var(--slate-50)", display: "flex", alignItems: "center", justifyContent: "center", minHeight: 150 }}>
-              <div style={{ textAlign: "center" }}><div style={{ fontSize: 48 }}>👩‍💻</div><div style={{ fontSize: 11, color: "var(--slate-300)", marginTop: 5 }}>Your camera</div></div>
+            <div className="hero-mock-side tilt-in" style={{ background:"var(--slate-50)", display:"flex", alignItems:"center", justifyContent:"center", minHeight:150 }}>
+              <div style={{ textAlign:"center" }}><div style={{ fontSize:48 }}>👩‍💻</div><div style={{ fontSize:11, color:"var(--slate-300)", marginTop:5 }}>Your camera</div></div>
             </div>
           </div>
         </div>
@@ -1157,8 +1196,8 @@ const Landing = ({ onNav, onCheckout }) => (
     </section>
 
     {/* HOW IT WORKS */}
-    <section className="sec-pad" style={{ padding: "100px clamp(20px,5vw,60px)", maxWidth: 1100, margin: "0 auto" }}>
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} viewport={{ once: true }} style={{ textAlign: "center", marginBottom: 56 }}>
+    <section className="sec-pad" style={{ padding:"100px clamp(20px,5vw,60px)", maxWidth:1100, margin:"0 auto" }}>
+      <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }} style={{ textAlign:"center", marginBottom:56 }}>
         <Tag color="teal">Process</Tag>
         <h2 className="brig" style={{ fontSize: "clamp(26px,4.5vw,50px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.03em", marginTop: 14, lineHeight: 1.1 }}>From zero to hired in four steps</h2>
       </motion.div>
@@ -1365,9 +1404,9 @@ const Landing = ({ onNav, onCheckout }) => (
     {/* WAITLIST CTA */}
     <section id="waitlist-section" style={{ padding: "96px clamp(20px,5vw,60px) 112px", background: "var(--slate)", position: "relative", overflow: "hidden" }}>
       {/* Animated background blobs */}
-      <div style={{ position: "absolute", top: "20%", left: "10%", width: 400, height: 400, background: "radial-gradient(circle,rgba(13,148,136,.14) 0%,transparent 70%)", pointerEvents: "none", animation: "float-anim 8s ease-in-out infinite" }} />
-      <div style={{ position: "absolute", bottom: "10%", right: "8%", width: 300, height: 300, background: "radial-gradient(circle,rgba(124,58,237,.1) 0%,transparent 70%)", pointerEvents: "none", animation: "float-anim 10s ease-in-out infinite reverse" }} />
-      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 900, height: 600, background: "radial-gradient(ellipse,rgba(13,148,136,.18) 0%,transparent 65%)", pointerEvents: "none" }} />
+      <div style={{ position:"absolute", top:"20%", left:"10%", width:400, height:400, background:"radial-gradient(circle,rgba(13,148,136,.14) 0%,transparent 70%)", pointerEvents:"none", animation:"float-anim 8s ease-in-out infinite" }}/>
+      <div style={{ position:"absolute", bottom:"10%", right:"8%", width:300, height:300, background:"radial-gradient(circle,rgba(124,58,237,.1) 0%,transparent 70%)", pointerEvents:"none", animation:"float-anim 10s ease-in-out infinite reverse" }}/>
+      <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:900, height:600, background:"radial-gradient(ellipse,rgba(13,148,136,.18) 0%,transparent 65%)", pointerEvents:"none" }}/>
 
       <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.65 }} viewport={{ once: true }}
         style={{ position: "relative", zIndex: 1, maxWidth: 660, margin: "0 auto" }}>
@@ -2330,7 +2369,7 @@ const CodePanel = ({ activePersona, qIdx, elapsed }) => {
   const submitCode = () => { setRunning(true); setTimeout(() => { setSubmitted(true); setRunning(false); setOutput("🏆 All test cases passed!\n\n✅ 72/72 test cases\n⏱ Runtime beats 94% of solutions\n📦 Memory beats 87% of solutions"); }, 1800); };
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "340px 1fr", flex: 1, minHeight: 0, overflow: "hidden" }}>
+    <div style={{ display:"grid", gridTemplateColumns:"340px 1fr", flex:1, minHeight:0, overflow:"hidden" }}>
       {/* ── Question Panel ── */}
       <div style={{ borderRight: "1px solid rgba(255,255,255,.08)", display: "flex", flexDirection: "column", overflowY: "auto", background: "rgba(0,0,0,.2)" }}>
         {/* Question selector */}
@@ -2394,8 +2433,8 @@ const CodePanel = ({ activePersona, qIdx, elapsed }) => {
       {/* ── Editor + Output Panel ── */}
       <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
         {/* Editor Toolbar */}
-        <div style={{ padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,.07)", display: "flex", alignItems: "center", gap: 10, flexShrink: 0, background: "rgba(0,0,0,.15)" }}>
-          <div style={{ display: "flex", gap: 5 }}>
+        <div style={{ padding:"10px 16px", borderBottom:"1px solid rgba(255,255,255,.07)", display:"flex", alignItems:"center", gap:10, flexShrink:0, background:"rgba(0,0,0,.15)" }}>
+          <div style={{ display:"flex", gap:5 }}>
             {LANGS.map(l => (
               <button key={l} onClick={() => handleLangChange(l)}
                 style={{ padding: "5px 10px", borderRadius: 7, border: `1.5px solid ${lang === l ? LANG_COLORS[l] : "rgba(255,255,255,.1)"}`, background: lang === l ? `${LANG_COLORS[l]}22` : "transparent", color: lang === l ? LANG_COLORS[l] : "rgba(255,255,255,.4)", fontSize: 11, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans',sans-serif" }}>
@@ -2554,18 +2593,31 @@ const InterviewRoom = ({ onNav, persona }) => {
   const captionsRef = useRef(null);
   const activePersona = persona || PERSONAS[2]; // default to Stress-Tester
 
+  // Stable callback — never changes across re-renders, so InterviewLoading's
+  // useEffect (which lists onReady as a dep) won't reset its timers every second.
+  const handleRoomReady = useCallback(() => setRoomLoading(false), []);
+
+  // Prevent body scroll and register keyboard shortcuts for the whole session.
   useEffect(() => {
-    const t = setInterval(() => setElapsed(e => e + 1), 1000);
+    const t = setInterval(() => setElapsed(e => e+1), 1000);
     document.body.style.overflow = "hidden";
-    // Keyboard shortcuts: Space=mute, →=next, Esc=end
     const onKey = e => {
       if (e.code === "Space") { e.preventDefault(); setMuted(m => !m); }
       if (e.code === "ArrowRight") { setQIdx(q => Math.min(q + 1, QUESTIONS.length - 1)); }
       if (e.code === "Escape") { setEnding(true); }
     };
     window.addEventListener("keydown", onKey);
-    return () => { clearInterval(t); document.body.style.overflow = ""; window.removeEventListener("keydown", onKey); };
+    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", onKey); };
   }, []);
+
+  // Start the interview timer only after the loading screen completes so it
+  // doesn't count loading time and — crucially — doesn't trigger re-renders
+  // (which would create a new inline onReady reference) while loading is active.
+  useEffect(() => {
+    if (roomLoading) return;
+    const t = setInterval(() => setElapsed(e => e+1), 1000);
+    return () => clearInterval(t);
+  }, [roomLoading]);
 
   // Auto-scroll captions to bottom when question changes
   useEffect(() => {
@@ -2589,24 +2641,24 @@ const InterviewRoom = ({ onNav, persona }) => {
   ];
 
   if (roomLoading) {
-    return <InterviewLoading persona={activePersona} onReady={() => setRoomLoading(false)} />;
+    return <InterviewLoading persona={activePersona} onReady={handleRoomReady} />;
   }
 
   return (
     <div className="int-room">
 
       {/* ── TOP BAR ─────────────────────────────────────────────────── */}
-      <div className="int-topbar" style={{ background: "rgba(15,23,42,.98)", borderBottom: "1px solid rgba(255,255,255,.08)", display: "flex", alignItems: "center", padding: "0 20px", gap: 16, flexShrink: 0, zIndex: 10, backdropFilter: "blur(12px)" }}>
+      <div className="int-topbar" style={{ background:"rgba(15,23,42,.98)", borderBottom:"1px solid rgba(255,255,255,.08)", display:"flex", alignItems:"center", padding:"0 20px", gap:16, flexShrink:0, zIndex:10, backdropFilter:"blur(12px)" }}>
 
-        {/* Logo — hidden on phone via .int-topbar-logo */}
+        {/* Logo — always visible; wordmark hidden on ≤640px via CSS, icon always shown */}
         <div className="int-topbar-logo">
           <Logo onClick={() => onNav("landing")} light />
         </div>
 
         {/* Persona emoji + name (always visible) */}
-        <div style={{ display: "flex", alignItems: "center", gap: 7, paddingLeft: 4, borderLeft: "1px solid rgba(255,255,255,.1)", marginLeft: 4, flexShrink: 0 }}>
-          <span style={{ fontSize: 18, lineHeight: 1 }}>{activePersona.emoji}</span>
-          <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.8)", whiteSpace: "nowrap" }}
+        <div style={{ display:"flex", alignItems:"center", gap:7, paddingLeft:4, borderLeft:"1px solid rgba(255,255,255,.1)", marginLeft:4, flexShrink:0 }}>
+          <span style={{ fontSize:18, lineHeight:1 }}>{activePersona.emoji}</span>
+          <span style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,.8)", whiteSpace:"nowrap" }}
             className="int-topbar-logo">{activePersona.title}</span>
         </div>
 
@@ -2631,11 +2683,11 @@ const InterviewRoom = ({ onNav, persona }) => {
         <div className="int-topbar-divider" />
 
         {/* Tab switcher */}
-        <div style={{ display: "flex", gap: 2, background: "rgba(255,255,255,.06)", borderRadius: 9, padding: 3, border: "1px solid rgba(255,255,255,.08)", flexShrink: 0 }}>
-          {[{ id: "interview", label: "Interview", icon: "🎙️" }, { id: "code", label: "Code", icon: "⌨️" }].map(tab => (
-            <button key={tab.id} onClick={() => setRoomTab(tab.id)}
-              style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 11px", borderRadius: 7, border: "none", background: roomTab === tab.id ? "rgba(13,148,136,.85)" : "transparent", color: roomTab === tab.id ? "#fff" : "rgba(255,255,255,.4)", fontSize: 11.5, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans',sans-serif", whiteSpace: "nowrap", lineHeight: 1 }}>
-              <span style={{ fontSize: 12 }}>{tab.icon}</span> {tab.label}
+        <div style={{ display:"flex", gap:2, background:"rgba(255,255,255,.06)", borderRadius:9, padding:3, border:"1px solid rgba(255,255,255,.08)", flexShrink:0 }}>
+          {[{ id:"interview", label:"Interview", icon:"🎙️" },{ id:"code", label:"Code", icon:"⌨️" }].map(tab => (
+            <button key={tab.id} onClick={()=>setRoomTab(tab.id)}
+              style={{ display:"flex", alignItems:"center", gap:5, padding:"5px 11px", borderRadius:7, border:"none", background:roomTab===tab.id?"rgba(13,148,136,.85)":"transparent", color:roomTab===tab.id?"#fff":"rgba(255,255,255,.4)", fontSize:11.5, fontWeight:700, cursor:"pointer", transition:"all 0.2s", fontFamily:"'DM Sans',sans-serif", whiteSpace:"nowrap", lineHeight:1 }}>
+              <span style={{ fontSize:12 }}>{tab.icon}</span> {tab.label}
             </button>
           ))}
         </div>
@@ -2661,26 +2713,26 @@ const InterviewRoom = ({ onNav, persona }) => {
             {fmt(elapsed)}
           </span>
           {/* Phase label */}
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: elapsed > 2700 ? "rgba(252,165,165,.7)" : elapsed > 1800 ? "rgba(253,230,138,.7)" : "rgba(255,255,255,.4)", marginLeft: 2 }}>
+          <span style={{ fontSize:10, fontWeight:700, letterSpacing:"0.06em", textTransform:"uppercase", color: elapsed > 2700 ? "rgba(252,165,165,.7)" : elapsed > 1800 ? "rgba(253,230,138,.7)" : "rgba(255,255,255,.4)", marginLeft:2 }}>
             {elapsed > 2700 ? "⚠ OVERTIME" : elapsed > 1800 ? "WRAPPING UP" : elapsed > 900 ? "IN PROGRESS" : "STARTING"}
           </span>
         </div>
 
         {/* End button */}
-        <button onClick={() => setEnding(true)} className="btn-danger" style={{ fontSize: 13, padding: "8px 16px", borderRadius: 22, flexShrink: 0 }}>
-          <PhoneOff size={14} /> End
+        <button onClick={()=>setEnding(true)} className="btn-danger" style={{ fontSize:13, padding:"8px 16px", borderRadius:22, flexShrink:0 }}>
+          <PhoneOff size={14}/> End
         </button>
       </div>
 
       {/* ── PHONE Q-PROGRESS STRIP (phone-only, hidden on desktop) ── */}
       <div className="int-qstrip">
-        <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Q{qIdx + 1}/{QUESTIONS.length}</span>
-        <div style={{ display: "flex", gap: 5, alignItems: "center", flex: 1, justifyContent: "center" }}>
-          {QUESTIONS.map((_, i) => (
-            <div key={i} onClick={() => setQIdx(i)} style={{ width: i === qIdx ? 28 : 8, height: 5, borderRadius: 3, background: i === qIdx ? "var(--teal)" : i < qIdx ? "rgba(20,184,166,.5)" : "rgba(255,255,255,.15)", transition: "all 0.3s", cursor: "pointer" }} />
+        <span style={{ fontSize:10, fontWeight:700, color:"rgba(255,255,255,.35)", letterSpacing:"0.08em", textTransform:"uppercase" }}>Q{qIdx+1}/{QUESTIONS.length}</span>
+        <div style={{ display:"flex", gap:5, alignItems:"center", flex:1, justifyContent:"center" }}>
+          {QUESTIONS.map((_,i) => (
+            <div key={i} onClick={()=>setQIdx(i)} style={{ width:i===qIdx?28:8, height:5, borderRadius:3, background:i===qIdx?"var(--teal)":i<qIdx?"rgba(20,184,166,.5)":"rgba(255,255,255,.15)", transition:"all 0.3s", cursor:"pointer" }}/>
           ))}
         </div>
-        <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.08em" }}>{activePersona.difficulty}</span>
+        <span style={{ fontSize:10, fontWeight:700, color:"rgba(255,255,255,.35)", letterSpacing:"0.08em" }}>{activePersona.difficulty}</span>
       </div>
 
       {/* ── BODY ──────────────────────────────────────────────────────── */}
@@ -2891,8 +2943,8 @@ const InterviewRoom = ({ onNav, persona }) => {
         )}
       </AnimatePresence>
 
-      {/* ── MOBILE BOTTOM CONTROLS BAR (tablet + phone only, hidden on desktop) ── */}
-      <div className="int-mob-bar">
+      {/* ── MOBILE BOTTOM CONTROLS BAR (interview tab only — hidden in code tab and on desktop) ── */}
+      {roomTab !== "code" && <div className="int-mob-bar">
         {/* Mute */}
         <button onClick={() => setMuted(m => !m)}
           style={{ flex: 1, height: 50, borderRadius: 14, border: "none", background: muted ? "var(--red)" : "rgba(255,255,255,.1)", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3, color: "#fff", transition: "all 0.2s" }}>
@@ -2919,7 +2971,7 @@ const InterviewRoom = ({ onNav, persona }) => {
             <PhoneOff size={16} /> End & Report
           </button>
         )}
-      </div>
+      </div>}
 
       {/* ── END INTERVIEW MODAL ─────────────────────────────── */}
       <AnimatePresence>
