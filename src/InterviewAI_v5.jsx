@@ -5,7 +5,7 @@ import {
   Check, Zap, BarChart2, Brain, RefreshCw, Shield, Award,
   TrendingUp, FileText, Sparkles, Settings, ArrowUpRight,
   LayoutDashboard, Globe, ChevronRight, AlertCircle,
-  Mail, Bell, LogIn, Lock, Target, CheckCircle2,
+  Mail, Bell, LogIn, Lock, Target, CheckCircle2, UserPlus,
   CreditCard, Palette, Menu, X, AlertTriangle, UserCircle,
   Star, MessageSquare, HelpCircle, Flame, Pencil,
   ChevronDown, ChevronUp, Calendar, Hash, Bookmark,
@@ -1042,7 +1042,7 @@ const Navbar = ({ view, onNav }) => {
           </>)}
           {!isLanding && <button className="btn-ghost" onClick={() => onNav("landing")}>← Home</button>}
           <button className="btn-secondary" onClick={() => onNav("signin")} style={{ fontSize: 13 }}><LogIn size={14} /> Sign in</button>
-          <button className="btn-primary" onClick={() => onNav("dashboard")} style={{ fontSize: 13 }}>Get started <ArrowUpRight size={14} /></button>
+          <button className="btn-primary" onClick={() => onNav("signup")} style={{ fontSize: 13 }}>Get started <ArrowUpRight size={14} /></button>
         </div>
         <button className="hamburger btn-ghost" style={{ display: "none", padding: 8 }} onClick={() => setMob(o => !o)}>
           {mob ? <X size={22} /> : <Menu size={22} />}
@@ -1060,7 +1060,7 @@ const Navbar = ({ view, onNav }) => {
             </>)}
             {!isLanding && <button className="nav-link" style={{ textAlign: "left" }} onClick={() => onNav("landing")}>← Home</button>}
             <button className="btn-secondary" onClick={() => { onNav("signin"); setMob(false); }} style={{ justifyContent: "center" }}><LogIn size={14} /> Sign in</button>
-            <button className="btn-primary" onClick={() => { onNav("dashboard"); setMob(false); }} style={{ justifyContent: "center" }}>Get started <ArrowUpRight size={14} /></button>
+            <button className="btn-primary" onClick={() => { onNav("signup"); setMob(false); }} style={{ justifyContent: "center" }}>Get started <ArrowUpRight size={14} /></button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1619,7 +1619,68 @@ const SignIn = ({ onNav }) => {
   );
 };
 
-/* ── New Interview ── */
+/* ── Sign Up ── */
+const SignUp = ({ onNav }) => {
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
+  const submit = e => { e.preventDefault(); setLoading(true); setTimeout(() => { setLoading(false); setShowComingSoon(true); }, 1200); };
+  return (
+    <div style={{ minHeight: "100vh", background: "var(--slate-50)", display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 20px" }}>
+      <motion.div initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }} style={{ width: "100%", maxWidth: 420 }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}><Logo onClick={() => onNav("landing")} /></div>
+          <h1 className="brig" style={{ fontSize: 28, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.03em" }}>Create your account</h1>
+          <p style={{ fontSize: 14, color: "var(--slate-500)", marginTop: 6 }}>Start your interview practice journey today.</p>
+        </div>
+        <div className="card" style={{ padding: 32 }}>
+          <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+            <div><label>Full Name</label><input type="text" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Jane Smith" disabled={loading} /></div>
+            <div><label>Email Address</label><input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" disabled={loading} /></div>
+            <div><label>Password</label><input type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} placeholder="••••••••" disabled={loading} /></div>
+            <button type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", justifyContent: "center", fontSize: 15, padding: "13px", marginTop: 4 }}>
+              {loading ? <><span className="spin"><RefreshCw size={16} /></span> Creating account…</> : <><UserPlus size={16} /> Create account</>}
+            </button>
+          </form>
+          <div style={{ height: 1, background: "var(--border)", margin: "22px 0" }} />
+          <p style={{ textAlign: "center", fontSize: 13.5, color: "var(--slate-500)" }}>
+            Already have an account?{" "}
+            <span onClick={() => onNav("signin")} style={{ color: "var(--teal)", fontWeight: 600, cursor: "pointer", transition: "color 0.15s" }}
+              onMouseEnter={e => e.currentTarget.style.color = "var(--teal-dark)"} onMouseLeave={e => e.currentTarget.style.color = "var(--teal)"}>Sign in →</span>
+          </p>
+        </div>
+      </motion.div>
+
+      {/* ── Coming Soon popup ── */}
+      <AnimatePresence>
+        {showComingSoon && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.65)", backdropFilter: "blur(10px)", zIndex: 999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}
+            onClick={e => e.target === e.currentTarget && setShowComingSoon(false)}>
+            <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 12 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              style={{ background: "var(--card)", borderRadius: 20, boxShadow: "0 32px 80px rgba(15,23,42,.25)", width: "100%", maxWidth: 400, textAlign: "center", padding: "56px 40px 48px" }}>
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 280, damping: 18, delay: 0.1 }}
+                style={{ width: 72, height: 72, borderRadius: "50%", background: "var(--teal-light)", border: "2px solid var(--teal)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", boxShadow: "0 8px 24px rgba(20,184,166,.25)" }}>
+                <UserPlus size={32} style={{ color: "var(--teal)" }} strokeWidth={2.5} />
+              </motion.div>
+              <h2 className="brig" style={{ fontSize: 22, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", marginBottom: 10 }}>Sign Up Coming Soon 🚀</h2>
+              <p style={{ fontSize: 14.5, color: "var(--slate-500)", lineHeight: 1.65, marginBottom: 28 }}>
+                Account creation will be available after our launch date.<br />
+                <strong style={{ color: "var(--slate)" }}>Kindly wait — we'll notify you!</strong>
+              </p>
+              <button className="btn-primary" onClick={() => setShowComingSoon(false)}
+                style={{ width: "100%", justifyContent: "center", fontSize: 15, padding: "13px 24px", borderRadius: 13 }}>
+                Got it
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+
 const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
   const [cv, setCv] = useState(false);
   const [avatar, setAvatar] = useState(1);
@@ -3583,6 +3644,7 @@ export default function App() {
   const renderView = () => {
     if (view === "landing") return <Landing onNav={go} onCheckout={openCheckout} />;
     if (view === "signin") return <SignIn onNav={go} />;
+    if (view === "signup") return <SignUp onNav={go} />;
     if (view === "interview") return <InterviewRoom onNav={go} persona={selectedPersona} />;
     if (view === "report") return <Report onNav={go} />;
     if (isDash) {
