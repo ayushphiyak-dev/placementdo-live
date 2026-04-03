@@ -110,6 +110,7 @@ const G = () => (
     @keyframes dot-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
     .spin { animation: spin-anim 0.9s linear infinite; display: inline-block; }
     @keyframes spin-anim { to { transform: rotate(360deg); } }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     .bounce-in { animation: bounceIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both; }
     @keyframes bounceIn { 0% { transform: scale(0.6); opacity: 0; } 70% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
     /* Extra animations */
@@ -1029,7 +1030,7 @@ const Navbar = ({ view, onNav }) => {
   const scrollTo = id => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMob(false); };
   const bg = solid || isDash || mob;
   return (
-    <>
+    <header>
       <motion.nav initial={{ y: -64, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}
         style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, height: 64, padding: "0 clamp(16px,4vw,40px)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, background: bg ? "rgba(250,250,248,0.96)" : "transparent", backdropFilter: bg ? "blur(18px)" : "none", borderBottom: bg ? "1px solid var(--border)" : "none", transition: "all 0.3s ease" }}>
         <Logo onClick={() => onNav("landing")} />
@@ -1064,7 +1065,7 @@ const Navbar = ({ view, onNav }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </header>
   );
 };
 
@@ -1151,7 +1152,8 @@ const DashboardShell = ({ activeTab, onNav, onUpgrade, children }) => {
 
 /* ── Landing ── */
 const Landing = ({ onNav, onCheckout }) => (
-  <div style={{ background: "var(--ivory)" }}>
+  <>
+    <main style={{ background: "var(--ivory)" }}>
     {/* HERO */}
     <section className="hero-pad" style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"100px clamp(20px,5vw,60px) 80px", textAlign:"center", position:"relative", overflow:"hidden" }}>
       <div style={{ position:"absolute", top:"30%", left:"50%", transform:"translate(-50%,-50%)", width:900, height:600, background:"radial-gradient(ellipse,rgba(13,148,136,.08) 0%,transparent 70%)", pointerEvents:"none" }}/>
@@ -1171,6 +1173,17 @@ const Landing = ({ onNav, onCheckout }) => (
         style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, width: "100%", maxWidth: 520 }}>
         <WaitlistForm size="lg" />
         <p style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 500 }}>No spam. No credit card. Just early access.</p>
+        <p style={{ fontSize: 12.5, color: "var(--slate-500)", display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center" }}>
+          <a href="/signin" onClick={(e) => { e.preventDefault(); onNav("signin"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
+            Sign in to continue practice
+          </a>
+          <a href="/dashboard" onClick={(e) => { e.preventDefault(); onNav("dashboard"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
+            Start a new interview session
+          </a>
+          <a href="/support" onClick={(e) => { e.preventDefault(); onNav("support"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
+            Visit help and support
+          </a>
+        </p>
       </motion.div>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.65 }} className="stats-row" style={{ marginTop: 52 }}>
         {[{ n: "2,400+", l: "Waitlist signups" }, { n: "140+", l: "Target companies" }, { n: "28", l: "Languages planned" }, { n: "2026", l: "Launch year" }].map(({ n, l }) => (
@@ -1487,6 +1500,7 @@ const Landing = ({ onNav, onCheckout }) => (
         </div>
       </motion.div>
     </section>
+    </main>
 
     {/* FOOTER */}
     <footer style={{ background: "var(--slate)", borderTop: "1px solid rgba(255,255,255,.06)" }}>
@@ -1544,7 +1558,7 @@ const Landing = ({ onNav, onCheckout }) => (
         </div>
       </div>
     </footer>
-  </div>
+  </>
 );
 
 /* ── Sign In ── */
@@ -1556,7 +1570,7 @@ const SignIn = ({ onNav }) => {
   const submit = e => { e.preventDefault(); setLoading(true); setTimeout(() => { setLoading(false); setShowComingSoon(true); }, 1200); };
   const handleForgot = () => { setResetSent(true); setTimeout(() => setResetSent(false), 4000); };
   return (
-    <div style={{ minHeight: "100vh", background: "var(--slate-50)", display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 20px" }}>
+    <main style={{ minHeight: "100vh", background: "var(--slate-50)", display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 20px" }}>
       <motion.div initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }} style={{ width: "100%", maxWidth: 420 }}>
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}><Logo onClick={() => onNav("landing")} /></div>
@@ -1615,7 +1629,7 @@ const SignIn = ({ onNav }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </main>
   );
 };
 
@@ -1626,7 +1640,7 @@ const SignUp = ({ onNav }) => {
   const [showComingSoon, setShowComingSoon] = useState(false);
   const submit = e => { e.preventDefault(); setLoading(true); setTimeout(() => { setLoading(false); setShowComingSoon(true); }, 1200); };
   return (
-    <div style={{ minHeight: "100vh", background: "var(--slate-50)", display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 20px" }}>
+    <main style={{ minHeight: "100vh", background: "var(--slate-50)", display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 20px" }}>
       <motion.div initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }} style={{ width: "100%", maxWidth: 420 }}>
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}><Logo onClick={() => onNav("landing")} /></div>
@@ -1676,7 +1690,7 @@ const SignUp = ({ onNav }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </main>
   );
 };
 
@@ -2765,7 +2779,8 @@ const InterviewRoom = ({ onNav, persona }) => {
   }
 
   return (
-    <div className="int-room">
+    <main className="int-room">
+      <h1 className="sr-only">Live Interview Room</h1>
 
       {/* ── TOP BAR ─────────────────────────────────────────────────── */}
       <div className="int-topbar">
@@ -3102,7 +3117,7 @@ const InterviewRoom = ({ onNav, persona }) => {
               <div style={{ width: 64, height: 64, borderRadius: "50%", background: "var(--red-light)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
                 <PhoneOff size={28} style={{ color: "var(--red)" }} />
               </div>
-              <h3 className="brig" style={{ fontSize: 22, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", marginBottom: 10 }}>End this interview?</h3>
+              <h2 className="brig" style={{ fontSize: 22, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", marginBottom: 10 }}>End this interview?</h2>
               <p style={{ fontSize: 14, color: "var(--slate-500)", marginBottom: 8, lineHeight: 1.65 }}>
                 You've completed <strong style={{ color: "var(--slate)" }}>{qIdx + 1} of {QUESTIONS.length}</strong> questions.
               </p>
@@ -3119,7 +3134,7 @@ const InterviewRoom = ({ onNav, persona }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </main>
   );
 };
 
@@ -3163,7 +3178,7 @@ const Report = ({ onNav }) => {
   ];
   const overall = Math.round(METRICS.reduce((a, m) => a + m.score, 0) / METRICS.length);
   return (
-    <div style={{ minHeight: "100vh", background: "var(--slate-50)", paddingTop: 64 }}>
+    <main style={{ minHeight: "100vh", background: "var(--slate-50)", paddingTop: 64 }}>
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "44px clamp(16px,4vw,44px) 80px" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
@@ -3301,7 +3316,7 @@ const Report = ({ onNav }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </main>
   );
 };
 
@@ -3626,12 +3641,119 @@ const SupportView = () => {
 
 /* ── Root App ── */
 const DASH_VIEWS = ["dashboard", "reports", "progress", "avatars", "settings", "support"];
+const ROUTE_TO_PATH = {
+  landing: "/",
+  signin: "/signin",
+  signup: "/signup",
+  dashboard: "/dashboard",
+  reports: "/reports",
+  progress: "/progress",
+  avatars: "/avatars",
+  settings: "/settings",
+  support: "/support",
+  interview: "/interview",
+  report: "/report",
+};
+
+const PATH_TO_ROUTE = Object.fromEntries(
+  Object.entries(ROUTE_TO_PATH).map(([route, path]) => [path, route]),
+);
+
+const SEO_MAP = {
+  landing: {
+    title: "PlacementDo | AI Interview Practice Platform",
+    description:
+      "Practice realistic AI interviews tailored to your CV, target role, and company with detailed scoring, feedback, and multilingual support for faster offer wins.",
+    type: "website",
+    breadcrumbName: "Home",
+  },
+  signin: {
+    title: "Sign In | PlacementDo",
+    description:
+      "Sign in to PlacementDo to continue AI interview practice, review your latest reports, and keep improving your communication and technical interview performance.",
+    type: "website",
+    breadcrumbName: "Sign In",
+  },
+  signup: {
+    title: "Create Account | PlacementDo",
+    description:
+      "Create your PlacementDo account to start personalized AI mock interviews, practice company-specific scenarios, and build confidence before real interviews.",
+    type: "website",
+    breadcrumbName: "Sign Up",
+  },
+  dashboard: {
+    title: "New Interview Session | PlacementDo",
+    description:
+      "Set up a new AI interview session by selecting company, role, focus area, and persona to practice realistic questions and improve your interview readiness.",
+    type: "website",
+    breadcrumbName: "New Interview",
+  },
+  reports: {
+    title: "My Reports | PlacementDo",
+    description:
+      "Review your interview reports, track score trends, compare sessions, and identify the exact communication and technical skills to improve next.",
+    type: "website",
+    breadcrumbName: "My Reports",
+  },
+  progress: {
+    title: "Progress Tracking | PlacementDo",
+    description:
+      "Track weekly and monthly interview progress with skill-level insights, score trends, and actionable coaching data to improve with consistency.",
+    type: "website",
+    breadcrumbName: "Progress",
+  },
+  avatars: {
+    title: "Interviewer Personas | PlacementDo",
+    description:
+      "Practice with distinct AI interviewer personas that simulate different interview styles, pressure levels, and behaviors to prepare for any panel.",
+    type: "website",
+    breadcrumbName: "Interviewer Personas",
+  },
+  settings: {
+    title: "Account Settings | PlacementDo",
+    description:
+      "Manage your profile, notification preferences, and plan details in PlacementDo settings to keep your interview practice workflow fully organized.",
+    type: "website",
+    breadcrumbName: "Settings",
+  },
+  support: {
+    title: "Help and Support | PlacementDo",
+    description:
+      "Get help with PlacementDo features, interview preparation guidance, and support resources to solve issues and maximize your practice outcomes.",
+    type: "website",
+    breadcrumbName: "Support",
+  },
+  interview: {
+    title: "Live Interview Room | PlacementDo",
+    description:
+      "Join a live AI interview room with timed questions, transcript cues, and focused practice controls to simulate high-pressure interview conditions.",
+    type: "website",
+    breadcrumbName: "Interview Room",
+  },
+  report: {
+    title: "Interview Analysis Report | PlacementDo",
+    description:
+      "View your AI interview analysis report with strengths, improvement areas, metric breakdowns, and practical next-step coaching recommendations.",
+    type: "website",
+    breadcrumbName: "Interview Report",
+  },
+};
 export default function App() {
-  const [view, setView] = useState("landing");
+  const [view, setView] = useState(() => {
+    const route = PATH_TO_ROUTE[window.location.pathname];
+    return route || "landing";
+  });
   const [checkoutPlan, setCheckout] = useState(null);
   const [toast, setToast] = useState(null);
 
-  const go = v => { setView(v); window.scrollTo({ top: 0, behavior: "instant" }); };
+  const go = v => {
+    setView(v);
+    const nextPath = ROUTE_TO_PATH[v] || "/";
+    if (window.location.pathname !== nextPath) {
+      window.history.pushState({}, "", nextPath);
+    }
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
   const isDash = DASH_VIEWS.includes(view);
 
   const openCheckout = plan => setCheckout(plan);
@@ -3639,6 +3761,118 @@ export default function App() {
   const showToast = msg => { setToast(msg); setTimeout(() => setToast(null), 4500); };
 
   const [selectedPersona, setSelectedPersona] = useState(PERSONAS[0]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const route = PATH_TO_ROUTE[window.location.pathname];
+      setView(route || "landing");
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const seo = SEO_MAP[view] || SEO_MAP.landing;
+    const origin = window.location.origin;
+    const path = ROUTE_TO_PATH[view] || "/";
+    const canonicalUrl = `${origin}${path}`;
+    const imageUrl = `${origin}/vite.svg`;
+
+    document.title = seo.title;
+
+    const upsertMeta = (selector, attrs) => {
+      let el = document.head.querySelector(selector);
+      if (!el) {
+        el = document.createElement("meta");
+        document.head.appendChild(el);
+      }
+      Object.entries(attrs).forEach(([k, val]) => el.setAttribute(k, val));
+    };
+
+    const upsertLink = (selector, attrs) => {
+      let el = document.head.querySelector(selector);
+      if (!el) {
+        el = document.createElement("link");
+        document.head.appendChild(el);
+      }
+      Object.entries(attrs).forEach(([k, val]) => el.setAttribute(k, val));
+    };
+
+    upsertMeta('meta[name="description"]', { name: "description", content: seo.description });
+    upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
+
+    upsertMeta('meta[property="og:title"]', { property: "og:title", content: seo.title });
+    upsertMeta('meta[property="og:description"]', { property: "og:description", content: seo.description });
+    upsertMeta('meta[property="og:image"]', { property: "og:image", content: imageUrl });
+    upsertMeta('meta[property="og:url"]', { property: "og:url", content: canonicalUrl });
+    upsertMeta('meta[property="og:type"]', { property: "og:type", content: seo.type });
+
+    upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" });
+    upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: seo.title });
+    upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: seo.description });
+    upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: imageUrl });
+
+    const scripts = Array.from(document.querySelectorAll("script[data-seo-schema='true']"));
+    scripts.forEach((script) => script.remove());
+
+    const appendSchema = (schemaObject, id) => {
+      const script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.setAttribute("data-seo-schema", "true");
+      script.setAttribute("data-seo-schema-id", id);
+      script.textContent = JSON.stringify(schemaObject);
+      document.head.appendChild(script);
+    };
+
+    if (view === "landing") {
+      appendSchema(
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "PlacementDo",
+          url: origin,
+          logo: imageUrl,
+        },
+        "organization",
+      );
+      appendSchema(
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "PlacementDo",
+          url: origin,
+          potentialAction: {
+            "@type": "SearchAction",
+            target: `${origin}/?q={search_term_string}`,
+            "query-input": "required name=search_term_string",
+          },
+        },
+        "website",
+      );
+    }
+
+    appendSchema(
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: `${origin}/`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: seo.breadcrumbName,
+            item: canonicalUrl,
+          },
+        ],
+      },
+      "breadcrumb",
+    );
+  }, [view]);
 
   const renderView = () => {
     if (view === "landing") return <Landing onNav={go} onCheckout={openCheckout} />;
