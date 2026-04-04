@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import InterviewAI from "./InterviewAI_v5.jsx";
+const InterviewAI = lazy(() => import("./InterviewAI_v5.jsx"));
 
 const SpeedInsights = lazy(() =>
   import('@vercel/speed-insights/react').then((mod) => ({ default: mod.SpeedInsights })),
@@ -18,7 +18,9 @@ export default function App() {
 
   return (
     <>
-      <InterviewAI />
+      <Suspense fallback={null}>
+        <InterviewAI />
+      </Suspense>
       {enableTelemetry && (
         <Suspense fallback={null}>
           <SpeedInsights />
