@@ -3825,7 +3825,6 @@ export default function App() {
     upsertMeta('meta[name="robots"]', { name: "robots", content: seo.robots || "index, follow" });
     upsertBaseMeta("theme-color", "#0D9488");
     upsertBaseMeta("author", "PlacementDo");
-    upsertBaseMeta("keywords", "AI interview practice, mock interviews, interview preparation, placement preparation, resume based interview, behavioral interview, system design interview");
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
 
     upsertMeta('meta[property="og:site_name"]', { property: "og:site_name", content: "PlacementDo" });
