@@ -3799,8 +3799,11 @@ export default function App() {
     };
 
     upsertMeta('meta[name="description"]', { name: "description", content: seo.description });
+    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
 
+    upsertMeta('meta[property="og:site_name"]', { property: "og:site_name", content: "PlacementDo" });
+    upsertMeta('meta[property="og:locale"]', { property: "og:locale", content: "en_US" });
     upsertMeta('meta[property="og:title"]', { property: "og:title", content: seo.title });
     upsertMeta('meta[property="og:description"]', { property: "og:description", content: seo.description });
     upsertMeta('meta[property="og:image"]', { property: "og:image", content: imageUrl });
@@ -3810,6 +3813,7 @@ export default function App() {
     upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" });
     upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: seo.title });
     upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: seo.description });
+    upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: canonicalUrl });
     upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: imageUrl });
 
     const scripts = Array.from(document.querySelectorAll("script[data-seo-schema='true']"));
