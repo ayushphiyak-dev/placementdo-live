@@ -3665,6 +3665,7 @@ const SEO_MAP = {
     description:
       "Practice realistic AI interviews tailored to your CV, target role, and company with detailed scoring, feedback, and multilingual support for faster offer wins.",
     type: "website",
+    robots: "index, follow",
     breadcrumbName: "Home",
   },
   signin: {
@@ -3672,6 +3673,7 @@ const SEO_MAP = {
     description:
       "Sign in to PlacementDo to continue AI interview practice, review your latest reports, and keep improving your communication and technical interview performance.",
     type: "website",
+    robots: "index, follow",
     breadcrumbName: "Sign In",
   },
   signup: {
@@ -3679,6 +3681,7 @@ const SEO_MAP = {
     description:
       "Create your PlacementDo account to start personalized AI mock interviews, practice company-specific scenarios, and build confidence before real interviews.",
     type: "website",
+    robots: "index, follow",
     breadcrumbName: "Sign Up",
   },
   dashboard: {
@@ -3686,6 +3689,7 @@ const SEO_MAP = {
     description:
       "Set up a new AI interview session by selecting company, role, focus area, and persona to practice realistic questions and improve your interview readiness.",
     type: "website",
+    robots: "index, follow",
     breadcrumbName: "New Interview",
   },
   reports: {
@@ -3693,6 +3697,7 @@ const SEO_MAP = {
     description:
       "Review your interview reports, track score trends, compare sessions, and identify the exact communication and technical skills to improve next.",
     type: "website",
+    robots: "index, follow",
     breadcrumbName: "My Reports",
   },
   progress: {
@@ -3700,6 +3705,7 @@ const SEO_MAP = {
     description:
       "Track weekly and monthly interview progress with skill-level insights, score trends, and actionable coaching data to improve with consistency.",
     type: "website",
+    robots: "index, follow",
     breadcrumbName: "Progress",
   },
   avatars: {
@@ -3707,6 +3713,7 @@ const SEO_MAP = {
     description:
       "Practice with distinct AI interviewer personas that simulate different interview styles, pressure levels, and behaviors to prepare for any panel.",
     type: "website",
+    robots: "index, follow",
     breadcrumbName: "Interviewer Personas",
   },
   settings: {
@@ -3714,6 +3721,7 @@ const SEO_MAP = {
     description:
       "Manage your profile, notification preferences, and plan details in PlacementDo settings to keep your interview practice workflow fully organized.",
     type: "website",
+    robots: "index, follow",
     breadcrumbName: "Settings",
   },
   support: {
@@ -3721,6 +3729,7 @@ const SEO_MAP = {
     description:
       "Get help with PlacementDo features, interview preparation guidance, and support resources to solve issues and maximize your practice outcomes.",
     type: "website",
+    robots: "index, follow",
     breadcrumbName: "Support",
   },
   interview: {
@@ -3728,6 +3737,7 @@ const SEO_MAP = {
     description:
       "Join a live AI interview room with timed questions, transcript cues, and focused practice controls to simulate high-pressure interview conditions.",
     type: "website",
+    robots: "index, follow",
     breadcrumbName: "Interview Room",
   },
   report: {
@@ -3735,6 +3745,7 @@ const SEO_MAP = {
     description:
       "View your AI interview analysis report with strengths, improvement areas, metric breakdowns, and practical next-step coaching recommendations.",
     type: "website",
+    robots: "index, follow",
     breadcrumbName: "Interview Report",
   },
 };
@@ -3799,7 +3810,7 @@ export default function App() {
     };
 
     upsertMeta('meta[name="description"]', { name: "description", content: seo.description });
-    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
+    upsertMeta('meta[name="robots"]', { name: "robots", content: seo.robots || "index, follow" });
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
 
     upsertMeta('meta[property="og:site_name"]', { property: "og:site_name", content: "PlacementDo" });
