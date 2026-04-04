@@ -3789,7 +3789,7 @@ export default function App() {
     const origin = window.location.origin;
     const path = ROUTE_TO_PATH[view] || "/";
     const canonicalUrl = `${origin}${path}`;
-    const imageUrl = `${origin}/og-image.jpg`;
+    const imageUrl = `${origin}/og-image.svg`;
 
     document.title = seo.title;
 
