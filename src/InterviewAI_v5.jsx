@@ -170,7 +170,7 @@ const G = () => (
     .report-mid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(280px,100%),1fr)); gap: 20px; }
 
     /* ── Layout utilities ── */
-    .hero-pad { padding: clamp(80px,12vh,120px) clamp(20px,5vw,60px) clamp(48px,8vh,80px); }
+    .hero-pad { padding: clamp(64px,10vh,96px) clamp(20px,5vw,60px) clamp(40px,6vh,64px); }
     .sec-pad { padding: clamp(56px,8vh,96px) clamp(20px,5vw,60px); }
     .dash-main { padding: clamp(72px,10vh,88px) clamp(16px,3vw,40px) clamp(32px,5vh,48px); min-height: 100vh; box-sizing: border-box; }
     .card-constrain { max-width: 900px; margin-left: auto; margin-right: auto; width: 100%; }
@@ -324,10 +324,12 @@ const G = () => (
       .dash-main { padding: clamp(72px,10vh,88px) 18px clamp(32px,5vh,48px) !important; }
       .hero-mock-side { display: none !important; }
       .hero-preview { display: none !important; }
+      .hero-quick-links { display: none !important; }
     }
     @media (max-width: 480px) {
       .wl-row { flex-direction: column; }
       .wl-row button { width: 100%; justify-content: center; }
+      .stats-row { gap: 10px !important; margin-top: 22px !important; }
     }
     /* ── Hero section: compact vertical spacing on short screens (e.g. 1366×768 laptops)
        so the interview mock preview stays visible above the fold ── */
@@ -1165,7 +1167,7 @@ const Landing = ({ onNav, onCheckout }) => (
         Practice the Interview.{" "}<span className="text-shimmer">Land the Offer.</span>
       </motion.h1>
       <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.22 }}
-        style={{ fontSize: "clamp(15px,2vw,19px)", color: "var(--slate-500)", maxWidth: 600, lineHeight: 1.72, marginBottom: 36 }}>
+        style={{ fontSize: "clamp(15px,2vw,18px)", color: "var(--slate-500)", maxWidth: 600, lineHeight: 1.68, marginBottom: 28 }}>
         A hyper-realistic AI interviewer that knows your CV, the company, and the exact role. Multi-language support. Detailed scoring. Ruthlessly honest feedback.{" "}
         <strong style={{ color: "var(--slate-700)" }}>Launching soon.</strong>
       </motion.p>
@@ -1173,7 +1175,7 @@ const Landing = ({ onNav, onCheckout }) => (
         style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, width: "100%", maxWidth: 520 }}>
         <WaitlistForm size="lg" />
         <p style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 500 }}>No spam. No credit card. Just early access.</p>
-        <p style={{ fontSize: 12.5, color: "var(--slate-500)", display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center" }}>
+        <p className="hero-quick-links" style={{ fontSize: 12.5, color: "var(--slate-500)", display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center" }}>
           <a href="/signin" onClick={(e) => { e.preventDefault(); onNav("signin"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
             Sign in to continue practice
           </a>
@@ -1185,7 +1187,7 @@ const Landing = ({ onNav, onCheckout }) => (
           </a>
         </p>
       </motion.div>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.65 }} className="stats-row" style={{ marginTop: 52 }}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.65 }} className="stats-row" style={{ marginTop: 36 }}>
         {[{ n: "2,400+", l: "Waitlist signups" }, { n: "140+", l: "Target companies" }, { n: "28", l: "Languages planned" }, { n: "2026", l: "Launch year" }].map(({ n, l }) => (
           <div key={l} style={{ textAlign: "center" }}>
             <div className="brig" style={{ fontSize: "clamp(18px,2.5vw,26px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em" }}>{n}</div>
@@ -1194,7 +1196,7 @@ const Landing = ({ onNav, onCheckout }) => (
         ))}
       </motion.div>
       <motion.div initial={{ opacity: 0, y: 48, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.8, delay: 0.52 }}
-        className="float hero-preview" style={{ marginTop: 68, maxWidth: 780, width: "100%" }}>
+        className="float hero-preview" style={{ marginTop: 40, maxWidth: 780, width: "100%" }}>
         <div className="card" style={{ borderRadius: 22, overflow: "hidden", boxShadow: "var(--shadow-xl)" }}>
           <div style={{ padding: "12px 20px", background: "var(--slate-50)", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 8 }}>
             {["#FF5F57", "#FEBC2E", "#28C840"].map(c => <div key={c} style={{ width: 11, height: 11, borderRadius: "50%", background: c }} />)}
@@ -3787,7 +3789,7 @@ export default function App() {
     const origin = window.location.origin;
     const path = ROUTE_TO_PATH[view] || "/";
     const canonicalUrl = `${origin}${path}`;
-    const imageUrl = `${origin}/vite.svg`;
+    const imageUrl = `${origin}/og-image.jpg`;
 
     document.title = seo.title;
 
@@ -3809,8 +3811,21 @@ export default function App() {
       Object.entries(attrs).forEach(([k, val]) => el.setAttribute(k, val));
     };
 
+    const upsertBaseMeta = (name, content) => {
+      let el = document.head.querySelector(`meta[name="${name}"]`);
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute("name", name);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+
     upsertMeta('meta[name="description"]', { name: "description", content: seo.description });
     upsertMeta('meta[name="robots"]', { name: "robots", content: seo.robots || "index, follow" });
+    upsertBaseMeta("theme-color", "#0D9488");
+    upsertBaseMeta("author", "PlacementDo");
+    upsertBaseMeta("keywords", "AI interview practice, mock interviews, interview preparation, placement preparation, resume based interview, behavioral interview, system design interview");
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
 
     upsertMeta('meta[property="og:site_name"]', { property: "og:site_name", content: "PlacementDo" });
@@ -3818,6 +3833,7 @@ export default function App() {
     upsertMeta('meta[property="og:title"]', { property: "og:title", content: seo.title });
     upsertMeta('meta[property="og:description"]', { property: "og:description", content: seo.description });
     upsertMeta('meta[property="og:image"]', { property: "og:image", content: imageUrl });
+    upsertMeta('meta[property="og:image:alt"]', { property: "og:image:alt", content: "PlacementDo AI interview practice platform preview" });
     upsertMeta('meta[property="og:url"]', { property: "og:url", content: canonicalUrl });
     upsertMeta('meta[property="og:type"]', { property: "og:type", content: seo.type });
 
@@ -3826,6 +3842,7 @@ export default function App() {
     upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: seo.description });
     upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: canonicalUrl });
     upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: imageUrl });
+    upsertMeta('meta[name="twitter:image:alt"]', { name: "twitter:image:alt", content: "PlacementDo AI interview practice platform preview" });
 
     const scripts = Array.from(document.querySelectorAll("script[data-seo-schema='true']"));
     scripts.forEach((script) => script.remove());
