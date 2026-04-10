@@ -12,8 +12,14 @@ const DEFAULT_POSTS = [
     publishedAt: "2026-04-10T00:00:00.000Z",
     updatedAt: "2026-04-10T00:00:00.000Z",
     status: "published",
+    author: "PlacementDo Team",
+    category: "Product",
+    tags: ["interview-prep", "product-updates"],
   },
 ];
+
+const DEFAULT_AUTHOR = "PlacementDo Team";
+const DEFAULT_CATEGORY = "General";
 
 const send = (res, status, body) => {
   res.status(status).json(body);
@@ -53,6 +59,41 @@ const parseBody = (req) => {
   return req.body;
 };
 
+const normalizeText = (value, fallback = "") =>
+  typeof value === "string" && value.trim() ? value.trim() : fallback;
+
+const normalizeTags = (value) => {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => (typeof item === "string" ? item.trim() : ""))
+      .filter(Boolean)
+      .slice(0, 8);
+  }
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean)
+      .slice(0, 8);
+  }
+  return [];
+};
+
+const estimateReadTime = (content = "") => {
+  const words = normalizeText(content).split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 220));
+};
+
+const normalizePost = (post = {}) => ({
+  ...post,
+  author: normalizeText(post.author, DEFAULT_AUTHOR),
+  category: normalizeText(post.category, DEFAULT_CATEGORY),
+  tags: normalizeTags(post.tags),
+  readTimeMinutes: Number.isFinite(Number(post.readTimeMinutes))
+    ? Math.max(1, Math.floor(Number(post.readTimeMinutes)))
+    : estimateReadTime(post.content || ""),
+});
+
 const hasAdminAccess = (req) => {
   const expected = ENV.BLOG_ADMIN_TOKEN;
   if (!expected) return false;
@@ -84,7 +125,7 @@ const loadPosts = async () => {
       const value = await kvCommand(["GET", BLOG_KEY]);
       if (typeof value === "string") {
         const parsed = JSON.parse(value);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed)) return parsed.map((post) => normalizePost(post));
       }
     } catch (error) {
       void error;
@@ -94,7 +135,7 @@ const loadPosts = async () => {
   if (!globalThis.__PLACEMENTDO_BLOG_POSTS__) {
     globalThis.__PLACEMENTDO_BLOG_POSTS__ = [...DEFAULT_POSTS];
   }
-  return globalThis.__PLACEMENTDO_BLOG_POSTS__;
+  return globalThis.__PLACEMENTDO_BLOG_POSTS__.map((post) => normalizePost(post));
 };
 
 const savePosts = async (posts) => {
@@ -112,6 +153,10 @@ const summarize = (post) => ({
   publishedAt: post.publishedAt,
   updatedAt: post.updatedAt,
   status: post.status,
+  author: post.author,
+  category: post.category,
+  tags: post.tags,
+  readTimeMinutes: post.readTimeMinutes,
 });
 
 export default async function handler(req, res) {
@@ -122,12 +167,13 @@ export default async function handler(req, res) {
     const slug = typeof req.query?.slug === "string" ? req.query.slug : "";
     const visiblePosts = posts
       .filter((post) => isAdmin || post.status === "published")
+      .map((post) => normalizePost(post))
       .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
     if (slug) {
       const post = visiblePosts.find((item) => item.slug === slug);
       if (!post) return send(res, 404, { error: "Post not found" });
-      return send(res, 200, { post });
+      return send(res, 200, { post: normalizePost(post) });
     }
 
     return send(res, 200, { posts: isAdmin ? visiblePosts : visiblePosts.map(summarize) });
@@ -144,6 +190,12 @@ export default async function handler(req, res) {
     const content = typeof body.content === "string" ? body.content.trim() : "";
     const requestedSlug = typeof body.slug === "string" ? slugify(body.slug) : "";
     const status = body.status === "draft" ? "draft" : "published";
+    const author = normalizeText(body.author, DEFAULT_AUTHOR);
+    const category = normalizeText(body.category, DEFAULT_CATEGORY);
+    const tags = normalizeTags(body.tags);
+    const readTimeMinutes = Number.isFinite(Number(body.readTimeMinutes))
+      ? Math.max(1, Math.floor(Number(body.readTimeMinutes)))
+      : estimateReadTime(content);
 
     if (!title || !excerpt || !content) {
       return send(res, 400, { error: "title, excerpt and content are required" });
@@ -155,9 +207,11 @@ export default async function handler(req, res) {
 
     const now = new Date().toISOString();
     const publishedAt = typeof body.publishedAt === "string" && body.publishedAt ? body.publishedAt : now;
-    const next = [{ slug, title, excerpt, content, publishedAt, updatedAt: now, status }, ...posts];
+    const next = [{
+      slug, title, excerpt, content, publishedAt, updatedAt: now, status, author, category, tags, readTimeMinutes,
+    }, ...posts];
     await savePosts(next);
-    return send(res, 201, { post: next[0] });
+    return send(res, 201, { post: normalizePost(next[0]) });
   }
 
   if (req.method === "PUT") {
@@ -175,6 +229,12 @@ export default async function handler(req, res) {
     const status = body.status === "draft" ? "draft" : body.status === "published" ? "published" : prev.status;
     const requestedSlug = typeof body.slug === "string" ? slugify(body.slug) : prev.slug;
     const nextSlug = createUniqueSlug(requestedSlug, posts, idx);
+    const author = normalizeText(body.author, normalizeText(prev.author, DEFAULT_AUTHOR));
+    const category = normalizeText(body.category, normalizeText(prev.category, DEFAULT_CATEGORY));
+    const tags = body.tags === undefined ? normalizeTags(prev.tags) : normalizeTags(body.tags);
+    const readTimeMinutes = Number.isFinite(Number(body.readTimeMinutes))
+      ? Math.max(1, Math.floor(Number(body.readTimeMinutes)))
+      : estimateReadTime(content);
 
     if (!title || !excerpt || !content || !requestedSlug || !nextSlug) {
       return send(res, 400, { error: "Invalid update payload" });
@@ -187,6 +247,10 @@ export default async function handler(req, res) {
       excerpt,
       content,
       status,
+      author,
+      category,
+      tags,
+      readTimeMinutes,
       publishedAt: typeof body.publishedAt === "string" && body.publishedAt ? body.publishedAt : prev.publishedAt,
       updatedAt: new Date().toISOString(),
     };
@@ -194,7 +258,7 @@ export default async function handler(req, res) {
     const next = [...posts];
     next[idx] = updated;
     await savePosts(next);
-    return send(res, 200, { post: updated });
+    return send(res, 200, { post: normalizePost(updated) });
   }
 
   if (req.method === "DELETE") {
