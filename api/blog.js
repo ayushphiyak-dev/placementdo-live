@@ -230,7 +230,7 @@ export default async function handler(req, res) {
       post: normalizePost(next[0]),
       defaults: BLOG_DEFAULTS,
       warning: requestedStatus === "published" && status !== "published"
-        ? "Only owner token can publish. Post saved as draft."
+        ? "Only owner token (BLOG_OWNER_TOKEN) can publish. Post saved as draft."
         : undefined,
     });
   }
@@ -284,7 +284,7 @@ export default async function handler(req, res) {
       post: normalizePost(updated),
       defaults: BLOG_DEFAULTS,
       warning: requestedStatus === "published" && status !== "published"
-        ? "Only owner token can publish. Post saved as draft."
+        ? "Only owner token (BLOG_OWNER_TOKEN) can publish. Post saved as draft."
         : undefined,
     });
   }
