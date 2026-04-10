@@ -1,0 +1,24 @@
+[
+  {
+    "id": "getting-started-with-placementdo",
+    "title": "Getting Started with PlacementDo: Your AI Interview Coach",
+    "slug": "getting-started-with-placementdo",
+    "date": "2026-04-10",
+    "author": "PlacementDo Team",
+    "category": "Product",
+    "tags": ["interview-prep", "product-updates", "getting-started"],
+    "excerpt": "Learn how to get your team onboarded and start practising AI-powered interviews in minutes. From persona selection to performance reports, here is everything you need to know.",
+    "content": "# Welcome to PlacementDo\n\nPlacementDo is your personal AI interview coach — built to help you practise realistic technical and behavioural interviews at your own pace.\n\n## How it works\n\nSelect one of our six interviewer personas, choose a job role, and start a live mock interview. The AI asks contextual follow-up questions based on your answers, just like a real interviewer would.\n\n## Key features\n\n- **CV-aware questioning** — upload your resume and the AI tailors questions to your experience\n- **Six distinct personas** — from the supportive mentor to the demanding FAANG interviewer\n- **Multilingual support** — practise in English, Spanish, French, and more\n- **Structured reports** — get scored on communication, technical depth, and problem-solving\n\n## Getting started\n\n1. Sign up for a free account\n2. Upload your CV (optional but recommended)\n3. Choose a persona that matches your target company culture\n4. Start your first interview session\n5. Review your performance report and identify areas to improve\n\n## Tips for best results\n\nPractise consistently — even 20 minutes a day over two weeks makes a measurable difference. Use the report breakdown to focus on your weakest areas first.\n\nWe are constantly improving the platform based on user feedback. If you have suggestions, reach out to us at hello@placementdo.com."
+  },
+  {
+    "id": "top-5-behavioural-interview-mistakes",
+    "title": "Top 5 Behavioural Interview Mistakes and How to Avoid Them",
+    "slug": "top-5-behavioural-interview-mistakes",
+    "date": "2026-04-08",
+    "author": "PlacementDo Team",
+    "category": "Interview Tips",
+    "tags": ["behavioural-interview", "career-advice", "interview-tips"],
+    "excerpt": "Behavioural questions trip up even experienced candidates. Here are the five most common mistakes — and the simple fixes that will make your answers stand out.",
+    "content": "# 5 Behavioural Interview Mistakes to Stop Making Today\n\nBehavioural interviews are designed to predict how you will perform in a role based on how you have handled situations in the past. Yet most candidates walk in underprepared.\n\n## Mistake 1 — Telling instead of showing\n\nSaying \"I am a great team player\" means nothing without evidence. Use the STAR framework (Situation, Task, Action, Result) to anchor every answer in a specific, real story.\n\n## Mistake 2 — Skipping the result\n\nInterviewers want to know the outcome. Always finish your answer with a measurable result: \"We shipped two weeks early\" or \"Customer satisfaction scores rose by 18%.\"\n\n## Mistake 3 — Only preparing positive stories\n\nQuestions like \"Tell me about a time you failed\" are almost guaranteed. Have two or three honest failure stories ready, each ending with what you learned and changed.\n\n## Mistake 4 — Rambling\n\nThe ideal STAR answer runs 90–120 seconds. Practise out loud so you know when to stop. PlacementDo reports include a response-length metric to help you calibrate.\n\n## Mistake 5 — Ignoring the job description\n\nEvery company highlights the behaviours they value most in their job postings. Map your stories to those competencies before the interview.\n\n## Practice makes permanent\n\nThe best way to fix these mistakes is deliberate repetition with feedback. Run a PlacementDo session, review the AI feedback, then re-record the same answer. Most users see measurable improvement within five practice sessions."
+  }
+]
