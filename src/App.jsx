@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState, useCallback } from 'react';
 const InterviewAI = lazy(() => import("./InterviewAI_v5.jsx"));
 const GuestSubmission = lazy(() => import("./components/Blog/GuestSubmission.jsx"));
 const AdminDashboard = lazy(() => import("./components/Admin/AdminDashboard.jsx"));
+const AdminCreatePost = lazy(() => import("./components/Admin/AdminCreatePost.jsx"));
 const BlogPage = lazy(() => import("./components/Blog/BlogPage.jsx"));
 const BlogPostPage = lazy(() => import("./components/Blog/BlogPostPage.jsx"));
 
@@ -13,7 +14,7 @@ const Analytics = lazy(() =>
 );
 
 // Routes handled by the new standalone pages (not by InterviewAI_v5).
-const STANDALONE_ROUTES = ["/write-for-us", "/admin/blog", "/blog"];
+const STANDALONE_ROUTES = ["/write-for-us", "/admin/blog", "/admin/blog/new", "/blog"];
 
 function AppRouter() {
   const [path, setPath] = useState(() => window.location.pathname);
@@ -41,6 +42,14 @@ function AppRouter() {
     return (
       <Suspense fallback={null}>
         <AdminDashboard onNav={navigate} />
+      </Suspense>
+    );
+  }
+
+  if (path === "/admin/blog/new") {
+    return (
+      <Suspense fallback={null}>
+        <AdminCreatePost onNav={navigate} />
       </Suspense>
     );
   }

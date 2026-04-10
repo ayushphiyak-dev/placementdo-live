@@ -14,6 +14,7 @@ import {
   Loader,
   Eye,
   ArrowLeft,
+  PlusCircle,
 } from "lucide-react";
 
 const formatDate = (value) => {
@@ -245,6 +246,15 @@ export default function AdminDashboard({ onNav }) {
               <p style={{ marginTop: 6, color: "var(--slate-500)", lineHeight: 1.8 }}>
                 Review, approve, or reject guest blog submissions. Admin token required.
               </p>
+            </div>
+            <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+              <button
+                className="btn-primary"
+                style={{ display: "inline-flex", alignItems: "center", gap: 7, whiteSpace: "nowrap" }}
+                onClick={() => navigate("/admin/blog/new")}
+              >
+                <PlusCircle size={15} /> Create New Post
+              </button>
             </div>
           </div>
 

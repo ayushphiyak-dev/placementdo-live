@@ -35,10 +35,12 @@ The blog supports two workflows. Choose whichever fits your deployment setup.
 
 ### Workflow A — JSON file (simple, no server required)
 
-Posts displayed at `/blog` and `/blog/:slug` are read directly from  
-**`src/data/blogPosts.json`** at build time. This is the simplest and most secure way to manage posts because only people with repository access can modify the file.
+Posts displayed at `/blog` and `/blog/:slug` are read from the `/api/blog` endpoint,
+which is seeded from the `DEFAULT_POSTS` array in `api/blog.js`. For purely static
+deployments you can also edit `src/data/blogPosts.json` and keep it in sync with the
+API seed data.
 
-#### How to add a new post
+#### How to add a new post via JSON (static/CDN builds)
 
 1. Open `src/data/blogPosts.json`
 2. Copy an existing post object and paste it as a new entry in the array
@@ -56,7 +58,8 @@ Posts displayed at `/blog` and `/blog/:slug` are read directly from
    | `category` | string _(optional)_ | Category label |
    | `tags` | string[] _(optional)_ | Array of tag strings |
 
-4. Commit the file and deploy
+4. Also update `DEFAULT_POSTS` in `api/blog.js` with the same data so the API returns it
+5. Commit the files and deploy
 
 **Security note:** Only people with repository access can modify `blogPosts.json`. The deployed site reads the compiled JSON at build time and does not expose any write access to public visitors.
 
@@ -70,32 +73,54 @@ Post content supports basic Markdown-style formatting:
 
 ---
 
-### Workflow B — Token-protected admin interface
+### Workflow B — Admin "Create Post" form (recommended)
 
-Blog posts are managed through a token-protected admin interface.
+Blog posts can be created directly from the site using the admin-only post creation form
+at `/admin/blog/new`. This is the recommended workflow for adding new posts without a
+code deployment.
+
+#### How to add a new post via the admin form
+
+1. Navigate to `https://your-domain.com/admin/blog/new`  
+   _(or go to `/admin/blog` and click **Create New Post**)_
+2. Enter your `BLOG_ADMIN_TOKEN` in the **Admin Token** field
+3. Fill in the post fields: title, slug, date, author, category, tags, excerpt, and content
+4. Set **Status** to _Published_ (requires `BLOG_OWNER_TOKEN`) or _Draft_
+5. Click **Publish Post**
+
+The new post will be saved and appear on `/blog` immediately.
 
 #### Security model
 
-- **Public visitors** can read published blog posts (list + individual post pages) with no authentication required.
-- **Admin users** access the management interface at `/blog/admin` and must supply the `BLOG_ADMIN_TOKEN` to load, create, edit, or delete posts.
-- Publishing is **owner-only** when `BLOG_OWNER_TOKEN` is configured. Admin users without this owner token can still create/edit content, but publish attempts are stored as drafts.
-- All write/delete operations are validated **server-side** in `api/blog.js`. The token is never exposed to the client — it is supplied by the admin user and checked against the environment variable on the server.
+- **Public visitors** can read published blog posts (list + individual post pages) with no authentication required. No create/edit/delete controls are visible to them.
+- **Admins** access the admin interface at `/admin/blog` and `/admin/blog/new`. They must supply the `BLOG_ADMIN_TOKEN` via the form; it is sent as the `x-admin-token` header and verified **server-side** in `api/blog.js`. The token is never stored in the browser or exposed to other users.
+- **Publishing** is owner-only when `BLOG_OWNER_TOKEN` is configured. Admins without this token can create content that is saved as a draft; an owner can then promote it to published.
 - Draft posts are invisible to unauthenticated visitors even via direct URL.
+- The `/admin/blog/new` route is a standard URL — security comes entirely from the server-side token check, not from obscurity.
 
-#### How to manage blog posts via admin panel
+#### How admins are recognised
 
-1. Navigate to `https://your-domain.com/blog/admin`
-2. Enter your `BLOG_ADMIN_TOKEN` in the **Admin Token** field
-3. (If publishing) Enter `BLOG_OWNER_TOKEN` in the **Owner Publish Token** field
-4. Click **Load Posts** to list existing posts
-5. Use the **Create Post** form to add a new post (title, slug, excerpt, content, author, category, tags, status)
-6. Click **Edit** next to a post to pre-fill the form for editing
-7. Click **Delete** to permanently remove a post
+There is no persistent login session. Each admin action requires the `BLOG_ADMIN_TOKEN` to be entered manually. The token is only checked on the server — removing client-side checks would not grant access.
 
 #### Storage
 
 - **Production (Vercel + KV configured):** Posts are stored in Vercel KV and persist across deployments.
-- **Local dev / no KV:** Posts are stored in a module-level in-memory variable and reset on server restart. The default sample post is always available.
+- **Local dev / no KV:** Posts are stored in a module-level in-memory variable and reset on server restart. The default sample posts are always available.
+
+---
+
+### Workflow C — Token-protected admin interface (guest submissions)
+
+The page at `/admin/blog` handles **guest submission review** (posts submitted via
+`/write-for-us`). It also links to the Create New Post form.
+
+#### How to manage blog posts via admin panel
+
+1. Navigate to `https://your-domain.com/admin/blog`
+2. Enter your `BLOG_ADMIN_TOKEN` in the **Admin Token** field
+3. Click **Load submissions** to see pending guest posts
+4. Use **Approve** or **Reject** to manage submissions
+5. Click **Create New Post** to open the admin post creation form
 
 
 ## Pages
@@ -110,7 +135,9 @@ Blog posts are managed through a token-protected admin interface.
 | About | `/about` | Mission, values, team contact |
 | Blog | `/blog` | Public read-only blog list |
 | Blog Post | `/blog/:slug` | Individual published post |
-| Blog Admin | `/blog/admin` | Token-protected post management |
+| Blog Admin | `/blog/admin` | Token-protected post management (InterviewAI) |
+| Admin Dashboard | `/admin/blog` | Token-protected guest submission review |
+| **Create Post** | **`/admin/blog/new`** | **Admin-only post creation form (new)** |
 | Careers | `/careers` | Open roles, culture |
 | Privacy Policy | `/privacy-policy` | Full privacy policy |
 | Terms of Service | `/terms-of-service` | Full terms of service |

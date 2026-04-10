@@ -1,20 +1,21 @@
 /**
  * BlogPage — public read-only blog listing.
  *
- * Posts are sourced from src/data/blogPosts.json.
- * To add a new blog post:
- *   1. Open src/data/blogPosts.json
- *   2. Copy an existing post object
- *   3. Change id, title, slug, date, author, excerpt, and content
- *   4. Commit and deploy
+ * Posts are sourced from the /api/blog endpoint, which serves the in-memory
+ * or KV-stored posts seeded with the content from DEFAULT_POSTS in api/blog.js.
  *
- * Only people with repository access can modify blogPosts.json,
- * so this is secure from public users. The deployed site only reads
- * the built JSON and does not expose any write access.
+ * To add a new blog post as an admin:
+ *   1. Navigate to /admin/blog/new
+ *   2. Enter your BLOG_ADMIN_TOKEN and fill in the post form
+ *   3. Submit — the post will be saved and appear on this page immediately
+ *
+ * Alternatively, to add posts via the JSON file (for static/CDN deploys):
+ *   1. Open src/data/blogPosts.json
+ *   2. Copy an existing post object and change its fields
+ *   3. Commit and deploy
  */
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Calendar, User, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
-import posts from "../../data/blogPosts.json";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -173,9 +174,37 @@ export default function BlogPage({ onNav }) {
     }
   };
 
+  const [rawPosts, setRawPosts] = useState([]);
+  const [loadingPosts, setLoadingPosts] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/blog")
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        const list = Array.isArray(data?.posts) ? data.posts : [];
+        // Normalize: API uses publishedAt; give each post a .date alias for sorting/display
+        setRawPosts(
+          list.map((p) => ({
+            ...p,
+            date: p.date || p.publishedAt || "",
+            id: p.id || p.slug,
+          }))
+        );
+      })
+      .catch(() => {
+        if (!cancelled) setRawPosts([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingPosts(false);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
   const sortedPosts = useMemo(
-    () => [...posts].sort((a, b) => new Date(b.date) - new Date(a.date)),
-    []
+    () => [...rawPosts].sort((a, b) => new Date(b.date) - new Date(a.date)),
+    [rawPosts]
   );
 
   const [search, setSearch] = useState("");
@@ -264,7 +293,11 @@ export default function BlogPage({ onNav }) {
           </section>
 
           {/* Post grid */}
-          {filteredPosts.length === 0 ? (
+          {loadingPosts ? (
+            <div className="bp-empty">
+              <p style={{ fontSize: 16, fontWeight: 500, color: "var(--slate-400)" }}>Loading posts…</p>
+            </div>
+          ) : filteredPosts.length === 0 ? (
             <div className="bp-empty">
               <p style={{ fontSize: 16, fontWeight: 500 }}>No posts found.</p>
               {search && (

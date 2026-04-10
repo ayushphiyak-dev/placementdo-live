@@ -1,12 +1,11 @@
 /**
  * BlogPostPage — public read-only individual blog post view.
  *
- * Reads the post matching `slug` from src/data/blogPosts.json.
- * To add a new blog post, edit blogPosts.json — see BlogPage.jsx for full instructions.
+ * Fetches the post matching `slug` from /api/blog?slug=<slug>.
+ * To add a new blog post, navigate to /admin/blog/new as an admin.
  */
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon } from "lucide-react";
-import posts from "../../data/blogPosts.json";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -218,16 +217,47 @@ export default function BlogPostPage({ slug, onNav }) {
     }
   };
 
-  const post = useMemo(
-    () => posts.find((p) => p.slug === slug) || null,
-    [slug]
-  );
+  const [post, setPost] = useState(null);
+  const [allPosts, setAllPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setNotFound(false);
+
+    // Fetch the individual post and all posts (for related posts)
+    Promise.all([
+      fetch(`/api/blog?slug=${encodeURIComponent(slug)}`).then((r) => r.json()),
+      fetch("/api/blog").then((r) => r.json()),
+    ])
+      .then(([postData, listData]) => {
+        if (cancelled) return;
+        if (postData?.post) {
+          const p = postData.post;
+          setPost({ ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug });
+        } else {
+          setNotFound(true);
+        }
+        const list = Array.isArray(listData?.posts) ? listData.posts : [];
+        setAllPosts(list.map((p) => ({ ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug })));
+      })
+      .catch(() => {
+        if (!cancelled) setNotFound(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [slug]);
 
   const blocks = useMemo(() => (post ? parseContent(post.content) : []), [post]);
 
   const relatedPosts = useMemo(() => {
     if (!post) return [];
-    return posts
+    return allPosts
       .filter((p) => p.slug !== post.slug)
       .sort((a, b) => {
         // Prefer same category first, then sort by date
@@ -237,7 +267,7 @@ export default function BlogPostPage({ slug, onNav }) {
         return new Date(b.date) - new Date(a.date);
       })
       .slice(0, 3);
-  }, [post]);
+  }, [post, allPosts]);
 
   return (
     <>
@@ -299,7 +329,11 @@ export default function BlogPostPage({ slug, onNav }) {
             <ArrowLeft size={15} /> Back to blog
           </button>
 
-          {!post ? (
+          {loading ? (
+            <div className="bpp-not-found">
+              <p style={{ fontSize: 16, color: "var(--slate-400)" }}>Loading…</p>
+            </div>
+          ) : (notFound || !post) ? (
             <div className="bpp-not-found">
               <BookOpen
                 size={48}
