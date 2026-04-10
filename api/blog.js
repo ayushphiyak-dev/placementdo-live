@@ -7,6 +7,7 @@ const TITLE_MAX = 180;
 const EXCERPT_MAX = 500;
 const CONTENT_MAX = 20000;
 const SLUG_INPUT_MAX = 160;
+const USER_AGENT_MAX_LENGTH = 200;
 
 const DEFAULT_POSTS = [
   {
@@ -76,8 +77,8 @@ const hasAdminAccess = (req) => {
   return typeof supplied === "string" && supplied === expected;
 };
 
-const lockoutWindowMs =
-  parseIntWithBounds(ENV.BLOG_ADMIN_LOCKOUT_MINUTES, DEFAULT_ADMIN_LOCKOUT_MINUTES, 1, 1440) * 60 * 1000;
+const lockoutMinutes = parseIntWithBounds(ENV.BLOG_ADMIN_LOCKOUT_MINUTES, DEFAULT_ADMIN_LOCKOUT_MINUTES, 1, 1440);
+const lockoutWindowMs = lockoutMinutes * 60 * 1000;
 const maxFailedAttempts = parseIntWithBounds(ENV.BLOG_ADMIN_MAX_ATTEMPTS, DEFAULT_ADMIN_MAX_ATTEMPTS, 1, 20);
 const mutationWindowMs = 60 * 60 * 1000;
 const maxMutationsPerHour = parseIntWithBounds(
@@ -101,7 +102,7 @@ const getClientId = (req) => {
   const fwd = req.headers["x-forwarded-for"];
   const ipFromHeader = Array.isArray(fwd) ? fwd[0] : `${fwd || ""}`;
   const ip = ipFromHeader.split(",")[0].trim() || req.socket?.remoteAddress || "unknown";
-  const ua = `${req.headers["user-agent"] || "unknown"}`.slice(0, 200);
+  const ua = `${req.headers["user-agent"] || "unknown"}`.slice(0, USER_AGENT_MAX_LENGTH);
   return JSON.stringify([ip, ua]);
 };
 
@@ -159,7 +160,9 @@ const validatePostPayloadLengths = (body) =>
 
 const enforceMutationQuota = (req, res) => {
   if (consumeMutationQuota(req)) return true;
-  send(res, 429, { error: "Rate limit exceeded for blog changes. Please try again later." });
+  send(res, 429, {
+    error: `Rate limit exceeded. Maximum ${maxMutationsPerHour} blog changes per hour are allowed.`,
+  });
   return false;
 };
 
@@ -220,7 +223,8 @@ const summarize = (post) => ({
 export default async function handler(req, res) {
   const isReadRequest = req.method === "GET";
   if (!isReadRequest && isClientLockedOut(req)) {
-    return send(res, 429, { error: "Too many failed admin code attempts. Please try again later." });
+    const label = lockoutMinutes === 1 ? "minute" : "minutes";
+    return send(res, 429, { error: `Too many failed admin code attempts. Please try again in ${lockoutMinutes} ${label}.` });
   }
 
   const posts = await loadPosts();
