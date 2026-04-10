@@ -3705,7 +3705,6 @@ const BlogList = ({ onNav }) => {
           <h1 className="brig" style={{ fontSize: "clamp(30px,5vw,44px)", letterSpacing: "-0.03em", marginTop: 12 }}>PlacementDo Blog</h1>
           <p style={{ color: "var(--slate-500)", marginTop: 8, maxWidth: 640 }}>Interview prep tips, product updates, and practical guides from the PlacementDo team.</p>
         </div>
-        <button className="btn-secondary" onClick={() => onNav("blogAdmin")}>Owner Admin</button>
       </div>
 
       {loading && <div className="card" style={{ padding: 20 }}>Loading posts…</div>}
@@ -3781,28 +3780,28 @@ const BlogPost = ({ slug, onNav, onPostLoaded }) => {
 };
 
 const BlogAdmin = ({ onNav }) => {
-  const [token, setToken] = useState("");
+  const [adminCode, setAdminCode] = useState("");
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
   const [editingSlug, setEditingSlug] = useState("");
   const [form, setForm] = useState({ title: "", excerpt: "", content: "", slug: "", status: "published" });
 
   const load = useCallback(async () => {
-    if (!token) return;
-    const r = await fetch("/api/blog", { headers: { "x-admin-token": token } });
+    if (!adminCode) return;
+    const r = await fetch("/api/blog", { headers: { "x-admin-code": adminCode } });
     const data = await r.json();
     if (!r.ok) throw new Error(data?.error || "Failed to load posts");
     setPosts(Array.isArray(data?.posts) ? data.posts : []);
-  }, [token]);
+  }, [adminCode]);
 
   const save = async (e) => {
     e.preventDefault();
-    if (!token) return;
+    if (!adminCode) return;
     const method = editingSlug ? "PUT" : "POST";
     const target = editingSlug ? `/api/blog?slug=${encodeURIComponent(editingSlug)}` : "/api/blog";
     const r = await fetch(target, {
       method,
-      headers: { "Content-Type": "application/json", "x-admin-token": token },
+      headers: { "Content-Type": "application/json", "x-admin-code": adminCode },
       body: JSON.stringify(form),
     });
     const data = await r.json();
@@ -3814,10 +3813,10 @@ const BlogAdmin = ({ onNav }) => {
   };
 
   const del = async (slug) => {
-    if (!token) return;
+    if (!adminCode) return;
     const r = await fetch(`/api/blog?slug=${encodeURIComponent(slug)}`, {
       method: "DELETE",
-      headers: { "x-admin-token": token },
+      headers: { "x-admin-code": adminCode },
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data?.error || "Delete failed");
@@ -3831,12 +3830,18 @@ const BlogAdmin = ({ onNav }) => {
         <h1 className="brig" style={{ fontSize: "clamp(28px,5vw,40px)", letterSpacing: "-0.03em" }}>Blog Admin</h1>
         <button className="btn-ghost" onClick={() => onNav("blog")}>View public blog</button>
       </div>
-      <p style={{ color: "var(--slate-500)", marginTop: 8 }}>Enter your admin token to create, edit, and delete posts securely via protected API endpoints.</p>
+      <p style={{ color: "var(--slate-500)", marginTop: 8 }}>Enter your admin code to create, edit, and delete posts. Wrong attempts are temporarily locked and API changes are rate-limited.</p>
       {message && <div style={{ marginTop: 12, color: "var(--green)", fontSize: 13 }}>{message}</div>}
 
       <div className="card" style={{ padding: 16, marginTop: 16 }}>
-        <label>Admin Token</label>
-        <input value={token} onChange={(e) => setToken(e.target.value)} placeholder="BLOG_ADMIN_TOKEN" />
+        <label>Admin Code</label>
+        <input
+          type="password"
+          value={adminCode}
+          onChange={(e) => setAdminCode(e.target.value)}
+          placeholder="BLOG_ADMIN_CODE"
+          autoComplete="off"
+        />
         <button className="btn-secondary" style={{ marginTop: 10 }} onClick={async () => {
           try { await load(); setMessage("Posts loaded."); }
           catch (err) { setMessage(err?.message || "Failed to load."); }
