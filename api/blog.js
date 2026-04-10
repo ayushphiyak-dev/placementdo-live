@@ -104,6 +104,13 @@ const hasAdminAccess = (req) => {
   return typeof supplied === "string" && supplied === expected;
 };
 
+const hasOwnerAccess = (req) => {
+  const expectedOwner = ENV.BLOG_OWNER_TOKEN;
+  if (!expectedOwner) return hasAdminAccess(req);
+  const suppliedOwner = req.headers["x-owner-token"] || req.headers["x-publish-token"];
+  return typeof suppliedOwner === "string" && suppliedOwner === expectedOwner;
+};
+
 const isKvConfigured = () =>
   Boolean(ENV.KV_REST_API_URL && ENV.KV_REST_API_TOKEN);
 
@@ -165,6 +172,7 @@ const summarize = (post) => ({
 export default async function handler(req, res) {
   const posts = await loadPosts();
   const isAdmin = hasAdminAccess(req);
+  const isOwner = hasOwnerAccess(req);
 
   if (req.method === "GET") {
     const slug = typeof req.query?.slug === "string" ? req.query.slug : "";
@@ -195,7 +203,8 @@ export default async function handler(req, res) {
     const excerpt = typeof body.excerpt === "string" ? body.excerpt.trim() : "";
     const content = typeof body.content === "string" ? body.content.trim() : "";
     const requestedSlug = typeof body.slug === "string" ? slugify(body.slug) : "";
-    const status = body.status === "draft" ? "draft" : "published";
+    const requestedStatus = body.status === "draft" ? "draft" : "published";
+    const status = requestedStatus === "published" && !isOwner ? "draft" : requestedStatus;
     const author = normalizeText(body.author, DEFAULT_AUTHOR);
     const category = normalizeText(body.category, DEFAULT_CATEGORY);
     const tags = normalizeTags(body.tags);
@@ -217,7 +226,13 @@ export default async function handler(req, res) {
       slug, title, excerpt, content, publishedAt, updatedAt: now, status, author, category, tags, readTimeMinutes,
     }, ...posts];
     await savePosts(next);
-    return send(res, 201, { post: normalizePost(next[0]), defaults: BLOG_DEFAULTS });
+    return send(res, 201, {
+      post: normalizePost(next[0]),
+      defaults: BLOG_DEFAULTS,
+      warning: requestedStatus === "published" && status !== "published"
+        ? "Only owner token can publish. Post saved as draft."
+        : undefined,
+    });
   }
 
   if (req.method === "PUT") {
@@ -232,7 +247,8 @@ export default async function handler(req, res) {
     const title = typeof body.title === "string" ? body.title.trim() : prev.title;
     const excerpt = typeof body.excerpt === "string" ? body.excerpt.trim() : prev.excerpt;
     const content = typeof body.content === "string" ? body.content.trim() : prev.content;
-    const status = body.status === "draft" ? "draft" : body.status === "published" ? "published" : prev.status;
+    const requestedStatus = body.status === "draft" ? "draft" : body.status === "published" ? "published" : prev.status;
+    const status = requestedStatus === "published" && !isOwner ? "draft" : requestedStatus;
     const requestedSlug = typeof body.slug === "string" ? slugify(body.slug) : prev.slug;
     const nextSlug = createUniqueSlug(requestedSlug, posts, idx);
     const author = normalizeText(body.author, normalizeText(prev.author, DEFAULT_AUTHOR));
@@ -264,7 +280,13 @@ export default async function handler(req, res) {
     const next = [...posts];
     next[idx] = updated;
     await savePosts(next);
-    return send(res, 200, { post: normalizePost(updated), defaults: BLOG_DEFAULTS });
+    return send(res, 200, {
+      post: normalizePost(updated),
+      defaults: BLOG_DEFAULTS,
+      warning: requestedStatus === "published" && status !== "published"
+        ? "Only owner token can publish. Post saved as draft."
+        : undefined,
+    });
   }
 
   if (req.method === "DELETE") {

@@ -1024,15 +1024,18 @@ const Toast = ({ message, onDismiss }) => (
 );
 
 /* ── Navbar ── */
+const FORCE_SOLID_HEADER_VIEWS = new Set(["about", "personas", "privacy", "terms"]);
+
 const Navbar = ({ view, onNav }) => {
   const [solid, setSolid] = useState(false);
   const [mob, setMob] = useState(false);
   const isLanding = view === "landing";
   const isDash = ["dashboard", "reports", "progress", "avatars", "settings"].includes(view);
+  const forceSolidHeader = FORCE_SOLID_HEADER_VIEWS.has(view);
   useEffect(() => { const fn = () => setSolid(window.scrollY > 30); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
   useEffect(() => setMob(false), [view]);
   const scrollTo = id => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMob(false); };
-  const bg = solid || isDash || mob;
+  const bg = solid || isDash || mob || forceSolidHeader;
   return (
     <header>
       <motion.nav initial={{ y: -64, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}
@@ -4074,6 +4077,7 @@ const BlogPost = ({ slug, onNav, onPostLoaded }) => {
 
 const BlogAdmin = ({ onNav }) => {
   const [token, setToken] = useState("");
+  const [ownerToken, setOwnerToken] = useState("");
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
   const [editingSlug, setEditingSlug] = useState("");
@@ -4082,7 +4086,7 @@ const BlogAdmin = ({ onNav }) => {
     excerpt: "",
     content: "",
     slug: "",
-    status: "published",
+    status: "draft",
     author: "",
     category: "",
     tags: "",
@@ -4104,18 +4108,22 @@ const BlogAdmin = ({ onNav }) => {
     const target = editingSlug ? `/api/blog?slug=${encodeURIComponent(editingSlug)}` : "/api/blog";
     const r = await fetch(target, {
       method,
-      headers: { "Content-Type": "application/json", "x-admin-token": token },
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-token": token,
+        ...(ownerToken ? { "x-owner-token": ownerToken } : {}),
+      },
       body: JSON.stringify(form),
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data?.error || "Save failed");
-    setMessage(editingSlug ? "Post updated." : "Post created.");
+    setMessage(data?.warning || (editingSlug ? "Post updated." : "Post created."));
     setForm({
       title: "",
       excerpt: "",
       content: "",
       slug: "",
-      status: "published",
+      status: "draft",
       author: "",
       category: "",
       tags: "",
@@ -4149,6 +4157,8 @@ const BlogAdmin = ({ onNav }) => {
       <div className="card" style={{ padding: 16, marginTop: 16 }}>
         <label>Admin Token</label>
         <input value={token} onChange={(e) => setToken(e.target.value)} placeholder="BLOG_ADMIN_TOKEN" />
+        <label style={{ marginTop: 10 }}>Owner Publish Token (optional)</label>
+        <input value={ownerToken} onChange={(e) => setOwnerToken(e.target.value)} placeholder="BLOG_OWNER_TOKEN" />
         <button className="btn-secondary" style={{ marginTop: 10 }} onClick={async () => {
           try { await load(); setMessage("Posts loaded."); }
           catch (err) { setMessage(err?.message || "Failed to load."); }
@@ -4182,7 +4192,7 @@ const BlogAdmin = ({ onNav }) => {
                   excerpt: "",
                   content: "",
                   slug: "",
-                  status: "published",
+                  status: "draft",
                   author: "",
                   category: "",
                   tags: "",
