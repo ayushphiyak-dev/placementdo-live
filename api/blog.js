@@ -20,6 +20,9 @@ const DEFAULT_POSTS = [
 
 const DEFAULT_AUTHOR = "PlacementDo Team";
 const DEFAULT_CATEGORY = "General";
+const BLOG_DEFAULTS = Object.freeze({ author: DEFAULT_AUTHOR, category: DEFAULT_CATEGORY });
+const MAX_TAGS = 8;
+const AVERAGE_WORDS_PER_MINUTE = 220;
 
 const send = (res, status, body) => {
   res.status(status).json(body);
@@ -67,21 +70,21 @@ const normalizeTags = (value) => {
     return value
       .map((item) => (typeof item === "string" ? item.trim() : ""))
       .filter(Boolean)
-      .slice(0, 8);
+      .slice(0, MAX_TAGS);
   }
   if (typeof value === "string") {
     return value
       .split(",")
       .map((item) => item.trim())
       .filter(Boolean)
-      .slice(0, 8);
+      .slice(0, MAX_TAGS);
   }
   return [];
 };
 
 const estimateReadTime = (content = "") => {
   const words = normalizeText(content).split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.ceil(words / 220));
+  return Math.max(1, Math.ceil(words / AVERAGE_WORDS_PER_MINUTE));
 };
 
 const normalizePost = (post = {}) => ({
@@ -173,10 +176,13 @@ export default async function handler(req, res) {
     if (slug) {
       const post = visiblePosts.find((item) => item.slug === slug);
       if (!post) return send(res, 404, { error: "Post not found" });
-      return send(res, 200, { post: normalizePost(post) });
+      return send(res, 200, { post: normalizePost(post), defaults: BLOG_DEFAULTS });
     }
 
-    return send(res, 200, { posts: isAdmin ? visiblePosts : visiblePosts.map(summarize) });
+    return send(res, 200, {
+      posts: isAdmin ? visiblePosts : visiblePosts.map(summarize),
+      defaults: BLOG_DEFAULTS,
+    });
   }
 
   if (!isAdmin) {
@@ -211,7 +217,7 @@ export default async function handler(req, res) {
       slug, title, excerpt, content, publishedAt, updatedAt: now, status, author, category, tags, readTimeMinutes,
     }, ...posts];
     await savePosts(next);
-    return send(res, 201, { post: normalizePost(next[0]) });
+    return send(res, 201, { post: normalizePost(next[0]), defaults: BLOG_DEFAULTS });
   }
 
   if (req.method === "PUT") {
@@ -258,7 +264,7 @@ export default async function handler(req, res) {
     const next = [...posts];
     next[idx] = updated;
     await savePosts(next);
-    return send(res, 200, { post: normalizePost(updated) });
+    return send(res, 200, { post: normalizePost(updated), defaults: BLOG_DEFAULTS });
   }
 
   if (req.method === "DELETE") {

@@ -3673,10 +3673,19 @@ const formatBlogDate = (value) => {
   return new Intl.DateTimeFormat("en-US", { year: "numeric", month: "short", day: "numeric" }).format(date);
 };
 
-const normalizeBlogMeta = (post = {}) => ({
+const MAX_BLOG_HEADING_LEVEL = 3;
+const MAX_VISIBLE_BLOG_TAGS = 3;
+const MAX_RELATED_BLOG_POSTS = 3;
+const LOCAL_BLOG_DEFAULTS = { author: "PlacementDo Team", category: "General" };
+
+const normalizeBlogMeta = (post = {}, defaults = LOCAL_BLOG_DEFAULTS) => ({
   ...post,
-  author: (typeof post.author === "string" && post.author.trim()) ? post.author.trim() : "PlacementDo Team",
-  category: (typeof post.category === "string" && post.category.trim()) ? post.category.trim() : "General",
+  author: (typeof post.author === "string" && post.author.trim())
+    ? post.author.trim()
+    : (defaults.author || LOCAL_BLOG_DEFAULTS.author),
+  category: (typeof post.category === "string" && post.category.trim())
+    ? post.category.trim()
+    : (defaults.category || LOCAL_BLOG_DEFAULTS.category),
   tags: Array.isArray(post.tags)
     ? post.tags.map((tag) => String(tag || "").trim()).filter(Boolean)
     : [],
@@ -3685,7 +3694,13 @@ const normalizeBlogMeta = (post = {}) => ({
     : 1,
 });
 
+/**
+ * Converts blog text content into renderable blocks.
+ * Supports headings (#..###), fenced code blocks (```), bullet lists (- or *),
+ * standalone markdown image syntax, and paragraph fallback for plain text.
+ */
 const parseBlogContent = (content = "") => {
+  const headingPattern = new RegExp(`^#{1,${MAX_BLOG_HEADING_LEVEL}}\\s+`);
   const lines = String(content).replace(/\r\n/g, "\n").split("\n");
   const blocks = [];
   let paragraph = [];
@@ -3736,16 +3751,16 @@ const parseBlogContent = (content = "") => {
       return;
     }
 
-    if (/^#{1,3}\s+/.test(trimmed)) {
+    if (headingPattern.test(trimmed)) {
       flushParagraph();
       flushList();
-      const level = Math.min(3, (trimmed.match(/^#+/)?.[0]?.length || 1));
-      blocks.push({ type: "heading", level, text: trimmed.replace(/^#{1,3}\s+/, "") });
+      const level = trimmed.match(/^#+/)?.[0]?.length || 1;
+      blocks.push({ type: "heading", level, text: trimmed.replace(headingPattern, "") });
       return;
     }
 
-    const imageMatch = trimmed.match(/^!\[(.*?)\]\((https?:\/\/[^\s)]+)\)$/);
-    if (imageMatch) {
+    const imageMatch = trimmed.match(/^!\[(.*?)\]\(([^)\s]+)\)$/);
+    if (imageMatch && isSafeBlogImageUrl(imageMatch[2])) {
       flushParagraph();
       flushList();
       blocks.push({ type: "image", alt: imageMatch[1] || "Blog image", src: imageMatch[2] });
@@ -3765,6 +3780,16 @@ const parseBlogContent = (content = "") => {
   flushList();
   flushCode();
   return blocks;
+};
+
+const isSafeBlogImageUrl = (value = "") => {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch (error) {
+    void error;
+    return false;
+  }
 };
 
 const PageShell = ({ tag = "PlacementDo", title, description, actions = null, maxWidth = 1080, background = "var(--slate-50)", children }) => (
@@ -3787,6 +3812,7 @@ const PageShell = ({ tag = "PlacementDo", title, description, actions = null, ma
 
 const BlogList = ({ onNav }) => {
   const [posts, setPosts] = useState([]);
+  const [defaults, setDefaults] = useState(LOCAL_BLOG_DEFAULTS);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
@@ -3799,7 +3825,15 @@ const BlogList = ({ onNav }) => {
         const r = await fetch("/api/blog");
         const data = await r.json();
         if (!r.ok) throw new Error(data?.error || "Failed to load blog posts");
-        if (!cancelled) setPosts(Array.isArray(data?.posts) ? data.posts.map((post) => normalizeBlogMeta(post)) : []);
+        if (!cancelled) {
+          const apiDefaults = data?.defaults && typeof data.defaults === "object" && Object.keys(data.defaults).length > 0
+            ? data.defaults
+            : defaults;
+          if (data?.defaults && typeof data.defaults === "object" && Object.keys(data.defaults).length > 0) {
+            setDefaults((curr) => ({ ...curr, ...data.defaults }));
+          }
+          setPosts(Array.isArray(data?.posts) ? data.posts.map((post) => normalizeBlogMeta(post, apiDefaults)) : []);
+        }
       } catch (err) {
         if (!cancelled) setError(err?.message || "Failed to load blog posts");
       } finally {
@@ -3875,7 +3909,7 @@ const BlogList = ({ onNav }) => {
             </div>
             {post.tags.length > 0 && (
               <div style={{ marginTop: 10, display: "flex", gap: 6, flexWrap: "wrap" }}>
-                {post.tags.slice(0, 3).map((tag) => (
+                {post.tags.slice(0, MAX_VISIBLE_BLOG_TAGS).map((tag) => (
                   <span key={`${post.slug}-${tag}`} style={{ fontSize: 11, padding: "4px 8px", borderRadius: 999, border: "1px solid var(--border)", color: "var(--slate-500)", background: "var(--slate-50)" }}>
                     #{tag}
                   </span>
@@ -3895,6 +3929,7 @@ const BlogList = ({ onNav }) => {
 const BlogPost = ({ slug, onNav, onPostLoaded }) => {
   const [post, setPost] = useState(null);
   const [relatedPosts, setRelatedPosts] = useState([]);
+  const [defaults, setDefaults] = useState(LOCAL_BLOG_DEFAULTS);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -3911,13 +3946,23 @@ const BlogPost = ({ slug, onNav, onPostLoaded }) => {
         const listData = await listResponse.json();
         if (!postResponse.ok) throw new Error(postData?.error || "Post not found");
         if (!cancelled) {
-          const normalizedPost = normalizeBlogMeta(postData?.post || null);
+          const postDefaults = postData?.defaults && typeof postData.defaults === "object" && Object.keys(postData.defaults).length > 0
+            ? postData.defaults
+            : null;
+          const listDefaults = listData?.defaults && typeof listData.defaults === "object" && Object.keys(listData.defaults).length > 0
+            ? listData.defaults
+            : null;
+          const responseDefaults = postDefaults || listDefaults || defaults;
+          if (postDefaults || listDefaults) {
+            setDefaults((curr) => ({ ...curr, ...(postDefaults || listDefaults) }));
+          }
+          const normalizedPost = normalizeBlogMeta(postData?.post || null, responseDefaults);
           setPost(normalizedPost);
           if (normalizedPost && onPostLoaded) {
             onPostLoaded({ title: normalizedPost.title, excerpt: normalizedPost.excerpt });
           }
           const listedPosts = listResponse.ok && Array.isArray(listData?.posts)
-            ? listData.posts.map((item) => normalizeBlogMeta(item))
+            ? listData.posts.map((item) => normalizeBlogMeta(item, responseDefaults))
             : [];
           const related = listedPosts
             .filter((item) => item.slug !== normalizedPost.slug)
@@ -3927,7 +3972,7 @@ const BlogPost = ({ slug, onNav, onPostLoaded }) => {
               if (aScore !== bScore) return bScore - aScore;
               return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
             })
-            .slice(0, 3);
+            .slice(0, MAX_RELATED_BLOG_POSTS);
           setRelatedPosts(related);
           if (!listResponse.ok) {
             setRelatedPosts([]);
@@ -3968,6 +4013,7 @@ const BlogPost = ({ slug, onNav, onPostLoaded }) => {
             <div style={{ display: "grid", gap: 14 }}>
               {blocks.map((block, idx) => {
                 if (block.type === "heading") {
+                  // PageShell renders the page-level h1, so parsed content headings start at h2.
                   const HeadingTag = block.level === 1 ? "h2" : block.level === 2 ? "h3" : "h4";
                   return <HeadingTag key={`h-${idx}`} className="brig" style={{ fontSize: block.level === 1 ? 30 : block.level === 2 ? 24 : 20, letterSpacing: "-0.02em", marginTop: 6 }}>{block.text}</HeadingTag>;
                 }
