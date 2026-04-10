@@ -1153,8 +1153,29 @@ const DashboardShell = ({ activeTab, onNav, onUpgrade, children }) => {
 };
 
 /* ── Landing ── */
-const Landing = ({ onNav, onCheckout }) => (
-  <>
+const Landing = ({ onNav, onCheckout }) => {
+  const goToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const productLinks = [
+    { label: "Features", action: () => goToSection("features-section") },
+    { label: "Pricing", action: () => goToSection("pricing-section") },
+    { label: "Personas", action: () => onNav("avatars") },
+    { label: "How it works", action: () => onNav("howItWorks") },
+    { label: "Changelog", action: () => onNav("changelog") },
+  ];
+
+  const companyLinks = [
+    { label: "About", action: () => onNav("about") },
+    { label: "Blog", action: () => onNav("blog") },
+    { label: "Careers", action: () => onNav("careers") },
+    { label: "Privacy Policy", action: () => onNav("privacy") },
+    { label: "Terms of Service", action: () => onNav("terms") },
+  ];
+
+  return (
+    <>
     <main style={{ background: "var(--ivory)" }}>
     {/* HERO */}
     <section className="hero-pad" style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"100px clamp(20px,5vw,60px) 80px", textAlign:"center", position:"relative", overflow:"hidden" }}>
@@ -1527,16 +1548,16 @@ const Landing = ({ onNav, onCheckout }) => (
         {/* Product links */}
         <div>
           <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Product</div>
-          {["Features", "Pricing", "Personas", "How it works", "Changelog"].map(l => (
-            <button key={l} className="footer-link">{l}</button>
+          {productLinks.map(({ label, action }) => (
+            <button key={label} className="footer-link" onClick={action}>{label}</button>
           ))}
         </div>
 
         {/* Company */}
         <div>
           <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Company</div>
-          {["About", "Blog", "Careers", "Privacy Policy", "Terms of Service"].map(l => (
-            <button key={l} className="footer-link">{l}</button>
+          {companyLinks.map(({ label, action }) => (
+            <button key={label} className="footer-link" onClick={action}>{label}</button>
           ))}
         </div>
 
@@ -1552,16 +1573,22 @@ const Landing = ({ onNav, onCheckout }) => (
       <div style={{ borderTop: "1px solid rgba(255,255,255,.07)", padding: "16px clamp(20px,5vw,60px)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, maxWidth: 1200, margin: "0 auto" }}>
         <span style={{ fontSize: 12, color: "rgba(255,255,255,.25)" }}>© 2026 PlacementDo. All rights reserved.</span>
         <div style={{ display: "flex", gap: 16 }}>
-          {["Privacy", "Terms", "Cookies"].map(l => (
-            <button key={l} style={{ fontSize: 12, color: "rgba(255,255,255,.25)", background: "none", border: "none", cursor: "pointer", transition: "color 0.15s", fontFamily: "'DM Sans',sans-serif" }}
+          {[
+            { label: "Privacy", action: () => onNav("privacy") },
+            { label: "Terms", action: () => onNav("terms") },
+            { label: "Cookies", action: () => onNav("privacy") },
+          ].map(({ label, action }) => (
+            <button key={label} style={{ fontSize: 12, color: "rgba(255,255,255,.25)", background: "none", border: "none", cursor: "pointer", transition: "color 0.15s", fontFamily: "'DM Sans',sans-serif" }}
+              onClick={action}
               onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,.6)"}
-              onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,.25)"}>{l}</button>
+              onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,.25)"}>{label}</button>
           ))}
         </div>
       </div>
     </footer>
   </>
-);
+  );
+};
 
 /* ── Sign In ── */
 const SignIn = ({ onNav }) => {
@@ -3641,12 +3668,255 @@ const SupportView = () => {
   );
 };
 
+const formatBlogDate = (value) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("en-US", { year: "numeric", month: "short", day: "numeric" }).format(date);
+};
+
+const BlogList = ({ onNav }) => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    const run = async () => {
+      try {
+        const r = await fetch("/api/blog");
+        const data = await r.json();
+        if (!r.ok) throw new Error(data?.error || "Failed to load blog posts");
+        if (!cancelled) setPosts(Array.isArray(data?.posts) ? data.posts : []);
+      } catch (err) {
+        if (!cancelled) setError(err?.message || "Failed to load blog posts");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    run();
+    return () => { cancelled = true; };
+  }, []);
+
+  return (
+    <main style={{ minHeight: "100vh", background: "var(--slate-50)", padding: "104px clamp(20px,5vw,60px) 72px", maxWidth: 1080, margin: "0 auto" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center", marginBottom: 24 }}>
+        <div>
+          <Tag color="teal">Blog</Tag>
+          <h1 className="brig" style={{ fontSize: "clamp(30px,5vw,44px)", letterSpacing: "-0.03em", marginTop: 12 }}>PlacementDo Blog</h1>
+          <p style={{ color: "var(--slate-500)", marginTop: 8, maxWidth: 640 }}>Interview prep tips, product updates, and practical guides from the PlacementDo team.</p>
+        </div>
+        <button className="btn-secondary" onClick={() => onNav("blogAdmin")}>Owner Admin</button>
+      </div>
+
+      {loading && <div className="card" style={{ padding: 20 }}>Loading posts…</div>}
+      {!loading && error && <div className="card" style={{ padding: 20, color: "var(--red)" }}>{error}</div>}
+      {!loading && !error && posts.length === 0 && <div className="card" style={{ padding: 20 }}>No posts published yet.</div>}
+
+      <div style={{ display: "grid", gap: 14 }}>
+        {posts.map((post) => (
+          <article key={post.slug} className="card card-lift" style={{ padding: "20px 22px" }}>
+            <div style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+              {formatBlogDate(post.publishedAt)}
+            </div>
+            <h2 className="brig" style={{ marginTop: 8, fontSize: 25, letterSpacing: "-0.02em" }}>{post.title}</h2>
+            <p style={{ marginTop: 8, color: "var(--slate-500)", lineHeight: 1.7 }}>{post.excerpt}</p>
+            <button className="btn-ghost" style={{ marginTop: 12, paddingLeft: 0 }} onClick={() => onNav("blogPost", { slug: post.slug })}>
+              Read more <ChevronRight size={14} />
+            </button>
+          </article>
+        ))}
+      </div>
+    </main>
+  );
+};
+
+const BlogPost = ({ slug, onNav, onPostLoaded }) => {
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!slug) return;
+    let cancelled = false;
+    const run = async () => {
+      try {
+        const r = await fetch(`/api/blog?slug=${encodeURIComponent(slug)}`);
+        const data = await r.json();
+        if (!r.ok) throw new Error(data?.error || "Post not found");
+        if (!cancelled) {
+          setPost(data?.post || null);
+          if (data?.post && onPostLoaded) {
+            onPostLoaded({ title: data.post.title, excerpt: data.post.excerpt });
+          }
+        }
+      } catch (err) {
+        if (!cancelled) setError(err?.message || "Post not found");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    run();
+    return () => { cancelled = true; };
+  }, [slug, onPostLoaded]);
+
+  return (
+    <main style={{ minHeight: "100vh", background: "var(--white)", padding: "104px clamp(20px,5vw,60px) 72px", maxWidth: 900, margin: "0 auto" }}>
+      <button className="btn-ghost" onClick={() => onNav("blog")} style={{ marginBottom: 20 }}>← Back to blog</button>
+      {loading && <div className="card" style={{ padding: 20 }}>Loading post…</div>}
+      {!loading && error && <div className="card" style={{ padding: 20, color: "var(--red)" }}>{error}</div>}
+      {!loading && !error && post && (
+        <article>
+          <div style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+            {formatBlogDate(post.publishedAt)}
+          </div>
+          <h1 className="brig" style={{ fontSize: "clamp(32px,5vw,46px)", letterSpacing: "-0.03em", marginTop: 10 }}>{post.title}</h1>
+          <p style={{ marginTop: 14, color: "var(--slate-500)", lineHeight: 1.75, fontSize: 17 }}>{post.excerpt}</p>
+          <div className="card" style={{ marginTop: 20, padding: 22, whiteSpace: "pre-wrap", lineHeight: 1.9, fontSize: 16 }}>
+            {post.content}
+          </div>
+        </article>
+      )}
+    </main>
+  );
+};
+
+const BlogAdmin = ({ onNav }) => {
+  const [token, setToken] = useState("");
+  const [posts, setPosts] = useState([]);
+  const [message, setMessage] = useState("");
+  const [editingSlug, setEditingSlug] = useState("");
+  const [form, setForm] = useState({ title: "", excerpt: "", content: "", slug: "", status: "published" });
+
+  const load = useCallback(async () => {
+    if (!token) return;
+    const r = await fetch("/api/blog", { headers: { "x-admin-token": token } });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data?.error || "Failed to load posts");
+    setPosts(Array.isArray(data?.posts) ? data.posts : []);
+  }, [token]);
+
+  const save = async (e) => {
+    e.preventDefault();
+    if (!token) return;
+    const method = editingSlug ? "PUT" : "POST";
+    const target = editingSlug ? `/api/blog?slug=${encodeURIComponent(editingSlug)}` : "/api/blog";
+    const r = await fetch(target, {
+      method,
+      headers: { "Content-Type": "application/json", "x-admin-token": token },
+      body: JSON.stringify(form),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data?.error || "Save failed");
+    setMessage(editingSlug ? "Post updated." : "Post created.");
+    setForm({ title: "", excerpt: "", content: "", slug: "", status: "published" });
+    setEditingSlug("");
+    await load();
+  };
+
+  const del = async (slug) => {
+    if (!token) return;
+    const r = await fetch(`/api/blog?slug=${encodeURIComponent(slug)}`, {
+      method: "DELETE",
+      headers: { "x-admin-token": token },
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data?.error || "Delete failed");
+    setMessage("Post deleted.");
+    await load();
+  };
+
+  return (
+    <main style={{ minHeight: "100vh", background: "var(--slate-50)", padding: "104px clamp(20px,5vw,60px) 72px", maxWidth: 1100, margin: "0 auto" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+        <h1 className="brig" style={{ fontSize: "clamp(28px,5vw,40px)", letterSpacing: "-0.03em" }}>Blog Admin</h1>
+        <button className="btn-ghost" onClick={() => onNav("blog")}>View public blog</button>
+      </div>
+      <p style={{ color: "var(--slate-500)", marginTop: 8 }}>Enter your admin token to create, edit, and delete posts securely via protected API endpoints.</p>
+      {message && <div style={{ marginTop: 12, color: "var(--green)", fontSize: 13 }}>{message}</div>}
+
+      <div className="card" style={{ padding: 16, marginTop: 16 }}>
+        <label>Admin Token</label>
+        <input value={token} onChange={(e) => setToken(e.target.value)} placeholder="BLOG_ADMIN_TOKEN" />
+        <button className="btn-secondary" style={{ marginTop: 10 }} onClick={async () => {
+          try { await load(); setMessage("Posts loaded."); }
+          catch (err) { setMessage(err?.message || "Failed to load."); }
+        }}>Load Posts</button>
+      </div>
+
+      <form className="card" style={{ padding: 18, marginTop: 16, display: "grid", gap: 12 }} onSubmit={async (e) => {
+        try { await save(e); }
+        catch (err) { setMessage(err?.message || "Save failed."); }
+      }}>
+        <h2 className="brig" style={{ fontSize: 20 }}>{editingSlug ? "Edit Post" : "Create Post"}</h2>
+        <div><label>Title</label><input value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} required /></div>
+        <div><label>Slug (optional)</label><input value={form.slug} onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))} placeholder="my-seo-friendly-slug" /></div>
+        <div><label>Excerpt</label><textarea value={form.excerpt} onChange={(e) => setForm((f) => ({ ...f, excerpt: e.target.value }))} rows={3} required /></div>
+        <div><label>Content</label><textarea value={form.content} onChange={(e) => setForm((f) => ({ ...f, content: e.target.value }))} rows={9} required /></div>
+        <div><label>Status</label><select value={form.status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}><option value="published">published</option><option value="draft">draft</option></select></div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button type="submit" className="btn-primary">{editingSlug ? "Update post" : "Create post"}</button>
+          {editingSlug && <button type="button" className="btn-ghost" onClick={() => { setEditingSlug(""); setForm({ title: "", excerpt: "", content: "", slug: "", status: "published" }); }}>Cancel edit</button>}
+        </div>
+      </form>
+
+      <div style={{ marginTop: 16, display: "grid", gap: 10 }}>
+        {posts.map((post) => (
+          <div key={post.slug} className="card" style={{ padding: 14 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+              <div>
+                <div className="brig" style={{ fontSize: 18 }}>{post.title}</div>
+                <div style={{ fontSize: 12, color: "var(--slate-400)", marginTop: 2 }}>{post.slug} • {post.status} • {formatBlogDate(post.publishedAt)}</div>
+              </div>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button className="btn-secondary" onClick={() => {
+                  setEditingSlug(post.slug);
+                  setForm((f) => ({ ...f, title: post.title, excerpt: post.excerpt, content: post.content || "", slug: post.slug, status: post.status }));
+                }}>Edit</button>
+                <button className="btn-danger" onClick={async () => {
+                  try { await del(post.slug); }
+                  catch (err) { setMessage(err?.message || "Delete failed."); }
+                }}>Delete</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
+  );
+};
+
+const StaticPage = ({ title, description, sections = [] }) => (
+  <main style={{ minHeight: "100vh", background: "var(--slate-50)", padding: "104px clamp(20px,5vw,60px) 72px" }}>
+    <div style={{ maxWidth: 900, margin: "0 auto" }}>
+      <Tag color="teal">PlacementDo</Tag>
+      <h1 className="brig" style={{ fontSize: "clamp(30px,5vw,42px)", letterSpacing: "-0.03em", marginTop: 10 }}>{title}</h1>
+      <p style={{ marginTop: 8, color: "var(--slate-500)", lineHeight: 1.8 }}>{description}</p>
+      <div style={{ marginTop: 20, display: "grid", gap: 12 }}>
+        {sections.map((item) => (
+          <section key={item.heading} className="card" style={{ padding: 18 }}>
+            <h2 className="brig" style={{ fontSize: 22 }}>{item.heading}</h2>
+            <p style={{ marginTop: 8, color: "var(--slate-500)", lineHeight: 1.8 }}>{item.body}</p>
+          </section>
+        ))}
+      </div>
+    </div>
+  </main>
+);
+
 /* ── Root App ── */
 const DASH_VIEWS = ["dashboard", "reports", "progress", "avatars", "settings", "support"];
 const ROUTE_TO_PATH = {
   landing: "/",
   signin: "/signin",
   signup: "/signup",
+  blog: "/blog",
+  blogAdmin: "/blog/admin",
+  about: "/about",
+  careers: "/careers",
+  privacy: "/privacy-policy",
+  terms: "/terms-of-service",
+  changelog: "/changelog",
+  howItWorks: "/how-it-works",
   dashboard: "/dashboard",
   reports: "/reports",
   progress: "/progress",
@@ -3660,6 +3930,15 @@ const ROUTE_TO_PATH = {
 const PATH_TO_ROUTE = Object.fromEntries(
   Object.entries(ROUTE_TO_PATH).map(([route, path]) => [path, route]),
 );
+
+const parseRouteFromPath = (pathname) => {
+  if (pathname === "/blog/") return { route: "blog", slug: "" };
+  if (pathname.startsWith("/blog/") && pathname !== "/blog/admin") {
+    const slug = decodeURIComponent(pathname.replace("/blog/", "")).trim();
+    if (slug) return { route: "blogPost", slug };
+  }
+  return { route: PATH_TO_ROUTE[pathname] || "landing", slug: "" };
+};
 
 const SEO_MAP = {
   landing: {
@@ -3685,6 +3964,78 @@ const SEO_MAP = {
     type: "website",
     robots: "index, follow",
     breadcrumbName: "Sign Up",
+  },
+  blog: {
+    title: "Blog | PlacementDo",
+    description:
+      "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes.",
+    type: "website",
+    robots: "index, follow",
+    breadcrumbName: "Blog",
+  },
+  blogPost: {
+    title: "Blog Post | PlacementDo",
+    description:
+      "Read detailed interview guidance and product updates from the PlacementDo blog.",
+    type: "article",
+    robots: "index, follow",
+    breadcrumbName: "Blog Post",
+  },
+  blogAdmin: {
+    title: "Blog Admin | PlacementDo",
+    description:
+      "Secure blog administration area for managing PlacementDo blog content.",
+    type: "website",
+    robots: "noindex, nofollow",
+    breadcrumbName: "Blog Admin",
+  },
+  about: {
+    title: "About | PlacementDo",
+    description:
+      "Learn about PlacementDo's mission to help candidates practice smarter and perform better in real interviews.",
+    type: "website",
+    robots: "index, follow",
+    breadcrumbName: "About",
+  },
+  careers: {
+    title: "Careers | PlacementDo",
+    description:
+      "Explore career opportunities and join the PlacementDo team building next-generation interview preparation technology.",
+    type: "website",
+    robots: "index, follow",
+    breadcrumbName: "Careers",
+  },
+  privacy: {
+    title: "Privacy Policy | PlacementDo",
+    description:
+      "Read PlacementDo's privacy policy to understand how we collect, process, and protect user information.",
+    type: "website",
+    robots: "index, follow",
+    breadcrumbName: "Privacy Policy",
+  },
+  terms: {
+    title: "Terms of Service | PlacementDo",
+    description:
+      "Review the terms of service for using PlacementDo products, services, and interview practice features.",
+    type: "website",
+    robots: "index, follow",
+    breadcrumbName: "Terms of Service",
+  },
+  changelog: {
+    title: "Changelog | PlacementDo",
+    description:
+      "Stay updated with recent product improvements, fixes, and new feature releases from PlacementDo.",
+    type: "website",
+    robots: "index, follow",
+    breadcrumbName: "Changelog",
+  },
+  howItWorks: {
+    title: "How It Works | PlacementDo",
+    description:
+      "See how PlacementDo personalizes AI mock interviews and delivers structured feedback to improve interview readiness.",
+    type: "website",
+    robots: "index, follow",
+    breadcrumbName: "How it works",
   },
   dashboard: {
     title: "New Interview Session | PlacementDo",
@@ -3752,16 +4103,18 @@ const SEO_MAP = {
   },
 };
 export default function App() {
-  const [view, setView] = useState(() => {
-    const route = PATH_TO_ROUTE[window.location.pathname];
-    return route || "landing";
-  });
+  const [view, setView] = useState(() => parseRouteFromPath(window.location.pathname).route);
+  const [blogSlug, setBlogSlug] = useState(() => parseRouteFromPath(window.location.pathname).slug);
+  const [blogPostSeo, setBlogPostSeo] = useState({ title: "", excerpt: "" });
   const [checkoutPlan, setCheckout] = useState(null);
   const [toast, setToast] = useState(null);
 
-  const go = v => {
+  const go = (v, options = {}) => {
+    const nextSlug = typeof options.slug === "string" ? options.slug.trim() : "";
     setView(v);
-    const nextPath = ROUTE_TO_PATH[v] || "/";
+    setBlogSlug(v === "blogPost" ? nextSlug : "");
+    if (v !== "blogPost") setBlogPostSeo({ title: "", excerpt: "" });
+    const nextPath = v === "blogPost" && nextSlug ? `/blog/${encodeURIComponent(nextSlug)}` : (ROUTE_TO_PATH[v] || "/");
     if (window.location.pathname !== nextPath) {
       window.history.pushState({}, "", nextPath);
     }
@@ -3777,17 +4130,25 @@ export default function App() {
 
   useEffect(() => {
     const handlePopState = () => {
-      const route = PATH_TO_ROUTE[window.location.pathname];
-      setView(route || "landing");
+      const parsed = parseRouteFromPath(window.location.pathname);
+      setView(parsed.route);
+      setBlogSlug(parsed.slug);
+      if (parsed.route !== "blogPost") setBlogPostSeo({ title: "", excerpt: "" });
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   useEffect(() => {
-    const seo = SEO_MAP[view] || SEO_MAP.landing;
+    const seo = view === "blogPost" && blogPostSeo.title
+      ? {
+        ...SEO_MAP.blogPost,
+        title: `${blogPostSeo.title} | PlacementDo`,
+        description: blogPostSeo.excerpt || SEO_MAP.blogPost.description,
+      }
+      : (SEO_MAP[view] || SEO_MAP.landing);
     const origin = window.location.origin;
-    const path = ROUTE_TO_PATH[view] || "/";
+    const path = view === "blogPost" && blogSlug ? `/blog/${encodeURIComponent(blogSlug)}` : (ROUTE_TO_PATH[view] || "/");
     const canonicalUrl = `${origin}${path}`;
     const imageUrl = `${origin}/og-image.svg`;
 
@@ -3903,12 +4264,90 @@ export default function App() {
       },
       "breadcrumb",
     );
-  }, [view]);
+  }, [view, blogSlug, blogPostSeo]);
 
   const renderView = () => {
     if (view === "landing") return <Landing onNav={go} onCheckout={openCheckout} />;
     if (view === "signin") return <SignIn onNav={go} />;
     if (view === "signup") return <SignUp onNav={go} />;
+    if (view === "blog") return <BlogList onNav={go} />;
+    if (view === "blogPost") return <BlogPost slug={blogSlug} onNav={go} onPostLoaded={setBlogPostSeo} />;
+    if (view === "blogAdmin") return <BlogAdmin onNav={go} />;
+    if (view === "about") {
+      return (
+        <StaticPage
+          title="About PlacementDo"
+          description="PlacementDo helps candidates prepare for high-stakes interviews with realistic AI-driven practice sessions and structured feedback."
+          sections={[
+            { heading: "Our mission", body: "We aim to make interview preparation more personalized, repeatable, and data-driven for every job seeker." },
+            { heading: "What we build", body: "PlacementDo combines role-aware interview simulation, company context, and clear analytics to improve readiness with each session." },
+          ]}
+        />
+      );
+    }
+    if (view === "careers") {
+      return (
+        <StaticPage
+          title="Careers at PlacementDo"
+          description="We are building thoughtful tools that help candidates unlock opportunities through better interview preparation."
+          sections={[
+            { heading: "Join us", body: "We are hiring mission-driven builders across product, engineering, and growth. Share your profile at support@placementdo.com." },
+            { heading: "How we work", body: "We value ownership, empathy for candidates, and practical execution that quickly improves real user outcomes." },
+          ]}
+        />
+      );
+    }
+    if (view === "privacy") {
+      return (
+        <StaticPage
+          title="Privacy Policy"
+          description="This policy explains what information PlacementDo collects, how it is used, and how we protect user data."
+          sections={[
+            { heading: "Information we collect", body: "We collect account details, usage activity, and interview session data required to provide and improve the service." },
+            { heading: "How we use data", body: "Data is used to personalize interview experiences, generate reports, improve product quality, and support users." },
+            { heading: "Your choices", body: "You can request data updates or deletion by contacting support. We process requests in line with applicable laws." },
+          ]}
+        />
+      );
+    }
+    if (view === "terms") {
+      return (
+        <StaticPage
+          title="Terms of Service"
+          description="These terms govern your use of PlacementDo services, website, and related content."
+          sections={[
+            { heading: "Use of service", body: "You agree to use PlacementDo lawfully and not misuse the platform or attempt unauthorized access." },
+            { heading: "Content and availability", body: "Features may evolve over time; we may update or discontinue specific functionality with reasonable notice." },
+            { heading: "Contact", body: "For questions about these terms, reach us at support@placementdo.com." },
+          ]}
+        />
+      );
+    }
+    if (view === "changelog") {
+      return (
+        <StaticPage
+          title="Changelog"
+          description="Recent improvements and updates shipped to PlacementDo."
+          sections={[
+            { heading: "v0.9.0", body: "Added dedicated Blog pages with SEO-friendly post URLs and secure owner admin CRUD endpoints." },
+            { heading: "v0.8.4", body: "Improved landing page clarity, upgraded CTA flows, and polished dashboard transitions." },
+          ]}
+        />
+      );
+    }
+    if (view === "howItWorks") {
+      return (
+        <StaticPage
+          title="How PlacementDo Works"
+          description="PlacementDo guides you through interview setup, realistic simulation, and focused feedback."
+          sections={[
+            { heading: "1. Configure practice context", body: "Select company, role, language, and interviewer persona to shape each session." },
+            { heading: "2. Run realistic interviews", body: "Answer structured AI questions under time constraints similar to real interview pressure." },
+            { heading: "3. Review and improve", body: "Get scoring, insights, and targeted recommendations to iterate quickly on weak areas." },
+          ]}
+        />
+      );
+    }
     if (view === "interview") return <InterviewRoom onNav={go} persona={selectedPersona} />;
     if (view === "report") return <Report onNav={go} />;
     if (isDash) {
