@@ -4246,6 +4246,867 @@ const StaticPage = ({ title, description, sections = [] }) => (
   </PageShell>
 );
 
+/* ── Features Page ── */
+const FeaturesPage = ({ onNav }) => {
+  const features = [
+    { icon: <Brain size={22} />, title: "CV-Contextual Questions", desc: "Upload your resume and our AI reads every project, skill claim, and gap — then crafts hyper-specific questions that expose exactly what a real interviewer would probe. No generic questions. Every session is built around your actual background.", color: "var(--teal)" },
+    { icon: <Globe size={22} />, title: "28 Languages + Code-Switching", desc: "Practice interviews in English, Mandarin, Hindi, French, Spanish, Arabic, and 22 more languages. Switch languages mid-session seamlessly. Perfect for candidates targeting global companies or bilingual roles.", color: "#0369A1" },
+    { icon: <Zap size={22} />, title: "Real-Time Filler Detection", desc: "Get flagged on filler words (um, uh, like), pacing issues, and over-qualification as they happen — not after. Build habits before a real interviewer silently judges you for the same patterns.", color: "var(--amber)" },
+    { icon: <Shield size={22} />, title: "Company Interview DNA", desc: "Each company has its own interview style. Google's Googleyness questions, McKinsey's case frameworks, Amazon's Leadership Principles — PlacementDo calibrates every session to the exact culture and expectations of your target.", color: "#7C3AED" },
+    { icon: <BarChart2 size={22} />, title: "10-Metric Score Breakdown", desc: "Walk away with structured scoring across technical depth, STAR method adherence, communication clarity, cultural fit alignment, logical reasoning, and six more tracked dimensions — so you know exactly where to improve next.", color: "#BE185D" },
+    { icon: <RefreshCw size={22} />, title: "Report Rechecks", desc: "Disagree with your analysis? Believe the AI missed context? Request a recheck from a different AI perspective. Pro gets 10, Elite gets 30. Useful when you want a second opinion on ambiguous or edge-case responses.", color: "var(--green)" },
+    { icon: <Award size={22} />, title: "AI Assistance Mode", desc: "Stuck mid-answer? In Assistance Mode, the AI can gently nudge you toward a better structure without just giving you the answer. Ideal for learning STAR method or case frameworks while practising.", color: "var(--amber)" },
+    { icon: <TrendingUp size={22} />, title: "Progress Tracking", desc: "Every interview session feeds into a long-term progress chart. Track your scores week over week, see which dimensions are improving fastest, and get targeted coaching on persistent weak spots.", color: "var(--teal)" },
+    { icon: <Target size={22} />, title: "Role + Level Targeting", desc: "Set the exact title, seniority level, and focus area (Behavioral / Technical / Case Study / Mixed). The AI adjusts question complexity, expected answer depth, and scoring criteria accordingly.", color: "#0369A1" },
+  ];
+
+  const stats = [
+    { n: "140+", l: "Target companies" },
+    { n: "28", l: "Languages supported" },
+    { n: "6", l: "Interviewer personas" },
+    { n: "10", l: "Scoring dimensions" },
+  ];
+
+  return (
+    <main style={{ minHeight: "100vh", background: "var(--ivory)" }}>
+      {/* Hero */}
+      <section style={{ background: "var(--white)", borderBottom: "1px solid var(--border)", padding: "96px clamp(20px,5vw,60px) 72px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 800, height: 500, background: "radial-gradient(ellipse,rgba(13,148,136,.07) 0%,transparent 70%)", pointerEvents: "none" }} />
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ position: "relative" }}>
+          <Tag color="teal"><Sparkles size={11} /> Features</Tag>
+          <h1 className="brig" style={{ fontSize: "clamp(32px,5vw,60px)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 16, marginBottom: 16, lineHeight: 1.08, maxWidth: 800, margin: "16px auto" }}>
+            Every edge you need to land the offer
+          </h1>
+          <p style={{ fontSize: "clamp(15px,2vw,18px)", color: "var(--slate-500)", maxWidth: 600, margin: "0 auto 32px", lineHeight: 1.68 }}>
+            PlacementDo combines CV-aware AI, company-specific preparation, multilingual support, and honest scoring into a single platform built to get you hired faster.
+          </p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <button className="btn-primary" onClick={() => onNav("pricing")}><CreditCard size={15} /> View Plans</button>
+            <button className="btn-secondary" onClick={() => onNav("howItWorks")}>How It Works <ChevronRight size={14} /></button>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Stats row */}
+      <section style={{ background: "var(--slate)", borderBottom: "1px solid rgba(255,255,255,.06)", padding: "28px clamp(20px,5vw,60px)" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", gap: "clamp(24px,4vw,56px)", justifyContent: "center", flexWrap: "wrap" }}>
+          {stats.map(({ n, l }) => (
+            <div key={l} style={{ textAlign: "center" }}>
+              <div className="brig" style={{ fontSize: "clamp(22px,3vw,32px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>{n}</div>
+              <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", marginTop: 3 }}>{l}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Feature grid */}
+      <section style={{ padding: "80px clamp(20px,5vw,60px)", maxWidth: 1200, margin: "0 auto" }}>
+        <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }} style={{ textAlign: "center", marginBottom: 52 }}>
+          <Tag color="slate">Core capabilities</Tag>
+          <h2 className="brig" style={{ fontSize: "clamp(24px,4vw,42px)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 12, lineHeight: 1.1 }}>Built for serious candidates</h2>
+          <p style={{ fontSize: 16, color: "var(--slate-500)", maxWidth: 560, margin: "12px auto 0", lineHeight: 1.65 }}>Nine capabilities working together to give you a decisive edge in competitive interview cycles.</p>
+        </motion.div>
+        <div className="feature-grid stagger">
+          {features.map(({ icon, title, desc, color }, i) => (
+            <motion.div key={title} initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.42, delay: i * 0.06 }} viewport={{ once: true }} className="feature-card">
+              <div className="fc-icon" style={{ background: `${color}12`, borderColor: `${color}20`, color }}>{icon}</div>
+              <h3>{title}</h3>
+              <p>{desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Personas highlight */}
+      <section style={{ background: "var(--slate)", padding: "80px clamp(20px,5vw,60px)", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: "20%", right: "-5%", width: 500, height: 400, background: "radial-gradient(ellipse,rgba(13,148,136,.18) 0%,transparent 65%)", pointerEvents: "none" }} />
+        <div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 1 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(340px,100%),1fr))", gap: 48, alignItems: "center" }}>
+            <div>
+              <Tag color="teal">🎭 Unique Feature</Tag>
+              <h2 className="brig" style={{ fontSize: "clamp(24px,3.5vw,38px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.025em", lineHeight: 1.18, marginTop: 14, marginBottom: 16 }}>
+                6 Distinct AI Interviewer Personalities
+              </h2>
+              <p style={{ fontSize: 15, color: "rgba(255,255,255,.6)", lineHeight: 1.72, marginBottom: 24 }}>
+                Most interview tools only test what you know. PlacementDo trains how you react. Each of our 6 personas simulates a different psychological archetype — from the dangerously supportive Friendly Peer to the silence-wielding Stoic Veteran. Knowing your subject isn't enough when the interviewer is actively trying to destabilise you.
+              </p>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 28 }}>
+                {["6 Distinct Personalities", "Psychological Pressure Training", "Adaptive Difficulty"].map((label) => (
+                  <div key={label} style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.14)", borderRadius: 20, padding: "5px 13px" }}>
+                    <span style={{ fontSize: 12, color: "rgba(255,255,255,.78)", fontWeight: 500 }}>{label}</span>
+                  </div>
+                ))}
+              </div>
+              <button className="btn-primary" onClick={() => onNav("personas")}><ArrowUpRight size={14} /> Explore Personas</button>
+            </div>
+            <div style={{ display: "grid", gap: 10 }}>
+              {[
+                { emoji: "⚡", title: "The Stress-Tester", desc: "Rapid-fire questions, deliberate interruptions, zero encouragement.", color: "#DC2626", bg: "rgba(220,38,38,.16)", bd: "rgba(220,38,38,.3)" },
+                { emoji: "😄", title: "The Friendly Peer", desc: "Deceptively warm — probes oversharing and unclear boundaries.", color: "#D97706", bg: "rgba(217,119,6,.16)", bd: "rgba(217,119,6,.3)" },
+                { emoji: "🎭", title: "The Devil's Advocate", desc: "Disagrees on principle. Forces you to defend every claim.", color: "#7C3AED", bg: "rgba(124,58,237,.16)", bd: "rgba(124,58,237,.3)" },
+                { emoji: "🗿", title: "The Stoic Veteran", desc: "Zero reaction. Three-beat silence after every answer.", color: "#475569", bg: "rgba(71,85,105,.2)", bd: "rgba(71,85,105,.35)" },
+              ].map(({ emoji, title, desc, color, bg, bd }) => (
+                <div key={title} style={{ display: "flex", alignItems: "flex-start", gap: 12, background: bg, border: `1px solid ${bd}`, borderRadius: 12, padding: "12px 16px" }}>
+                  <span style={{ fontSize: 22, flexShrink: 0, lineHeight: 1 }}>{emoji}</span>
+                  <div>
+                    <div style={{ fontSize: 13.5, fontWeight: 700, color: "#fff", marginBottom: 3 }}>{title}</div>
+                    <div style={{ fontSize: 12.5, color: "rgba(255,255,255,.55)", lineHeight: 1.5 }}>{desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{ padding: "72px clamp(20px,5vw,60px)", textAlign: "center", background: "var(--white)", borderTop: "1px solid var(--border)" }}>
+        <Tag color="teal">Get started</Tag>
+        <h2 className="brig" style={{ fontSize: "clamp(24px,4vw,40px)", fontWeight: 800, color: "var(--slate)", letterSpacing: "-0.03em", marginTop: 14, marginBottom: 14, lineHeight: 1.1 }}>Ready to practice smarter?</h2>
+        <p style={{ color: "var(--slate-500)", maxWidth: 500, margin: "0 auto 28px", lineHeight: 1.68 }}>Join 2,400+ candidates already on the waitlist. Secure your early-access spot and get 30% off at launch.</p>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <button className="btn-primary" onClick={() => onNav("landing")}><Bell size={15} /> Join Waitlist</button>
+          <button className="btn-secondary" onClick={() => onNav("pricing")}>See Pricing <ChevronRight size={14} /></button>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+/* ── Pricing Page ── */
+const PricingPage = ({ onNav, onCheckout }) => {
+  const [openFaq, setOpenFaq] = useState(null);
+  const faqs = [
+    { q: "Are these one-time purchases or subscriptions?", a: "All PlacementDo plans are one-time purchases. There are no monthly subscriptions, no auto-renewals, and no hidden fees. You buy a bundle of interview credits and use them at your own pace — no expiry." },
+    { q: "What counts as one interview?", a: "One interview session uses one credit. A session is a complete end-to-end practice — from the AI asking questions through to your detailed scoring report. Sessions typically run 20–45 minutes depending on the number of questions." },
+    { q: "Can I change my interviewer persona mid-session?", a: "Personas are locked at the start of each session. You choose your persona when setting up, and the AI maintains that personality throughout. This is intentional — real interviews don't let you swap interviewers." },
+    { q: "What is AI Assistance Mode?", a: "Available on Pro and Elite plans, AI Assistance Mode lets the AI gently guide you toward a stronger answer structure without revealing the answer. It's particularly useful when learning the STAR method or case interview frameworks. It can be toggled on or off per session." },
+    { q: "What are report rechecks?", a: "If you believe the AI scored an answer unfairly or missed important context, you can request a recheck. A second AI pass re-evaluates that session from a different analytical perspective. Pro includes 10 rechecks; Elite includes 30." },
+    { q: "Is there a refund policy?", a: "We offer a satisfaction guarantee on your first session. If you are not satisfied after completing your first interview, contact support@placementdo.com within 7 days and we will issue a full refund. Subsequent sessions are non-refundable." },
+  ];
+
+  return (
+    <main style={{ minHeight: "100vh", background: "var(--ivory)" }}>
+      {/* Hero */}
+      <section style={{ background: "var(--white)", borderBottom: "1px solid var(--border)", padding: "96px clamp(20px,5vw,60px) 72px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 800, height: 500, background: "radial-gradient(ellipse,rgba(13,148,136,.07) 0%,transparent 70%)", pointerEvents: "none" }} />
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ position: "relative" }}>
+          <Tag color="teal"><CreditCard size={11} /> Pricing</Tag>
+          <h1 className="brig" style={{ fontSize: "clamp(32px,5vw,60px)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 16, lineHeight: 1.08, maxWidth: 800, margin: "16px auto" }}>
+            One interview could change everything
+          </h1>
+          <p style={{ fontSize: "clamp(15px,2vw,18px)", color: "var(--slate-500)", maxWidth: 580, margin: "0 auto 16px", lineHeight: 1.68 }}>
+            No subscriptions. No auto-renewals. Buy interview credits once, use them whenever you need them. Waitlist members get 30% off at launch.
+          </p>
+          <div style={{ display: "flex", gap: 20, justifyContent: "center", flexWrap: "wrap", marginTop: 12 }}>
+            {[<><CheckCircle2 size={14} /> No subscription</>, <><CheckCircle2 size={14} /> No auto-renewal</>, <><CheckCircle2 size={14} /> 30% early-bird discount</>].map((item, i) => (
+              <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13.5, color: "var(--teal-dark)", fontWeight: 600 }}>{item}</span>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Pricing grid */}
+      <section style={{ padding: "72px clamp(20px,5vw,60px)", maxWidth: 1100, margin: "0 auto" }}>
+        <div className="pricing-grid stagger">
+          {PLANS.map(({ name, price, old, hi, tagline, features }, i) => (
+            <motion.div key={name} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: i * 0.1 }} viewport={{ once: true }}
+              className={`pricing-card ${hi ? "hi" : ""}`}
+              style={{ background: hi ? "var(--slate)" : "var(--white)", border: hi ? "1px solid var(--slate)" : "1px solid var(--border)", boxShadow: hi ? "var(--shadow-xl)" : "var(--shadow-sm)" }}>
+              {hi && <div style={{ position: "absolute", top: -14, left: "50%", transform: "translateX(-50%)", background: "var(--teal)", color: "#fff", fontSize: 11, fontWeight: 700, padding: "4px 18px", borderRadius: 20, whiteSpace: "nowrap", letterSpacing: "0.06em", boxShadow: "var(--shadow-teal)" }}>MOST POPULAR</div>}
+              <div style={{ fontSize: 12, fontWeight: 700, color: hi ? "rgba(255,255,255,.4)" : "var(--slate-300)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 5 }}>{name}</div>
+              <div style={{ fontSize: 12.5, color: hi ? "rgba(255,255,255,.55)" : "var(--slate-500)", marginBottom: 18 }}>{tagline}</div>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 26 }}>
+                <span className="brig" style={{ fontSize: "clamp(34px,4vw,48px)", fontWeight: 800, color: hi ? "#fff" : "var(--slate)", letterSpacing: "-0.04em" }}>{price}</span>
+                {old && <span style={{ fontSize: 17, color: hi ? "rgba(255,255,255,.3)" : "var(--slate-300)", textDecoration: "line-through" }}>{old}</span>}
+              </div>
+              <div style={{ height: 1, background: hi ? "rgba(255,255,255,.1)" : "var(--border)", marginBottom: 22 }} />
+              <div style={{ marginBottom: 26 }}>
+                {features.map(f => (
+                  <div key={f} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 11 }}>
+                    <div style={{ width: 17, height: 17, borderRadius: "50%", background: hi ? "rgba(255,255,255,.12)" : "var(--teal-light)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
+                      <Check size={9} style={{ color: hi ? "#fff" : "var(--teal)" }} strokeWidth={3} />
+                    </div>
+                    <span style={{ fontSize: 13.5, color: hi ? "rgba(255,255,255,.78)" : "var(--slate-700)", lineHeight: 1.5 }}>{f}</span>
+                  </div>
+                ))}
+              </div>
+              <button onClick={() => onCheckout(name)}
+                style={{ width: "100%", padding: "13px", borderRadius: 12, border: "none", background: hi ? "var(--teal)" : "var(--slate-100)", color: hi ? "#fff" : "var(--slate)", fontFamily: "'DM Sans',sans-serif", fontWeight: 600, fontSize: 14, cursor: "pointer", transition: "all 0.22s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: "auto" }}
+                onMouseEnter={e => { e.currentTarget.style.background = hi ? "var(--teal-dark)" : "var(--slate-200)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = hi ? "var(--teal)" : "var(--slate-100)"; e.currentTarget.style.transform = ""; }}>
+                <CreditCard size={15} /> Get {name} Plan
+              </button>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Plan comparison — quick reference */}
+      <section style={{ padding: "0 clamp(20px,5vw,60px) 72px", maxWidth: 860, margin: "0 auto" }}>
+        <div className="card" style={{ overflow: "hidden" }}>
+          <div style={{ padding: "18px 24px", borderBottom: "1px solid var(--border)", background: "var(--slate-50)" }}>
+            <span className="brig" style={{ fontSize: 16, fontWeight: 700, color: "var(--slate)" }}>Quick plan comparison</span>
+          </div>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "'DM Sans',sans-serif", fontSize: 13.5 }}>
+              <thead>
+                <tr style={{ borderBottom: "1px solid var(--border)", background: "var(--slate-50)" }}>
+                  {["Feature", "Starter ($1)", "Pro ($39.99)", "Elite ($89.99)"].map((h, i) => (
+                    <th key={h} style={{ padding: "12px 18px", textAlign: i === 0 ? "left" : "center", fontSize: 12, fontWeight: 700, color: "var(--slate-500)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["Interview sessions", "1", "40", "100"],
+                  ["Detailed reports", "1", "40", "100"],
+                  ["Report rechecks", "—", "10", "30"],
+                  ["AI Assistance Mode", "—", "✓", "✓"],
+                  ["Languages", "Any (28)", "Multi-language", "All 28"],
+                  ["Interviewer personas", "1 of 6", "Any 3 of 6", "All 6"],
+                  ["Priority support", "—", "—", "✓"],
+                ].map((row, ri) => (
+                  <tr key={ri} style={{ borderBottom: ri < 6 ? "1px solid var(--border)" : "none" }}
+                    onMouseEnter={e => e.currentTarget.style.background = "var(--slate-50)"}
+                    onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                    {row.map((cell, ci) => (
+                      <td key={ci} style={{ padding: "13px 18px", textAlign: ci === 0 ? "left" : "center", color: ci === 0 ? "var(--slate-700)" : cell === "✓" ? "var(--green)" : cell === "—" ? "var(--slate-300)" : "var(--slate-700)", fontWeight: ci === 0 ? 500 : cell === "✓" ? 700 : 400 }}>{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ padding: "0 clamp(20px,5vw,60px) 80px", maxWidth: 780, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 40 }}>
+          <Tag color="slate"><HelpCircle size={10} /> FAQ</Tag>
+          <h2 className="brig" style={{ fontSize: "clamp(22px,3.5vw,36px)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 12 }}>Common pricing questions</h2>
+        </div>
+        <div className="card" style={{ overflow: "hidden" }}>
+          {faqs.map(({ q, a }, i) => (
+            <div key={i} className="faq-item">
+              <button className="faq-btn" onClick={() => setOpenFaq(o => o === i ? null : i)} style={{ padding: "20px 24px" }}>
+                <span className="brig" style={{ fontSize: 15, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.01em", lineHeight: 1.3 }}>{q}</span>
+                <span className="faq-chevron" style={{ transform: openFaq === i ? "rotate(180deg)" : "rotate(0deg)" }}><ChevronDown size={18} /></span>
+              </button>
+              <AnimatePresence initial={false}>
+                {openFaq === i && (
+                  <motion.div key="ans" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}>
+                    <p style={{ fontSize: 14.5, color: "var(--slate-600)", lineHeight: 1.75, padding: "0 24px 22px", borderTop: "1px solid var(--border)" }}>{a}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+};
+
+/* ── Personas Page (public) ── */
+const PersonasPage = ({ onNav }) => {
+  const [expanded, setExpanded] = useState(null);
+
+  return (
+    <main style={{ minHeight: "100vh", background: "var(--ivory)" }}>
+      {/* Hero */}
+      <section style={{ background: "var(--slate)", padding: "96px clamp(20px,5vw,60px) 72px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: 800, height: 500, background: "radial-gradient(ellipse,rgba(13,148,136,.18) 0%,transparent 65%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "-10%", right: "5%", width: 360, height: 300, background: "radial-gradient(ellipse,rgba(124,58,237,.14) 0%,transparent 65%)", pointerEvents: "none" }} />
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ position: "relative", zIndex: 1 }}>
+          <Tag color="teal">🎭 Interviewer Personas</Tag>
+          <h1 className="brig" style={{ fontSize: "clamp(32px,5vw,60px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", marginTop: 16, lineHeight: 1.08, maxWidth: 800, margin: "16px auto" }}>
+            Survive any interviewer personality
+          </h1>
+          <p style={{ fontSize: "clamp(15px,2vw,18px)", color: "rgba(255,255,255,.6)", maxWidth: 620, margin: "0 auto 32px", lineHeight: 1.68 }}>
+            Real interviews aren't just about what you know — they're about who's asking. PlacementDo trains how you react to 6 distinct behavioral archetypes, from the dangerously charming to the psychologically intense.
+          </p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <button className="btn-primary" onClick={() => onNav("signin")}><Zap size={14} /> Start Practicing</button>
+            <button className="btn-secondary" onClick={() => onNav("features")}>See All Features <ChevronRight size={14} /></button>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Persona grid */}
+      <section style={{ padding: "72px clamp(20px,5vw,60px)", maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <Tag color="slate">6 archetypes</Tag>
+          <h2 className="brig" style={{ fontSize: "clamp(24px,4vw,40px)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 12, lineHeight: 1.1 }}>Meet your interviewers</h2>
+          <p style={{ color: "var(--slate-500)", maxWidth: 560, margin: "12px auto 0", lineHeight: 1.65 }}>Each persona is engineered to test a different dimension of your interview performance. Understanding their patterns is half the battle.</p>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(320px,100%),1fr))", gap: 20 }}>
+          {PERSONAS.map((p, idx) => {
+            const isOpen = expanded === p.id;
+            return (
+              <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, delay: idx * 0.07 }} viewport={{ once: true }}
+                style={{ borderRadius: 18, overflow: "hidden", border: `1.5px solid ${isOpen ? p.accentColor + "60" : "var(--border)"}`, background: "var(--white)", boxShadow: isOpen ? `0 0 0 4px ${p.accentColor}12, var(--shadow-md)` : "var(--shadow-sm)", transition: "all 0.25s" }}>
+                <div style={{ height: 5, background: `linear-gradient(90deg, ${p.accentColor}, ${p.accentColor}88)` }} />
+                <div style={{ padding: "22px 24px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                    <div style={{ width: 60, height: 60, borderRadius: "50%", background: `linear-gradient(135deg, ${p.gradientFrom}, ${p.gradientTo})`, border: `2px solid ${p.accentColor}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26 }}>
+                      {p.emoji}
+                    </div>
+                    <div style={{ background: p.diffBg, color: p.diffColor, fontSize: 10.5, fontWeight: 700, padding: "4px 11px", borderRadius: 20, border: `1px solid ${p.accentColor}28` }}>{p.difficulty}</div>
+                  </div>
+                  <div className="brig" style={{ fontSize: 18, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.015em", marginBottom: 3 }}>{p.title}</div>
+                  <div style={{ fontSize: 12, color: p.accentColor, fontWeight: 600, marginBottom: 10 }}>{p.style}</div>
+                  <p style={{ fontSize: 13.5, color: "var(--slate-500)", lineHeight: 1.65, marginBottom: 14 }}>{p.vibe}</p>
+                  <div style={{ height: 1, background: "var(--border)", marginBottom: 12 }} />
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
+                    {p.traits.map(t => (
+                      <span key={t} style={{ fontSize: 11, color: "var(--slate-600)", background: "var(--slate-100)", padding: "3px 9px", borderRadius: 12, fontWeight: 500, border: "1px solid var(--border)" }}>{t}</span>
+                    ))}
+                  </div>
+                  <button className="btn-ghost" style={{ paddingLeft: 0, fontSize: 13 }} onClick={() => setExpanded(isOpen ? null : p.id)}>
+                    {isOpen ? "Show less" : "What to expect"} {isOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div key="exp" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }}>
+                        <div style={{ marginTop: 12, padding: "14px 16px", background: `${p.accentColor}08`, borderRadius: 10, border: `1px solid ${p.accentColor}18` }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: p.accentColor, letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 8 }}>What to expect</div>
+                          <p style={{ fontSize: 13, color: "var(--slate-600)", lineHeight: 1.7, margin: 0 }}>
+                            {p.id === 1 && "Expect warmth that disarms you. Sam builds false rapport quickly, making you feel like you're talking to a colleague rather than being assessed. This is when candidates overshare, ramble past the STAR format, and reveal things that hurt their case. The challenge is maintaining professional boundaries while still appearing likeable."}
+                            {p.id === 2 && "Maya listens deeply, reflects back what you say, and then asks deceptively simple follow-up questions about your emotional reasoning. Her silence after a question is deliberate — it pressures you to fill the space. The key is learning to sit with discomfort and give precise, not expansive, answers."}
+                            {p.id === 3 && "Rex doesn't wait for you to finish. Expect two or three interruptions per answer, deliberate scepticism about every claim ('prove it'), and periods of sustained silence designed to make you panic and over-explain. This is the hardest persona for a reason — it mirrors exactly what FAANG stress interviewers do."}
+                            {p.id === 4 && "Harold is unreadable. You'll answer a strong question, pause, and receive no reaction at all — no nod, no 'interesting', nothing. Then three seconds of silence before the next question. Most candidates interpret silence as failure and add unnecessary caveats. The discipline here is learning to stop talking when your answer is complete."}
+                            {p.id === 5 && "Victor's default response is disagreement. 'I'm not sure I agree with that approach' or 'That seems overly optimistic — defend it.' His goal is not to be right; it's to see whether you cave under pressure or maintain your position with clear reasoning. The trap is over-correcting. Learn to distinguish between reconsidering and capitulating."}
+                            {p.id === 6 && "Dr. Chen types notes constantly, makes minimal eye contact, and asks one hyper-specific forensic question at a time. If your answer contains any vagueness — an estimate, an approximation, a feeling — expect the next question to forensically dissect exactly that point. Precision in your answers is the only reliable defence."}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Why personas matter */}
+      <section style={{ background: "var(--white)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "72px clamp(20px,5vw,60px)" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <Tag color="slate">Why it matters</Tag>
+            <h2 className="brig" style={{ fontSize: "clamp(22px,3.5vw,36px)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 12 }}>The psychology behind persona training</h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(260px,100%),1fr))", gap: 20 }}>
+            {[
+              { icon: <Brain size={20} />, color: "var(--teal)", title: "Situational fluency", desc: "Most interview failures aren't caused by knowledge gaps — they're caused by situational anxiety. Repeated exposure to different interviewer styles builds the neural pathways needed to stay composed under pressure." },
+              { icon: <Shield size={20} />, color: "#7C3AED", title: "Pattern recognition", desc: "Each persona has consistent tells and traps. Once you've trained against them enough times, you'll instantly recognize the patterns in real interviews — and respond with calibrated, practised precision rather than reactive panic." },
+              { icon: <Award size={20} />, color: "var(--amber)", title: "Transferable confidence", desc: "Confidence that's earned through repeated challenge transfers to real situations. Candidates who've survived 20 sessions with The Stress-Tester consistently report that real FAANG interviewers feel comparatively manageable." },
+            ].map(({ icon, color, title, desc }) => (
+              <div key={title} className="card" style={{ padding: 26 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: `${color}12`, display: "flex", alignItems: "center", justifyContent: "center", color, marginBottom: 16 }}>{icon}</div>
+                <div className="brig" style={{ fontSize: 16, fontWeight: 700, color: "var(--slate)", marginBottom: 8 }}>{title}</div>
+                <p style={{ fontSize: 13.5, color: "var(--slate-500)", lineHeight: 1.7, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{ padding: "72px clamp(20px,5vw,60px)", textAlign: "center" }}>
+        <Tag color="teal">Get started</Tag>
+        <h2 className="brig" style={{ fontSize: "clamp(22px,3.5vw,38px)", fontWeight: 800, color: "var(--slate)", letterSpacing: "-0.03em", marginTop: 14, marginBottom: 14 }}>Start training against all 6 personas</h2>
+        <p style={{ color: "var(--slate-500)", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.68 }}>Join the waitlist now. Starter plan includes 1 session. Pro unlocks any 3 personas. Elite unlocks all 6.</p>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <button className="btn-primary" onClick={() => onNav("pricing")}><CreditCard size={14} /> View Plans</button>
+          <button className="btn-secondary" onClick={() => onNav("landing")}>Join Waitlist <ChevronRight size={14} /></button>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+/* ── How It Works Page ── */
+const HowItWorksPage = ({ onNav }) => {
+  const steps = [
+    {
+      step: "01", icon: <Upload size={24} />, color: "var(--teal)",
+      title: "Upload your CV",
+      desc: "Start by uploading your resume. Our AI parses every project, role, skill claim, and career gap in detail. This context is used throughout your session to generate hyper-relevant questions that a real interviewer who had actually read your CV would ask — not generic interview questions from a list.",
+      detail: ["PDF, DOCX, or plain text formats accepted", "AI identifies your strongest and weakest talking points", "Gaps and ambiguities are flagged as likely interview targets"],
+    },
+    {
+      step: "02", icon: <Building2 size={24} />, color: "#0369A1",
+      title: "Configure your session",
+      desc: "Choose your target company from 140+ options, set your exact role and seniority level, select a focus area (Behavioral, Technical, Case Study, or Mixed), and pick your interviewer persona. Every setting directly shapes the questions, scoring criteria, and difficulty of your session.",
+      detail: ["140+ companies with distinct interview styles calibrated", "Role and level targeting adjusts expected answer depth", "Focus area selection adapts question types and frameworks"],
+    },
+    {
+      step: "03", icon: <Video size={24} />, color: "#7C3AED",
+      title: "Run a live AI interview",
+      desc: "Your AI interviewer begins. Questions are timed. You respond verbally via your microphone. The AI listens, follows up, pushes back, and maintains its persona throughout — whether that means interrupting you mid-sentence (Stress-Tester) or sitting in three-beat silence after your answer (Stoic Veteran). No second chances. No pausing.",
+      detail: ["Real-time filler word detection during your response", "AI follows up on weak points and specific claims", "Persona behaviors maintained consistently throughout"],
+    },
+    {
+      step: "04", icon: <Award size={24} />, color: "var(--amber)",
+      title: "Receive your analysis report",
+      desc: "Within moments of ending the session, your detailed analysis report is ready. It scores 10 dimensions including technical depth, STAR method adherence, communication clarity, and cultural fit — with specific timestamps, exact quotes from your answers, and actionable improvement recommendations for the next session.",
+      detail: ["10-dimension scoring with benchmarks vs. target role", "Exact quotes and timestamps for each scored moment", "Prioritised list of improvement actions for next session"],
+    },
+  ];
+
+  return (
+    <main style={{ minHeight: "100vh", background: "var(--ivory)" }}>
+      {/* Hero */}
+      <section style={{ background: "var(--white)", borderBottom: "1px solid var(--border)", padding: "96px clamp(20px,5vw,60px) 72px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 800, height: 500, background: "radial-gradient(ellipse,rgba(13,148,136,.07) 0%,transparent 70%)", pointerEvents: "none" }} />
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ position: "relative" }}>
+          <Tag color="teal">Process</Tag>
+          <h1 className="brig" style={{ fontSize: "clamp(32px,5vw,60px)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 16, lineHeight: 1.08, maxWidth: 800, margin: "16px auto" }}>
+            From zero to hired in four steps
+          </h1>
+          <p style={{ fontSize: "clamp(15px,2vw,18px)", color: "var(--slate-500)", maxWidth: 580, margin: "0 auto 32px", lineHeight: 1.68 }}>
+            A structured, repeatable practice workflow designed to deliver measurable improvement with every session — from your first practice through to your offer.
+          </p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <button className="btn-primary" onClick={() => onNav("signin")}><Zap size={14} /> Start Now</button>
+            <button className="btn-secondary" onClick={() => onNav("features")}>See Features <ChevronRight size={14} /></button>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Steps */}
+      <section style={{ padding: "80px clamp(20px,5vw,60px)", maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ display: "grid", gap: 28 }}>
+          {steps.map(({ step, icon, color, title, desc, detail }, i) => (
+            <motion.div key={step} initial={{ opacity: 0, x: i % 2 === 0 ? -24 : 24 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}
+              className="card" style={{ padding: "clamp(24px,4vw,36px)", display: "grid", gridTemplateColumns: "auto 1fr", gap: "clamp(20px,3vw,36px)", alignItems: "start" }}>
+              {/* Step number + icon */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                <div style={{ width: 60, height: 60, borderRadius: "50%", background: `${color}12`, border: `2px solid ${color}30`, display: "flex", alignItems: "center", justifyContent: "center", color, flexShrink: 0 }}>{icon}</div>
+                <span className="brig" style={{ fontSize: 11, fontWeight: 800, color: `${color}80`, letterSpacing: "0.1em" }}>{step}</span>
+              </div>
+              {/* Content */}
+              <div>
+                <h2 className="brig" style={{ fontSize: "clamp(18px,2.5vw,24px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", marginBottom: 10 }}>{title}</h2>
+                <p style={{ fontSize: 15, color: "var(--slate-500)", lineHeight: 1.75, marginBottom: 18 }}>{desc}</p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(220px,100%),1fr))", gap: 8 }}>
+                  {detail.map(d => (
+                    <div key={d} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
+                      <div style={{ width: 16, height: 16, borderRadius: "50%", background: `${color}14`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
+                        <Check size={9} style={{ color }} strokeWidth={3} />
+                      </div>
+                      <span style={{ fontSize: 13, color: "var(--slate-600)", lineHeight: 1.5 }}>{d}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Report detail */}
+      <section style={{ background: "var(--white)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "72px clamp(20px,5vw,60px)" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <Tag color="amber">What's in your report</Tag>
+            <h2 className="brig" style={{ fontSize: "clamp(22px,3.5vw,36px)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 12 }}>10 dimensions. Brutally honest.</h2>
+            <p style={{ color: "var(--slate-500)", maxWidth: 520, margin: "12px auto 0", lineHeight: 1.65 }}>Every session ends with a structured report that tells you exactly where you stand and what to fix next.</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(220px,100%),1fr))", gap: 14 }}>
+            {[
+              { n: "Technical depth", c: "var(--teal)" },
+              { n: "STAR method adherence", c: "#0369A1" },
+              { n: "Communication clarity", c: "#7C3AED" },
+              { n: "Cultural fit alignment", c: "var(--amber)" },
+              { n: "Logical reasoning", c: "#BE185D" },
+              { n: "Conciseness + pacing", c: "var(--green)" },
+              { n: "Confidence signals", c: "#DC2626" },
+              { n: "Question comprehension", c: "var(--teal)" },
+              { n: "Follow-up handling", c: "#7C3AED" },
+              { n: "Overall readiness", c: "#0369A1" },
+            ].map(({ n, c }, i) => (
+              <motion.div key={n} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: i * 0.04 }} viewport={{ once: true }}
+                style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", borderRadius: 11, border: "1px solid var(--border)", background: "var(--ivory)" }}>
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: c, flexShrink: 0 }} />
+                <span style={{ fontSize: 13.5, color: "var(--slate-700)", fontWeight: 500 }}>{n}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{ padding: "72px clamp(20px,5vw,60px)", textAlign: "center" }}>
+        <Tag color="teal">Begin your first session</Tag>
+        <h2 className="brig" style={{ fontSize: "clamp(22px,3.5vw,38px)", fontWeight: 800, color: "var(--slate)", letterSpacing: "-0.03em", marginTop: 14, marginBottom: 14 }}>Ready to practice under real pressure?</h2>
+        <p style={{ color: "var(--slate-500)", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.68 }}>Starter plan is $1 for a full session + report. No subscription required. See the difference after just one session.</p>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <button className="btn-primary" onClick={() => onNav("pricing")}><CreditCard size={14} /> View Plans</button>
+          <button className="btn-secondary" onClick={() => onNav("personas")}>Meet the Personas <ChevronRight size={14} /></button>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+/* ── About Page ── */
+const AboutPage = ({ onNav }) => (
+  <main style={{ minHeight: "100vh", background: "var(--ivory)" }}>
+    {/* Hero */}
+    <section style={{ background: "var(--slate)", padding: "96px clamp(20px,5vw,60px) 72px", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: "20%", right: "5%", width: 500, height: 400, background: "radial-gradient(ellipse,rgba(13,148,136,.16) 0%,transparent 65%)", pointerEvents: "none" }} />
+      <div style={{ maxWidth: 860, margin: "0 auto", position: "relative", zIndex: 1 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <Tag color="teal">About PlacementDo</Tag>
+          <h1 className="brig" style={{ fontSize: "clamp(32px,5vw,56px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", marginTop: 16, lineHeight: 1.1, marginBottom: 18 }}>
+            Built for candidates who want to win the interview, not just survive it
+          </h1>
+          <p style={{ fontSize: "clamp(15px,2vw,18px)", color: "rgba(255,255,255,.6)", lineHeight: 1.72, maxWidth: 680 }}>
+            PlacementDo was born from a simple observation: most candidates are over-prepared on knowledge and under-prepared on execution. They know the answers — they just can't deliver them under pressure, to a difficult interviewer, in a foreign language, or on a bad day.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+
+    {/* Mission */}
+    <section style={{ padding: "72px clamp(20px,5vw,60px)", maxWidth: 1100, margin: "0 auto" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(340px,100%),1fr))", gap: 32, alignItems: "center" }}>
+        <div>
+          <Tag color="teal">Our mission</Tag>
+          <h2 className="brig" style={{ fontSize: "clamp(24px,3.5vw,38px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.025em", lineHeight: 1.18, marginTop: 12, marginBottom: 18 }}>
+            Make high-quality interview preparation equally accessible to every candidate
+          </h2>
+          <p style={{ fontSize: 15, color: "var(--slate-500)", lineHeight: 1.78, marginBottom: 18 }}>
+            Candidates who succeed in competitive interviews don't just know more — they've practiced more, in more realistic conditions, with more honest feedback. That level of preparation has historically required expensive coaching, insider connections, or luck.
+          </p>
+          <p style={{ fontSize: 15, color: "var(--slate-500)", lineHeight: 1.78 }}>
+            PlacementDo exists to remove those barriers. A first-generation candidate preparing for their first tech interview should have access to the same quality of practice as someone with a network full of ex-FAANG coaches. That's what we're building.
+          </p>
+        </div>
+        <div style={{ display: "grid", gap: 14 }}>
+          {[
+            { icon: <Target size={18} />, color: "var(--teal)", title: "Personalized, not generic", desc: "Every session is built around your actual CV and target role — not a question bank anyone can access." },
+            { icon: <Globe size={18} />, color: "#0369A1", title: "Globally accessible", desc: "28 language support means preparation is available in the language your interview will actually be in." },
+            { icon: <Shield size={18} />, color: "#7C3AED", title: "Honest, not flattering", desc: "Real improvement comes from honest feedback, not encouragement. We build tools that tell you the truth." },
+          ].map(({ icon, color, title, desc }) => (
+            <div key={title} className="card" style={{ padding: "18px 20px", display: "flex", gap: 14 }}>
+              <div style={{ width: 38, height: 38, borderRadius: 10, background: `${color}12`, display: "flex", alignItems: "center", justifyContent: "center", color, flexShrink: 0 }}>{icon}</div>
+              <div>
+                <div className="brig" style={{ fontSize: 14.5, fontWeight: 700, color: "var(--slate)", marginBottom: 5 }}>{title}</div>
+                <p style={{ fontSize: 13, color: "var(--slate-500)", lineHeight: 1.65, margin: 0 }}>{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* What we build */}
+    <section style={{ background: "var(--white)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "72px clamp(20px,5vw,60px)" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <Tag color="slate">What we build</Tag>
+          <h2 className="brig" style={{ fontSize: "clamp(22px,3.5vw,36px)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 12 }}>Preparation infrastructure for the modern job seeker</h2>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 20 }}>
+          {[
+            { icon: <Brain size={20} />, color: "var(--teal)", title: "CV-Aware AI Interviewer", desc: "An AI that actually reads your resume and asks questions about it — the same way a real interviewer who prepared for your interview would. Not a chatbot reading from a question list." },
+            { icon: <Flame size={20} />, color: "#DC2626", title: "Persona-Based Pressure Training", desc: "Six distinct interviewer personalities engineered to train your composure, not just your knowledge. Because the gap between knowing the answer and delivering it under pressure is exactly where interviews are lost." },
+            { icon: <BarChart2 size={20} />, color: "#BE185D", title: "Structured Performance Analytics", desc: "A 10-dimension scoring system that goes beyond 'you did well' to tell you exactly where you gained and lost points — with timestamps, quotes, and a clear action list for next time." },
+            { icon: <TrendingUp size={20} />, color: "var(--green)", title: "Long-Term Progress Tracking", desc: "Improvement is a process, not a single session. Track your scores week over week, watch specific dimensions improve, and build the data-backed confidence that comes from measurable progress." },
+          ].map(({ icon, color, title, desc }) => (
+            <div key={title} className="feature-card">
+              <div className="fc-icon" style={{ background: `${color}12`, borderColor: `${color}20`, color }}>{icon}</div>
+              <h3>{title}</h3>
+              <p>{desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* Values */}
+    <section style={{ padding: "72px clamp(20px,5vw,60px)", maxWidth: 860, margin: "0 auto" }}>
+      <div style={{ textAlign: "center", marginBottom: 48 }}>
+        <Tag color="slate">How we operate</Tag>
+        <h2 className="brig" style={{ fontSize: "clamp(22px,3.5vw,36px)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 12 }}>Our working values</h2>
+      </div>
+      <div style={{ display: "grid", gap: 16 }}>
+        {[
+          { n: "Candidate empathy first", b: "Every product decision starts with a single question: does this actually help a candidate prepare more effectively? We don't build features for their own sake — we build them because we've seen candidates fail at the exact point they would have addressed." },
+          { n: "Honest over comfortable", b: "It's tempting to build tools that make users feel good. We chose not to. PlacementDo gives you the score you earned, not the score you hoped for. Uncomfortable feedback delivered well is the most valuable thing a preparation tool can offer." },
+          { n: "Repeatable over one-off", b: "Interview preparation that only works once isn't preparation — it's luck. Everything we build is designed for repeated use, because the candidates who succeed are the ones who practiced ten times, not the ones who found the perfect YouTube video the night before." },
+          { n: "Simple over clever", b: "We resist complexity for its own sake. The best preparation tools are the ones you actually use consistently, not the ones with the most features. Every addition to PlacementDo has to pass a simplicity test before it ships." },
+        ].map(({ n, b }) => (
+          <div key={n} className="card" style={{ padding: "20px 24px", display: "flex", gap: 16 }}>
+            <div style={{ width: 4, borderRadius: 2, background: "var(--teal)", flexShrink: 0, alignSelf: "stretch" }} />
+            <div>
+              <div className="brig" style={{ fontSize: 15.5, fontWeight: 700, color: "var(--slate)", marginBottom: 7, letterSpacing: "-0.01em" }}>{n}</div>
+              <p style={{ fontSize: 14, color: "var(--slate-500)", lineHeight: 1.75, margin: 0 }}>{b}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Contact */}
+    <section style={{ background: "var(--teal-light)", borderTop: "1px solid rgba(13,148,136,.18)", padding: "48px clamp(20px,5vw,60px)", textAlign: "center" }}>
+      <div style={{ maxWidth: 560, margin: "0 auto" }}>
+        <h2 className="brig" style={{ fontSize: "clamp(20px,3vw,28px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", marginBottom: 12 }}>Questions or feedback?</h2>
+        <p style={{ color: "var(--slate-600)", lineHeight: 1.68, marginBottom: 20 }}>We read every message. Whether you have a product suggestion, a bug report, or just want to say hello — we're listening at <strong>support@placementdo.com</strong></p>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <button className="btn-primary" onClick={() => onNav("blog")}><FileText size={14} /> Read Our Blog</button>
+          <button className="btn-secondary" onClick={() => onNav("careers")}>Join Our Team <ChevronRight size={14} /></button>
+        </div>
+      </div>
+    </section>
+  </main>
+);
+
+/* ── Careers Page ── */
+const CareersPage = () => (
+  <main style={{ minHeight: "100vh", background: "var(--ivory)" }}>
+    {/* Hero */}
+    <section style={{ background: "var(--white)", borderBottom: "1px solid var(--border)", padding: "96px clamp(20px,5vw,60px) 72px", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: "30%", right: "10%", width: 400, height: 300, background: "radial-gradient(ellipse,rgba(13,148,136,.08) 0%,transparent 65%)", pointerEvents: "none" }} />
+      <div style={{ maxWidth: 860, margin: "0 auto", position: "relative", zIndex: 1 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <Tag color="teal">We're hiring</Tag>
+          <h1 className="brig" style={{ fontSize: "clamp(32px,5vw,56px)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 16, lineHeight: 1.1, marginBottom: 18 }}>
+            Build the platform that helps millions get hired
+          </h1>
+          <p style={{ fontSize: "clamp(15px,2vw,18px)", color: "var(--slate-500)", lineHeight: 1.72, maxWidth: 640 }}>
+            We're a small team building thoughtful tools that help candidates unlock opportunities through better interview preparation. If you care deeply about candidate outcomes and want to work on a product that directly changes people's lives — we'd love to hear from you.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+
+    {/* Current openings */}
+    <section style={{ padding: "72px clamp(20px,5vw,60px)", maxWidth: 860, margin: "0 auto" }}>
+      <Tag color="slate">Current openings</Tag>
+      <h2 className="brig" style={{ fontSize: "clamp(22px,3.5vw,36px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.025em", marginTop: 12, marginBottom: 28 }}>Open roles</h2>
+      <div className="card" style={{ padding: "28px 32px", display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
+        <div style={{ width: 52, height: 52, borderRadius: 14, background: "var(--teal-light)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <Sparkles size={22} style={{ color: "var(--teal)" }} />
+        </div>
+        <div style={{ flex: 1, minWidth: 240 }}>
+          <div className="brig" style={{ fontSize: 18, fontWeight: 700, color: "var(--slate)", marginBottom: 8 }}>We hire on a rolling basis</div>
+          <p style={{ fontSize: 14.5, color: "var(--slate-500)", lineHeight: 1.72, marginBottom: 18 }}>
+            We don't always have formal roles open, but we're always interested in exceptional people who align with our mission. If you're a strong engineer, product designer, or growth specialist who wants to work on something that directly improves candidates' lives — send your profile and a note about what you'd want to build.
+          </p>
+          <p style={{ fontSize: 14.5, color: "var(--slate-500)", lineHeight: 1.72, marginBottom: 20 }}>
+            Reach us at <strong style={{ color: "var(--slate-700)" }}>support@placementdo.com</strong> with the subject line "Careers — [your role/skill]". We respond to every serious application personally.
+          </p>
+          <a href="mailto:support@placementdo.com?subject=Careers"
+            style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
+            className="btn-primary">
+            <Mail size={14} /> Send your application
+          </a>
+        </div>
+      </div>
+    </section>
+
+    {/* Areas of interest */}
+    <section style={{ background: "var(--white)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "72px clamp(20px,5vw,60px)" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <Tag color="slate">Where we need help</Tag>
+          <h2 className="brig" style={{ fontSize: "clamp(22px,3.5vw,36px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.025em", marginTop: 12 }}>Disciplines we're always interested in</h2>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(260px,100%),1fr))", gap: 18 }}>
+          {[
+            { icon: <Brain size={20} />, color: "var(--teal)", title: "AI / ML Engineering", desc: "Building and improving the conversational AI, persona models, scoring systems, and real-time audio processing that power the core interview experience." },
+            { icon: <Palette size={20} />, color: "#7C3AED", title: "Product Design", desc: "Designing user flows, interaction patterns, and visual systems that make a high-stakes tool feel approachable, trustworthy, and genuinely useful to candidates." },
+            { icon: <BarChart2 size={20} />, color: "#BE185D", title: "Growth / Marketing", desc: "Reaching and activating candidates at the moment they need us most — typically the window between getting a first-round invite and showing up for the interview." },
+            { icon: <FileText size={20} />, color: "var(--amber)", title: "Content & Coaching", desc: "Creating the interview preparation frameworks, coaching guidance, and structured content that helps candidates make the most of their sessions and reports." },
+            { icon: <Settings size={20} />, color: "#0369A1", title: "Backend Engineering", desc: "Building the infrastructure for real-time session management, secure report generation, multi-region deployment, and scalable API design." },
+            { icon: <Shield size={20} />, color: "var(--green)", title: "Trust & Safety", desc: "Ensuring the platform remains secure, fair, and free from misuse — while keeping the experience smooth for the candidates who are here for the right reasons." },
+          ].map(({ icon, color, title, desc }) => (
+            <div key={title} className="feature-card">
+              <div className="fc-icon" style={{ background: `${color}12`, borderColor: `${color}20`, color }}>{icon}</div>
+              <h3>{title}</h3>
+              <p>{desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* Culture */}
+    <section style={{ padding: "72px clamp(20px,5vw,60px)", maxWidth: 860, margin: "0 auto" }}>
+      <Tag color="teal">How we work</Tag>
+      <h2 className="brig" style={{ fontSize: "clamp(22px,3.5vw,36px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.025em", marginTop: 12, marginBottom: 28 }}>Culture and ways of working</h2>
+      <div style={{ display: "grid", gap: 16 }}>
+        {[
+          { n: "Small team, real ownership", b: "We're a small team, which means everyone owns significant surface area. You won't spend six months on a single feature — you'll ship things, watch them affect real users, iterate, and ship again." },
+          { n: "Remote-first, async by default", b: "We work asynchronously across time zones. Meetings exist when they genuinely accelerate decisions; otherwise, we default to written communication that's thoughtful, clear, and creates a permanent record of reasoning." },
+          { n: "Mission-aligned, outcome-focused", b: "We care about candidate outcomes, not activity metrics. If a feature makes preparation measurably better, we build it. If it doesn't, we don't, regardless of how clever the idea is." },
+          { n: "Honest feedback, given with care", b: "The same directness we build into our product, we bring to our working culture. We give honest feedback, receive it without defensiveness, and create an environment where the best idea wins regardless of who proposes it." },
+        ].map(({ n, b }) => (
+          <div key={n} className="card" style={{ padding: "20px 24px", display: "flex", gap: 16 }}>
+            <div style={{ width: 4, borderRadius: 2, background: "var(--teal)", flexShrink: 0, alignSelf: "stretch" }} />
+            <div>
+              <div className="brig" style={{ fontSize: 15.5, fontWeight: 700, color: "var(--slate)", marginBottom: 7, letterSpacing: "-0.01em" }}>{n}</div>
+              <p style={{ fontSize: 14, color: "var(--slate-500)", lineHeight: 1.75, margin: 0 }}>{b}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+);
+
+/* ── Privacy Policy Page ── */
+const PrivacyPage = () => {
+  const sections = [
+    {
+      heading: "Information we collect",
+      body: "We collect information you provide directly when you create an account, including your name and email address. When you use the platform, we collect usage data including interview session activity, session duration, responses submitted during practice interviews, feature interactions, and navigation patterns. We also collect technical data such as IP address, browser type, device information, and operating system, primarily for security, fraud prevention, and product improvement purposes. Waitlist submissions are stored securely and used only to notify you at launch.",
+    },
+    {
+      heading: "How we use your data",
+      body: "Data is used to: (1) provide the interview practice service, including generating your personalised questions and scoring reports; (2) improve the AI model's accuracy and question relevance over time; (3) send you service-related communications, including account notices and session reports; (4) detect and prevent fraud, misuse, and security incidents; (5) analyse product usage patterns to prioritise improvements; and (6) communicate with waitlist members about launch updates and early-access pricing. We do not sell, rent, or share your personal data with third-party advertisers.",
+    },
+    {
+      heading: "Data storage and retention",
+      body: "Account data and interview session reports are stored on secure cloud infrastructure with encryption at rest and in transit. We retain account data for as long as your account is active. Interview session reports are retained for 12 months by default, after which they are automatically deleted unless you request otherwise. Waitlist email addresses are retained until launch or until you unsubscribe, whichever comes first. You may request deletion of your data at any time by contacting support@placementdo.com.",
+    },
+    {
+      heading: "Third-party services",
+      body: "We use a limited number of third-party services to operate the platform, including cloud hosting providers, analytics tools, and email delivery services. These providers process data only on our behalf and under contractual obligations consistent with this policy. We do not allow third-party services to use your data for their own purposes. When required, we maintain Data Processing Agreements (DPAs) with these providers.",
+    },
+    {
+      heading: "Cookies and tracking",
+      body: "We use necessary cookies for session management, authentication, and security. We may use analytics cookies to understand aggregate product usage patterns — these are anonymised and do not identify individual users. We do not use third-party advertising cookies. You can disable non-essential cookies through your browser settings; disabling necessary cookies may affect platform functionality.",
+    },
+    {
+      heading: "Your rights and choices",
+      body: "Depending on your jurisdiction, you may have rights including: access to the personal data we hold about you; correction of inaccurate data; deletion of your data ('right to be forgotten'); restriction or objection to certain processing; and data portability. To exercise any of these rights, contact support@placementdo.com. We aim to respond within 30 days. For users in the European Economic Area (EEA), we process data under GDPR. For California residents, we comply with CCPA.",
+    },
+    {
+      heading: "Children's privacy",
+      body: "PlacementDo is intended for users aged 16 and older. We do not knowingly collect personal information from children under 16. If we become aware that we have inadvertently collected such data, we will delete it promptly. If you believe we may have collected data from a child under 16, please contact support@placementdo.com immediately.",
+    },
+    {
+      heading: "Changes to this policy",
+      body: "We may update this Privacy Policy from time to time to reflect changes in our practices, legal requirements, or product features. When we make material changes, we will notify registered users by email or through a notice on the platform at least 14 days before the changes take effect. Continued use of the platform after that date constitutes acceptance of the updated policy. The date of the most recent update appears at the top of this page.",
+    },
+    {
+      heading: "Contact and data controller",
+      body: "PlacementDo is the data controller for personal information collected through this platform. For privacy questions, data requests, or concerns, contact us at support@placementdo.com. We take privacy seriously and commit to responding to all legitimate inquiries within 30 business days.",
+    },
+  ];
+
+  return (
+    <main style={{ minHeight: "100vh", background: "var(--ivory)" }}>
+      <section style={{ background: "var(--slate)", padding: "96px clamp(20px,5vw,60px) 56px" }}>
+        <div style={{ maxWidth: 860, margin: "0 auto" }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <Tag color="teal"><Shield size={11} /> Privacy Policy</Tag>
+            <h1 className="brig" style={{ fontSize: "clamp(28px,5vw,48px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", marginTop: 14, lineHeight: 1.1, marginBottom: 14 }}>Your privacy matters to us</h1>
+            <p style={{ fontSize: 15, color: "rgba(255,255,255,.55)", lineHeight: 1.7 }}>This policy explains how PlacementDo collects, uses, and protects your information. Last updated: April 2026.</p>
+          </motion.div>
+        </div>
+      </section>
+      <section style={{ padding: "56px clamp(20px,5vw,60px) 80px", maxWidth: 860, margin: "0 auto" }}>
+        <div style={{ display: "grid", gap: 14 }}>
+          {sections.map((item, i) => (
+            <motion.section key={item.heading} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: i * 0.04 }} viewport={{ once: true }} className="card" style={{ padding: "24px 28px" }}>
+              <h2 className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", marginBottom: 10, letterSpacing: "-0.01em" }}>{item.heading}</h2>
+              <p style={{ fontSize: 14.5, color: "var(--slate-500)", lineHeight: 1.82, margin: 0 }}>{item.body}</p>
+            </motion.section>
+          ))}
+        </div>
+        <p style={{ marginTop: 24, fontSize: 13, color: "var(--slate-400)", textAlign: "center" }}>Questions about this policy? Email us at <strong style={{ color: "var(--slate-600)" }}>support@placementdo.com</strong></p>
+      </section>
+    </main>
+  );
+};
+
+/* ── Terms of Service Page ── */
+const TermsPage = () => {
+  const sections = [
+    {
+      heading: "Acceptance of terms",
+      body: "By accessing or using PlacementDo (the 'Service'), you agree to be bound by these Terms of Service ('Terms'). If you do not agree to these Terms, you may not use the Service. These Terms apply to all users, including registered account holders, waitlist members, and visitors. We reserve the right to update these Terms at any time; continued use of the Service after changes are posted constitutes acceptance of the revised Terms.",
+    },
+    {
+      heading: "Eligibility",
+      body: "You must be at least 16 years of age to use PlacementDo. By using the Service, you represent and warrant that you meet this age requirement. If you are creating an account on behalf of an organisation, you represent that you have the authority to bind that organisation to these Terms.",
+    },
+    {
+      heading: "Account registration and security",
+      body: "To access certain features, you may be required to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. You agree to notify us immediately at support@placementdo.com if you become aware of any unauthorised access to your account. We are not liable for any loss or damage arising from your failure to maintain account security.",
+    },
+    {
+      heading: "Acceptable use",
+      body: "You agree to use the Service only for lawful interview preparation purposes and in accordance with these Terms. You must not: attempt to reverse-engineer, decompile, or extract the AI models or proprietary systems powering PlacementDo; use automated tools or bots to access or interact with the Service; resell or redistribute access to the Service without written permission; share account credentials with third parties; upload content that is harmful, illegal, or infringes on third-party rights; or attempt to gain unauthorised access to any part of the Service or its infrastructure.",
+    },
+    {
+      heading: "Purchases and payment",
+      body: "All purchases are one-time transactions. There are no subscriptions or auto-renewals. Prices are displayed in USD. Payment is processed by our third-party payment processor. By completing a purchase, you authorise us to charge the payment method on file for the stated amount. All sales are final unless covered by our first-session satisfaction guarantee, under which we offer a full refund within 7 days of your first completed session if you are unsatisfied. Contact support@placementdo.com to request a refund under this policy.",
+    },
+    {
+      heading: "Intellectual property",
+      body: "All content, features, and functionality of the Service — including but not limited to the AI models, scoring systems, persona designs, interview question generation logic, report formats, and visual design — are owned by or licensed to PlacementDo and are protected by copyright, trade secret, and other intellectual property laws. You may not copy, reproduce, distribute, or create derivative works from any part of the Service without our express written consent.",
+    },
+    {
+      heading: "User-submitted content",
+      body: "When you upload a CV or submit responses during interview practice sessions, you grant PlacementDo a limited, non-exclusive, royalty-free licence to process that content solely to provide you with the Service. We do not use your CV or interview responses for advertising, nor do we share them with third parties except as required to operate the Service (e.g., AI processing providers under confidentiality obligations). You retain ownership of all content you submit.",
+    },
+    {
+      heading: "Disclaimer of warranties",
+      body: "The Service is provided 'as is' and 'as available' without warranties of any kind, either express or implied. We do not warrant that the Service will be uninterrupted, error-free, or free of viruses. We do not guarantee specific interview outcomes, job offers, or improvements in interview performance as a result of using PlacementDo. Interview preparation tools improve your readiness — real-world outcomes depend on many factors outside our control.",
+    },
+    {
+      heading: "Limitation of liability",
+      body: "To the maximum extent permitted by applicable law, PlacementDo and its officers, directors, employees, and agents shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits or data, arising from your use of or inability to use the Service. Our total liability to you for any claims arising from these Terms shall not exceed the amount you paid us in the 12 months preceding the claim.",
+    },
+    {
+      heading: "Termination",
+      body: "We reserve the right to suspend or terminate your access to the Service at any time, with or without cause, including if we reasonably believe you have violated these Terms. Upon termination, your right to use the Service will cease immediately. Sections of these Terms that by their nature should survive termination — including intellectual property, disclaimers, limitations of liability, and governing law — will continue to apply.",
+    },
+    {
+      heading: "Governing law and disputes",
+      body: "These Terms are governed by and construed in accordance with applicable law. Any disputes arising from these Terms or your use of the Service shall first be attempted to be resolved informally by contacting support@placementdo.com. If informal resolution is not possible, disputes shall be submitted to binding arbitration or the courts of competent jurisdiction, depending on applicable law in your jurisdiction.",
+    },
+    {
+      heading: "Contact",
+      body: "For questions, concerns, or legal notices regarding these Terms of Service, contact us at support@placementdo.com. We aim to respond to all formal inquiries within 10 business days. Our mailing address and registered details are available upon request for legal and compliance purposes.",
+    },
+  ];
+
+  return (
+    <main style={{ minHeight: "100vh", background: "var(--ivory)" }}>
+      <section style={{ background: "var(--slate)", padding: "96px clamp(20px,5vw,60px) 56px" }}>
+        <div style={{ maxWidth: 860, margin: "0 auto" }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <Tag color="teal"><FileText size={11} /> Terms of Service</Tag>
+            <h1 className="brig" style={{ fontSize: "clamp(28px,5vw,48px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", marginTop: 14, lineHeight: 1.1, marginBottom: 14 }}>Terms of Service</h1>
+            <p style={{ fontSize: 15, color: "rgba(255,255,255,.55)", lineHeight: 1.7 }}>By using PlacementDo, you agree to these terms. Please read them carefully. Last updated: April 2026.</p>
+          </motion.div>
+        </div>
+      </section>
+      <section style={{ padding: "56px clamp(20px,5vw,60px) 80px", maxWidth: 860, margin: "0 auto" }}>
+        <div style={{ display: "grid", gap: 14 }}>
+          {sections.map((item, i) => (
+            <motion.section key={item.heading} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: i * 0.04 }} viewport={{ once: true }} className="card" style={{ padding: "24px 28px" }}>
+              <h2 className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", marginBottom: 10, letterSpacing: "-0.01em" }}>{item.heading}</h2>
+              <p style={{ fontSize: 14.5, color: "var(--slate-500)", lineHeight: 1.82, margin: 0 }}>{item.body}</p>
+            </motion.section>
+          ))}
+        </div>
+        <p style={{ marginTop: 24, fontSize: 13, color: "var(--slate-400)", textAlign: "center" }}>Questions about these terms? Email us at <strong style={{ color: "var(--slate-600)" }}>support@placementdo.com</strong></p>
+      </section>
+    </main>
+  );
+};
+
 /* ── Root App ── */
 const DASH_VIEWS = ["dashboard", "reports", "progress", "avatars", "settings", "support"];
 const ROUTE_TO_PATH = {
@@ -4707,9 +5568,14 @@ export default function App() {
     if (view === "blog") return <BlogList onNav={go} />;
     if (view === "blogPost") return <BlogPost slug={blogSlug} onNav={go} onPostLoaded={setBlogPostSeo} />;
     if (view === "blogAdmin") return <BlogAdmin onNav={go} />;
-    if (SECTION_PAGE_CONTENT[view]) {
-      return <StaticPage {...SECTION_PAGE_CONTENT[view]} />;
-    }
+    if (view === "features") return <FeaturesPage onNav={go} />;
+    if (view === "pricing") return <PricingPage onNav={go} onCheckout={openCheckout} />;
+    if (view === "personas") return <PersonasPage onNav={go} />;
+    if (view === "howItWorks") return <HowItWorksPage onNav={go} />;
+    if (view === "about") return <AboutPage onNav={go} />;
+    if (view === "careers") return <CareersPage />;
+    if (view === "privacy") return <PrivacyPage />;
+    if (view === "terms") return <TermsPage />;
     if (view === "interview") return <InterviewRoom onNav={go} persona={selectedPersona} />;
     if (view === "report") return <Report onNav={go} />;
     if (isDash) {
