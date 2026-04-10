@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 const BLOG_KEY = "placementdo:blog:posts";
 const ENV = globalThis.process?.env || {};
 const DEFAULT_ADMIN_MAX_ATTEMPTS = 5;
@@ -103,7 +105,7 @@ const getClientId = (req) => {
   const ipFromHeader = Array.isArray(fwd) ? fwd[0] : `${fwd || ""}`;
   const ip = ipFromHeader.split(",")[0].trim() || req.socket?.remoteAddress || "unknown";
   const ua = `${req.headers["user-agent"] || "unknown"}`.slice(0, USER_AGENT_MAX_LENGTH);
-  return JSON.stringify([ip, ua]);
+  return createHash("sha256").update(JSON.stringify([ip, ua])).digest("hex");
 };
 
 const isClientLockedOut = (req) => {
@@ -160,9 +162,7 @@ const validatePostPayloadLengths = (body) =>
 
 const enforceMutationQuota = (req, res) => {
   if (consumeMutationQuota(req)) return true;
-  send(res, 429, {
-    error: `Rate limit exceeded. Maximum ${maxMutationsPerHour} blog changes per hour are allowed.`,
-  });
+  send(res, 429, { error: "Rate limit exceeded. Please try again later." });
   return false;
 };
 
@@ -223,8 +223,7 @@ const summarize = (post) => ({
 export default async function handler(req, res) {
   const isReadRequest = req.method === "GET";
   if (!isReadRequest && isClientLockedOut(req)) {
-    const label = lockoutMinutes === 1 ? "minute" : "minutes";
-    return send(res, 429, { error: `Too many failed admin code attempts. Please try again in ${lockoutMinutes} ${label}.` });
+    return send(res, 429, { error: "Too many failed admin code attempts. Please try again later." });
   }
 
   const posts = await loadPosts();
