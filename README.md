@@ -29,9 +29,52 @@ npm run build    # production build
 
 ## Blog management
 
+The blog supports two workflows. Choose whichever fits your deployment setup.
+
+---
+
+### Workflow A — JSON file (simple, no server required)
+
+Posts displayed at `/blog` and `/blog/:slug` are read directly from  
+**`src/data/blogPosts.json`** at build time. This is the simplest and most secure way to manage posts because only people with repository access can modify the file.
+
+#### How to add a new post
+
+1. Open `src/data/blogPosts.json`
+2. Copy an existing post object and paste it as a new entry in the array
+3. Fill in all fields:
+
+   | Field | Type | Description |
+   |-------|------|-------------|
+   | `id` | string | Unique identifier (e.g. `"my-new-post"`) |
+   | `title` | string | Post title |
+   | `slug` | string | URL-safe identifier — appears in `/blog/<slug>` |
+   | `date` | string | ISO date like `"2026-04-15"` |
+   | `author` | string | Author display name |
+   | `excerpt` | string | Short summary shown on the listing page |
+   | `content` | string | Full post content (plain text or light Markdown) |
+   | `category` | string _(optional)_ | Category label |
+   | `tags` | string[] _(optional)_ | Array of tag strings |
+
+4. Commit the file and deploy
+
+**Security note:** Only people with repository access can modify `blogPosts.json`. The deployed site reads the compiled JSON at build time and does not expose any write access to public visitors.
+
+#### Content format
+
+Post content supports basic Markdown-style formatting:
+- `# H1`, `## H2`, `### H3` for headings (up to 3 levels)
+- ` ``` ` fenced blocks for code
+- `- ` or `* ` prefixed lines for bullet lists
+- Plain text paragraphs (blank line = new paragraph)
+
+---
+
+### Workflow B — Token-protected admin interface
+
 Blog posts are managed through a token-protected admin interface.
 
-### Security model
+#### Security model
 
 - **Public visitors** can read published blog posts (list + individual post pages) with no authentication required.
 - **Admin users** access the management interface at `/blog/admin` and must supply the `BLOG_ADMIN_TOKEN` to load, create, edit, or delete posts.
@@ -39,7 +82,7 @@ Blog posts are managed through a token-protected admin interface.
 - All write/delete operations are validated **server-side** in `api/blog.js`. The token is never exposed to the client — it is supplied by the admin user and checked against the environment variable on the server.
 - Draft posts are invisible to unauthenticated visitors even via direct URL.
 
-### How to manage blog posts
+#### How to manage blog posts via admin panel
 
 1. Navigate to `https://your-domain.com/blog/admin`
 2. Enter your `BLOG_ADMIN_TOKEN` in the **Admin Token** field
@@ -49,19 +92,11 @@ Blog posts are managed through a token-protected admin interface.
 6. Click **Edit** next to a post to pre-fill the form for editing
 7. Click **Delete** to permanently remove a post
 
-### Content format
-
-Post content supports basic Markdown-style formatting:
-- `# H1`, `## H2`, `### H3` for headings (up to 3 levels)
-- `` ``` `` fenced blocks for code
-- `- ` or `* ` prefixed lines for bullet lists
-- `![alt](https://url)` for images (HTTPS/HTTP only)
-- Plain text paragraphs (blank line = new paragraph)
-
-### Storage
+#### Storage
 
 - **Production (Vercel + KV configured):** Posts are stored in Vercel KV and persist across deployments.
 - **Local dev / no KV:** Posts are stored in a module-level in-memory variable and reset on server restart. The default sample post is always available.
+
 
 ## Pages
 
