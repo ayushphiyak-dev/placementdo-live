@@ -247,7 +247,8 @@ export default async function handler(req, res) {
     const title = typeof body.title === "string" ? body.title.trim() : prev.title;
     const excerpt = typeof body.excerpt === "string" ? body.excerpt.trim() : prev.excerpt;
     const content = typeof body.content === "string" ? body.content.trim() : prev.content;
-    const requestedStatus = body.status === "draft" ? "draft" : body.status === "published" ? "published" : prev.status;
+    const VALID_STATUSES = ["draft", "pending", "published", "rejected"];
+    const requestedStatus = VALID_STATUSES.includes(body.status) ? body.status : prev.status;
     const status = requestedStatus === "published" && !isOwner ? "draft" : requestedStatus;
     const requestedSlug = typeof body.slug === "string" ? slugify(body.slug) : prev.slug;
     const nextSlug = createUniqueSlug(requestedSlug, posts, idx);
