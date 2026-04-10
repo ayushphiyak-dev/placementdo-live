@@ -404,8 +404,10 @@ const G = () => (
 
     /* ── Footer ── */
     .footer-grid { display:grid; grid-template-columns:2fr repeat(3,1fr); gap:clamp(28px,4vw,48px); padding:clamp(40px,8vh,64px) clamp(20px,5vw,60px) 40px; max-width:1200px; margin:0 auto; }
-    .footer-link { font-size:13.5px; color:rgba(255,255,255,.45); background:none; border:none; cursor:pointer; padding:5px 0; display:block; text-align:left; font-family:'DM Sans',sans-serif; transition:color 0.18s; width:fit-content; }
-    .footer-link:hover { color:rgba(255,255,255,.85); }
+    .footer-link-group { display:flex; flex-direction:column; gap:8px; align-items:flex-start; }
+    .footer-link { font-size:13.5px; color:rgba(255,255,255,.72); background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); cursor:pointer; padding:7px 12px; display:inline-flex; align-items:center; text-align:left; font-family:'DM Sans',sans-serif; transition:color 0.18s, background 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s; border-radius:999px; width:fit-content; }
+    .footer-link:hover { color:#fff; background:rgba(13,148,136,.22); border-color:rgba(45,212,191,.56); transform:translateY(-1px); box-shadow:0 4px 14px rgba(13,148,136,.2); }
+    .footer-link:focus-visible { outline:2px solid rgba(45,212,191,.75); outline-offset:2px; }
     .footer-social { width:36px; height:36px; border-radius:9px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; color:rgba(255,255,255,.5); }
     .footer-social:hover { background:rgba(13,148,136,.25); border-color:rgba(13,148,136,.5); color:var(--teal-mid); transform:translateY(-2px); }
     @media(max-width:900px){ .footer-grid { grid-template-columns:1fr 1fr; gap:36px; } }
@@ -1547,17 +1549,21 @@ const Landing = ({ onNav, onCheckout }) => {
         {/* Product links */}
         <div>
           <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Product</div>
-          {productLinks.map(({ label, action }) => (
-            <button key={label} className="footer-link" onClick={action}>{label}</button>
-          ))}
+          <div className="footer-link-group">
+            {productLinks.map(({ label, action }) => (
+              <button key={label} className="footer-link" onClick={action}>{label}</button>
+            ))}
+          </div>
         </div>
 
         {/* Company */}
         <div>
           <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Company</div>
-          {companyLinks.map(({ label, action }) => (
-            <button key={label} className="footer-link" onClick={action}>{label}</button>
-          ))}
+          <div className="footer-link-group">
+            {companyLinks.map(({ label, action }) => (
+              <button key={label} className="footer-link" onClick={action}>{label}</button>
+            ))}
+          </div>
         </div>
 
         {/* Join waitlist */}
@@ -3865,7 +3871,6 @@ const BlogList = ({ onNav }) => {
       tag="Blog"
       title="PlacementDo Blog"
       description="Interview prep tips, product updates, and practical guides from the PlacementDo team."
-      actions={<button className="btn-secondary" onClick={() => onNav("blogAdmin")}>Owner Admin</button>}
     >
       <div className="card" style={{ padding: 14, display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", marginBottom: 14 }}>
         <div>
