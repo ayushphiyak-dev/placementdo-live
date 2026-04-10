@@ -63,11 +63,11 @@ export default async function handler(req, res) {
     const posts = await loadPosts();
     const pending = posts
       .filter((p) => p.status === "pending")
-      .sort((a, b) => new Date(b.created_at || b.publishedAt).getTime() - new Date(a.created_at || a.publishedAt).getTime())
       .map((p) => ({
         slug: p.slug,
         title: p.title,
         excerpt: p.excerpt,
+        content: p.content || "",
         author: p.author,
         author_email: p.author_email,
         category: p.category,
@@ -77,7 +77,8 @@ export default async function handler(req, res) {
         created_at: p.created_at || p.publishedAt,
         readTimeMinutes: p.readTimeMinutes,
         featured_image: p.featured_image,
-      }));
+      }))
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
     return send(res, 200, { posts: pending, total: pending.length });
   } catch {

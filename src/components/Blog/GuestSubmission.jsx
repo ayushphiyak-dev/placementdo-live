@@ -25,9 +25,17 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_CONTENT = 50000;
 const MAX_TITLE = 300;
 
-// Strip HTML tags to prevent XSS before sending to the server.
-const stripHtml = (value = "") =>
-  String(value).replace(/<[^>]*>/g, "").replace(/javascript:/gi, "").trim();
+// Encode HTML special characters in short metadata fields before submitting
+// to prevent stored XSS. Content is stored as plain text and rendered
+// safely by React's automatic escaping on the display side.
+const escapeHtml = (value = "") =>
+  String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;")
+    .trim();
 
 const validate = (fields) => {
   const errors = {};
@@ -98,11 +106,11 @@ export default function GuestSubmission({ onNav }) {
 
     try {
       const payload = {
-        name: stripHtml(form.name.trim()),
+        name: escapeHtml(form.name.trim()),
         email: form.email.trim(),
-        blog_title: stripHtml(form.title.trim()),
-        content: stripHtml(form.content.trim()),
-        category: stripHtml(form.category),
+        blog_title: escapeHtml(form.title.trim()),
+        content: form.content.trim(), // plain text, safe via React auto-escaping at render time
+        category: escapeHtml(form.category),
         featured_image: form.featured_image.trim(),
       };
 

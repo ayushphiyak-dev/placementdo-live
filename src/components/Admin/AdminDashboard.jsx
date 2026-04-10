@@ -79,6 +79,8 @@ const ExpandedPost = ({ post, onClose }) => (
           <TagIcon size={12} /> {post.category}
         </span>
       </div>
+      {/* Content is plain text stored by the API and rendered via React text nodes,
+          which auto-escape HTML — no dangerouslySetInnerHTML, no XSS risk. */}
       <div className="card" style={{ padding: 18, background: "var(--slate-50)", whiteSpace: "pre-wrap", fontFamily: "'DM Sans',sans-serif", fontSize: 14, lineHeight: 1.85, color: "var(--slate-600)", maxHeight: 420, overflowY: "auto" }}>
         {post.content || post.excerpt || "No content"}
       </div>
@@ -216,14 +218,14 @@ export default function AdminDashboard({ onNav }) {
           Blog <ChevronRight size={14} />
         </button>
         <button className="btn-ghost" onClick={() => navigate("/blog/admin")}>
-          Blog Admin
+          Full Blog Admin
         </button>
       </header>
 
       <main className="ad-page">
         <div className="ad-inner">
           <button className="btn-ghost" style={{ paddingLeft: 0, marginBottom: 16 }} onClick={() => navigate("/blog/admin")}>
-            <ArrowLeft size={15} /> Blog Admin
+            <ArrowLeft size={15} /> Full Blog Admin
           </button>
 
           {/* Page header */}

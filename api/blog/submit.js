@@ -58,9 +58,17 @@ const estimateReadTime = (content = "") => {
   return Math.max(1, Math.ceil(words / AVERAGE_WORDS_PER_MINUTE));
 };
 
-// Basic server-side HTML/script stripping to prevent stored XSS.
-const stripTags = (value = "") =>
-  String(value).replace(/<[^>]*>/g, "").replace(/javascript:/gi, "").trim();
+// Escape HTML special characters in short text fields (title, author name, category)
+// to prevent stored XSS. Blog content is stored as plain text and rendered safely
+// by React's automatic escaping — do NOT apply this to the content field.
+const escapeHtml = (value = "") =>
+  String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;")
+    .trim();
 
 const isValidEmail = (value = "") =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
@@ -69,6 +77,7 @@ const isSafeUrl = (value = "") => {
   if (!value) return true; // optional field
   try {
     const url = new URL(value);
+    // Block javascript:, data:, vbscript: and any other non-http(s) schemes
     return url.protocol === "https:" || url.protocol === "http:";
   } catch {
     return false;
@@ -140,11 +149,13 @@ export default async function handler(req, res) {
   const body = parseBody(req);
 
   // Extract and sanitize fields
-  const authorName = stripTags(normalizeText(body.author_name || body.name, ""));
+  // escapeHtml is applied to short metadata fields; content is stored as-is
+  // (plain text) and rendered safely by React's automatic HTML escaping.
+  const authorName = escapeHtml(normalizeText(body.author_name || body.name, ""));
   const authorEmail = normalizeText(body.author_email || body.email, "");
-  const title = stripTags(normalizeText(body.title || body.blog_title, ""));
+  const title = escapeHtml(normalizeText(body.title || body.blog_title, ""));
   const rawContent = normalizeText(body.content, "");
-  const category = stripTags(normalizeText(body.category, ""));
+  const category = escapeHtml(normalizeText(body.category, ""));
   const featuredImage = normalizeText(body.featured_image, "");
 
   // Validate required fields
@@ -190,9 +201,10 @@ export default async function handler(req, res) {
       status: "pending",
       is_guest_post: true,
       created_at: now,
-      publishedAt: now,
-      updatedAt: now,
+      // publishedAt is null until the admin approves the submission
+      publishedAt: null,
       published_at: null,
+      updatedAt: now,
       readTimeMinutes: estimateReadTime(rawContent),
     };
 
