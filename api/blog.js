@@ -26,7 +26,7 @@ const send = (res, status, body) => {
   res.status(status).json(body);
 };
 
-const parseBoundedInt = (value, fallback, min, max) => {
+const parseIntWithBounds = (value, fallback, min, max) => {
   const parsed = Number.parseInt(`${value ?? ""}`, 10);
   if (!Number.isFinite(parsed)) return fallback;
   return Math.min(max, Math.max(min, parsed));
@@ -77,10 +77,10 @@ const hasAdminAccess = (req) => {
 };
 
 const lockoutWindowMs =
-  parseBoundedInt(ENV.BLOG_ADMIN_LOCKOUT_MINUTES, DEFAULT_ADMIN_LOCKOUT_MINUTES, 1, 1440) * 60 * 1000;
-const maxFailedAttempts = parseBoundedInt(ENV.BLOG_ADMIN_MAX_ATTEMPTS, DEFAULT_ADMIN_MAX_ATTEMPTS, 1, 20);
+  parseIntWithBounds(ENV.BLOG_ADMIN_LOCKOUT_MINUTES, DEFAULT_ADMIN_LOCKOUT_MINUTES, 1, 1440) * 60 * 1000;
+const maxFailedAttempts = parseIntWithBounds(ENV.BLOG_ADMIN_MAX_ATTEMPTS, DEFAULT_ADMIN_MAX_ATTEMPTS, 1, 20);
 const mutationWindowMs = 60 * 60 * 1000;
-const maxMutationsPerHour = parseBoundedInt(
+const maxMutationsPerHour = parseIntWithBounds(
   ENV.BLOG_ADMIN_MAX_MUTATIONS_PER_HOUR,
   DEFAULT_ADMIN_MAX_MUTATIONS_PER_HOUR,
   1,
@@ -102,7 +102,7 @@ const getClientId = (req) => {
   const ipFromHeader = Array.isArray(fwd) ? fwd[0] : `${fwd || ""}`;
   const ip = ipFromHeader.split(",")[0].trim() || req.socket?.remoteAddress || "unknown";
   const ua = `${req.headers["user-agent"] || "unknown"}`.slice(0, 200);
-  return `${ip}|${ua}`;
+  return JSON.stringify([ip, ua]);
 };
 
 const isClientLockedOut = (req) => {
@@ -147,6 +147,20 @@ const consumeMutationQuota = (req) => {
   if (current.count >= maxMutationsPerHour) return false;
   state.mutationCountByClient.set(clientId, { ...current, count: current.count + 1 });
   return true;
+};
+
+const validatePostPayloadLengths = (body) =>
+  !(
+    (typeof body.title === "string" && body.title.length > TITLE_MAX) ||
+    (typeof body.excerpt === "string" && body.excerpt.length > EXCERPT_MAX) ||
+    (typeof body.content === "string" && body.content.length > CONTENT_MAX) ||
+    (typeof body.slug === "string" && body.slug.length > SLUG_INPUT_MAX)
+  );
+
+const enforceMutationQuota = (req, res) => {
+  if (consumeMutationQuota(req)) return true;
+  send(res, 429, { error: "Rate limit exceeded for blog changes. Please try again later." });
+  return false;
 };
 
 const isKvConfigured = () =>
@@ -235,17 +249,10 @@ export default async function handler(req, res) {
   if (!isReadRequest) clearFailedAttempts(req);
 
   if (req.method === "POST") {
-    if (!consumeMutationQuota(req)) {
-      return send(res, 429, { error: "Rate limit exceeded for blog changes. Please try again later." });
-    }
+    if (!enforceMutationQuota(req, res)) return;
 
     const body = parseBody(req);
-    if (
-      (typeof body.title === "string" && body.title.length > TITLE_MAX) ||
-      (typeof body.excerpt === "string" && body.excerpt.length > EXCERPT_MAX) ||
-      (typeof body.content === "string" && body.content.length > CONTENT_MAX) ||
-      (typeof body.slug === "string" && body.slug.length > SLUG_INPUT_MAX)
-    ) {
+    if (!validatePostPayloadLengths(body)) {
       return send(res, 400, { error: "One or more fields exceed allowed limits." });
     }
 
@@ -271,17 +278,10 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "PUT") {
-    if (!consumeMutationQuota(req)) {
-      return send(res, 429, { error: "Rate limit exceeded for blog changes. Please try again later." });
-    }
+    if (!enforceMutationQuota(req, res)) return;
 
     const body = parseBody(req);
-    if (
-      (typeof body.title === "string" && body.title.length > TITLE_MAX) ||
-      (typeof body.excerpt === "string" && body.excerpt.length > EXCERPT_MAX) ||
-      (typeof body.content === "string" && body.content.length > CONTENT_MAX) ||
-      (typeof body.slug === "string" && body.slug.length > SLUG_INPUT_MAX)
-    ) {
+    if (!validatePostPayloadLengths(body)) {
       return send(res, 400, { error: "One or more fields exceed allowed limits." });
     }
 
@@ -321,9 +321,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "DELETE") {
-    if (!consumeMutationQuota(req)) {
-      return send(res, 429, { error: "Rate limit exceeded for blog changes. Please try again later." });
-    }
+    if (!enforceMutationQuota(req, res)) return;
 
     const targetSlug = typeof req.query?.slug === "string" ? req.query.slug : "";
     if (!targetSlug) return send(res, 400, { error: "slug query parameter is required" });
