@@ -10,6 +10,7 @@ const EXCERPT_MAX = 500;
 const CONTENT_MAX = 20000;
 const SLUG_INPUT_MAX = 160;
 const USER_AGENT_MAX_LENGTH = 200;
+const MAX_SECURITY_TRACKED_CLIENTS = 5000;
 
 const DEFAULT_POSTS = [
   {
@@ -100,16 +101,44 @@ const getSecurityState = () => {
   return globalThis.__PLACEMENTDO_BLOG_SECURITY__;
 };
 
+const cleanupSecurityState = (now = Date.now()) => {
+  const state = getSecurityState();
+  for (const [clientId, entry] of state.failedAttemptsByClient.entries()) {
+    const stale = now - entry.lastFailedAt > lockoutWindowMs && entry.lockedUntil <= now;
+    if (stale) state.failedAttemptsByClient.delete(clientId);
+  }
+  for (const [clientId, entry] of state.mutationCountByClient.entries()) {
+    if (now - entry.windowStartedAt > mutationWindowMs) {
+      state.mutationCountByClient.delete(clientId);
+    }
+  }
+
+  if (state.failedAttemptsByClient.size > MAX_SECURITY_TRACKED_CLIENTS) {
+    const oldest = [...state.failedAttemptsByClient.entries()]
+      .sort((a, b) => a[1].lastFailedAt - b[1].lastFailedAt)
+      .slice(0, state.failedAttemptsByClient.size - MAX_SECURITY_TRACKED_CLIENTS);
+    oldest.forEach(([clientId]) => state.failedAttemptsByClient.delete(clientId));
+  }
+  if (state.mutationCountByClient.size > MAX_SECURITY_TRACKED_CLIENTS) {
+    const oldest = [...state.mutationCountByClient.entries()]
+      .sort((a, b) => a[1].windowStartedAt - b[1].windowStartedAt)
+      .slice(0, state.mutationCountByClient.size - MAX_SECURITY_TRACKED_CLIENTS);
+    oldest.forEach(([clientId]) => state.mutationCountByClient.delete(clientId));
+  }
+};
+
 const getClientId = (req) => {
   const fwd = req.headers["x-forwarded-for"];
-  const ipFromHeader = Array.isArray(fwd) ? fwd[0] : `${fwd || ""}`;
-  const ip = ipFromHeader.split(",")[0].trim() || req.socket?.remoteAddress || "unknown";
+  const forwardedRaw = Array.isArray(fwd) ? fwd[0] : `${fwd || ""}`;
+  const forwardedIp = forwardedRaw.split(",")[0].trim() || "unknown";
+  const socketIp = `${req.socket?.remoteAddress || ""}`.trim() || "unknown";
   const ua = `${req.headers["user-agent"] || "unknown"}`.slice(0, USER_AGENT_MAX_LENGTH);
-  return createHash("sha256").update(JSON.stringify([ip, ua])).digest("hex");
+  return createHash("sha256").update(`${socketIp}\u0000${forwardedIp}\u0000${ua}`).digest("hex");
 };
 
 const isClientLockedOut = (req) => {
   const now = Date.now();
+  cleanupSecurityState(now);
   const clientId = getClientId(req);
   const entry = getSecurityState().failedAttemptsByClient.get(clientId);
   if (!entry) return false;
@@ -122,6 +151,7 @@ const isClientLockedOut = (req) => {
 
 const registerFailedAttempt = (req) => {
   const now = Date.now();
+  cleanupSecurityState(now);
   const clientId = getClientId(req);
   const state = getSecurityState();
   const current = state.failedAttemptsByClient.get(clientId);
@@ -140,6 +170,7 @@ const clearFailedAttempts = (req) => {
 
 const consumeMutationQuota = (req) => {
   const now = Date.now();
+  cleanupSecurityState(now);
   const clientId = getClientId(req);
   const state = getSecurityState();
   const current = state.mutationCountByClient.get(clientId);
