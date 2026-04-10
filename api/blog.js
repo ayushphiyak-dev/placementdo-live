@@ -29,6 +29,17 @@ const slugify = (value = "") =>
     .slice(0, 120)
     .replace(/^-|-$/g, "");
 
+const createUniqueSlug = (base, posts, skipIndex = -1) => {
+  if (!base) return "";
+  const taken = posts
+    .filter((_, idx) => idx !== skipIndex)
+    .map((post) => post.slug);
+  if (!taken.includes(base)) return base;
+  let counter = 2;
+  while (taken.includes(`${base}-${counter}`)) counter += 1;
+  return `${base}-${counter}`;
+};
+
 const parseBody = (req) => {
   if (!req.body) return {};
   if (typeof req.body === "string") {
@@ -52,22 +63,27 @@ const hasAdminAccess = (req) => {
 const isKvConfigured = () =>
   Boolean(ENV.KV_REST_API_URL && ENV.KV_REST_API_TOKEN);
 
-const kvRequest = async (path) => {
-  const url = `${ENV.KV_REST_API_URL}${path}`;
+const kvCommand = async (command) => {
+  const url = `${ENV.KV_REST_API_URL}/pipeline`;
   const r = await fetch(url, {
-    method: "GET",
-    headers: { Authorization: `Bearer ${ENV.KV_REST_API_TOKEN}` },
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${ENV.KV_REST_API_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify([command]),
   });
   if (!r.ok) throw new Error("KV request failed");
-  return r.json();
+  const data = await r.json();
+  return data?.[0]?.result;
 };
 
 const loadPosts = async () => {
   if (isKvConfigured()) {
     try {
-      const data = await kvRequest(`/get/${encodeURIComponent(BLOG_KEY)}`);
-      if (typeof data?.result === "string") {
-        const parsed = JSON.parse(data.result);
+      const value = await kvCommand(["GET", BLOG_KEY]);
+      if (typeof value === "string") {
+        const parsed = JSON.parse(value);
         if (Array.isArray(parsed)) return parsed;
       }
     } catch (error) {
@@ -83,8 +99,7 @@ const loadPosts = async () => {
 
 const savePosts = async (posts) => {
   if (isKvConfigured()) {
-    const encoded = encodeURIComponent(JSON.stringify(posts));
-    await kvRequest(`/set/${encodeURIComponent(BLOG_KEY)}/${encoded}`);
+    await kvCommand(["SET", BLOG_KEY, JSON.stringify(posts)]);
     return;
   }
   globalThis.__PLACEMENTDO_BLOG_POSTS__ = posts;
@@ -136,9 +151,7 @@ export default async function handler(req, res) {
 
     let slug = requestedSlug || slugify(title);
     if (!slug) return send(res, 400, { error: "Invalid title/slug" });
-
-    const slugExists = posts.some((post) => post.slug === slug);
-    if (slugExists) slug = `${slug}-${Date.now()}`;
+    slug = createUniqueSlug(slug, posts);
 
     const now = new Date().toISOString();
     const publishedAt = typeof body.publishedAt === "string" && body.publishedAt ? body.publishedAt : now;
@@ -161,15 +174,15 @@ export default async function handler(req, res) {
     const content = typeof body.content === "string" ? body.content.trim() : prev.content;
     const status = body.status === "draft" ? "draft" : body.status === "published" ? "published" : prev.status;
     const requestedSlug = typeof body.slug === "string" ? slugify(body.slug) : prev.slug;
-    const slugTaken = posts.some((post, i) => i !== idx && post.slug === requestedSlug);
+    const nextSlug = createUniqueSlug(requestedSlug, posts, idx);
 
-    if (!title || !excerpt || !content || !requestedSlug || slugTaken) {
+    if (!title || !excerpt || !content || !requestedSlug || !nextSlug) {
       return send(res, 400, { error: "Invalid update payload" });
     }
 
     const updated = {
       ...prev,
-      slug: requestedSlug,
+      slug: nextSlug,
       title,
       excerpt,
       content,
