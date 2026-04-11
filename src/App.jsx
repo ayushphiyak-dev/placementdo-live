@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState, useCallback } from 'react';
+import GlobalStyles from './GlobalStyles.jsx';
 const InterviewAI = lazy(() => import("./InterviewAI_v5.jsx"));
 const GuestSubmission = lazy(() => import("./components/Blog/GuestSubmission.jsx"));
 const AdminDashboard = lazy(() => import("./components/Admin/AdminDashboard.jsx"));
@@ -103,6 +104,7 @@ export default function App() {
 
   return (
     <>
+      <GlobalStyles />
       <AppRouter />
       {enableTelemetry && (
         <Suspense fallback={null}>
