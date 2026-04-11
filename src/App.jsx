@@ -3,6 +3,7 @@ const InterviewAI = lazy(() => import("./InterviewAI_v5.jsx"));
 const GuestSubmission = lazy(() => import("./components/Blog/GuestSubmission.jsx"));
 const AdminDashboard = lazy(() => import("./components/Admin/AdminDashboard.jsx"));
 const AdminCreatePost = lazy(() => import("./components/Admin/AdminCreatePost.jsx"));
+const AdminEditPost = lazy(() => import("./components/Admin/AdminEditPost.jsx"));
 const BlogPage = lazy(() => import("./components/Blog/BlogPage.jsx"));
 const BlogPostPage = lazy(() => import("./components/Blog/BlogPostPage.jsx"));
 
@@ -50,6 +51,18 @@ function AppRouter() {
     return (
       <Suspense fallback={null}>
         <AdminCreatePost onNav={navigate} />
+      </Suspense>
+    );
+  }
+
+  // Admin edit — /admin/blog/:slug/edit
+  if (path.startsWith("/admin/blog/") && path.endsWith("/edit")) {
+    const editSlug = decodeURIComponent(
+      path.slice("/admin/blog/".length, -"/edit".length)
+    ).trim();
+    return (
+      <Suspense fallback={null}>
+        <AdminEditPost slug={editSlug} onNav={navigate} />
       </Suspense>
     );
   }
