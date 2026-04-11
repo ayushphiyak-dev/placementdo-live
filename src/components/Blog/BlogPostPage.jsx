@@ -7,6 +7,37 @@
 import { useMemo, useReducer, useEffect } from "react";
 import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon } from "lucide-react";
 
+// Cache helpers — keep fetched post data in sessionStorage so the post
+// renders immediately on refresh instead of flashing a spinner.
+const POST_CACHE_KEY = (slug) => `pd:blog:post:${slug}`;
+const LIST_CACHE_KEY = "pd:blog:list";
+
+const readPostCache = (slug) => {
+  try {
+    const raw = window.sessionStorage.getItem(POST_CACHE_KEY(slug));
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+const writePostCache = (slug, data) => {
+  try {
+    window.sessionStorage.setItem(POST_CACHE_KEY(slug), JSON.stringify(data));
+  } catch {
+    // sessionStorage may be unavailable
+  }
+};
+
+const readListCache = () => {
+  try {
+    const raw = window.sessionStorage.getItem(LIST_CACHE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
   if (Number.isNaN(date.getTime())) return dateStr;
@@ -208,12 +239,24 @@ const STYLES = `
   }
 `;
 
-const FETCH_INITIAL = { post: null, allPosts: [], loading: true, notFound: false };
+const makeFetchInitial = (slug) => {
+  const cached = readPostCache(slug);
+  if (cached) {
+    return { post: cached.post, allPosts: cached.allPosts, loading: false, notFound: false };
+  }
+  return { post: null, allPosts: [], loading: true, notFound: false };
+};
 
 function fetchReducer(state, action) {
   switch (action.type) {
-    case "reset":
-      return FETCH_INITIAL;
+    case "reset": {
+      // When navigating to a new slug, show cached data if available or show loading
+      const cached = readPostCache(action.slug);
+      if (cached) {
+        return { post: cached.post, allPosts: cached.allPosts, loading: false, notFound: false };
+      }
+      return { post: null, allPosts: [], loading: true, notFound: false };
+    }
     case "loaded":
       return { post: action.post, allPosts: action.allPosts, loading: false, notFound: false };
     case "error":
@@ -232,17 +275,28 @@ export default function BlogPostPage({ slug, onNav }) {
     }
   };
 
-  const [{ post, allPosts, loading, notFound }, dispatch] = useReducer(fetchReducer, FETCH_INITIAL);
+  const [{ post, allPosts, loading, notFound }, dispatch] = useReducer(
+    fetchReducer,
+    slug,
+    makeFetchInitial
+  );
 
   useEffect(() => {
     let cancelled = false;
-    dispatch({ type: "reset" });
+    dispatch({ type: "reset", slug });
 
-    // Fetch the individual post and all posts (for related posts)
-    Promise.all([
+    // Prefer the cached post list for related posts to avoid an extra round-trip
+    const cachedList = readListCache();
+
+    // Fetch the individual post and (if no cached list) all posts for related posts
+    const promises = [
       fetch(`/api/blog?slug=${encodeURIComponent(slug)}`).then((r) => r.json()),
-      fetch("/api/blog").then((r) => r.json()),
-    ])
+      cachedList
+        ? Promise.resolve({ posts: cachedList })
+        : fetch("/api/blog").then((r) => r.json()),
+    ];
+
+    Promise.all(promises)
       .then(([postData, listData]) => {
         if (cancelled) return;
         // Normalise list first so it can be passed into both branches of the dispatch
@@ -251,11 +305,14 @@ export default function BlogPostPage({ slug, onNav }) {
           : [];
         if (postData?.post) {
           const p = postData.post;
+          const normalizedPost = { ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug };
           dispatch({
             type: "loaded",
-            post: { ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug },
+            post: normalizedPost,
             allPosts: list,
           });
+          // Persist to sessionStorage so refresh is instant
+          writePostCache(slug, { post: normalizedPost, allPosts: list });
         } else {
           dispatch({ type: "error" });
         }

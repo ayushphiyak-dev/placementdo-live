@@ -17,6 +17,27 @@
 import { useState, useMemo, useEffect } from "react";
 import { Calendar, User, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
 
+// Cache helpers — keep the last-fetched post list in sessionStorage so the
+// blog grid is visible immediately on refresh instead of flashing a spinner.
+const BLOG_LIST_CACHE_KEY = "pd:blog:list";
+
+const readListCache = () => {
+  try {
+    const raw = window.sessionStorage.getItem(BLOG_LIST_CACHE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+const writeListCache = (posts) => {
+  try {
+    window.sessionStorage.setItem(BLOG_LIST_CACHE_KEY, JSON.stringify(posts));
+  } catch {
+    // sessionStorage may be unavailable (private browsing, storage full, etc.)
+  }
+};
+
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
   if (Number.isNaN(date.getTime())) return dateStr;
@@ -174,8 +195,8 @@ export default function BlogPage({ onNav }) {
     }
   };
 
-  const [rawPosts, setRawPosts] = useState([]);
-  const [loadingPosts, setLoadingPosts] = useState(true);
+  const [rawPosts, setRawPosts] = useState(() => readListCache() || []);
+  const [loadingPosts, setLoadingPosts] = useState(() => readListCache() === null);
 
   useEffect(() => {
     let cancelled = false;
@@ -185,13 +206,13 @@ export default function BlogPage({ onNav }) {
         if (cancelled) return;
         const list = Array.isArray(data?.posts) ? data.posts : [];
         // Normalize: API uses publishedAt; give each post a .date alias for sorting/display
-        setRawPosts(
-          list.map((p) => ({
-            ...p,
-            date: p.date || p.publishedAt || "",
-            id: p.id || p.slug,
-          }))
-        );
+        const normalized = list.map((p) => ({
+          ...p,
+          date: p.date || p.publishedAt || "",
+          id: p.id || p.slug,
+        }));
+        setRawPosts(normalized);
+        writeListCache(normalized);
       })
       .catch(() => {
         if (!cancelled) setRawPosts([]);
@@ -203,7 +224,12 @@ export default function BlogPage({ onNav }) {
   }, []);
 
   const sortedPosts = useMemo(
-    () => [...rawPosts].sort((a, b) => new Date(b.date) - new Date(a.date)),
+    () =>
+      [...rawPosts].sort((a, b) => {
+        const diff = new Date(b.date) - new Date(a.date);
+        // Secondary sort by slug ensures deterministic order when dates are equal
+        return diff !== 0 ? diff : a.slug.localeCompare(b.slug);
+      }),
     [rawPosts]
   );
 

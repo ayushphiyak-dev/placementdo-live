@@ -193,7 +193,11 @@ export default async function handler(req, res) {
     const visiblePosts = posts
       .filter((post) => isAdmin || post.status === "published")
       .map((post) => normalizePost(post))
-      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+      .sort((a, b) => {
+        const diff = new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+        // Secondary sort by slug ensures deterministic order when dates are equal
+        return diff !== 0 ? diff : a.slug.localeCompare(b.slug);
+      });
 
     if (slug) {
       const post = visiblePosts.find((item) => item.slug === slug);
