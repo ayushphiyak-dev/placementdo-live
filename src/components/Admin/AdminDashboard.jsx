@@ -15,6 +15,9 @@ import {
   Eye,
   ArrowLeft,
   PlusCircle,
+  Pencil,
+  Globe,
+  EyeOff,
 } from "lucide-react";
 
 const formatDate = (value) => {
@@ -97,32 +100,85 @@ export default function AdminDashboard({ onNav }) {
   const [actionLoading, setActionLoading] = useState(""); // slug of post being acted on
   const [message, setMessage] = useState({ text: "", type: "success" });
   const [previewPost, setPreviewPost] = useState(null);
-  const [filter, setFilter] = useState("pending"); // "pending" | "all"
+  // "all" | "published" | "draft" | "pending"
+  const [filter, setFilter] = useState("all");
 
   const showMessage = useCallback((text, type = "success") => {
     setMessage({ text, type });
     setTimeout(() => setMessage({ text: "", type: "success" }), 5000);
   }, []);
 
+  // Load ALL posts (published + draft + pending) via GET /api/blog with admin token
   const load = useCallback(async (adminToken = token) => {
     if (!adminToken) return;
     setLoading(true);
     setMessage({ text: "", type: "success" });
     try {
-      const r = await fetch("/api/blog/pending", {
+      const r = await fetch("/api/blog", {
         headers: { "x-admin-token": adminToken },
       });
       const data = await r.json();
-      if (!r.ok) throw new Error(data?.error || "Failed to load submissions");
-      setPosts(Array.isArray(data?.posts) ? data.posts : []);
+      if (!r.ok) throw new Error(data?.error || "Failed to load posts");
+      // Normalize: API uses publishedAt; add a created_at alias for display
+      const list = Array.isArray(data?.posts) ? data.posts : [];
+      setPosts(
+        list.map((p) => ({
+          ...p,
+          created_at: p.created_at || p.publishedAt || p.updatedAt || "",
+        }))
+      );
       setLoaded(true);
     } catch (err) {
-      showMessage(err?.message || "Failed to load submissions.", "error");
+      showMessage(err?.message || "Failed to load posts.", "error");
     } finally {
       setLoading(false);
     }
   }, [token, showMessage]);
 
+  // Publish a post via the approve endpoint (no owner token needed)
+  const publish = async (slug) => {
+    setActionLoading(slug);
+    try {
+      const r = await fetch(`/api/blog/approve?slug=${encodeURIComponent(slug)}`, {
+        method: "PUT",
+        headers: { "x-admin-token": token },
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data?.error || "Publish failed");
+      showMessage(data?.message || "Post published.");
+      setPosts((prev) =>
+        prev.map((p) => (p.slug === slug ? { ...p, status: "published" } : p))
+      );
+    } catch (err) {
+      showMessage(err?.message || "Publish failed.", "error");
+    } finally {
+      setActionLoading("");
+    }
+  };
+
+  // Unpublish a post (set to draft) via PUT /api/blog
+  const unpublish = async (slug) => {
+    setActionLoading(slug);
+    try {
+      const r = await fetch(`/api/blog?slug=${encodeURIComponent(slug)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "x-admin-token": token },
+        body: JSON.stringify({ status: "draft" }),
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data?.error || "Unpublish failed");
+      showMessage("Post unpublished (set to draft).");
+      setPosts((prev) =>
+        prev.map((p) => (p.slug === slug ? { ...p, status: "draft" } : p))
+      );
+    } catch (err) {
+      showMessage(err?.message || "Unpublish failed.", "error");
+    } finally {
+      setActionLoading("");
+    }
+  };
+
+  // Approve a guest submission (same as publish but shows different label)
   const approve = async (slug) => {
     setActionLoading(slug);
     try {
@@ -133,7 +189,9 @@ export default function AdminDashboard({ onNav }) {
       const data = await r.json();
       if (!r.ok) throw new Error(data?.error || "Approve failed");
       showMessage(data?.message || "Post approved and published.");
-      setPosts((prev) => prev.filter((p) => p.slug !== slug));
+      setPosts((prev) =>
+        prev.map((p) => (p.slug === slug ? { ...p, status: "published" } : p))
+      );
     } catch (err) {
       showMessage(err?.message || "Approve failed.", "error");
     } finally {
@@ -150,8 +208,10 @@ export default function AdminDashboard({ onNav }) {
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data?.error || "Reject failed");
-      showMessage(data?.message || "Post rejected.", "success");
-      setPosts((prev) => prev.filter((p) => p.slug !== slug));
+      showMessage(data?.message || "Post rejected.");
+      setPosts((prev) =>
+        prev.map((p) => (p.slug === slug ? { ...p, status: "rejected" } : p))
+      );
     } catch (err) {
       showMessage(err?.message || "Reject failed.", "error");
     } finally {
@@ -178,15 +238,24 @@ export default function AdminDashboard({ onNav }) {
     }
   };
 
-  const navigate = (path) => {
+  const navigate = useCallback((path) => {
     if (onNav) {
       onNav(path);
     } else {
       window.location.href = path;
     }
-  };
+  }, [onNav]);
 
-  const filteredPosts = filter === "all" ? posts : posts.filter((p) => p.status === "pending");
+  // Filter tabs config
+  const FILTERS = [
+    { key: "all", label: "All" },
+    { key: "published", label: "Published" },
+    { key: "draft", label: "Draft" },
+    { key: "pending", label: "Pending" },
+  ];
+
+  const filteredPosts =
+    filter === "all" ? posts : posts.filter((p) => p.status === filter);
 
   return (
     <>
@@ -218,15 +287,12 @@ export default function AdminDashboard({ onNav }) {
         <button className="btn-ghost" onClick={() => navigate("/blog")}>
           Blog <ChevronRight size={14} />
         </button>
-        <button className="btn-ghost" onClick={() => navigate("/blog/admin")}>
-          Full Blog Admin
-        </button>
       </header>
 
       <main className="ad-page">
         <div className="ad-inner">
-          <button className="btn-ghost" style={{ paddingLeft: 0, marginBottom: 16 }} onClick={() => navigate("/blog/admin")}>
-            <ArrowLeft size={15} /> Full Blog Admin
+          <button className="btn-ghost" style={{ paddingLeft: 0, marginBottom: 16 }} onClick={() => navigate("/blog")}>
+            <ArrowLeft size={15} /> Back to Blog
           </button>
 
           {/* Page header */}
@@ -234,17 +300,17 @@ export default function AdminDashboard({ onNav }) {
             <div>
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
-                background: "var(--amber-light)", color: "var(--amber)",
+                background: "var(--teal-light)", color: "var(--teal-dark)",
                 fontSize: 12, fontWeight: 600, padding: "4px 12px", borderRadius: 20,
                 letterSpacing: "0.02em",
               }}>
-                <ShieldCheck size={12} /> Guest Submissions
+                <ShieldCheck size={12} /> Admin
               </span>
               <h1 className="brig" style={{ fontSize: "clamp(28px,5vw,40px)", letterSpacing: "-0.03em", marginTop: 10 }}>
-                Submission Review
+                Blog Management
               </h1>
               <p style={{ marginTop: 6, color: "var(--slate-500)", lineHeight: 1.8 }}>
-                Review, approve, or reject guest blog submissions. Admin token required.
+                Manage all blog posts — create, edit, publish, unpublish, or delete. Admin token required.
               </p>
             </div>
             <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
@@ -279,7 +345,7 @@ export default function AdminDashboard({ onNav }) {
                   onClick={() => load(token)}
                   style={{ whiteSpace: "nowrap" }}
                 >
-                  {loading ? <><Loader size={14} className="spin" /> Loading…</> : <><RefreshCw size={14} /> Load submissions</>}
+                  {loading ? <><Loader size={14} className="spin" /> Loading…</> : <><RefreshCw size={14} /> Load Posts</>}
                 </button>
               </div>
             </div>
@@ -304,41 +370,44 @@ export default function AdminDashboard({ onNav }) {
             )}
           </AnimatePresence>
 
-          {/* Submissions list */}
+          {/* Posts list */}
           {loaded && (
             <div style={{ marginTop: 20 }}>
               {/* Filter tabs */}
-              <div style={{ display: "flex", gap: 8, marginBottom: 14, borderBottom: "1px solid var(--border)", paddingBottom: 10 }}>
-                {["pending", "all"].map((f) => (
-                  <button
-                    key={f}
-                    onClick={() => setFilter(f)}
-                    style={{
-                      padding: "6px 14px", borderRadius: 8, border: "none",
-                      background: filter === f ? "var(--teal-light)" : "transparent",
-                      color: filter === f ? "var(--teal-dark)" : "var(--slate-500)",
-                      fontWeight: filter === f ? 600 : 500,
-                      fontSize: 13, cursor: "pointer",
-                      fontFamily: "'DM Sans',sans-serif",
-                      transition: "all 0.18s",
-                    }}
-                  >
-                    {f === "pending" ? "Pending" : "All"}{" "}
-                    <span style={{
-                      fontSize: 11, fontWeight: 700,
-                      background: filter === f ? "var(--teal-dark)" : "var(--slate-200)",
-                      color: filter === f ? "#fff" : "var(--slate-600)",
-                      padding: "1px 7px", borderRadius: 20, marginLeft: 4,
-                    }}>
-                      {f === "pending" ? posts.filter((p) => p.status === "pending").length : posts.length}
-                    </span>
-                  </button>
-                ))}
+              <div style={{ display: "flex", gap: 8, marginBottom: 14, borderBottom: "1px solid var(--border)", paddingBottom: 10, flexWrap: "wrap" }}>
+                {FILTERS.map(({ key, label }) => {
+                  const count = key === "all" ? posts.length : posts.filter((p) => p.status === key).length;
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => setFilter(key)}
+                      style={{
+                        padding: "6px 14px", borderRadius: 8, border: "none",
+                        background: filter === key ? "var(--teal-light)" : "transparent",
+                        color: filter === key ? "var(--teal-dark)" : "var(--slate-500)",
+                        fontWeight: filter === key ? 600 : 500,
+                        fontSize: 13, cursor: "pointer",
+                        fontFamily: "'DM Sans',sans-serif",
+                        transition: "all 0.18s",
+                      }}
+                    >
+                      {label}{" "}
+                      <span style={{
+                        fontSize: 11, fontWeight: 700,
+                        background: filter === key ? "var(--teal-dark)" : "var(--slate-200)",
+                        color: filter === key ? "#fff" : "var(--slate-600)",
+                        padding: "1px 7px", borderRadius: 20, marginLeft: 4,
+                      }}>
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
 
               {filteredPosts.length === 0 && (
                 <div className="card" style={{ padding: 28, textAlign: "center", color: "var(--slate-500)" }}>
-                  {filter === "pending" ? "No pending submissions." : "No submissions found."}
+                  No posts found for this filter.
                 </div>
               )}
 
@@ -354,6 +423,11 @@ export default function AdminDashboard({ onNav }) {
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 6 }}>
                           <StatusBadge status={post.status} />
+                          {post.is_guest_post && (
+                            <span style={{ fontSize: 11, fontWeight: 700, background: "var(--amber-light)", color: "var(--amber)", padding: "2px 8px", borderRadius: 20, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                              Guest
+                            </span>
+                          )}
                           <span style={{ fontSize: 12, color: "var(--slate-400)", display: "inline-flex", alignItems: "center", gap: 3 }}>
                             <TagIcon size={11} /> {post.category}
                           </span>
@@ -389,6 +463,7 @@ export default function AdminDashboard({ onNav }) {
 
                       {/* Right: actions */}
                       <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0, justifyContent: "center" }}>
+                        {/* Preview */}
                         <button
                           className="btn-ghost"
                           onClick={() => setPreviewPost(post)}
@@ -397,8 +472,20 @@ export default function AdminDashboard({ onNav }) {
                           <Eye size={13} /> Preview
                         </button>
 
-                        {post.status === "pending" && (
-                          <>
+                        {/* Edit */}
+                        <button
+                          className="btn-ghost"
+                          onClick={() => navigate(`/admin/blog/${encodeURIComponent(post.slug)}/edit`)}
+                          disabled={actionLoading === post.slug}
+                          style={{ fontSize: 13, gap: 5 }}
+                        >
+                          <Pencil size={13} /> Edit
+                        </button>
+
+                        {/* Publish / Unpublish */}
+                        {post.status !== "published" ? (
+                          post.status === "pending" ? (
+                            // Guest submission: show Approve/Reject pair
                             <button
                               onClick={() => approve(post.slug)}
                               disabled={actionLoading === post.slug}
@@ -415,26 +502,66 @@ export default function AdminDashboard({ onNav }) {
                               {actionLoading === post.slug ? <Loader size={13} className="spin" /> : <Check size={13} />}
                               Approve
                             </button>
-
+                          ) : (
+                            // Draft / rejected: show Publish button
                             <button
-                              onClick={() => reject(post.slug)}
+                              onClick={() => publish(post.slug)}
                               disabled={actionLoading === post.slug}
                               style={{
                                 display: "flex", alignItems: "center", gap: 6,
                                 padding: "8px 16px", borderRadius: 8, border: "none",
-                                background: "var(--amber-light)", color: "var(--amber)",
+                                background: "var(--green-light)", color: "var(--green)",
                                 fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 600,
                                 cursor: actionLoading === post.slug ? "not-allowed" : "pointer",
                                 opacity: actionLoading === post.slug ? 0.6 : 1,
                                 transition: "all 0.18s",
                               }}
                             >
-                              {actionLoading === post.slug ? <Loader size={13} className="spin" /> : <X size={13} />}
-                              Reject
+                              {actionLoading === post.slug ? <Loader size={13} className="spin" /> : <Globe size={13} />}
+                              Publish
                             </button>
-                          </>
+                          )
+                        ) : (
+                          // Published: show Unpublish button
+                          <button
+                            onClick={() => unpublish(post.slug)}
+                            disabled={actionLoading === post.slug}
+                            style={{
+                              display: "flex", alignItems: "center", gap: 6,
+                              padding: "8px 16px", borderRadius: 8, border: "none",
+                              background: "var(--amber-light)", color: "var(--amber)",
+                              fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 600,
+                              cursor: actionLoading === post.slug ? "not-allowed" : "pointer",
+                              opacity: actionLoading === post.slug ? 0.6 : 1,
+                              transition: "all 0.18s",
+                            }}
+                          >
+                            {actionLoading === post.slug ? <Loader size={13} className="spin" /> : <EyeOff size={13} />}
+                            Unpublish
+                          </button>
                         )}
 
+                        {/* Reject (only for pending guest submissions) */}
+                        {post.status === "pending" && (
+                          <button
+                            onClick={() => reject(post.slug)}
+                            disabled={actionLoading === post.slug}
+                            style={{
+                              display: "flex", alignItems: "center", gap: 6,
+                              padding: "8px 16px", borderRadius: 8, border: "none",
+                              background: "var(--amber-light)", color: "var(--amber)",
+                              fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 600,
+                              cursor: actionLoading === post.slug ? "not-allowed" : "pointer",
+                              opacity: actionLoading === post.slug ? 0.6 : 1,
+                              transition: "all 0.18s",
+                            }}
+                          >
+                            {actionLoading === post.slug ? <Loader size={13} className="spin" /> : <X size={13} />}
+                            Reject
+                          </button>
+                        )}
+
+                        {/* Delete */}
                         <button
                           onClick={() => del(post.slug)}
                           disabled={actionLoading === post.slug}
