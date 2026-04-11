@@ -198,6 +198,8 @@ export default function BlogPage({ onNav }) {
         writeListCache(normalized);
       })
       .catch(() => {
+        // On fetch failure, keep any cached posts visible rather than showing an empty
+        // state — stale posts are more useful than a blank page for a transient error.
         if (!cancelled) setPostState((s) => ({ ...s, loadingPosts: false }));
       });
     return () => { cancelled = true; };
