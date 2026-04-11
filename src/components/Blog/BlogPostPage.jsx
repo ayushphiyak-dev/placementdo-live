@@ -4,7 +4,7 @@
  * Fetches the post matching `slug` from /api/blog?slug=<slug>.
  * To add a new blog post, navigate to /admin/blog/new as an admin.
  */
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useReducer, useEffect } from "react";
 import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon } from "lucide-react";
 
 const formatDate = (dateStr) => {
@@ -208,6 +208,21 @@ const STYLES = `
   }
 `;
 
+const FETCH_INITIAL = { post: null, allPosts: [], loading: true, notFound: false };
+
+function fetchReducer(state, action) {
+  switch (action.type) {
+    case "reset":
+      return FETCH_INITIAL;
+    case "loaded":
+      return { post: action.post, allPosts: action.allPosts, loading: false, notFound: false };
+    case "error":
+      return { ...state, loading: false, notFound: true };
+    default:
+      return state;
+  }
+}
+
 export default function BlogPostPage({ slug, onNav }) {
   const navigate = (path) => {
     if (onNav) {
@@ -217,15 +232,11 @@ export default function BlogPostPage({ slug, onNav }) {
     }
   };
 
-  const [post, setPost] = useState(null);
-  const [allPosts, setAllPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
+  const [{ post, allPosts, loading, notFound }, dispatch] = useReducer(fetchReducer, FETCH_INITIAL);
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setNotFound(false);
+    dispatch({ type: "reset" });
 
     // Fetch the individual post and all posts (for related posts)
     Promise.all([
@@ -234,20 +245,23 @@ export default function BlogPostPage({ slug, onNav }) {
     ])
       .then(([postData, listData]) => {
         if (cancelled) return;
+        // Normalise list first so it can be passed into both branches of the dispatch
+        const list = Array.isArray(listData?.posts)
+          ? listData.posts.map((p) => ({ ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug }))
+          : [];
         if (postData?.post) {
           const p = postData.post;
-          setPost({ ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug });
+          dispatch({
+            type: "loaded",
+            post: { ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug },
+            allPosts: list,
+          });
         } else {
-          setNotFound(true);
+          dispatch({ type: "error" });
         }
-        const list = Array.isArray(listData?.posts) ? listData.posts : [];
-        setAllPosts(list.map((p) => ({ ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug })));
       })
       .catch(() => {
-        if (!cancelled) setNotFound(true);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) dispatch({ type: "error" });
       });
 
     return () => { cancelled = true; };
