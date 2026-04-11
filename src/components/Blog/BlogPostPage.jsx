@@ -209,24 +209,20 @@ const STYLES = `
   }
 `;
 
-const makeFetchInitial = (slug) => {
+// Build an initial fetch state from the sessionStorage cache for a given slug.
+// Used by both the lazy initializer and the reducer's "reset" action.
+const stateFromCache = (slug) => {
   const cached = readPostCache(slug);
-  if (cached) {
-    return { post: cached.post, allPosts: cached.allPosts, loading: false, notFound: false };
-  }
-  return { post: null, allPosts: [], loading: true, notFound: false };
+  return cached
+    ? { post: cached.post, allPosts: cached.allPosts, loading: false, notFound: false }
+    : { post: null, allPosts: [], loading: true, notFound: false };
 };
 
 function fetchReducer(state, action) {
   switch (action.type) {
-    case "reset": {
+    case "reset":
       // When navigating to a new slug, show cached data if available or show loading
-      const cached = readPostCache(action.slug);
-      if (cached) {
-        return { post: cached.post, allPosts: cached.allPosts, loading: false, notFound: false };
-      }
-      return { post: null, allPosts: [], loading: true, notFound: false };
-    }
+      return stateFromCache(action.slug);
     case "loaded":
       return { post: action.post, allPosts: action.allPosts, loading: false, notFound: false };
     case "error":
@@ -248,7 +244,7 @@ export default function BlogPostPage({ slug, onNav }) {
   const [{ post, allPosts, loading, notFound }, dispatch] = useReducer(
     fetchReducer,
     slug,
-    makeFetchInitial
+    stateFromCache
   );
 
   useEffect(() => {

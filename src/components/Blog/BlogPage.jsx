@@ -175,8 +175,11 @@ export default function BlogPage({ onNav }) {
     }
   };
 
-  const [rawPosts, setRawPosts] = useState(() => readListCache() || []);
-  const [loadingPosts, setLoadingPosts] = useState(() => readListCache() === null);
+  // Read cache once on mount — initializes both the post list and the loading flag
+  const [{ rawPosts, loadingPosts }, setPostState] = useState(() => {
+    const cached = readListCache();
+    return { rawPosts: cached || [], loadingPosts: cached === null };
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -191,14 +194,11 @@ export default function BlogPage({ onNav }) {
           date: p.date || p.publishedAt || "",
           id: p.id || p.slug,
         }));
-        setRawPosts(normalized);
+        setPostState({ rawPosts: normalized, loadingPosts: false });
         writeListCache(normalized);
       })
       .catch(() => {
-        if (!cancelled) setRawPosts([]);
-      })
-      .finally(() => {
-        if (!cancelled) setLoadingPosts(false);
+        if (!cancelled) setPostState((s) => ({ ...s, loadingPosts: false }));
       });
     return () => { cancelled = true; };
   }, []);
