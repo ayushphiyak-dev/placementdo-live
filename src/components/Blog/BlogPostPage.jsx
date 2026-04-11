@@ -6,37 +6,7 @@
  */
 import { useMemo, useReducer, useEffect } from "react";
 import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon } from "lucide-react";
-
-// Cache helpers — keep fetched post data in sessionStorage so the post
-// renders immediately on refresh instead of flashing a spinner.
-const POST_CACHE_KEY = (slug) => `pd:blog:post:${slug}`;
-const LIST_CACHE_KEY = "pd:blog:list";
-
-const readPostCache = (slug) => {
-  try {
-    const raw = window.sessionStorage.getItem(POST_CACHE_KEY(slug));
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-};
-
-const writePostCache = (slug, data) => {
-  try {
-    window.sessionStorage.setItem(POST_CACHE_KEY(slug), JSON.stringify(data));
-  } catch {
-    // sessionStorage may be unavailable
-  }
-};
-
-const readListCache = () => {
-  try {
-    const raw = window.sessionStorage.getItem(LIST_CACHE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-};
+import { readListCache, readPostCache, writePostCache } from "./blogCache.js";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);

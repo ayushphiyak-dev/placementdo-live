@@ -16,27 +16,7 @@
  */
 import { useState, useMemo, useEffect } from "react";
 import { Calendar, User, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
-
-// Cache helpers — keep the last-fetched post list in sessionStorage so the
-// blog grid is visible immediately on refresh instead of flashing a spinner.
-const BLOG_LIST_CACHE_KEY = "pd:blog:list";
-
-const readListCache = () => {
-  try {
-    const raw = window.sessionStorage.getItem(BLOG_LIST_CACHE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-};
-
-const writeListCache = (posts) => {
-  try {
-    window.sessionStorage.setItem(BLOG_LIST_CACHE_KEY, JSON.stringify(posts));
-  } catch {
-    // sessionStorage may be unavailable (private browsing, storage full, etc.)
-  }
-};
+import { readListCache, writeListCache } from "./blogCache.js";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
