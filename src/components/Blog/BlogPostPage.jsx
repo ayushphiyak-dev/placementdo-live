@@ -202,6 +202,14 @@ const STYLES = `
     color: var(--slate-500);
     background: var(--slate-50);
   }
+  .bpp-cover {
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    margin-bottom: 28px;
+  }
   .bpp-not-found {
     text-align: center;
     padding: 80px 24px;
@@ -210,7 +218,6 @@ const STYLES = `
 `;
 
 // Build an initial fetch state from the sessionStorage cache for a given slug.
-// Used by both the lazy initializer and the reducer's "reset" action.
 const stateFromCache = (slug) => {
   const cached = readPostCache(slug);
   return cached
@@ -267,11 +274,11 @@ export default function BlogPostPage({ slug, onNav }) {
         if (cancelled) return;
         // Normalise list first so it can be passed into both branches of the dispatch
         const list = Array.isArray(listData?.posts)
-          ? listData.posts.map((p) => ({ ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug }))
+          ? listData.posts.map((p) => ({ ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug, coverImage: p.coverImage || "" }))
           : [];
         if (postData?.post) {
           const p = postData.post;
-          const normalizedPost = { ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug };
+          const normalizedPost = { ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug, coverImage: p.coverImage || "" };
           dispatch({
             type: "loaded",
             post: normalizedPost,
@@ -416,6 +423,17 @@ export default function BlogPostPage({ slug, onNav }) {
 
               {/* Title */}
               <h1 className="brig bpp-title">{post.title}</h1>
+
+              {/* Cover image. Admin posts use `coverImage`; guest submissions use
+                  `featured_image`. Both are validated as safe URLs by the API. */}
+              {(post.coverImage || post.featured_image) && (
+                <img
+                  src={post.coverImage || post.featured_image}
+                  alt={post.title}
+                  className="bpp-cover"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
+                />
+              )}
 
               {/* Excerpt summary */}
               <p

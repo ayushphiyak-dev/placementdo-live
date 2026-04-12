@@ -17,6 +17,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Calendar, User, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
 import { readListCache, writeListCache } from "./blogCache.js";
+import SEED_POSTS from "../../data/blogPosts.json";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -27,6 +28,22 @@ const formatDate = (dateStr) => {
     day: "numeric",
   }).format(date);
 };
+
+// Normalize the bundled seed posts so they match the API shape.
+// This is the fallback used on cold load (no localStorage cache) so the
+// blog grid renders immediately instead of showing a loading spinner.
+const FALLBACK_POSTS = SEED_POSTS.map((p) => ({
+  ...p,
+  date: p.date || p.publishedAt || "",
+  id: p.id || p.slug,
+  status: p.status || "published",
+  tags: Array.isArray(p.tags) ? p.tags : [],
+  author: p.author || "PlacementDo Team",
+  category: p.category || "General",
+  excerpt: p.excerpt || "",
+  readTimeMinutes: p.readTimeMinutes || 1,
+  coverImage: p.coverImage || "",
+}));
 
 const STYLES = `
   .bp-page {
@@ -78,15 +95,29 @@ const STYLES = `
     background: var(--white);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 24px 26px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 0;
+    overflow: hidden;
     transition: box-shadow 0.18s, transform 0.18s;
   }
   .bp-card:hover {
     box-shadow: 0 6px 24px rgba(0,0,0,.08);
     transform: translateY(-2px);
+  }
+  .bp-card-cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+  }
+  .bp-card-body {
+    padding: 24px 26px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
   .bp-card-meta {
     display: flex;
@@ -175,10 +206,12 @@ export default function BlogPage({ onNav }) {
     }
   };
 
-  // Read cache once on mount — initializes both the post list and the loading flag
+  // Read cache once on mount — initializes both the post list and the loading flag.
+  // Falls back to the bundled seed posts so the grid is shown immediately on any
+  // cold load, with no "Loading posts…" spinner visible to the user.
   const [{ rawPosts, loadingPosts }, setPostState] = useState(() => {
     const cached = readListCache();
-    return { rawPosts: cached || [], loadingPosts: cached === null };
+    return { rawPosts: cached || FALLBACK_POSTS, loadingPosts: false };
   });
 
   useEffect(() => {
@@ -193,6 +226,7 @@ export default function BlogPage({ onNav }) {
           ...p,
           date: p.date || p.publishedAt || "",
           id: p.id || p.slug,
+          coverImage: p.coverImage || "",
         }));
         setPostState({ rawPosts: normalized, loadingPosts: false });
         writeListCache(normalized);
@@ -301,11 +335,7 @@ export default function BlogPage({ onNav }) {
           </section>
 
           {/* Post grid */}
-          {loadingPosts ? (
-            <div className="bp-empty">
-              <p style={{ fontSize: 16, fontWeight: 500, color: "var(--slate-400)" }}>Loading posts…</p>
-            </div>
-          ) : filteredPosts.length === 0 ? (
+          {filteredPosts.length === 0 ? (
             <div className="bp-empty">
               <p style={{ fontSize: 16, fontWeight: 500 }}>No posts found.</p>
               {search && (
@@ -322,47 +352,60 @@ export default function BlogPage({ onNav }) {
             <div className="bp-grid">
               {filteredPosts.map((post) => (
                 <article key={post.id} className="bp-card">
-                  <div className="bp-card-meta">
-                    {post.category && (
-                      <span className="bp-card-category">{post.category}</span>
-                    )}
-                    <span className="bp-card-meta-item">
-                      <Calendar size={12} />
-                      {formatDate(post.date)}
-                    </span>
-                  </div>
-
-                  <h2 className="brig bp-card-title">{post.title}</h2>
-                  <p className="bp-card-excerpt">{post.excerpt}</p>
-
-                  {Array.isArray(post.tags) && post.tags.length > 0 && (
-                    <div className="bp-tags">
-                      {post.tags.slice(0, 3).map((tag) => (
-                        <span key={tag} className="bp-tag-pill">
-                          #{tag}
-                        </span>
-                      ))}
+              {/* Cover image — rendered on cards that have one.
+                  `display:none` on error removes the element from layout (no gap). */}
+              {post.coverImage && (
+                <img
+                  src={post.coverImage}
+                  alt=""
+                  className="bp-card-cover"
+                  loading="lazy"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
+                />
+              )}
+                  <div className="bp-card-body">
+                    <div className="bp-card-meta">
+                      {post.category && (
+                        <span className="bp-card-category">{post.category}</span>
+                      )}
+                      <span className="bp-card-meta-item">
+                        <Calendar size={12} />
+                        {formatDate(post.date)}
+                      </span>
                     </div>
-                  )}
 
-                  <div className="bp-card-footer">
-                    <span className="bp-card-author">
-                      <User size={12} />
-                      {post.author}
-                    </span>
-                    <button
-                      className="btn-ghost"
-                      style={{
-                        fontSize: 13,
-                        paddingRight: 0,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 4,
-                      }}
-                      onClick={() => navigate(`/blog/${post.slug}`)}
-                    >
-                      Read more <ArrowRight size={13} />
-                    </button>
+                    <h2 className="brig bp-card-title">{post.title}</h2>
+                    <p className="bp-card-excerpt">{post.excerpt}</p>
+
+                    {Array.isArray(post.tags) && post.tags.length > 0 && (
+                      <div className="bp-tags">
+                        {post.tags.slice(0, 3).map((tag) => (
+                          <span key={tag} className="bp-tag-pill">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="bp-card-footer">
+                      <span className="bp-card-author">
+                        <User size={12} />
+                        {post.author}
+                      </span>
+                      <button
+                        className="btn-ghost"
+                        style={{
+                          fontSize: 13,
+                          paddingRight: 0,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 4,
+                        }}
+                        onClick={() => navigate(`/blog/${post.slug}`)}
+                      >
+                        Read more <ArrowRight size={13} />
+                      </button>
+                    </div>
                   </div>
                 </article>
               ))}

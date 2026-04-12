@@ -77,6 +77,7 @@ export default function AdminCreatePost({ onNav }) {
     excerpt: "",
     content: "",
     status: "published",
+    coverImage: "",
   });
   const [autoSlug, setAutoSlug] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -131,6 +132,7 @@ export default function AdminCreatePost({ onNav }) {
         excerpt: form.excerpt.trim(),
         content: form.content.trim(),
         status: form.status,
+        coverImage: form.coverImage.trim(),
       };
 
       const res = await fetch("/api/blog", {
@@ -165,6 +167,7 @@ export default function AdminCreatePost({ onNav }) {
         excerpt: "",
         content: "",
         status: "published",
+        coverImage: "",
       });
       setAutoSlug(true);
     } catch (err) {
@@ -378,6 +381,20 @@ export default function AdminCreatePost({ onNav }) {
                 />
                 <p className="acp-hint">Comma-separated list of tags.</p>
               </div>
+            </div>
+
+            {/* Cover image */}
+            <div className="acp-field">
+              <label htmlFor="acp-cover">Cover Image URL</label>
+              <input
+                id="acp-cover"
+                name="coverImage"
+                type="url"
+                value={form.coverImage}
+                onChange={handleChange}
+                placeholder="https://example.com/cover.jpg"
+              />
+              <p className="acp-hint">Optional. Use an https:// URL. Displayed at the top of the post and in listing cards.</p>
             </div>
 
             {/* Status */}

@@ -73,6 +73,7 @@ const EMPTY_FORM = {
   excerpt: "",
   content: "",
   status: "draft",
+  coverImage: "",
 };
 
 export default function AdminEditPost({ slug: originalSlug, onNav }) {
@@ -136,6 +137,7 @@ export default function AdminEditPost({ slug: originalSlug, onNav }) {
         excerpt: p.excerpt || "",
         content: p.content || "",
         status: p.status === "published" ? "published" : "draft",
+        coverImage: p.coverImage || "",
       });
       setLoaded(true);
       showMessage("Post loaded — edit below and save.", "success");
@@ -192,6 +194,7 @@ export default function AdminEditPost({ slug: originalSlug, onNav }) {
         excerpt: form.excerpt.trim(),
         content: form.content.trim(),
         status: form.status,
+        coverImage: form.coverImage.trim(),
       };
 
       const res = await fetch(`/api/blog?slug=${encodeURIComponent(originalSlug)}`, {
@@ -467,6 +470,21 @@ export default function AdminEditPost({ slug: originalSlug, onNav }) {
                 />
                 <p className="aep-hint">Comma-separated list of tags.</p>
               </div>
+            </div>
+
+            {/* Cover image */}
+            <div className="aep-field">
+              <label htmlFor="aep-cover">Cover Image URL</label>
+              <input
+                id="aep-cover"
+                name="coverImage"
+                type="url"
+                value={form.coverImage}
+                onChange={handleChange}
+                placeholder="https://example.com/cover.jpg"
+                disabled={!loaded}
+              />
+              <p className="aep-hint">Optional. Use an https:// URL. Displayed at the top of the post and in listing cards.</p>
             </div>
 
             {/* Status */}
