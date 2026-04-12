@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import { AnimatePresence } from "framer-motion";
 import {
   ShieldCheck,
   Check,
@@ -352,23 +351,21 @@ export default function AdminDashboard({ onNav }) {
           </div>
 
           {/* Status message */}
-          <AnimatePresence>
-            {message.text && (
-              <div
-                className="fade-in-up"
-                style={{
-                  marginTop: 12, padding: "10px 14px",
-                  background: message.type === "error" ? "var(--red-light)" : "var(--green-light)",
-                  border: `1px solid ${message.type === "error" ? "rgba(220,38,38,.25)" : "rgba(22,163,74,.25)"}`,
-                  borderRadius: 10, color: message.type === "error" ? "var(--red)" : "var(--green)",
-                  fontSize: 13, display: "flex", gap: 7, alignItems: "center",
-                }}
-              >
-                {message.type === "error" ? <AlertCircle size={14} /> : <Check size={14} />}
-                {message.text}
-              </div>
-            )}
-          </AnimatePresence>
+          {message.text && (
+            <div
+              className="fade-in-up"
+              style={{
+                marginTop: 12, padding: "10px 14px",
+                background: message.type === "error" ? "var(--red-light)" : "var(--green-light)",
+                border: `1px solid ${message.type === "error" ? "rgba(220,38,38,.25)" : "rgba(22,163,74,.25)"}`,
+                borderRadius: 10, color: message.type === "error" ? "var(--red)" : "var(--green)",
+                fontSize: 13, display: "flex", gap: 7, alignItems: "center",
+              }}
+            >
+              {message.type === "error" ? <AlertCircle size={14} /> : <Check size={14} />}
+              {message.text}
+            </div>
+          )}
 
           {/* Posts list */}
           {loaded && (
@@ -589,11 +586,9 @@ export default function AdminDashboard({ onNav }) {
       </main>
 
       {/* Preview modal */}
-      <AnimatePresence>
-        {previewPost && (
-          <ExpandedPost post={previewPost} onClose={() => setPreviewPost(null)} />
-        )}
-      </AnimatePresence>
+      {previewPost && (
+        <ExpandedPost post={previewPost} onClose={() => setPreviewPost(null)} />
+      )}
     </>
   );
 }
