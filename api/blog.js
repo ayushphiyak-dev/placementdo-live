@@ -37,6 +37,7 @@ const DEFAULT_CATEGORY = "General";
 const BLOG_DEFAULTS = Object.freeze({ author: DEFAULT_AUTHOR, category: DEFAULT_CATEGORY });
 const MAX_TAGS = 8;
 const AVERAGE_WORDS_PER_MINUTE = 220;
+const MAX_IMAGE_URL_LENGTH = 2048;
 
 const send = (res, status, body) => {
   res.status(status).json(body);
@@ -99,6 +100,25 @@ const normalizeTags = (value) => {
 const estimateReadTime = (content = "") => {
   const words = normalizeText(content).split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(words / AVERAGE_WORDS_PER_MINUTE));
+};
+
+const isSafeUrl = (value = "") => {
+  if (!value) return true;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+};
+
+const normalizeCoverImage = (value) => {
+  if (typeof value !== "string") return "";
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  if (trimmed.length > MAX_IMAGE_URL_LENGTH) return "";
+  if (!isSafeUrl(trimmed)) return "";
+  return trimmed;
 };
 
 const normalizePost = (post = {}) => ({
@@ -181,6 +201,7 @@ const summarize = (post) => ({
   category: post.category,
   tags: post.tags,
   readTimeMinutes: post.readTimeMinutes,
+  coverImage: post.coverImage || "",
 });
 
 export default async function handler(req, res) {
@@ -226,6 +247,7 @@ export default async function handler(req, res) {
     const author = normalizeText(body.author, DEFAULT_AUTHOR);
     const category = normalizeText(body.category, DEFAULT_CATEGORY);
     const tags = normalizeTags(body.tags);
+    const coverImage = normalizeCoverImage(body.coverImage);
     const readTimeMinutes = Number.isFinite(Number(body.readTimeMinutes))
       ? Math.max(1, Math.floor(Number(body.readTimeMinutes)))
       : estimateReadTime(content);
@@ -241,7 +263,7 @@ export default async function handler(req, res) {
     const now = new Date().toISOString();
     const publishedAt = typeof body.publishedAt === "string" && body.publishedAt ? body.publishedAt : now;
     const next = [{
-      slug, title, excerpt, content, publishedAt, updatedAt: now, status, author, category, tags, readTimeMinutes,
+      slug, title, excerpt, content, publishedAt, updatedAt: now, status, author, category, tags, coverImage, readTimeMinutes,
     }, ...posts];
     await savePosts(next);
     return send(res, 201, {
@@ -273,6 +295,7 @@ export default async function handler(req, res) {
     const author = normalizeText(body.author, normalizeText(prev.author, DEFAULT_AUTHOR));
     const category = normalizeText(body.category, normalizeText(prev.category, DEFAULT_CATEGORY));
     const tags = body.tags === undefined ? normalizeTags(prev.tags) : normalizeTags(body.tags);
+    const coverImage = body.coverImage === undefined ? (prev.coverImage || "") : normalizeCoverImage(body.coverImage);
     const readTimeMinutes = Number.isFinite(Number(body.readTimeMinutes))
       ? Math.max(1, Math.floor(Number(body.readTimeMinutes)))
       : estimateReadTime(content);
@@ -291,6 +314,7 @@ export default async function handler(req, res) {
       author,
       category,
       tags,
+      coverImage,
       readTimeMinutes,
       publishedAt: typeof body.publishedAt === "string" && body.publishedAt ? body.publishedAt : prev.publishedAt,
       updatedAt: new Date().toISOString(),
