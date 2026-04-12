@@ -6,6 +6,7 @@
  */
 import { useMemo, useReducer, useEffect } from "react";
 import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon } from "lucide-react";
+import { readListCache, readPostCache, writePostCache } from "./blogCache.js";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -208,12 +209,20 @@ const STYLES = `
   }
 `;
 
-const FETCH_INITIAL = { post: null, allPosts: [], loading: true, notFound: false };
+// Build an initial fetch state from the sessionStorage cache for a given slug.
+// Used by both the lazy initializer and the reducer's "reset" action.
+const stateFromCache = (slug) => {
+  const cached = readPostCache(slug);
+  return cached
+    ? { post: cached.post, allPosts: cached.allPosts, loading: false, notFound: false }
+    : { post: null, allPosts: [], loading: true, notFound: false };
+};
 
 function fetchReducer(state, action) {
   switch (action.type) {
     case "reset":
-      return FETCH_INITIAL;
+      // When navigating to a new slug, show cached data if available or show loading
+      return stateFromCache(action.slug);
     case "loaded":
       return { post: action.post, allPosts: action.allPosts, loading: false, notFound: false };
     case "error":
@@ -232,17 +241,28 @@ export default function BlogPostPage({ slug, onNav }) {
     }
   };
 
-  const [{ post, allPosts, loading, notFound }, dispatch] = useReducer(fetchReducer, FETCH_INITIAL);
+  const [{ post, allPosts, loading, notFound }, dispatch] = useReducer(
+    fetchReducer,
+    slug,
+    stateFromCache
+  );
 
   useEffect(() => {
     let cancelled = false;
-    dispatch({ type: "reset" });
+    dispatch({ type: "reset", slug });
 
-    // Fetch the individual post and all posts (for related posts)
-    Promise.all([
+    // Prefer the cached post list for related posts to avoid an extra round-trip
+    const cachedList = readListCache();
+
+    // Fetch the individual post and (if no cached list) all posts for related posts
+    const promises = [
       fetch(`/api/blog?slug=${encodeURIComponent(slug)}`).then((r) => r.json()),
-      fetch("/api/blog").then((r) => r.json()),
-    ])
+      cachedList
+        ? Promise.resolve({ posts: cachedList })
+        : fetch("/api/blog").then((r) => r.json()),
+    ];
+
+    Promise.all(promises)
       .then(([postData, listData]) => {
         if (cancelled) return;
         // Normalise list first so it can be passed into both branches of the dispatch
@@ -251,11 +271,14 @@ export default function BlogPostPage({ slug, onNav }) {
           : [];
         if (postData?.post) {
           const p = postData.post;
+          const normalizedPost = { ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug };
           dispatch({
             type: "loaded",
-            post: { ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug },
+            post: normalizedPost,
             allPosts: list,
           });
+          // Persist to sessionStorage so refresh is instant
+          writePostCache(slug, { post: normalizedPost, allPosts: list });
         } else {
           dispatch({ type: "error" });
         }

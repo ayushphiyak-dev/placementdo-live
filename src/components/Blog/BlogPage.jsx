@@ -16,6 +16,7 @@
  */
 import { useState, useMemo, useEffect } from "react";
 import { Calendar, User, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
+import { readListCache, writeListCache } from "./blogCache.js";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -174,8 +175,11 @@ export default function BlogPage({ onNav }) {
     }
   };
 
-  const [rawPosts, setRawPosts] = useState([]);
-  const [loadingPosts, setLoadingPosts] = useState(true);
+  // Read cache once on mount — initializes both the post list and the loading flag
+  const [{ rawPosts, loadingPosts }, setPostState] = useState(() => {
+    const cached = readListCache();
+    return { rawPosts: cached || [], loadingPosts: cached === null };
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -185,25 +189,29 @@ export default function BlogPage({ onNav }) {
         if (cancelled) return;
         const list = Array.isArray(data?.posts) ? data.posts : [];
         // Normalize: API uses publishedAt; give each post a .date alias for sorting/display
-        setRawPosts(
-          list.map((p) => ({
-            ...p,
-            date: p.date || p.publishedAt || "",
-            id: p.id || p.slug,
-          }))
-        );
+        const normalized = list.map((p) => ({
+          ...p,
+          date: p.date || p.publishedAt || "",
+          id: p.id || p.slug,
+        }));
+        setPostState({ rawPosts: normalized, loadingPosts: false });
+        writeListCache(normalized);
       })
       .catch(() => {
-        if (!cancelled) setRawPosts([]);
-      })
-      .finally(() => {
-        if (!cancelled) setLoadingPosts(false);
+        // On fetch failure, keep any cached posts visible rather than showing an empty
+        // state — stale posts are more useful than a blank page for a transient error.
+        if (!cancelled) setPostState((s) => ({ ...s, loadingPosts: false }));
       });
     return () => { cancelled = true; };
   }, []);
 
   const sortedPosts = useMemo(
-    () => [...rawPosts].sort((a, b) => new Date(b.date) - new Date(a.date)),
+    () =>
+      [...rawPosts].sort((a, b) => {
+        const diff = new Date(b.date) - new Date(a.date);
+        // Secondary sort by slug ensures deterministic order when dates are equal
+        return diff !== 0 ? diff : a.slug.localeCompare(b.slug);
+      }),
     [rawPosts]
   );
 
