@@ -138,14 +138,15 @@ export default function AdminDashboard({ onNav }) {
     }
   }, [token, showMessage]);
 
-  // Auto-load posts if a session token is already available
+  // Auto-load posts if a session token is already available.
+  // `load` is included in the dependency array; since it's a useCallback that
+  // only changes when `token` or `showMessage` change, and both are stable at
+  // mount time, this runs exactly once on mount when a session token exists.
   useEffect(() => {
-    const saved = getSessionToken();
-    if (saved && !loaded) {
-      load(saved);
+    if (token && !loaded) {
+      load();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [load, token, loaded]);
 
   // Publish a post via the approve endpoint (no owner token needed)
   const publish = async (slug) => {

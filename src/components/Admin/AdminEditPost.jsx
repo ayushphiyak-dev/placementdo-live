@@ -102,8 +102,10 @@ export default function AdminEditPost({ slug: originalSlug, onNav }) {
   };
 
   // Load the existing post data into the form (requires admin token)
-  const loadPost = useCallback(async () => {
-    if (!token.trim()) {
+  // `adminToken` defaults to the current token state, but can be passed explicitly
+  // by the auto-load effect to avoid a stale-closure dependency on `token`.
+  const loadPost = useCallback(async (adminToken = token) => {
+    if (!adminToken.trim()) {
       showMessage("Please enter your admin token first.", "error");
       return;
     }
@@ -117,7 +119,7 @@ export default function AdminEditPost({ slug: originalSlug, onNav }) {
 
     try {
       const res = await fetch(`/api/blog?slug=${encodeURIComponent(originalSlug)}`, {
-        headers: { "x-admin-token": token.trim() },
+        headers: { "x-admin-token": adminToken.trim() },
       });
       const data = await res.json();
 
@@ -127,7 +129,7 @@ export default function AdminEditPost({ slug: originalSlug, onNav }) {
       }
 
       // Persist valid token for the rest of the session
-      setSessionToken(token.trim());
+      setSessionToken(adminToken.trim());
 
       const p = data.post;
       setForm({
@@ -150,14 +152,17 @@ export default function AdminEditPost({ slug: originalSlug, onNav }) {
     } finally {
       setLoadingPost(false);
     }
-  }, [token, originalSlug]);
+  }, [token, originalSlug, showMessage]);
 
-  // Auto-load post if a session token is already available
+  // Auto-load the post on mount if a session token is already saved.
+  // We pass the saved token explicitly to loadPost so there is no stale-closure
+  // dependency on the `token` state value.
   useEffect(() => {
-    const saved = getSessionToken();
-    if (saved && originalSlug && !loaded) {
-      loadPost();
+    const savedToken = getSessionToken();
+    if (savedToken && originalSlug) {
+      loadPost(savedToken);
     }
+  // loadPost is stable between renders when token/originalSlug/showMessage don't change.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
