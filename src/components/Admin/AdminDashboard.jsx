@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   ShieldCheck,
   Check,
@@ -17,7 +17,9 @@ import {
   Pencil,
   Globe,
   EyeOff,
+  LogOut,
 } from "lucide-react";
+import { getSessionToken, setSessionToken, clearSessionToken } from "./adminSession.js";
 
 const formatDate = (value) => {
   if (!value) return "—";
@@ -92,7 +94,7 @@ const ExpandedPost = ({ post, onClose }) => (
 );
 
 export default function AdminDashboard({ onNav }) {
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(() => getSessionToken());
   const [posts, setPosts] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -118,6 +120,8 @@ export default function AdminDashboard({ onNav }) {
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data?.error || "Failed to load posts");
+      // Persist valid token for the duration of the session
+      setSessionToken(adminToken);
       // Normalize: API uses publishedAt; add a created_at alias for display
       const list = Array.isArray(data?.posts) ? data.posts : [];
       setPosts(
@@ -133,6 +137,16 @@ export default function AdminDashboard({ onNav }) {
       setLoading(false);
     }
   }, [token, showMessage]);
+
+  // Auto-load posts if a session token is already available.
+  // `load` is included in the dependency array; since it's a useCallback that
+  // only changes when `token` or `showMessage` change, and both are stable at
+  // mount time, this runs exactly once on mount when a session token exists.
+  useEffect(() => {
+    if (token && !loaded) {
+      load();
+    }
+  }, [load, token, loaded]);
 
   // Publish a post via the approve endpoint (no owner token needed)
   const publish = async (slug) => {
@@ -245,6 +259,14 @@ export default function AdminDashboard({ onNav }) {
     }
   }, [onNav]);
 
+  const signOut = useCallback(() => {
+    clearSessionToken();
+    setToken("");
+    setPosts([]);
+    setLoaded(false);
+    setMessage({ text: "", type: "success" });
+  }, []);
+
   // Filter tabs config
   const FILTERS = [
     { key: "all", label: "All" },
@@ -286,6 +308,16 @@ export default function AdminDashboard({ onNav }) {
         <button className="btn-ghost" onClick={() => navigate("/blog")}>
           Blog <ChevronRight size={14} />
         </button>
+        {loaded && (
+          <button
+            className="btn-ghost"
+            style={{ fontSize: 13, color: "var(--slate-500)" }}
+            onClick={signOut}
+            title="Clear session token and sign out"
+          >
+            <LogOut size={14} /> Sign out
+          </button>
+        )}
       </header>
 
       <main className="ad-page">

@@ -15,8 +15,9 @@
  *   3. Commit and deploy
  */
 import { useState, useMemo, useEffect } from "react";
-import { Calendar, User, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
+import { Calendar, User, ChevronRight, ArrowRight, BookOpen, ShieldCheck } from "lucide-react";
 import { readListCache, writeListCache } from "./blogCache.js";
+import { getSessionToken } from "../Admin/adminSession.js";
 import SEED_POSTS from "../../data/blogPosts.json";
 
 const formatDate = (dateStr) => {
@@ -206,6 +207,10 @@ export default function BlogPage({ onNav }) {
     }
   };
 
+  // Show the Admin button only when an admin session token is present,
+  // so the entry point is not exposed to regular public visitors.
+  const isAdminSession = Boolean(getSessionToken());
+
   // Read cache once on mount — initializes both the post list and the loading flag.
   // Falls back to the bundled seed posts so the grid is shown immediately on any
   // cold load, with no "Loading posts…" spinner visible to the user.
@@ -308,6 +313,16 @@ export default function BlogPage({ onNav }) {
         >
           Write for us <ChevronRight size={14} />
         </button>
+        {isAdminSession && (
+          <button
+            className="btn-ghost"
+            style={{ fontSize: 13 }}
+            onClick={() => navigate("/admin/blog")}
+            title="Admin area"
+          >
+            <ShieldCheck size={14} /> Admin
+          </button>
+        )}
       </header>
 
       <main className="bp-page">
