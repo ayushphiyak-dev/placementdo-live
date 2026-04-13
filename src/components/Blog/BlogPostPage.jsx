@@ -215,7 +215,7 @@ const STYLES = `
   }
 `;
 
-const stateFromCache = () => ({ post: null, allPosts: [], loading: true, notFound: false });
+const getInitialState = () => ({ post: null, allPosts: [], loading: true, notFound: false });
 
 function fetchReducer(state, action) {
   switch (action.type) {
@@ -242,8 +242,8 @@ export default function BlogPostPage({ slug, onNav }) {
 
   const [{ post, allPosts, loading, notFound }, dispatch] = useReducer(
     fetchReducer,
-    null,
-    stateFromCache
+    undefined,
+    getInitialState
   );
 
   useEffect(() => {
