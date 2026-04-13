@@ -23,6 +23,7 @@ import {
   ChevronRight,
   ArrowLeft,
 } from "lucide-react";
+import { getSessionToken, setSessionToken } from "./adminSession.js";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -66,7 +67,7 @@ export default function AdminCreatePost({ onNav }) {
     [onNav]
   );
 
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(() => getSessionToken());
   const [form, setForm] = useState({
     title: "",
     slug: "",
@@ -150,6 +151,9 @@ export default function AdminCreatePost({ onNav }) {
         showMessage(data?.error || "Failed to create post.", "error");
         return;
       }
+
+      // Persist valid token for the rest of the session
+      setSessionToken(token.trim());
 
       const warning = data?.warning ? ` Note: ${data.warning}` : "";
       showMessage(

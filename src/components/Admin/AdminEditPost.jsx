@@ -15,7 +15,7 @@
  *   - Setting status to "published" requires BLOG_OWNER_TOKEN; posts saved as
  *     draft otherwise.
  */
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   ShieldCheck,
   Save,
@@ -26,6 +26,7 @@ import {
   ArrowLeft,
   RefreshCw,
 } from "lucide-react";
+import { getSessionToken, setSessionToken } from "./adminSession.js";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -85,7 +86,7 @@ export default function AdminEditPost({ slug: originalSlug, onNav }) {
     [onNav]
   );
 
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(() => getSessionToken());
   const [form, setForm] = useState({ ...EMPTY_FORM, slug: originalSlug || "" });
   const [autoSlug, setAutoSlug] = useState(false); // don't auto-overwrite loaded slug
   const [loaded, setLoaded] = useState(false);
@@ -125,6 +126,9 @@ export default function AdminEditPost({ slug: originalSlug, onNav }) {
         return;
       }
 
+      // Persist valid token for the rest of the session
+      setSessionToken(token.trim());
+
       const p = data.post;
       setForm({
         title: p.title || "",
@@ -147,6 +151,15 @@ export default function AdminEditPost({ slug: originalSlug, onNav }) {
       setLoadingPost(false);
     }
   }, [token, originalSlug]);
+
+  // Auto-load post if a session token is already available
+  useEffect(() => {
+    const saved = getSessionToken();
+    if (saved && originalSlug && !loaded) {
+      loadPost();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -212,6 +225,9 @@ export default function AdminEditPost({ slug: originalSlug, onNav }) {
         showMessage(data?.error || "Failed to save changes.", "error");
         return;
       }
+
+      // Persist valid token for the rest of the session
+      setSessionToken(token.trim());
 
       const warning = data?.warning ? ` Note: ${data.warning}` : "";
       showMessage(

@@ -15,7 +15,7 @@
  *   3. Commit and deploy
  */
 import { useState, useMemo, useEffect } from "react";
-import { Calendar, User, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
+import { Calendar, User, ChevronRight, ArrowRight, BookOpen, ShieldCheck } from "lucide-react";
 import { readListCache, writeListCache } from "./blogCache.js";
 import SEED_POSTS from "../../data/blogPosts.json";
 
@@ -307,6 +307,14 @@ export default function BlogPage({ onNav }) {
           onClick={() => navigate("/write-for-us")}
         >
           Write for us <ChevronRight size={14} />
+        </button>
+        <button
+          className="btn-ghost"
+          style={{ fontSize: 13 }}
+          onClick={() => navigate("/admin/blog")}
+          title="Admin area"
+        >
+          <ShieldCheck size={14} /> Admin
         </button>
       </header>
 
