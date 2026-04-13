@@ -1,10 +1,6 @@
 import { lazy, Suspense, useEffect, useState, useCallback } from 'react';
 import GlobalStyles from './GlobalStyles.jsx';
 const InterviewAI = lazy(() => import("./InterviewAI_v5.jsx"));
-const GuestSubmission = lazy(() => import("./components/Blog/GuestSubmission.jsx"));
-const AdminDashboard = lazy(() => import("./components/Admin/AdminDashboard.jsx"));
-const AdminCreatePost = lazy(() => import("./components/Admin/AdminCreatePost.jsx"));
-const AdminEditPost = lazy(() => import("./components/Admin/AdminEditPost.jsx"));
 const BlogPage = lazy(() => import("./components/Blog/BlogPage.jsx"));
 const BlogPostPage = lazy(() => import("./components/Blog/BlogPostPage.jsx"));
 
@@ -16,7 +12,7 @@ const Analytics = lazy(() =>
 );
 
 // Routes handled by the new standalone pages (not by InterviewAI_v5).
-const STANDALONE_ROUTES = ["/write-for-us", "/admin/blog", "/admin/blog/new", "/blog"];
+const STANDALONE_ROUTES = ["/blog"];
 
 function AppRouter() {
   const [path, setPath] = useState(() => window.location.pathname);
@@ -32,42 +28,6 @@ function AppRouter() {
     return () => window.removeEventListener("popstate", handlePop);
   }, []);
 
-  if (path === "/write-for-us") {
-    return (
-      <Suspense fallback={null}>
-        <GuestSubmission onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (path === "/admin/blog") {
-    return (
-      <Suspense fallback={null}>
-        <AdminDashboard onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (path === "/admin/blog/new") {
-    return (
-      <Suspense fallback={null}>
-        <AdminCreatePost onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  // Admin edit — /admin/blog/:slug/edit
-  if (path.startsWith("/admin/blog/") && path.endsWith("/edit")) {
-    const editSlug = decodeURIComponent(
-      path.slice("/admin/blog/".length, -"/edit".length)
-    ).trim();
-    return (
-      <Suspense fallback={null}>
-        <AdminEditPost slug={editSlug} onNav={navigate} />
-      </Suspense>
-    );
-  }
-
   // Public blog listing — /blog and /blog/
   if (path === "/blog" || path === "/blog/") {
     return (
@@ -77,8 +37,8 @@ function AppRouter() {
     );
   }
 
-  // Public blog post — /blog/:slug  (keep /blog/admin going to InterviewAI below)
-  if (path.startsWith("/blog/") && path !== "/blog/admin") {
+  // Public blog post — /blog/:slug
+  if (path.startsWith("/blog/")) {
     const slug = decodeURIComponent(path.replace("/blog/", "")).trim();
     return (
       <Suspense fallback={null}>

@@ -1,23 +1,8 @@
-/**
- * BlogPage — public read-only blog listing.
- *
- * Posts are sourced from the /api/blog endpoint, which serves the in-memory
- * or KV-stored posts seeded with the content from DEFAULT_POSTS in api/blog.js.
- *
- * To add a new blog post as an admin:
- *   1. Navigate to /admin/blog/new
- *   2. Enter your BLOG_ADMIN_TOKEN and fill in the post form
- *   3. Submit — the post will be saved and appear on this page immediately
- *
- * Alternatively, to add posts via the JSON file (for static/CDN deploys):
- *   1. Open src/data/blogPosts.json
- *   2. Copy an existing post object and change its fields
- *   3. Commit and deploy
- */
-import { useState, useMemo, useEffect } from "react";
-import { Calendar, User, ChevronRight, ArrowRight, BookOpen, ShieldCheck } from "lucide-react";
-import { readListCache, writeListCache } from "./blogCache.js";
-import { getSessionToken } from "../Admin/adminSession.js";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import {
+  Calendar, User, ArrowRight, BookOpen, ShieldCheck,
+  AlertCircle, Check, Loader, Trash2, PlusCircle, LogOut,
+} from "lucide-react";
 import SEED_POSTS from "../../data/blogPosts.json";
 
 const formatDate = (dateStr) => {
@@ -30,264 +15,302 @@ const formatDate = (dateStr) => {
   }).format(date);
 };
 
-// Normalize the bundled seed posts so they match the API shape.
-// This is the fallback used on cold load (no localStorage cache) so the
-// blog grid renders immediately instead of showing a loading spinner.
-const FALLBACK_POSTS = SEED_POSTS.map((p) => ({
-  ...p,
-  date: p.date || p.publishedAt || "",
-  id: p.id || p.slug,
-  status: p.status || "published",
-  tags: Array.isArray(p.tags) ? p.tags : [],
-  author: p.author || "PlacementDo Team",
-  category: p.category || "General",
-  excerpt: p.excerpt || "",
-  readTimeMinutes: p.readTimeMinutes || 1,
-  coverImage: p.coverImage || "",
-}));
+const slugify = (v = "") =>
+  v.toLowerCase().trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .slice(0, 120)
+    .replace(/^-|-$/g, "");
+
+// Admin session helpers (sessionStorage only — cleared when tab closes)
+const ADMIN_KEY = "pd:admin:token";
+const getStoredToken = () => { try { return window.sessionStorage.getItem(ADMIN_KEY) || ""; } catch { return ""; } };
+const storeToken = (t) => { try { window.sessionStorage.setItem(ADMIN_KEY, t); } catch {} };
+const clearToken = () => { try { window.sessionStorage.removeItem(ADMIN_KEY); } catch {} };
+
+const normalizePosts = (arr) =>
+  arr.map((p) => ({
+    ...p,
+    date: p.date || p.publishedAt || "",
+    id: p.id || p.slug,
+    status: p.status || "published",
+    tags: Array.isArray(p.tags) ? p.tags : [],
+    author: p.author || "PlacementDo Team",
+    category: p.category || "General",
+    excerpt: p.excerpt || "",
+    coverImage: p.coverImage || "",
+  }));
+
+const FALLBACK_POSTS = normalizePosts(SEED_POSTS);
+
+const EMPTY_FORM = {
+  title: "", slug: "",
+  date: new Date().toISOString().slice(0, 10),
+  author: "PlacementDo Team", category: "General",
+  tags: "", excerpt: "", content: "", coverImage: "",
+};
 
 const STYLES = `
-  .bp-page {
-    min-height: 100vh;
-    background: var(--slate-50);
-    padding: 104px clamp(20px,5vw,60px) 72px;
+  .blog-page { min-height: 100vh; background: var(--slate-50); }
+  .blog-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(250,250,248,.96); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); height: 64px;
+    display: flex; align-items: center;
+    padding: 0 clamp(20px,5vw,60px); gap: 16px;
   }
-  .bp-inner {
-    max-width: 1100px;
-    margin: 0 auto;
+  .blog-main { max-width: 1100px; margin: 0 auto; padding: 104px clamp(20px,5vw,60px) 80px; }
+  .blog-hero { padding: 48px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
+  .blog-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--teal-light); color: var(--teal-dark);
+    font-size: 12px; font-weight: 600;
+    padding: 4px 12px; border-radius: 20px;
+    letter-spacing: 0.02em; margin-bottom: 14px;
   }
-  .bp-hero {
-    padding: 48px 0 36px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 40px;
-  }
-  .bp-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--teal-light);
-    color: var(--teal-dark);
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 20px;
-    letter-spacing: 0.02em;
-    margin-bottom: 14px;
-  }
-  .bp-hero-title {
-    font-size: clamp(32px, 5vw, 52px);
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin: 0 0 14px;
-  }
-  .bp-hero-desc {
-    color: var(--slate-500);
-    line-height: 1.8;
-    font-size: 16px;
-    max-width: 600px;
-    margin: 0;
-  }
-  .bp-grid {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-  }
-  .bp-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    overflow: hidden;
+  .blog-title { font-size: clamp(32px,5vw,52px); letter-spacing: -0.03em; line-height: 1.1; margin: 0 0 14px; }
+  .blog-desc { color: var(--slate-500); line-height: 1.8; font-size: 16px; max-width: 600px; margin: 0; }
+  .blog-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); }
+  .blog-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; display: flex; flex-direction: column;
     transition: box-shadow 0.18s, transform 0.18s;
   }
-  .bp-card:hover {
-    box-shadow: 0 6px 24px rgba(0,0,0,.08);
-    transform: translateY(-2px);
+  .blog-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.08); transform: translateY(-2px); }
+  .blog-card-cover { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .blog-card-body { padding: 24px 26px; display: flex; flex-direction: column; flex: 1; }
+  .blog-card-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font-size: 12px; color: var(--slate-400); margin-bottom: 12px; }
+  .blog-card-meta-item { display: inline-flex; align-items: center; gap: 4px; }
+  .blog-card-cat { display: inline-block; background: var(--teal-light); color: var(--teal-dark); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .blog-card-h2 { font-size: clamp(18px,2.5vw,22px); letter-spacing: -0.02em; line-height: 1.3; margin: 0 0 10px; }
+  .blog-card-excerpt { color: var(--slate-500); line-height: 1.75; font-size: 14.5px; flex: 1; margin: 0 0 16px; }
+  .blog-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border); }
+  .blog-card-author { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--slate-500); }
+  .blog-empty { text-align: center; padding: 64px 24px; color: var(--slate-400); }
+  .admin-section { margin-top: 80px; padding-top: 56px; border-top: 2px solid var(--border); }
+  .admin-panel { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 28px 32px; }
+  .admin-field { display: grid; gap: 6px; }
+  .admin-field label { font-size: 13px; font-weight: 600; color: var(--slate-700); }
+  .admin-field input, .admin-field textarea, .admin-field select {
+    width: 100%; box-sizing: border-box;
+    padding: 9px 12px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--white);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    color: var(--slate-800); outline: none; transition: border-color 0.18s;
   }
-  .bp-card-cover {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    display: block;
-    border-radius: 0;
+  .admin-field input:focus, .admin-field textarea:focus, .admin-field select:focus { border-color: var(--teal-dark); }
+  .admin-field textarea { resize: vertical; }
+  .admin-hint { font-size: 12px; color: var(--slate-400); margin-top: 3px; }
+  .admin-row { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  .admin-msg {
+    padding: 10px 14px; border-radius: 10px; font-size: 13px;
+    display: flex; gap: 7px; align-items: flex-start; margin-bottom: 16px;
   }
-  .bp-card-body {
-    padding: 24px 26px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+  .admin-msg.success { background: var(--green-light); border: 1px solid rgba(22,163,74,.25); color: var(--green); }
+  .admin-msg.error { background: var(--red-light); border: 1px solid rgba(220,38,38,.25); color: var(--red); }
+  .post-mgmt-row {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 0; border-bottom: 1px solid var(--border);
   }
-  .bp-card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-    font-size: 12px;
-    color: var(--slate-400);
-    margin-bottom: 12px;
+  .post-mgmt-row:last-child { border-bottom: none; }
+  .status-badge {
+    display: inline-flex; align-items: center;
+    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+    letter-spacing: 0.04em; text-transform: uppercase; flex-shrink: 0;
   }
-  .bp-card-meta-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .bp-card-category {
-    display: inline-block;
-    background: var(--teal-light);
-    color: var(--teal-dark);
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.02em;
-  }
-  .bp-card-title {
-    font-size: clamp(18px, 2.5vw, 22px);
-    letter-spacing: -0.02em;
-    line-height: 1.3;
-    margin: 0 0 10px;
-  }
-  .bp-card-excerpt {
-    color: var(--slate-500);
-    line-height: 1.75;
-    font-size: 14.5px;
-    flex: 1;
-    margin: 0 0 16px;
-  }
-  .bp-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: auto;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-  }
-  .bp-card-author {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: var(--slate-500);
-  }
-  .bp-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 14px;
-  }
-  .bp-tag-pill {
-    font-size: 11px;
-    padding: 3px 9px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    color: var(--slate-500);
-    background: var(--slate-50);
-  }
-  .bp-empty {
-    text-align: center;
-    padding: 64px 24px;
-    color: var(--slate-400);
-  }
+  .status-published { background: var(--green-light); color: var(--green); }
+  .status-draft { background: var(--slate-100); color: var(--slate-600); }
   @media (max-width: 640px) {
-    .bp-grid {
-      grid-template-columns: 1fr;
-    }
+    .blog-grid { grid-template-columns: 1fr; }
+    .admin-row { grid-template-columns: 1fr; }
+    .admin-panel { padding: 20px 16px; }
   }
 `;
 
 export default function BlogPage({ onNav }) {
-  const navigate = (path) => {
-    if (onNav) {
-      onNav(path);
-    } else {
-      window.location.href = path;
-    }
-  };
+  const navigate = useCallback(
+    (path) => (onNav ? onNav(path) : (window.location.href = path)),
+    [onNav]
+  );
 
-  // Show the Admin button only when an admin session token is present,
-  // so the entry point is not exposed to regular public visitors.
-  const isAdminSession = Boolean(getSessionToken());
+  // --- Posts ---
+  const [posts, setPosts] = useState(FALLBACK_POSTS);
 
-  // Read cache once on mount — initializes both the post list and the loading flag.
-  // Falls back to the bundled seed posts so the grid is shown immediately on any
-  // cold load, with no "Loading posts…" spinner visible to the user.
-  const [{ rawPosts, loadingPosts }, setPostState] = useState(() => {
-    const cached = readListCache();
-    return { rawPosts: cached || FALLBACK_POSTS, loadingPosts: false };
-  });
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/blog")
-      .then((r) => r.json())
-      .then((data) => {
-        if (cancelled) return;
-        const list = Array.isArray(data?.posts) ? data.posts : [];
-        // Normalize: API uses publishedAt; give each post a .date alias for sorting/display
-        const normalized = list.map((p) => ({
-          ...p,
-          date: p.date || p.publishedAt || "",
-          id: p.id || p.slug,
-          coverImage: p.coverImage || "",
-        }));
-        setPostState({ rawPosts: normalized, loadingPosts: false });
-        writeListCache(normalized);
-      })
-      .catch(() => {
-        // On fetch failure, keep any cached posts visible rather than showing an empty
-        // state — stale posts are more useful than a blank page for a transient error.
-        if (!cancelled) setPostState((s) => ({ ...s, loadingPosts: false }));
-      });
-    return () => { cancelled = true; };
+  const fetchPosts = useCallback(async (token = "") => {
+    try {
+      const headers = token ? { "x-admin-token": token } : {};
+      const r = await fetch("/api/blog", { headers });
+      const data = await r.json();
+      const list = Array.isArray(data?.posts) ? normalizePosts(data.posts) : [];
+      if (list.length > 0) setPosts(list);
+    } catch {}
   }, []);
 
-  const sortedPosts = useMemo(
-    () =>
-      [...rawPosts].sort((a, b) => {
-        const diff = new Date(b.date) - new Date(a.date);
-        // Secondary sort by slug ensures deterministic order when dates are equal
-        return diff !== 0 ? diff : a.slug.localeCompare(b.slug);
-      }),
-    [rawPosts]
-  );
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   const [search, setSearch] = useState("");
 
   const filteredPosts = useMemo(() => {
+    const publicPosts = posts.filter((p) => p.status === "published");
+    const sorted = [...publicPosts].sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
     const q = search.trim().toLowerCase();
-    if (!q) return sortedPosts;
-    return sortedPosts.filter((p) => {
-      const haystack =
-        `${p.title} ${p.excerpt} ${p.author} ${(p.tags || []).join(" ")} ${p.category || ""}`.toLowerCase();
-      return haystack.includes(q);
+    if (!q) return sorted;
+    return sorted.filter((p) =>
+      `${p.title} ${p.excerpt} ${p.author} ${(p.tags || []).join(" ")} ${p.category || ""}`
+        .toLowerCase()
+        .includes(q)
+    );
+  }, [posts, search]);
+
+  // --- Admin auth ---
+  const [adminToken, setAdminToken] = useState(getStoredToken);
+  const [authed, setAuthed] = useState(() => Boolean(getStoredToken()));
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState("");
+
+  const handleLogin = useCallback(
+    async (e) => {
+      e.preventDefault();
+      const t = adminToken.trim();
+      if (!t) { setAuthError("Please enter your admin token."); return; }
+      setAuthLoading(true);
+      setAuthError("");
+      try {
+        const r = await fetch("/api/blog", { headers: { "x-admin-token": t } });
+        if (r.ok) {
+          storeToken(t);
+          setAuthed(true);
+          const data = await r.json();
+          const list = Array.isArray(data?.posts) ? normalizePosts(data.posts) : [];
+          if (list.length > 0) setPosts(list);
+        } else {
+          setAuthError("Invalid token. Please check and try again.");
+        }
+      } catch {
+        setAuthError("Network error. Please try again.");
+      } finally {
+        setAuthLoading(false);
+      }
+    },
+    [adminToken]
+  );
+
+  const handleLogout = useCallback(() => {
+    clearToken();
+    setAdminToken("");
+    setAuthed(false);
+    setAuthError("");
+    fetchPosts();
+  }, [fetchPosts]);
+
+  // --- Create post ---
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [autoSlug, setAutoSlug] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [createMsg, setCreateMsg] = useState({ text: "", type: "" });
+  const [showCreate, setShowCreate] = useState(false);
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => {
+      const next = { ...prev, [name]: value };
+      if (name === "title" && autoSlug) next.slug = slugify(value);
+      return next;
     });
-  }, [sortedPosts, search]);
+  };
+
+  const handleSlugChange = (e) => {
+    setAutoSlug(false);
+    setForm((prev) => ({ ...prev, slug: e.target.value }));
+  };
+
+  const handleCreate = useCallback(
+    async (e) => {
+      e.preventDefault();
+      const t = adminToken.trim();
+      setCreating(true);
+      setCreateMsg({ text: "", type: "" });
+      try {
+        const payload = {
+          title: form.title.trim(),
+          slug: slugify(form.slug) || slugify(form.title),
+          publishedAt: form.date
+            ? new Date(form.date).toISOString()
+            : new Date().toISOString(),
+          author: form.author.trim() || "PlacementDo Team",
+          category: form.category.trim() || "General",
+          tags: form.tags.split(",").map((s) => s.trim()).filter(Boolean),
+          excerpt: form.excerpt.trim(),
+          content: form.content.trim(),
+          status: "published",
+          coverImage: form.coverImage.trim(),
+        };
+        const r = await fetch("/api/blog", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-token": t,
+            "x-owner-token": t,
+          },
+          body: JSON.stringify(payload),
+        });
+        const data = await r.json();
+        if (!r.ok) {
+          setCreateMsg({ text: data?.error || "Failed to create post.", type: "error" });
+          return;
+        }
+        const title = data?.post?.title || payload.title;
+        setCreateMsg({ text: `"${title}" published successfully!`, type: "success" });
+        setForm({ ...EMPTY_FORM, date: new Date().toISOString().slice(0, 10) });
+        setAutoSlug(true);
+        setShowCreate(false);
+        await fetchPosts(t);
+      } catch (err) {
+        setCreateMsg({ text: err?.message || "Network error.", type: "error" });
+      } finally {
+        setCreating(false);
+      }
+    },
+    [adminToken, form, fetchPosts]
+  );
+
+  // --- Delete post ---
+  const [deletingSlug, setDeletingSlug] = useState(null);
+
+  const handleDelete = useCallback(
+    async (slug, title) => {
+      if (!window.confirm(`Delete post "${title}"? This cannot be undone.`)) return;
+      setDeletingSlug(slug);
+      try {
+        await fetch(`/api/blog?slug=${encodeURIComponent(slug)}`, {
+          method: "DELETE",
+          headers: { "x-admin-token": adminToken.trim() },
+        });
+        await fetchPosts(adminToken.trim());
+      } finally {
+        setDeletingSlug(null);
+      }
+    },
+    [adminToken, fetchPosts]
+  );
+
+  // Posts list shown in admin panel (all statuses)
+  const adminPosts = useMemo(
+    () => [...posts].sort((a, b) => new Date(b.date) - new Date(a.date)),
+    [posts]
+  );
 
   return (
     <>
       <style>{STYLES}</style>
 
-      {/* Minimal nav header */}
-      <header
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          background: "rgba(250,250,248,.96)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid var(--border)",
-          height: 64,
-          display: "flex",
-          alignItems: "center",
-          padding: "0 clamp(20px,5vw,60px)",
-          gap: 16,
-        }}
-      >
+      {/* Header */}
+      <header className="blog-header">
         <button
           className="btn-ghost"
           style={{ paddingLeft: 0 }}
@@ -295,47 +318,25 @@ export default function BlogPage({ onNav }) {
         >
           <span
             className="brig"
-            style={{
-              fontSize: 17,
-              fontWeight: 700,
-              color: "var(--teal-dark)",
-              letterSpacing: "-0.02em",
-            }}
+            style={{ fontSize: 17, fontWeight: 700, color: "var(--teal-dark)", letterSpacing: "-0.02em" }}
           >
             PlacementDo
           </span>
         </button>
         <div style={{ flex: 1 }} />
-        <button
-          className="btn-ghost"
-          style={{ fontSize: 13 }}
-          onClick={() => navigate("/write-for-us")}
-        >
-          Write for us <ChevronRight size={14} />
-        </button>
-        {isAdminSession && (
-          <button
-            className="btn-ghost"
-            style={{ fontSize: 13 }}
-            onClick={() => navigate("/admin/blog")}
-            title="Admin area"
-          >
-            <ShieldCheck size={14} /> Admin
-          </button>
-        )}
       </header>
 
-      <main className="bp-page">
-        <div className="bp-inner">
+      <div className="blog-page">
+        <main className="blog-main">
+
           {/* Hero */}
-          <section className="bp-hero">
-            <span className="bp-tag">
+          <section className="blog-hero">
+            <span className="blog-label">
               <BookOpen size={12} /> Blog
             </span>
-            <h1 className="brig bp-hero-title">PlacementDo Blog</h1>
-            <p className="bp-hero-desc">
-              Interview preparation insights, product updates, and actionable
-              strategies to help you land your next role.
+            <h1 className="brig blog-title">PlacementDo Blog</h1>
+            <p className="blog-desc">
+              Interview preparation insights, product updates, and actionable strategies to help you land your next role.
             </p>
             <div style={{ marginTop: 22 }}>
               <input
@@ -349,9 +350,9 @@ export default function BlogPage({ onNav }) {
             </div>
           </section>
 
-          {/* Post grid */}
+          {/* Blog grid */}
           {filteredPosts.length === 0 ? (
-            <div className="bp-empty">
+            <div className="blog-empty">
               <p style={{ fontSize: 16, fontWeight: 500 }}>No posts found.</p>
               {search && (
                 <button
@@ -364,58 +365,37 @@ export default function BlogPage({ onNav }) {
               )}
             </div>
           ) : (
-            <div className="bp-grid">
+            <div className="blog-grid">
               {filteredPosts.map((post) => (
-                <article key={post.id} className="bp-card">
-              {/* Cover image — rendered on cards that have one.
-                  `display:none` on error removes the element from layout (no gap). */}
-              {post.coverImage && (
-                <img
-                  src={post.coverImage}
-                  alt=""
-                  className="bp-card-cover"
-                  loading="lazy"
-                  onError={(e) => { e.currentTarget.style.display = "none"; }}
-                />
-              )}
-                  <div className="bp-card-body">
-                    <div className="bp-card-meta">
+                <article key={post.id} className="blog-card">
+                  {post.coverImage && (
+                    <img
+                      src={post.coverImage}
+                      alt=""
+                      className="blog-card-cover"
+                      loading="lazy"
+                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                    />
+                  )}
+                  <div className="blog-card-body">
+                    <div className="blog-card-meta">
                       {post.category && (
-                        <span className="bp-card-category">{post.category}</span>
+                        <span className="blog-card-cat">{post.category}</span>
                       )}
-                      <span className="bp-card-meta-item">
+                      <span className="blog-card-meta-item">
                         <Calendar size={12} />
                         {formatDate(post.date)}
                       </span>
                     </div>
-
-                    <h2 className="brig bp-card-title">{post.title}</h2>
-                    <p className="bp-card-excerpt">{post.excerpt}</p>
-
-                    {Array.isArray(post.tags) && post.tags.length > 0 && (
-                      <div className="bp-tags">
-                        {post.tags.slice(0, 3).map((tag) => (
-                          <span key={tag} className="bp-tag-pill">
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="bp-card-footer">
-                      <span className="bp-card-author">
-                        <User size={12} />
-                        {post.author}
+                    <h2 className="brig blog-card-h2">{post.title}</h2>
+                    <p className="blog-card-excerpt">{post.excerpt}</p>
+                    <div className="blog-card-footer">
+                      <span className="blog-card-author">
+                        <User size={12} /> {post.author}
                       </span>
                       <button
                         className="btn-ghost"
-                        style={{
-                          fontSize: 13,
-                          paddingRight: 0,
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 4,
-                        }}
+                        style={{ fontSize: 13, paddingRight: 0, display: "inline-flex", alignItems: "center", gap: 4 }}
                         onClick={() => navigate(`/blog/${post.slug}`)}
                       >
                         Read more <ArrowRight size={13} />
@@ -426,8 +406,248 @@ export default function BlogPage({ onNav }) {
               ))}
             </div>
           )}
-        </div>
-      </main>
+
+          {/* Admin section */}
+          <section className="admin-section">
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
+              <ShieldCheck size={20} style={{ color: "var(--teal-dark)" }} />
+              <h2 className="brig" style={{ fontSize: 22, letterSpacing: "-0.02em", margin: 0 }}>
+                Admin
+              </h2>
+            </div>
+
+            {!authed ? (
+              /* Login form */
+              <div className="admin-panel" style={{ maxWidth: 420 }}>
+                <p style={{ fontSize: 14, color: "var(--slate-500)", marginBottom: 18, lineHeight: 1.7 }}>
+                  Log in with your admin token to manage and publish blog posts.
+                </p>
+                {authError && (
+                  <div className="admin-msg error">
+                    <AlertCircle size={14} style={{ flexShrink: 0, marginTop: 1 }} />
+                    {authError}
+                  </div>
+                )}
+                <form onSubmit={handleLogin} style={{ display: "grid", gap: 16 }}>
+                  <div className="admin-field">
+                    <label htmlFor="admin-token-input">Admin Token</label>
+                    <input
+                      id="admin-token-input"
+                      type="password"
+                      value={adminToken}
+                      onChange={(e) => setAdminToken(e.target.value)}
+                      placeholder="Paste your BLOG_ADMIN_TOKEN"
+                      autoComplete="current-password"
+                      required
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="btn-primary"
+                    disabled={authLoading}
+                    style={{ display: "inline-flex", alignItems: "center", gap: 8, justifyContent: "center" }}
+                  >
+                    {authLoading ? (
+                      <><Loader size={14} className="spin" /> Verifying…</>
+                    ) : (
+                      <><ShieldCheck size={14} /> Log In</>
+                    )}
+                  </button>
+                </form>
+              </div>
+            ) : (
+              /* Authenticated admin panel */
+              <div style={{ display: "grid", gap: 24 }}>
+                {/* Toolbar */}
+                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                  <span
+                    style={{
+                      display: "inline-flex", alignItems: "center", gap: 6,
+                      background: "var(--green-light)", color: "var(--green)",
+                      fontSize: 12, fontWeight: 600, padding: "4px 12px", borderRadius: 20,
+                    }}
+                  >
+                    <Check size={12} /> Logged in
+                  </span>
+                  <button
+                    className="btn-primary"
+                    style={{ display: "inline-flex", alignItems: "center", gap: 7 }}
+                    onClick={() => { setShowCreate((v) => !v); setCreateMsg({ text: "", type: "" }); }}
+                  >
+                    <PlusCircle size={14} />
+                    {showCreate ? "Cancel" : "New Post"}
+                  </button>
+                  <button
+                    className="btn-ghost"
+                    style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6, color: "var(--slate-500)" }}
+                    onClick={handleLogout}
+                  >
+                    <LogOut size={14} /> Log out
+                  </button>
+                </div>
+
+                {/* Create post form */}
+                {showCreate && (
+                  <div className="admin-panel">
+                    <h3 className="brig" style={{ fontSize: 18, letterSpacing: "-0.02em", marginBottom: 20, marginTop: 0 }}>
+                      New Blog Post
+                    </h3>
+
+                    {createMsg.text && (
+                      <div className={`admin-msg ${createMsg.type}`}>
+                        {createMsg.type === "error"
+                          ? <AlertCircle size={14} style={{ flexShrink: 0, marginTop: 1 }} />
+                          : <Check size={14} style={{ flexShrink: 0, marginTop: 1 }} />}
+                        {createMsg.text}
+                      </div>
+                    )}
+
+                    <form onSubmit={handleCreate} style={{ display: "grid", gap: 18 }}>
+                      <div className="admin-field">
+                        <label htmlFor="f-title">Title <span style={{ color: "var(--red)" }}>*</span></label>
+                        <input
+                          id="f-title" name="title" value={form.title}
+                          onChange={handleFormChange}
+                          placeholder="e.g. How to Ace Your System Design Interview"
+                          required
+                        />
+                      </div>
+
+                      <div className="admin-field">
+                        <label htmlFor="f-slug">Slug <span style={{ color: "var(--red)" }}>*</span></label>
+                        <input
+                          id="f-slug" name="slug" value={form.slug}
+                          onChange={handleSlugChange}
+                          placeholder="e.g. how-to-ace-system-design"
+                          required
+                        />
+                        <p className="admin-hint">
+                          URL: /blog/<strong>{form.slug || "your-slug"}</strong>
+                        </p>
+                      </div>
+
+                      <div className="admin-row">
+                        <div className="admin-field">
+                          <label htmlFor="f-date">Publish Date <span style={{ color: "var(--red)" }}>*</span></label>
+                          <input id="f-date" type="date" name="date" value={form.date} onChange={handleFormChange} required />
+                        </div>
+                        <div className="admin-field">
+                          <label htmlFor="f-author">Author <span style={{ color: "var(--red)" }}>*</span></label>
+                          <input id="f-author" name="author" value={form.author} onChange={handleFormChange} required />
+                        </div>
+                      </div>
+
+                      <div className="admin-row">
+                        <div className="admin-field">
+                          <label htmlFor="f-category">Category</label>
+                          <input id="f-category" name="category" value={form.category} onChange={handleFormChange} placeholder="e.g. Interview Tips" />
+                        </div>
+                        <div className="admin-field">
+                          <label htmlFor="f-tags">Tags</label>
+                          <input id="f-tags" name="tags" value={form.tags} onChange={handleFormChange} placeholder="tag1, tag2, tag3" />
+                          <p className="admin-hint">Comma-separated.</p>
+                        </div>
+                      </div>
+
+                      <div className="admin-field">
+                        <label htmlFor="f-cover">Cover Image URL</label>
+                        <input id="f-cover" name="coverImage" type="url" value={form.coverImage} onChange={handleFormChange} placeholder="https://example.com/image.jpg" />
+                      </div>
+
+                      <div className="admin-field">
+                        <label htmlFor="f-excerpt">Excerpt <span style={{ color: "var(--red)" }}>*</span></label>
+                        <textarea id="f-excerpt" name="excerpt" value={form.excerpt} onChange={handleFormChange} rows={3} placeholder="Short summary shown on the blog listing (1–2 sentences)." required />
+                      </div>
+
+                      <div className="admin-field">
+                        <label htmlFor="f-content">Content <span style={{ color: "var(--red)" }}>*</span></label>
+                        <textarea
+                          id="f-content" name="content" value={form.content}
+                          onChange={handleFormChange} rows={14}
+                          placeholder={"Supports plain text and Markdown:\n# Heading\n## Subheading\n- list item\n```code block```"}
+                          required
+                        />
+                        <p className="admin-hint">Supports # headings, - lists, ``` code blocks.</p>
+                      </div>
+
+                      <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
+                        <button type="button" className="btn-ghost" onClick={() => setShowCreate(false)} disabled={creating}>
+                          Cancel
+                        </button>
+                        <button type="submit" className="btn-primary" disabled={creating} style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                          {creating ? <><Loader size={14} className="spin" /> Publishing…</> : <><PlusCircle size={14} /> Publish Post</>}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                {/* Post management list */}
+                <div className="admin-panel">
+                  <h3 className="brig" style={{ fontSize: 18, letterSpacing: "-0.02em", marginBottom: 16, marginTop: 0 }}>
+                    All Posts ({adminPosts.length})
+                  </h3>
+                  {adminPosts.length === 0 ? (
+                    <p style={{ color: "var(--slate-400)", fontSize: 14 }}>No posts yet.</p>
+                  ) : (
+                    <div>
+                      {adminPosts.map((post) => (
+                        <div key={post.id} className="post-mgmt-row">
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
+                              <span className={`status-badge status-${post.status === "published" ? "published" : "draft"}`}>
+                                {post.status}
+                              </span>
+                              {post.category && (
+                                <span style={{ fontSize: 11, color: "var(--slate-400)" }}>{post.category}</span>
+                              )}
+                              <span style={{ fontSize: 11, color: "var(--slate-400)", display: "inline-flex", alignItems: "center", gap: 3 }}>
+                                <Calendar size={10} /> {formatDate(post.date)}
+                              </span>
+                            </div>
+                            <div
+                              className="brig"
+                              style={{ fontSize: 15, letterSpacing: "-0.01em", marginBottom: 3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                            >
+                              {post.title}
+                            </div>
+                            <div style={{ fontSize: 12, color: "var(--slate-400)" }}>
+                              /blog/{post.slug}
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                            {post.status === "published" && (
+                              <button
+                                className="btn-ghost"
+                                style={{ fontSize: 12, padding: "4px 10px" }}
+                                onClick={() => navigate(`/blog/${post.slug}`)}
+                              >
+                                View
+                              </button>
+                            )}
+                            <button
+                              className="btn-ghost"
+                              style={{ fontSize: 12, padding: "4px 10px", color: "var(--red)", display: "inline-flex", alignItems: "center", gap: 5 }}
+                              onClick={() => handleDelete(post.slug, post.title)}
+                              disabled={deletingSlug === post.slug}
+                            >
+                              {deletingSlug === post.slug
+                                ? <Loader size={12} className="spin" />
+                                : <Trash2 size={12} />}
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </section>
+
+        </main>
+      </div>
     </>
   );
 }

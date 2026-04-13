@@ -2,11 +2,9 @@
  * BlogPostPage — public read-only individual blog post view.
  *
  * Fetches the post matching `slug` from /api/blog?slug=<slug>.
- * To add a new blog post, navigate to /admin/blog/new as an admin.
  */
 import { useMemo, useReducer, useEffect } from "react";
 import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon } from "lucide-react";
-import { readListCache, readPostCache, writePostCache } from "./blogCache.js";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -217,13 +215,7 @@ const STYLES = `
   }
 `;
 
-// Build an initial fetch state from the sessionStorage cache for a given slug.
-const stateFromCache = (slug) => {
-  const cached = readPostCache(slug);
-  return cached
-    ? { post: cached.post, allPosts: cached.allPosts, loading: false, notFound: false }
-    : { post: null, allPosts: [], loading: true, notFound: false };
-};
+const getInitialState = () => ({ post: null, allPosts: [], loading: true, notFound: false });
 
 function fetchReducer(state, action) {
   switch (action.type) {
@@ -250,42 +242,30 @@ export default function BlogPostPage({ slug, onNav }) {
 
   const [{ post, allPosts, loading, notFound }, dispatch] = useReducer(
     fetchReducer,
-    slug,
-    stateFromCache
+    undefined,
+    getInitialState
   );
 
   useEffect(() => {
     let cancelled = false;
     dispatch({ type: "reset", slug });
 
-    // Prefer the cached post list for related posts to avoid an extra round-trip
-    const cachedList = readListCache();
-
-    // Fetch the individual post and (if no cached list) all posts for related posts
+    // Fetch the individual post and all posts for related posts
     const promises = [
       fetch(`/api/blog?slug=${encodeURIComponent(slug)}`).then((r) => r.json()),
-      cachedList
-        ? Promise.resolve({ posts: cachedList })
-        : fetch("/api/blog").then((r) => r.json()),
+      fetch("/api/blog").then((r) => r.json()),
     ];
 
     Promise.all(promises)
       .then(([postData, listData]) => {
         if (cancelled) return;
-        // Normalise list first so it can be passed into both branches of the dispatch
         const list = Array.isArray(listData?.posts)
           ? listData.posts.map((p) => ({ ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug, coverImage: p.coverImage || "" }))
           : [];
         if (postData?.post) {
           const p = postData.post;
           const normalizedPost = { ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug, coverImage: p.coverImage || "" };
-          dispatch({
-            type: "loaded",
-            post: normalizedPost,
-            allPosts: list,
-          });
-          // Persist to sessionStorage so refresh is instant
-          writePostCache(slug, { post: normalizedPost, allPosts: list });
+          dispatch({ type: "loaded", post: normalizedPost, allPosts: list });
         } else {
           dispatch({ type: "error" });
         }
