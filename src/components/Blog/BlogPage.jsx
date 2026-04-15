@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import {
-  Calendar, User, ArrowRight, BookOpen, ShieldCheck,
+  Calendar, User, ArrowRight, ShieldCheck,
   AlertCircle, Check, Loader, Trash2, PlusCircle, LogOut,
 } from "lucide-react";
 import SEED_POSTS from "../../data/blogPosts.json";
@@ -61,16 +61,7 @@ const STYLES = `
     padding: 0 clamp(20px,5vw,60px); gap: 16px;
   }
   .blog-main { max-width: 1100px; margin: 0 auto; padding: 104px clamp(20px,5vw,60px) 80px; }
-  .blog-hero { padding: 48px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
-  .blog-label {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--teal-light); color: var(--teal-dark);
-    font-size: 12px; font-weight: 600;
-    padding: 4px 12px; border-radius: 20px;
-    letter-spacing: 0.02em; margin-bottom: 14px;
-  }
-  .blog-title { font-size: clamp(32px,5vw,52px); letter-spacing: -0.03em; line-height: 1.1; margin: 0 0 14px; }
-  .blog-desc { color: var(--slate-500); line-height: 1.8; font-size: 16px; max-width: 600px; margin: 0; }
+  .blog-search-bar { margin-bottom: 28px; }
   .blog-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); }
   .blog-card {
     background: var(--white); border: 1px solid var(--border); border-radius: 14px;
@@ -329,26 +320,17 @@ export default function BlogPage({ onNav }) {
       <div className="blog-page">
         <main className="blog-main">
 
-          {/* Hero */}
-          <section className="blog-hero">
-            <span className="blog-label">
-              <BookOpen size={12} /> Blog
-            </span>
-            <h1 className="brig blog-title">PlacementDo Blog</h1>
-            <p className="blog-desc">
-              Interview preparation insights, product updates, and actionable strategies to help you land your next role.
-            </p>
-            <div style={{ marginTop: 22 }}>
-              <input
-                type="search"
-                placeholder="Search posts…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                aria-label="Search blog posts"
-                style={{ maxWidth: 360 }}
-              />
-            </div>
-          </section>
+          {/* Search bar */}
+          <div className="blog-search-bar">
+            <input
+              type="search"
+              placeholder="Search posts…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search blog posts"
+              style={{ maxWidth: 360 }}
+            />
+          </div>
 
           {/* Blog grid */}
           {filteredPosts.length === 0 ? (
