@@ -1172,7 +1172,6 @@ const Landing = ({ onNav, onCheckout }) => {
 
   const companyLinks = [
     { label: "About", action: () => onNav("about") },
-    { label: "Blog", action: () => onNav("blog") },
     { label: "Careers", action: () => onNav("careers") },
     { label: "Privacy Policy", action: () => onNav("privacy") },
     { label: "Terms of Service", action: () => onNav("terms") },
@@ -4869,7 +4868,6 @@ const AboutPage = ({ onNav }) => (
         <h2 className="brig" style={{ fontSize: "clamp(20px,3vw,28px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", marginBottom: 12 }}>Questions or feedback?</h2>
         <p style={{ color: "var(--slate-600)", lineHeight: 1.68, marginBottom: 20 }}>We read every message. Whether you have a product suggestion, a bug report, or just want to say hello — we're listening at <strong>support@placementdo.com</strong></p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <button className="btn-primary" onClick={() => onNav("blog")}><FileText size={14} /> Read Our Blog</button>
           <button className="btn-secondary" onClick={() => onNav("careers")}>Join Our Team <ChevronRight size={14} /></button>
         </div>
       </div>
