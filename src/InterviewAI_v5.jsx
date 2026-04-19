@@ -5148,12 +5148,13 @@ const PATH_TO_ROUTE = Object.fromEntries(
 );
 
 const parseRouteFromPath = (pathname) => {
-  if (pathname === "/blog/") return { route: "blog", slug: "" };
-  if (pathname.startsWith("/blog/") && pathname !== "/blog/admin") {
-    const slug = decodeURIComponent(pathname.replace("/blog/", "")).trim();
+  const normalized = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+  if (normalized === "/blog") return { route: "blog", slug: "" };
+  if (normalized.startsWith("/blog/") && normalized !== "/blog/admin") {
+    const slug = decodeURIComponent(normalized.replace("/blog/", "")).trim();
     if (slug) return { route: "blogPost", slug };
   }
-  return { route: PATH_TO_ROUTE[pathname] || "landing", slug: "" };
+  return { route: PATH_TO_ROUTE[normalized] || "landing", slug: "" };
 };
 
 const SEO_MAP = {
@@ -5274,7 +5275,7 @@ const SEO_MAP = {
     description:
       "Set up a new AI interview session by selecting company, role, focus area, and persona to practice realistic questions and improve your interview readiness.",
     type: "website",
-    robots: "index, follow",
+    robots: "noindex, nofollow",
     breadcrumbName: "New Interview",
   },
   reports: {
@@ -5282,7 +5283,7 @@ const SEO_MAP = {
     description:
       "Review your interview reports, track score trends, compare sessions, and identify the exact communication and technical skills to improve next.",
     type: "website",
-    robots: "index, follow",
+    robots: "noindex, nofollow",
     breadcrumbName: "My Reports",
   },
   progress: {
@@ -5290,7 +5291,7 @@ const SEO_MAP = {
     description:
       "Track weekly and monthly interview progress with skill-level insights, score trends, and actionable coaching data to improve with consistency.",
     type: "website",
-    robots: "index, follow",
+    robots: "noindex, nofollow",
     breadcrumbName: "Progress",
   },
   avatars: {
@@ -5298,7 +5299,7 @@ const SEO_MAP = {
     description:
       "Practice with distinct AI interviewer personas that simulate different interview styles, pressure levels, and behaviors to prepare for any panel.",
     type: "website",
-    robots: "index, follow",
+    robots: "noindex, nofollow",
     breadcrumbName: "Interviewer Personas",
   },
   settings: {
@@ -5306,7 +5307,7 @@ const SEO_MAP = {
     description:
       "Manage your profile, notification preferences, and plan details in PlacementDo settings to keep your interview practice workflow fully organized.",
     type: "website",
-    robots: "index, follow",
+    robots: "noindex, nofollow",
     breadcrumbName: "Settings",
   },
   support: {
@@ -5314,7 +5315,7 @@ const SEO_MAP = {
     description:
       "Get help with PlacementDo features, interview preparation guidance, and support resources to solve issues and maximize your practice outcomes.",
     type: "website",
-    robots: "index, follow",
+    robots: "noindex, nofollow",
     breadcrumbName: "Support",
   },
   interview: {
@@ -5322,7 +5323,7 @@ const SEO_MAP = {
     description:
       "Join a live AI interview room with timed questions, transcript cues, and focused practice controls to simulate high-pressure interview conditions.",
     type: "website",
-    robots: "index, follow",
+    robots: "noindex, nofollow",
     breadcrumbName: "Interview Room",
   },
   report: {
@@ -5330,7 +5331,7 @@ const SEO_MAP = {
     description:
       "View your AI interview analysis report with strengths, improvement areas, metric breakdowns, and practical next-step coaching recommendations.",
     type: "website",
-    robots: "index, follow",
+    robots: "noindex, nofollow",
     breadcrumbName: "Interview Report",
   },
 };
