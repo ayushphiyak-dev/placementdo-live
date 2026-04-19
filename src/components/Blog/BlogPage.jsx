@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import {
-  Calendar, User, ArrowRight, ShieldCheck,
+  Calendar, User, ArrowRight, ShieldCheck, BookOpen,
   AlertCircle, Check, Loader, Trash2, PlusCircle, LogOut,
 } from "lucide-react";
 import SEED_POSTS from "../../data/blogPosts.json";
@@ -79,6 +79,41 @@ const STYLES = `
   .blog-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border); }
   .blog-card-author { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--slate-500); }
   .blog-empty { text-align: center; padding: 64px 24px; color: var(--slate-400); }
+  .blog-section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--teal-dark); margin-bottom: 20px;
+  }
+  .blog-featured {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    background: var(--white); border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; margin-bottom: 48px;
+    transition: box-shadow 0.18s, transform 0.18s; cursor: pointer;
+  }
+  .blog-featured:hover { box-shadow: 0 8px 32px rgba(0,0,0,.09); transform: translateY(-2px); }
+  .blog-featured-img-wrap {
+    position: relative; overflow: hidden; min-height: 280px;
+    background: linear-gradient(135deg, var(--teal-light) 0%, rgba(13,148,136,.12) 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .blog-featured-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .blog-featured-img-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px; color: var(--teal-dark); opacity: 0.5; padding: 40px;
+  }
+  .blog-featured-body {
+    padding: clamp(24px,4vw,44px); display: flex; flex-direction: column; justify-content: center;
+  }
+  .blog-featured-title {
+    font-size: clamp(22px,3vw,32px); letter-spacing: -0.025em; line-height: 1.2;
+    margin: 0 0 14px;
+  }
+  .blog-featured-excerpt {
+    color: var(--slate-500); line-height: 1.75; font-size: 15px; margin: 0 0 20px; flex: 1;
+  }
+  @media (max-width: 720px) {
+    .blog-featured { grid-template-columns: 1fr; }
+    .blog-featured-img-wrap { min-height: 200px; }
+  }
   .admin-section { margin-top: 80px; padding-top: 56px; border-top: 2px solid var(--border); }
   .admin-panel { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 28px 32px; }
   .admin-field { display: grid; gap: 6px; }
@@ -150,7 +185,10 @@ export default function BlogPage({ onNav }) {
       (a, b) => new Date(b.date) - new Date(a.date)
     );
     const q = search.trim().toLowerCase();
-    if (!q) return sorted;
+    if (!q) {
+      // Hide the featured (first/most recent) post from the grid so it isn't shown twice
+      return sorted.slice(1);
+    }
     return sorted.filter((p) =>
       `${p.title} ${p.excerpt} ${p.author} ${(p.tags || []).join(" ")} ${p.category || ""}`
         .toLowerCase()
@@ -290,6 +328,14 @@ export default function BlogPage({ onNav }) {
     [adminToken, fetchPosts]
   );
 
+  // Featured post = most recent published post (not shown again in grid when searching)
+  const featuredPost = useMemo(() => {
+    const published = posts.filter((p) => p.status === "published");
+    return published.length > 0
+      ? [...published].sort((a, b) => new Date(b.date) - new Date(a.date))[0]
+      : null;
+  }, [posts]);
+
   // Posts list shown in admin panel (all statuses)
   const adminPosts = useMemo(
     () => [...posts].sort((a, b) => new Date(b.date) - new Date(a.date)),
@@ -315,21 +361,99 @@ export default function BlogPage({ onNav }) {
           </span>
         </button>
         <div style={{ flex: 1 }} />
+        <button
+          className="btn-ghost"
+          style={{ fontSize: 13 }}
+          onClick={() => navigate("/")}
+        >
+          ← Home
+        </button>
       </header>
 
       <div className="blog-page">
         <main className="blog-main">
 
-          {/* Search bar */}
-          <div className="blog-search-bar">
-            <input
-              type="search"
-              placeholder="Search posts…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              aria-label="Search blog posts"
-              style={{ maxWidth: 360 }}
-            />
+          {/* Page heading */}
+          <div style={{ marginBottom: 36 }}>
+            <h1 className="brig" style={{ fontSize: "clamp(28px,5vw,44px)", letterSpacing: "-0.03em", margin: "0 0 10px" }}>
+              PlacementDo Blog
+            </h1>
+            <p style={{ color: "var(--slate-500)", fontSize: 15, lineHeight: 1.7, margin: 0, maxWidth: 560 }}>
+              Interview tips, career advice, and product updates — all in one place.
+            </p>
+          </div>
+
+          {/* Featured post */}
+          {!search && featuredPost && (
+            <div style={{ marginBottom: 48 }}>
+              <p className="blog-section-label">Featured Post</p>
+              <div
+                className="blog-featured"
+                role="article"
+                onClick={() => navigate(`/blog/${featuredPost.slug}`)}
+                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && navigate(`/blog/${featuredPost.slug}`)}
+                tabIndex={0}
+                aria-label={`Featured post: ${featuredPost.title}`}
+              >
+                <div className="blog-featured-img-wrap">
+                  {featuredPost.coverImage ? (
+                    <img
+                      src={featuredPost.coverImage}
+                      alt={featuredPost.title}
+                      className="blog-featured-img"
+                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                    />
+                  ) : (
+                    <div className="blog-featured-img-placeholder">
+                      <BookOpen size={48} />
+                      <span style={{ fontSize: 13, fontWeight: 600 }}>PlacementDo Blog</span>
+                    </div>
+                  )}
+                </div>
+                <div className="blog-featured-body">
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center", marginBottom: 14 }}>
+                    {featuredPost.category && (
+                      <span className="blog-card-cat">{featuredPost.category}</span>
+                    )}
+                    <span style={{ fontSize: 12, color: "var(--slate-400)", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                      <Calendar size={12} /> {formatDate(featuredPost.date)}
+                    </span>
+                  </div>
+                  <h2 className="brig blog-featured-title">{featuredPost.title}</h2>
+                  <p className="blog-featured-excerpt">{featuredPost.excerpt}</p>
+                  <div>
+                    <button
+                      className="btn-primary"
+                      style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+                      onClick={() => navigate(`/blog/${featuredPost.slug}`)}
+                    >
+                      Read article <ArrowRight size={14} />
+                    </button>
+                  </div>
+                  <div style={{ marginTop: 16, fontSize: 12, color: "var(--slate-400)", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                    <User size={11} /> {featuredPost.author}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* All posts heading + search */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 20 }}>
+            <p className="blog-section-label" style={{ margin: 0 }}>
+              {search ? "Search results" : "All Posts"}
+            </p>
+            {/* Search bar */}
+            <div className="blog-search-bar" style={{ margin: 0 }}>
+              <input
+                type="search"
+                placeholder="Search posts…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                aria-label="Search blog posts"
+                style={{ maxWidth: 280 }}
+              />
+            </div>
           </div>
 
           {/* Blog grid */}

@@ -1170,8 +1170,14 @@ const Landing = ({ onNav, onCheckout }) => {
     { label: "How it works", action: () => onNav("howItWorks") },
   ];
 
+  const navigateToBlog = () => {
+    window.history.pushState({}, "", "/blog");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
   const companyLinks = [
     { label: "About", action: () => onNav("about") },
+    { label: "Blog", action: navigateToBlog },
     { label: "Careers", action: () => onNav("careers") },
     { label: "Privacy Policy", action: () => onNav("privacy") },
     { label: "Terms of Service", action: () => onNav("terms") },
