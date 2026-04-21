@@ -220,8 +220,7 @@ const getInitialState = () => ({ post: null, allPosts: [], loading: true, notFou
 function fetchReducer(state, action) {
   switch (action.type) {
     case "reset":
-      // When navigating to a new slug, show cached data if available or show loading
-      return stateFromCache(action.slug);
+      return getInitialState();
     case "loaded":
       return { post: action.post, allPosts: action.allPosts, loading: false, notFound: false };
     case "error":
