@@ -134,7 +134,7 @@ export default function AptitudePage({ onNav }) {
         heading="Aptitude Questions for Placement"
         subheading="Comprehensive aptitude preparation covering quantitative, logical, and verbal sections — the three pillars of every campus placement online assessment."
         ctaButtons={[
-          { label: "Start AI Mock Interview", onClick: () => onNav("/") },
+          { label: "Start AI Mock Interview", onClick: () => onNav("/dashboard") },
           { label: "Placement Prep Guide", onClick: () => onNav("/placement-preparation") },
         ]}
       />
@@ -239,7 +239,7 @@ export default function AptitudePage({ onNav }) {
           subtext="PlacementDo combines aptitude prep with AI-powered mock interviews for a complete placement preparation experience."
           buttonLabel="Try PlacementDo free"
           onNav={onNav}
-          buttonHref="/"
+          buttonHref="/dashboard"
         />
       </div>
     </PageLayout>

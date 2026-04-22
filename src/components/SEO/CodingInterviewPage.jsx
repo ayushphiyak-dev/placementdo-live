@@ -176,7 +176,7 @@ export default function CodingInterviewPage({ onNav }) {
         heading="Coding Interview Questions"
         subheading="Master the topics that matter — from easy arrays for service companies to hard system design for FAANG. Practice with AI-powered mock interviews."
         ctaButtons={[
-          { label: "Start AI Mock Interview", onClick: () => onNav("/") },
+          { label: "Start AI Mock Interview", onClick: () => onNav("/dashboard") },
           { label: "Placement Prep Guide", onClick: () => onNav("/placement-preparation") },
         ]}
       />
@@ -290,7 +290,7 @@ export default function CodingInterviewPage({ onNav }) {
           subtext="Get instant feedback on your solutions, explanation quality, and communication. Practice real interview scenarios with PlacementDo."
           buttonLabel="Start coding practice"
           onNav={onNav}
-          buttonHref="/"
+          buttonHref="/dashboard"
         />
       </div>
     </PageLayout>

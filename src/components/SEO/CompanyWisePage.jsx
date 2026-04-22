@@ -224,7 +224,7 @@ export default function CompanyWisePage({ company, onNav }) {
         heading={data.heading}
         subheading={data.subheading}
         ctaButtons={[
-          { label: "Start AI Mock Interview", onClick: () => onNav("/") },
+          { label: "Start AI Mock Interview", onClick: () => onNav("/dashboard") },
           { label: "Full Placement Guide", onClick: () => onNav("/placement-preparation") },
         ]}
       />
@@ -346,7 +346,7 @@ export default function CompanyWisePage({ company, onNav }) {
           subtext={`Simulate real ${company.toUpperCase()} technical and HR interviews. Get instant feedback on your answers and communication skills.`}
           buttonLabel="Start mock interview"
           onNav={onNav}
-          buttonHref="/"
+          buttonHref="/dashboard"
         />
       </div>
     </PageLayout>
