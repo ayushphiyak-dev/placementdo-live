@@ -3,6 +3,7 @@
  * Provides a fixed header with PlacementDo branding and a dark footer.
  */
 import { useEffect, useState } from "react";
+import { Zap } from "lucide-react";
 
 const NAV_LINKS = [
   { label: "Blog", href: "/blog" },
@@ -34,12 +35,16 @@ const STYLES = `
   .seo-header-logo {
     display: flex; align-items: center; gap: 9px; cursor: pointer;
     text-decoration: none; color: inherit; flex-shrink: 0;
+    background: none; border: none; padding: 0;
   }
   .seo-header-logo-mark {
-    width: 32px; height: 32px; border-radius: 9px;
-    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+    width: 34px; height: 34px; border-radius: 10px;
+    background: var(--teal);
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 16px; font-weight: 800;
+    transition: transform 0.2s, box-shadow 0.2s; flex-shrink: 0;
+  }
+  .seo-header-logo-mark:hover {
+    transform: scale(1.08); box-shadow: var(--shadow-teal);
   }
   .seo-header-nav { display: flex; align-items: center; gap: 4px; }
   .seo-header-cta {
@@ -132,9 +137,11 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
       <div className="seo-layout">
         <header>
           <nav className="seo-header">
-            <button className="seo-header-logo" onClick={() => navigate("/")} style={{ background: "none", border: "none", padding: 0 }}>
-              <div className="seo-header-logo-mark">P</div>
-              <span className="brig" style={{ fontSize: 17, fontWeight: 800, color: "var(--slate)", letterSpacing: "-0.02em" }}>PlacementDo</span>
+            <button className="seo-header-logo" onClick={() => navigate("/")}>
+              <div className="seo-header-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
+              <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
+                Placement<span style={{ color: "var(--teal)" }}>Do</span>
+              </span>
             </button>
             <div className="seo-header-nav">
               {NAV_LINKS.map(({ label, href }) => (
@@ -162,8 +169,10 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
           <div className="seo-footer-inner">
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                <div className="seo-header-logo-mark">P</div>
-                <span className="brig" style={{ fontSize: 17, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>PlacementDo</span>
+                <div className="seo-header-logo-mark" style={{ width: 34, height: 34, borderRadius: 10, background: "var(--teal)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <Zap size={18} color="#fff" strokeWidth={2.5} />
+                </div>
+                <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>Placement<span style={{ color: "var(--teal-mid)" }}>Do</span></span>
               </div>
               <p className="seo-footer-brand-desc">
                 A hyper-realistic AI interview simulator. Practice smarter. Land faster.

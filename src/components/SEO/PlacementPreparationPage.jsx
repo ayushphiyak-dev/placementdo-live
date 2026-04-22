@@ -38,6 +38,41 @@ const STYLES = `
   .pp-prose p { font-size: 15px; color: var(--slate-600); line-height: 1.78; margin: 0 0 16px; }
   .pp-prose ul { padding-left: 20px; margin: 0 0 16px; }
   .pp-prose li { font-size: 15px; color: var(--slate-600); line-height: 1.7; margin-bottom: 6px; }
+
+  /* Company Guides cards */
+  .pp-company-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .pp-company-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 16px;
+    padding: 26px; display: flex; flex-direction: column; gap: 14px;
+    transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
+  }
+  .pp-company-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,.09); transform: translateY(-3px); border-color: var(--border-strong); }
+  .pp-company-card-header { display: flex; align-items: center; gap: 12px; }
+  .pp-company-card-icon {
+    width: 48px; height: 48px; border-radius: 13px; font-size: 24px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .pp-company-card-name { font-size: 18px; font-weight: 700; color: var(--slate); letter-spacing: -0.015em; margin: 0; }
+  .pp-company-card-sub { font-size: 12px; color: var(--slate-400); font-weight: 500; margin-top: 2px; }
+  .pp-company-card-desc { font-size: 13.5px; color: var(--slate-500); line-height: 1.7; margin: 0; flex: 1; }
+  .pp-company-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pp-company-card-tag {
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em;
+  }
+  .pp-company-card-tag.aptitude { background: #FEF3C7; color: #D97706; }
+  .pp-company-card-tag.coding { background: #EDE9FE; color: #7C3AED; }
+  .pp-company-card-tag.interview { background: #DCFCE7; color: #16A34A; }
+  .pp-company-card-tag.difficulty-medium { background: var(--amber-light); color: var(--amber); }
+  .pp-company-card-tag.difficulty-hard { background: var(--red-light); color: var(--red); }
+  .pp-company-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .pp-company-card-prep { font-size: 12px; color: var(--slate-400); }
+  .pp-company-card-cta {
+    display: inline-flex; align-items: center; gap: 5px; padding: 8px 16px;
+    background: var(--teal); color: #fff; border: none; border-radius: 999px;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.18s, transform 0.15s;
+    font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  }
+  .pp-company-card-cta:hover { background: var(--teal-dark); transform: translateY(-1px); }
 `;
 
 const STEPS = [
@@ -136,7 +171,7 @@ export default function PlacementPreparationPage({ onNav }) {
         heading="Your Complete Placement Preparation Guide"
         subheading="From aptitude tests to final HR rounds — a structured roadmap to help you crack campus placements at top companies in 2026."
         ctaButtons={[
-          { label: "Start AI Mock Interview", onClick: () => onNav("/") },
+          { label: "Start AI Mock Interview", onClick: () => onNav("/dashboard") },
           { label: "Aptitude Practice", onClick: () => onNav("/aptitude-questions") },
         ]}
       />
@@ -252,7 +287,7 @@ export default function PlacementPreparationPage({ onNav }) {
           subtext="Get real-time feedback on your answers, communication, and problem-solving approach. Used by 2,400+ students preparing for campus placements."
           buttonLabel="Start practicing free"
           onNav={onNav}
-          buttonHref="/"
+          buttonHref="/dashboard"
         />
       </div>
     </PageLayout>
