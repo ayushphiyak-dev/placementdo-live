@@ -1,0 +1,47 @@
+/**
+ * ContentCard — card with icon, title, description, optional tags and link.
+ */
+const STYLES = `
+  .content-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 14px;
+    padding: 24px 26px; display: flex; flex-direction: column; gap: 10px;
+    transition: box-shadow 0.18s, transform 0.18s;
+  }
+  .content-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.07); transform: translateY(-2px); }
+  .content-card-icon { font-size: 28px; line-height: 1; }
+  .content-card-title { font-size: 16.5px; font-weight: 700; color: var(--slate); letter-spacing: -0.015em; margin: 0; }
+  .content-card-desc { font-size: 14px; color: var(--slate-500); line-height: 1.7; margin: 0; flex: 1; }
+  .content-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .content-card-tag {
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+    background: var(--teal-light); color: var(--teal-dark); letter-spacing: 0.03em;
+  }
+  .content-card-link {
+    font-size: 13px; font-weight: 600; color: var(--teal); background: none; border: none;
+    cursor: pointer; padding: 0; margin-top: 4px; text-align: left;
+    font-family: 'DM Sans', sans-serif; display: inline-flex; align-items: center; gap: 4px;
+    transition: color 0.15s;
+  }
+  .content-card-link:hover { color: var(--teal-dark); }
+`;
+
+export default function ContentCard({ icon, title, description, tags, linkText, onClick }) {
+  return (
+    <>
+      <style>{STYLES}</style>
+      <div className="content-card">
+        {icon && <div className="content-card-icon">{icon}</div>}
+        <h3 className="brig content-card-title">{title}</h3>
+        {description && <p className="content-card-desc">{description}</p>}
+        {tags && tags.length > 0 && (
+          <div className="content-card-tags">
+            {tags.map((t) => <span key={t} className="content-card-tag">{t}</span>)}
+          </div>
+        )}
+        {linkText && onClick && (
+          <button className="content-card-link" onClick={onClick}>{linkText} →</button>
+        )}
+      </div>
+    </>
+  );
+}

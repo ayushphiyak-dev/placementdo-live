@@ -403,13 +403,14 @@ const G = () => (
     .faq-chevron { transition:transform 0.25s, color 0.2s; color:var(--slate-400); flex-shrink:0; }
 
     /* ── Footer ── */
-    .footer-grid { display:grid; grid-template-columns:2fr repeat(3,1fr); gap:clamp(28px,4vw,48px); padding:clamp(40px,8vh,64px) clamp(20px,5vw,60px) 40px; max-width:1200px; margin:0 auto; }
+    .footer-grid { display:grid; grid-template-columns:2fr repeat(4,1fr); gap:clamp(28px,4vw,48px); padding:clamp(40px,8vh,64px) clamp(20px,5vw,60px) 40px; max-width:1200px; margin:0 auto; }
     .footer-link-group { display:flex; flex-direction:column; gap:8px; align-items:flex-start; }
     .footer-link { font-size:13.5px; color:rgba(255,255,255,.72); background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); cursor:pointer; padding:7px 12px; display:inline-flex; align-items:center; text-align:left; font-family:'DM Sans',sans-serif; transition:color 0.18s, background 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s; border-radius:999px; width:fit-content; }
     .footer-link:hover { color:#fff; background:rgba(13,148,136,.22); border-color:rgba(45,212,191,.56); transform:translateY(-1px); box-shadow:0 4px 14px rgba(13,148,136,.2); }
     .footer-link:focus-visible { outline:2px solid rgba(45,212,191,.75); outline-offset:2px; }
     .footer-social { width:36px; height:36px; border-radius:9px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; color:rgba(255,255,255,.5); }
     .footer-social:hover { background:rgba(13,148,136,.25); border-color:rgba(13,148,136,.5); color:var(--teal-mid); transform:translateY(-2px); }
+    @media(max-width:1100px){ .footer-grid { grid-template-columns:1fr 1fr 1fr; gap:32px; } }
     @media(max-width:900px){ .footer-grid { grid-template-columns:1fr 1fr; gap:36px; } }
     @media(max-width:580px){ .footer-grid { grid-template-columns:1fr; gap:28px; padding:48px 20px 32px; } }
 
@@ -1035,6 +1036,7 @@ const Navbar = ({ view, onNav }) => {
   useEffect(() => { const fn = () => setSolid(window.scrollY > 30); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
   useEffect(() => setMob(false), [view]);
   const scrollTo = id => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMob(false); };
+  const navigateTo = (url) => { window.history.pushState({}, "", url); window.dispatchEvent(new PopStateEvent("popstate")); setMob(false); };
   const bg = solid || isDash || mob || forceSolidHeader;
   return (
     <header>
@@ -1049,6 +1051,8 @@ const Navbar = ({ view, onNav }) => {
             <div style={{ width: 1, height: 20, background: "var(--border)", margin: "0 6px" }} />
           </>)}
           {!isLanding && <button className="btn-ghost" onClick={() => onNav("landing")}>← Home</button>}
+          <button className="nav-link" onClick={() => navigateTo("/blog")}>Blog</button>
+          <button className="nav-link" onClick={() => navigateTo("/placement-preparation")}>Placement Prep</button>
           <button className="btn-secondary" onClick={() => onNav("signin")} style={{ fontSize: 13 }}><LogIn size={14} /> Sign in</button>
           <button className="btn-primary" onClick={() => onNav("dashboard")} style={{ fontSize: 13 }}>Get started <ArrowUpRight size={14} /></button>
         </div>
@@ -1067,6 +1071,8 @@ const Navbar = ({ view, onNav }) => {
               <div style={{ height: 1, background: "var(--border)", margin: "4px 0" }} />
             </>)}
             {!isLanding && <button className="nav-link" style={{ textAlign: "left" }} onClick={() => onNav("landing")}>← Home</button>}
+            <button className="nav-link" style={{ textAlign: "left" }} onClick={() => navigateTo("/blog")}>Blog</button>
+            <button className="nav-link" style={{ textAlign: "left" }} onClick={() => navigateTo("/placement-preparation")}>Placement Prep</button>
             <button className="btn-secondary" onClick={() => { onNav("signin"); setMob(false); }} style={{ justifyContent: "center" }}><LogIn size={14} /> Sign in</button>
             <button className="btn-primary" onClick={() => { onNav("dashboard"); setMob(false); }} style={{ justifyContent: "center" }}>Get started <ArrowUpRight size={14} /></button>
           </motion.div>
@@ -1175,12 +1181,25 @@ const Landing = ({ onNav, onCheckout }) => {
     window.dispatchEvent(new PopStateEvent("popstate"));
   };
 
+  const navigateTo = (url) => {
+    window.history.pushState({}, "", url);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
   const companyLinks = [
     { label: "About", action: () => onNav("about") },
     { label: "Blog", action: navigateToBlog },
     { label: "Careers", action: () => onNav("careers") },
     { label: "Privacy Policy", action: () => onNav("privacy") },
     { label: "Terms of Service", action: () => onNav("terms") },
+  ];
+
+  const resourceLinks = [
+    { label: "Placement Prep", action: () => navigateTo("/placement-preparation") },
+    { label: "Aptitude Q&A", action: () => navigateTo("/aptitude-questions") },
+    { label: "Coding Interview Q&A", action: () => navigateTo("/coding-interview-questions") },
+    { label: "TCS Questions", action: () => navigateTo("/company-wise-questions/tcs") },
+    { label: "Wipro Questions", action: () => navigateTo("/company-wise-questions/wipro") },
   ];
 
   return (
@@ -1569,6 +1588,16 @@ const Landing = ({ onNav, onCheckout }) => {
           <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Company</div>
           <div className="footer-link-group">
             {companyLinks.map(({ label, action }) => (
+              <button key={label} className="footer-link" onClick={action}>{label}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* Resources */}
+        <div>
+          <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Resources</div>
+          <div className="footer-link-group">
+            {resourceLinks.map(({ label, action }) => (
               <button key={label} className="footer-link" onClick={action}>{label}</button>
             ))}
           </div>
