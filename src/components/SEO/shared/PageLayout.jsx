@@ -111,6 +111,8 @@ const STYLES = `
 
 export default function PageLayout({ title, metaDescription, children, onNav }) {
   const [mob, setMob] = useState(false);
+  // Capture the pathname once at mount; each SPA route mounts a fresh PageLayout instance.
+  const [canonicalPath] = useState(() => window.location.pathname);
 
   useEffect(() => {
     if (title) document.title = title;
@@ -118,9 +120,8 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
       upsertMeta('meta[name="description"]', { name: "description", content: metaDescription });
     }
     upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
-    const canonicalUrl = `${window.location.origin}${window.location.pathname}`;
-    upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
-  }, [title, metaDescription]);
+    upsertLink('link[rel="canonical"]', { rel: "canonical", href: `${window.location.origin}${canonicalPath}` });
+  }, [title, metaDescription, canonicalPath]);
 
   const navigate = (href) => {
     onNav(href);

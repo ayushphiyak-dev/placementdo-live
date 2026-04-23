@@ -20,12 +20,3 @@ export const upsertLink = (selector, attrs) => {
   }
   Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
 };
-
-/**
- * Sets robots to "index, follow" and canonical to origin + given path.
- * Call this from a useEffect on every public page.
- */
-export const setPublicPageMeta = (path) => {
-  upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
-  upsertLink('link[rel="canonical"]', { rel: "canonical", href: `${window.location.origin}${path}` });
-};
