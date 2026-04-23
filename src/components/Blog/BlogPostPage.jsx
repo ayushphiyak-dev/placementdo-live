@@ -278,6 +278,26 @@ export default function BlogPostPage({ slug, onNav }) {
 
   const blocks = useMemo(() => (post ? parseContent(post.content) : []), [post]);
 
+  useEffect(() => {
+    const upsertMeta = (selector, attrs) => {
+      let el = document.head.querySelector(selector);
+      if (!el) { el = document.createElement("meta"); document.head.appendChild(el); }
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    };
+    const upsertLink = (selector, attrs) => {
+      let el = document.head.querySelector(selector);
+      if (!el) { el = document.createElement("link"); document.head.appendChild(el); }
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    };
+    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
+    const canonicalUrl = `${window.location.origin}/blog/${encodeURIComponent(slug)}`;
+    upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
+    if (post) {
+      document.title = `${post.title} | PlacementDo`;
+      upsertMeta('meta[name="description"]', { name: "description", content: post.excerpt || "Read detailed interview guidance and product updates from the PlacementDo blog." });
+    }
+  }, [slug, post]);
+
   const relatedPosts = useMemo(() => {
     if (!post) return [];
     return allPosts

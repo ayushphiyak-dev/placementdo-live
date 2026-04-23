@@ -108,22 +108,35 @@ const STYLES = `
   }
 `;
 
+const upsertMeta = (selector, attrs) => {
+  let el = document.head.querySelector(selector);
+  if (!el) {
+    el = document.createElement("meta");
+    document.head.appendChild(el);
+  }
+  Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+};
+
+const upsertLink = (selector, attrs) => {
+  let el = document.head.querySelector(selector);
+  if (!el) {
+    el = document.createElement("link");
+    document.head.appendChild(el);
+  }
+  Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+};
+
 export default function PageLayout({ title, metaDescription, children, onNav }) {
   const [mob, setMob] = useState(false);
 
   useEffect(() => {
     if (title) document.title = title;
-    const existing = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      if (existing) {
-        existing.setAttribute("content", metaDescription);
-      } else {
-        const meta = document.createElement("meta");
-        meta.name = "description";
-        meta.content = metaDescription;
-        document.head.appendChild(meta);
-      }
+      upsertMeta('meta[name="description"]', { name: "description", content: metaDescription });
     }
+    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
+    const canonicalUrl = `${window.location.origin}${window.location.pathname}`;
+    upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
   }, [title, metaDescription]);
 
   const navigate = (href) => {

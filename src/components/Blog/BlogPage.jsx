@@ -177,6 +177,23 @@ export default function BlogPage({ onNav }) {
     fetchPosts();
   }, [fetchPosts]);
 
+  useEffect(() => {
+    document.title = "Blog | PlacementDo";
+    const upsertMeta = (selector, attrs) => {
+      let el = document.head.querySelector(selector);
+      if (!el) { el = document.createElement("meta"); document.head.appendChild(el); }
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    };
+    const upsertLink = (selector, attrs) => {
+      let el = document.head.querySelector(selector);
+      if (!el) { el = document.createElement("link"); document.head.appendChild(el); }
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    };
+    upsertMeta('meta[name="description"]', { name: "description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
+    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
+    upsertLink('link[rel="canonical"]', { rel: "canonical", href: `${window.location.origin}/blog` });
+  }, []);
+
   const [search, setSearch] = useState("");
 
   const filteredPosts = useMemo(() => {
