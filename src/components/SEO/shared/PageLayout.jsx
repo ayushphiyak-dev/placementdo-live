@@ -4,6 +4,7 @@
  */
 import { useEffect, useState } from "react";
 import { Zap } from "lucide-react";
+import { upsertMeta, upsertLink } from "./metaUtils.js";
 
 const NAV_LINKS = [
   { label: "Blog", href: "/blog" },
@@ -107,24 +108,6 @@ const STYLES = `
     .seo-footer-inner { grid-template-columns: 1fr; gap: 28px; padding: 48px 20px 32px; }
   }
 `;
-
-const upsertMeta = (selector, attrs) => {
-  let el = document.head.querySelector(selector);
-  if (!el) {
-    el = document.createElement("meta");
-    document.head.appendChild(el);
-  }
-  Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-};
-
-const upsertLink = (selector, attrs) => {
-  let el = document.head.querySelector(selector);
-  if (!el) {
-    el = document.createElement("link");
-    document.head.appendChild(el);
-  }
-  Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-};
 
 export default function PageLayout({ title, metaDescription, children, onNav }) {
   const [mob, setMob] = useState(false);
