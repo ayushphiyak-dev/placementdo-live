@@ -4,6 +4,7 @@
  */
 import { useEffect, useState } from "react";
 import { Zap } from "lucide-react";
+import { upsertMeta, upsertLink } from "./metaUtils.js";
 
 const NAV_LINKS = [
   { label: "Blog", href: "/blog" },
@@ -110,21 +111,17 @@ const STYLES = `
 
 export default function PageLayout({ title, metaDescription, children, onNav }) {
   const [mob, setMob] = useState(false);
+  // Capture the pathname once at mount; each SPA route mounts a fresh PageLayout instance.
+  const [canonicalPath] = useState(() => window.location.pathname);
 
   useEffect(() => {
     if (title) document.title = title;
-    const existing = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      if (existing) {
-        existing.setAttribute("content", metaDescription);
-      } else {
-        const meta = document.createElement("meta");
-        meta.name = "description";
-        meta.content = metaDescription;
-        document.head.appendChild(meta);
-      }
+      upsertMeta('meta[name="description"]', { name: "description", content: metaDescription });
     }
-  }, [title, metaDescription]);
+    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
+    upsertLink('link[rel="canonical"]', { rel: "canonical", href: `${window.location.origin}${canonicalPath}` });
+  }, [title, metaDescription, canonicalPath]);
 
   const navigate = (href) => {
     onNav(href);

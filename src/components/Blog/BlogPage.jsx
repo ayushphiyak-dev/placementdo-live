@@ -4,6 +4,7 @@ import {
   AlertCircle, Check, Loader, Trash2, PlusCircle, LogOut,
 } from "lucide-react";
 import SEED_POSTS from "../../data/blogPosts.json";
+import { upsertMeta, upsertLink } from "../SEO/shared/metaUtils.js";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -176,6 +177,13 @@ export default function BlogPage({ onNav }) {
   useEffect(() => {
     fetchPosts();
   }, [fetchPosts]);
+
+  useEffect(() => {
+    document.title = "Blog | PlacementDo";
+    upsertMeta('meta[name="description"]', { name: "description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
+    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
+    upsertLink('link[rel="canonical"]', { rel: "canonical", href: `${window.location.origin}/blog` });
+  }, []);
 
   const [search, setSearch] = useState("");
 

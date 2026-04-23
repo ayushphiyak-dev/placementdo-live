@@ -5,6 +5,7 @@
  */
 import { useMemo, useReducer, useEffect } from "react";
 import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon } from "lucide-react";
+import { upsertMeta, upsertLink } from "../SEO/shared/metaUtils.js";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -277,6 +278,16 @@ export default function BlogPostPage({ slug, onNav }) {
   }, [slug]);
 
   const blocks = useMemo(() => (post ? parseContent(post.content) : []), [post]);
+
+  useEffect(() => {
+    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
+    const canonicalUrl = `${window.location.origin}/blog/${encodeURIComponent(slug)}`;
+    upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
+    if (post) {
+      document.title = `${post.title} | PlacementDo`;
+      upsertMeta('meta[name="description"]', { name: "description", content: post.excerpt || "Read detailed interview guidance and product updates from the PlacementDo blog." });
+    }
+  }, [slug, post]);
 
   const relatedPosts = useMemo(() => {
     if (!post) return [];
