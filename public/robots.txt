@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
 
 Sitemap: https://placementdo.app/sitemap.xml
