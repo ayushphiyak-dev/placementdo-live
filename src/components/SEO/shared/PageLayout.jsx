@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { label: "Aptitude", href: "/aptitude-questions" },
   { label: "Coding", href: "/coding-interview-questions" },
   { label: "Resources", href: "/seo-resources" },
+  { label: "Demo", href: "/demo" },
 ];
 
 const FOOTER_LINKS = [
@@ -26,6 +27,8 @@ const FOOTER_LINKS = [
   { label: "Cognizant Questions", href: "/company-wise-questions/cognizant" },
   { label: "HCL Questions", href: "/company-wise-questions/hcl" },
   { label: "Blog", href: "/blog" },
+  { label: "SEO Resources", href: "/seo-resources" },
+  { label: "Interactive Demo", href: "/demo" },
 ];
 
 const STYLES = `

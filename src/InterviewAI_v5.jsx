@@ -1200,6 +1200,7 @@ const Landing = ({ onNav, onCheckout }) => {
     { label: "Coding Interview Q&A", action: () => navigateTo("/coding-interview-questions") },
     { label: "TCS Questions", action: () => navigateTo("/company-wise-questions/tcs") },
     { label: "Wipro Questions", action: () => navigateTo("/company-wise-questions/wipro") },
+    { label: "Interactive Demo", action: () => navigateTo("/demo") },
   ];
 
   return (
@@ -1224,7 +1225,10 @@ const Landing = ({ onNav, onCheckout }) => {
         style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, width: "100%", maxWidth: 520 }}>
         <WaitlistForm size="lg" />
         <p style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 500 }}>No spam. No credit card. Just early access.</p>
-        <p className="hero-quick-links" style={{ fontSize: 12.5, color: "var(--slate-500)", display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center" }}>
+        <p className="hero-quick-links" style={{ fontSize: 12.5, color: "var(--slate-500)", display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", alignItems: "center" }}>
+          <a href="/demo" onClick={(e) => { e.preventDefault(); navigateTo("/demo"); }} style={{ color: "var(--teal-dark)", fontWeight: 700, display: "flex", alignItems: "center", gap: 4, background: "var(--teal-light)", padding: "4px 10px", borderRadius: 8 }}>
+            <Sparkles size={13} /> See Interactive Demo
+          </a>
           <a href="/signin" onClick={(e) => { e.preventDefault(); onNav("signin"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
             Sign in to continue practice
           </a>
