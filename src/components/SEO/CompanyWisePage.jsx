@@ -120,6 +120,117 @@ const TCS_DATA = {
   ],
 };
 
+/* ── Infosys Data ── */
+const INFOSYS_DATA = {
+  title: "Infosys Placement Questions 2026 | PlacementDo",
+  meta: "Complete Infosys placement preparation — InfyTQ, Hackwithinfy, aptitude test pattern, and interview rounds. Practice with AI mock interviews.",
+  tag: "🏢 Infosys · 2026 Edition",
+  heading: "Infosys Placement Preparation 2026",
+  subheading: "Crack Infosys campus recruitment with our complete guide — InfyTQ platform, aptitude pattern, technical and HR interview tips for freshers.",
+  overviewCards: [
+    { icon: "📋", title: "InfyTQ Platform", description: "Infosys recruits through InfyTQ — an online learning and assessment platform. Candidates complete courses, earn certifications, and appear in Infosys placement tests.", tags: ["InfyTQ", "Certification", "Online Test"] },
+    { icon: "⏱️", title: "Test Pattern", description: "Infosys placement test: Quantitative aptitude (10Q/35min), Reasoning ability (15Q/25min), Verbal ability (20Q/35min), Pseudo code (5Q/25min), and coding (2 problems/3hrs).", tags: ["3 Sections", "Coding Round"] },
+    { icon: "🎯", title: "Selection Process", description: "InfyTQ test → Technical interview → HR interview. Candidates who qualify InfyTQ certification are fast-tracked via Infosys' dedicated placement process.", tags: ["InfyTQ Certified", "Tech + HR"] },
+    { icon: "💼", title: "Roles Offered", description: "Systems Engineer (3.6 LPA), Technology Analyst via Power Programmer track (9 LPA+). Power Programmer requires strong coding in the assessment.", tags: ["Systems Engineer", "Power Programmer"] },
+  ],
+  syllabusItems: [
+    { heading: "Quantitative Aptitude", topics: ["Number System", "Percentages", "Ratios & Proportion", "Time & Work", "Time-Speed-Distance", "Profit & Loss", "Averages", "Simple & Compound Interest"] },
+    { heading: "Reasoning Ability", topics: ["Logical Deduction", "Blood Relations", "Seating Arrangements", "Coding-Decoding", "Cause & Effect", "Input-Output"] },
+    { heading: "Verbal Ability", topics: ["Reading Comprehension", "Error Identification", "Sentence Improvement", "Vocabulary", "Para Completion"] },
+    { heading: "Pseudo Code", topics: ["Algorithm reading", "Output prediction", "Complexity analysis", "No actual coding", "Logic flow"] },
+    { heading: "Coding (Power Programmer)", topics: ["2–3 problems", "Medium-Hard DSA", "Arrays, DP, Graphs", "Any language allowed", "3 hour window"] },
+  ],
+  patternRows: [
+    ["Quantitative Aptitude", "10 questions", "35 minutes", "No negative marking"],
+    ["Reasoning Ability", "15 questions", "25 minutes", "Logical and analytical"],
+    ["Verbal Ability", "20 questions", "35 minutes", "Reading comprehension heavy"],
+    ["Pseudo Code", "5 questions", "25 minutes", "Algorithm interpretation"],
+    ["Coding (Power Prog.)", "2–3 problems", "180 minutes", "For Power Programmer track"],
+  ],
+};
+
+/* ── Accenture Data ── */
+const ACCENTURE_DATA = {
+  title: "Accenture Placement Questions 2026 | PlacementDo",
+  meta: "Complete Accenture placement preparation — CTA test pattern, communication assessment, and interview tips. Practice with AI mock interviews on PlacementDo.",
+  tag: "🏢 Accenture · 2026 Edition",
+  heading: "Accenture Placement Preparation 2026",
+  subheading: "Crack Accenture's Cognitive and Technical Assessment, Communication Test, and interview rounds with this complete preparation guide.",
+  overviewCards: [
+    { icon: "📋", title: "CTA Assessment", description: "Cognitive and Technical Assessment (CTA): 90 questions across cognitive ability and IT technical domain. Strong verbal reasoning and attention to detail sections.", tags: ["Cognitive", "Technical IT", "90 Questions"] },
+    { icon: "⏱️", title: "Communication Test", description: "Accenture-unique round: essay writing (20 min), multitasking (listening + reading), and spoken English. Tests communication clarity critical for client-facing roles.", tags: ["Essay", "Spoken English", "Multitasking"] },
+    { icon: "🎯", title: "Selection Process", description: "CTA → Communication Assessment → Technical + HR Interview. The process is more communication-focused than other IT service companies.", tags: ["3 Stages", "Communication Focus"] },
+    { icon: "💼", title: "Roles Offered", description: "Application Software Engineer (ASE) at ~4.5–7 LPA. Specialist tracks (cloud, AI) available for top performers at higher packages.", tags: ["ASE Role", "Specialist Tracks"] },
+  ],
+  syllabusItems: [
+    { heading: "Verbal Reasoning", topics: ["Reading comprehension", "Sentence completion", "Analogies", "Critical reasoning", "Para jumbles"] },
+    { heading: "Attention to Detail", topics: ["Data table comparison", "Proofreading", "Sequential instructions", "Pattern spotting", "Error identification"] },
+    { heading: "Abstract Reasoning", topics: ["Shape pattern recognition", "Matrix completion", "Next in series", "Visual analogies"] },
+    { heading: "Technical IT", topics: ["Programming fundamentals", "Data structures basics", "DBMS and SQL", "OS and networking", "Code debugging"] },
+    { heading: "Communication (Essay)", topics: ["150-250 word essays", "Technology topics", "Social topics", "Clear structure required", "Prose not bullet points"] },
+  ],
+  patternRows: [
+    ["Cognitive Ability", "50 questions", "70 minutes", "Verbal, abstract, attention to detail"],
+    ["Technical (IT)", "40 questions", "40 minutes", "CS fundamentals and programming"],
+    ["Communication", "Multitask + Essay", "~40 minutes", "Unique Accenture section"],
+    ["Interview", "Tech + HR combined", "30–45 minutes", "Project and communication focused"],
+  ],
+};
+
+/* ── Cognizant Data ── */
+const COGNIZANT_DATA = {
+  title: "Cognizant Placement Questions 2026 | PlacementDo",
+  meta: "Complete Cognizant GenC and GenC Next placement preparation — eSEAT test pattern, aptitude, coding, and interview tips for 2026 freshers.",
+  tag: "🏢 Cognizant GenC · 2026 Edition",
+  heading: "Cognizant Placement Preparation 2026",
+  subheading: "Crack Cognizant's GenC and GenC Next recruitment with complete eSEAT test preparation, coding strategies, and interview tips.",
+  overviewCards: [
+    { icon: "📋", title: "GenC Overview", description: "Cognizant hires through two tracks: GenC (standard, ~4 LPA) and GenC Next (premium, ~6.5+ LPA). Both take the eSEAT test; GenC Next has an additional coding section.", tags: ["GenC", "GenC Next", "Two Tracks"] },
+    { icon: "⏱️", title: "eSEAT Test", description: "Employability Skills English Aptitude Test: Aptitude (25Q, 75min), Logical Reasoning (15Q), Verbal (25Q), and Coding (2 problems, 45min) for GenC Next only.", tags: ["eSEAT", "75 min Aptitude", "Coding Optional"] },
+    { icon: "🎯", title: "Selection Process", description: "eSEAT → Technical Interview (GenC Next) → HR Interview. The process is relatively fresher-friendly with clear round descriptions.", tags: ["2-3 Rounds", "Fresher Friendly"] },
+    { icon: "💼", title: "Roles Offered", description: "Programmer Analyst Trainee (GenC, ~4 LPA), Programmer Analyst (GenC Next, ~6.5 LPA). Both have structured onboarding and training programmes.", tags: ["Programmer Analyst", "Training Programme"] },
+  ],
+  syllabusItems: [
+    { heading: "Quantitative Aptitude", topics: ["Number system", "Percentages", "Time & Work", "TSD", "Averages", "Permutations", "Data Interpretation"] },
+    { heading: "Logical Reasoning", topics: ["Seating arrangement", "Blood relations", "Syllogisms", "Coding-decoding", "Direction problems"] },
+    { heading: "Verbal Ability", topics: ["Reading comprehension (2 passages)", "Error identification", "Synonyms/Antonyms", "Fill in the blanks", "Sentence correction"] },
+    { heading: "Coding (GenC Next)", topics: ["2 DSA problems", "Easy to medium difficulty", "Arrays and strings", "DP basics", "Python, Java, C/C++ allowed"] },
+  ],
+  patternRows: [
+    ["Quantitative Aptitude", "25 questions", "75 minutes", "Most time-critical section"],
+    ["Logical Reasoning", "15 questions", "included above", "Seating arrangements common"],
+    ["Verbal Ability", "25 questions", "included above", "2 RC passages"],
+    ["Coding (GenC Next)", "2 problems", "45 minutes", "Not required for GenC track"],
+  ],
+};
+
+/* ── HCL Data ── */
+const HCL_DATA = {
+  title: "HCL Placement Questions 2026 | PlacementDo",
+  meta: "Complete HCL placement preparation — HCLAT test, TechBee programme, aptitude, and interview rounds. AI mock interview practice on PlacementDo.",
+  tag: "🏢 HCL TechBee · 2026 Edition",
+  heading: "HCL Placement Preparation 2026",
+  subheading: "Crack HCL's campus recruitment process — HCLAT test, technical interview, and HR round with this comprehensive preparation guide.",
+  overviewCards: [
+    { icon: "📋", title: "HCLAT Overview", description: "HCL Aptitude Test (HCLAT) is the primary screening tool. It covers quantitative aptitude, logical reasoning, verbal ability, and basic programming knowledge.", tags: ["HCLAT", "4 Sections", "Online Test"] },
+    { icon: "⏱️", title: "Test Duration", description: "HCLAT: approximately 60 minutes for aptitude + 30 minutes for technical / programming section. Total: ~90 minutes. No official negative marking confirmed.", tags: ["90 Minutes", "Aptitude + Technical"] },
+    { icon: "🎯", title: "Selection Process", description: "Written test (HCLAT) → Technical Interview → HR Interview. HCL is known for straightforward, friendly interview rounds compared to other large IT companies.", tags: ["3-Stage Process", "Fresher Friendly"] },
+    { icon: "💼", title: "Roles Offered", description: "HCL TechBee (after class 12, ~3.5 LPA), Graduate Engineer Trainee (after B.Tech, ~3.75–6 LPA). HCL Unica track for exceptional performers.", tags: ["TechBee", "GET Role", "Unica Track"] },
+  ],
+  syllabusItems: [
+    { heading: "Quantitative Aptitude", topics: ["Number system", "Ratios & Percentages", "Time-Speed-Distance", "Time & Work", "Profit & Loss", "Simple & Compound Interest"] },
+    { heading: "Logical Reasoning", topics: ["Series completion", "Analogies", "Blood relations", "Direction problems", "Data sufficiency", "Coding-decoding"] },
+    { heading: "Verbal Ability", topics: ["Reading comprehension", "Grammar and error spotting", "Vocabulary", "Sentence correction", "Para jumbles"] },
+    { heading: "Technical / Programming", topics: ["C/C++ basics", "OOP concepts", "Data structures: arrays, stacks", "OS fundamentals", "DBMS basics", "Output prediction MCQs"] },
+  ],
+  patternRows: [
+    ["Quantitative Aptitude", "~20 questions", "30 minutes", "Speed important"],
+    ["Logical Reasoning", "~15 questions", "20 minutes", "Series and analogy heavy"],
+    ["Verbal Ability", "~20 questions", "20 minutes", "Grammar and RC"],
+    ["Technical", "~15 questions", "30 minutes", "Programming MCQs"],
+  ],
+};
+
 /* ── Wipro Data ── */
 const WIPRO_DATA = {
   title: "Wipro Placement Questions 2026 | PlacementDo",
@@ -207,9 +318,11 @@ const PREP_TIPS = [
 ];
 
 export default function CompanyWisePage({ company, onNav }) {
-  const data = company === "wipro" ? WIPRO_DATA : TCS_DATA;
-  const otherCompany = company === "wipro" ? "tcs" : "wipro";
-  const otherLabel = company === "wipro" ? "TCS NQT Guide" : "Wipro NLTH Guide";
+  const DATA_MAP = { tcs: TCS_DATA, wipro: WIPRO_DATA, infosys: INFOSYS_DATA, accenture: ACCENTURE_DATA, cognizant: COGNIZANT_DATA, hcl: HCL_DATA };
+  const data = DATA_MAP[company] || TCS_DATA;
+  const otherLinks = Object.entries(DATA_MAP)
+    .filter(([k]) => k !== company)
+    .map(([k, d]) => ({ key: k, label: d.heading.replace(" Placement Preparation 2026", "") }));
 
   return (
     <PageLayout
@@ -333,13 +446,17 @@ export default function CompanyWisePage({ company, onNav }) {
           <div style={{ marginTop: 32 }}>
             <SectionHeading label="Related Resources" heading="Explore more guides" />
             <div className="cw-links-row">
-              <button className="cw-link-btn" onClick={() => onNav("/placement-preparation")}>📘 Full Placement Guide</button>
+              <button className="cw-link-btn" onClick={() => onNav("/placement-preparation-complete-guide")}>🎯 Complete Placement Guide</button>
+              <button className="cw-link-btn" onClick={() => onNav("/placement-preparation")}>📘 Placement Prep Tips</button>
               <button className="cw-link-btn" onClick={() => onNav("/aptitude-questions")}>📊 Aptitude Questions</button>
               <button className="cw-link-btn" onClick={() => onNav("/coding-interview-questions")}>💻 Coding Questions</button>
-              <button className="cw-link-btn" onClick={() => onNav(`/company-wise-questions/${otherCompany}`)}>🏢 {otherLabel}</button>
+              {otherLinks.map(({ key, label }) => (
+                <button key={key} className="cw-link-btn" onClick={() => onNav(`/company-wise-questions/${key}`)}>🏢 {label}</button>
+              ))}
             </div>
           </div>
         </section>
+
 
         <CTABlock
           heading={`Practice ${company.toUpperCase()} Interview with AI`}
