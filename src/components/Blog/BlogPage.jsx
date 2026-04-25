@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import {
   Calendar, User, ArrowRight, ShieldCheck, BookOpen,
-  AlertCircle, Check, Loader, Trash2, PlusCircle, LogOut,
+  AlertCircle, Check, Loader, Trash2, PlusCircle, LogOut, Zap,
 } from "lucide-react";
 import SEED_POSTS from "../../data/blogPosts.json";
 import { upsertMeta, upsertLink } from "../SEO/shared/metaUtils.js";
@@ -58,9 +58,11 @@ const STYLES = `
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     background: rgba(250,250,248,.96); backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border); height: 64px;
-    display: flex; align-items: center;
+    display: flex; align-items: center; justify-content: space-between;
     padding: 0 clamp(20px,5vw,60px); gap: 16px;
   }
+  .blog-logo { display: inline-flex; align-items: center; gap: 10px; background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; }
+  .blog-logo-mark { background: var(--teal); height: 32px; width: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
   .blog-main { max-width: 1100px; margin: 0 auto; padding: 104px clamp(20px,5vw,60px) 80px; }
   .blog-search-bar { margin-bottom: 28px; }
   .blog-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); }
@@ -356,19 +358,12 @@ export default function BlogPage({ onNav }) {
 
       {/* Header */}
       <header className="blog-header">
-        <button
-          className="btn-ghost"
-          style={{ paddingLeft: 0 }}
-          onClick={() => navigate("/")}
-        >
-          <span
-            className="brig"
-            style={{ fontSize: 17, fontWeight: 700, color: "var(--teal-dark)", letterSpacing: "-0.02em" }}
-          >
-            PlacementDo
+        <button className="blog-logo" onClick={() => navigate("/")}>
+          <div className="blog-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
+          <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
+            Placement<span style={{ color: "var(--teal)" }}>Do</span>
           </span>
         </button>
-        <div style={{ flex: 1 }} />
         <button
           className="btn-ghost"
           style={{ fontSize: 13 }}

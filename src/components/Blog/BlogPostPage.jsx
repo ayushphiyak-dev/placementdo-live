@@ -3,9 +3,10 @@
  *
  * Fetches the post matching `slug` from /api/blog?slug=<slug>.
  */
-import { useMemo, useReducer, useEffect } from "react";
-import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon } from "lucide-react";
-import { upsertMeta, upsertLink } from "../SEO/shared/metaUtils.js";
+import { useMemo, useReducer, useEffect, useCallback } from "react";
+import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon, Share2, Linkedin, Twitter, Zap } from "lucide-react";
+import { upsertMeta, upsertLink, upsertJsonLd } from "../SEO/shared/metaUtils.js";
+import SEED_POSTS from "../../data/blogPosts.json";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -105,6 +106,8 @@ const STYLES = `
     background: var(--white);
     padding: 104px clamp(20px,5vw,60px) 80px;
   }
+  .blog-logo { display: inline-flex; align-items: center; gap: 10px; background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; }
+  .blog-logo-mark { background: var(--teal); height: 32px; width: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
   .bpp-inner {
     max-width: 760px;
     margin: 0 auto;
@@ -214,6 +217,42 @@ const STYLES = `
     padding: 80px 24px;
     color: var(--slate-400);
   }
+  /* Share Section */
+  .bpp-share { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 32px 0 0; }
+  .bpp-share-label { font-size: 13px; font-weight: 600; color: var(--slate-500); margin-right: 4px; }
+  .bpp-share-btn {
+    display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px;
+    border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: all .18s; border: 1.5px solid; font-family: 'DM Sans', sans-serif;
+  }
+  .bpp-share-btn.linkedin { background: #EFF8FF; color: #0A66C2; border-color: rgba(10,102,194,.25); }
+  .bpp-share-btn.linkedin:hover { background: #0A66C2; color: #fff; border-color: #0A66C2; transform: translateY(-1px); }
+  .bpp-share-btn.twitter { background: #F0F9FF; color: #1D9BF0; border-color: rgba(29,155,240,.25); }
+  .bpp-share-btn.twitter:hover { background: #1D9BF0; color: #fff; border-color: #1D9BF0; transform: translateY(-1px); }
+  .bpp-share-btn.reddit { background: #FFF4F0; color: #FF4500; border-color: rgba(255,69,0,.25); }
+  .bpp-share-btn.reddit:hover { background: #FF4500; color: #fff; border-color: #FF4500; transform: translateY(-1px); }
+  /* CTA Block */
+  .bpp-cta { background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%); border-radius: 20px; padding: clamp(32px,5vw,48px) clamp(24px,4vw,40px); text-align: center; margin: 48px 0 0; }
+  .bpp-cta h2 { font-size: clamp(22px,4vw,32px); font-weight: 800; color: #fff; letter-spacing: -0.025em; margin: 0 0 10px; }
+  .bpp-cta p { font-size: 15px; color: rgba(255,255,255,.8); line-height: 1.65; margin: 0 0 24px; }
+  .bpp-cta-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--teal-dark); border: none; cursor: pointer; font-size: 15px; font-weight: 700; padding: 13px 28px; border-radius: 999px; transition: transform .15s, box-shadow .15s; font-family: 'DM Sans', sans-serif; }
+  .bpp-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+  /* Continue Reading */
+  .bpp-continue { margin: 40px 0 0; }
+  .bpp-continue-title { font-size: 18px; font-weight: 700; color: var(--slate); margin: 0 0 16px; letter-spacing: -0.02em; }
+  .bpp-continue-links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .bpp-continue-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--teal-dark); background: var(--teal-light); cursor: pointer; transition: all .18s; font-family: 'DM Sans', sans-serif; }
+  .bpp-continue-btn:hover { background: var(--teal); color: #fff; border-color: var(--teal); }
+  /* Responsive */
+  @media (max-width: 680px) {
+    .bpp-page { padding: 88px 20px 60px; }
+    .bpp-h2 { font-size: 22px; }
+    .bpp-h3 { font-size: 18px; }
+    .bpp-h4 { font-size: 16px; }
+    .bpp-p { font-size: 15px; }
+    .bpp-pre { font-size: 12.5px; padding: 12px; }
+    .bpp-cta { border-radius: 16px; }
+  }
 `;
 
 const getInitialState = () => ({ post: null, allPosts: [], loading: true, notFound: false });
@@ -250,10 +289,23 @@ export default function BlogPostPage({ slug, onNav }) {
     let cancelled = false;
     dispatch({ type: "reset", slug });
 
-    // Fetch the individual post and all posts for related posts
+    // Local fetch fallback for static deployments
+    const loadLocal = () => {
+      if (cancelled) return;
+      const foundPost = SEED_POSTS.find((p) => p.slug === slug);
+      if (foundPost) {
+        const normalizedList = SEED_POSTS.map((p) => ({ ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug, coverImage: p.coverImage || "" }));
+        const normalizedPost = { ...foundPost, date: foundPost.date || foundPost.publishedAt || "", id: foundPost.id || foundPost.slug, coverImage: foundPost.coverImage || "" };
+        dispatch({ type: "loaded", post: normalizedPost, allPosts: normalizedList });
+      } else {
+        dispatch({ type: "error" });
+      }
+    };
+
+    // Attempt API fetch first for dynamic deployments
     const promises = [
-      fetch(`/api/blog?slug=${encodeURIComponent(slug)}`).then((r) => r.json()),
-      fetch("/api/blog").then((r) => r.json()),
+      fetch(`/api/blog?slug=${encodeURIComponent(slug)}`).then((r) => { if (!r.ok) throw new Error("API failed"); return r.json(); }),
+      fetch("/api/blog").then((r) => { if (!r.ok) throw new Error("API failed"); return r.json(); }),
     ];
 
     Promise.all(promises)
@@ -267,11 +319,11 @@ export default function BlogPostPage({ slug, onNav }) {
           const normalizedPost = { ...p, date: p.date || p.publishedAt || "", id: p.id || p.slug, coverImage: p.coverImage || "" };
           dispatch({ type: "loaded", post: normalizedPost, allPosts: list });
         } else {
-          dispatch({ type: "error" });
+          loadLocal();
         }
       })
       .catch(() => {
-        if (!cancelled) dispatch({ type: "error" });
+        if (!cancelled) loadLocal();
       });
 
     return () => { cancelled = true; };
@@ -286,8 +338,32 @@ export default function BlogPostPage({ slug, onNav }) {
     if (post) {
       document.title = `${post.title} | PlacementDo`;
       upsertMeta('meta[name="description"]', { name: "description", content: post.excerpt || "Read detailed interview guidance and product updates from the PlacementDo blog." });
+      // Article JSON-LD
+      upsertJsonLd("blog-article", {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": post.title,
+        "description": post.excerpt || "",
+        "author": { "@type": "Organization", "name": "PlacementDo" },
+        "publisher": { "@type": "Organization", "name": "PlacementDo", "url": "https://placementdo.app" },
+        "url": canonicalUrl,
+        "datePublished": post.publishedAt || post.date || "",
+        "dateModified": post.updatedAt || post.publishedAt || post.date || "",
+        "keywords": Array.isArray(post.tags) ? post.tags.join(", ") : "",
+        "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrl },
+      });
     }
+    return () => {
+      const el = document.head.querySelector('script[data-ld-id="blog-article"]');
+      if (el) el.remove();
+    };
   }, [slug, post]);
+
+  const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/blog/${slug}` : `https://placementdo.app/blog/${slug}`;
+  const shareTitle = post ? encodeURIComponent(post.title) : "";
+  const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+  const shareTwitter = `https://twitter.com/intent/tweet?text=${shareTitle}&url=${encodeURIComponent(shareUrl)}&via=Placementdo`;
+  const shareReddit = `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${shareTitle}`;
 
   const relatedPosts = useMemo(() => {
     if (!post) return [];
@@ -321,28 +397,17 @@ export default function BlogPostPage({ slug, onNav }) {
           height: 64,
           display: "flex",
           alignItems: "center",
+          justifyContent: "space-between",
           padding: "0 clamp(20px,5vw,60px)",
           gap: 16,
         }}
       >
-        <button
-          className="btn-ghost"
-          style={{ paddingLeft: 0 }}
-          onClick={() => navigate("/")}
-        >
-          <span
-            className="brig"
-            style={{
-              fontSize: 17,
-              fontWeight: 700,
-              color: "var(--teal-dark)",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            PlacementDo
+        <button className="blog-logo" onClick={() => navigate("/")}>
+          <div className="blog-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
+          <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
+            Placement<span style={{ color: "var(--teal)" }}>Do</span>
           </span>
         </button>
-        <div style={{ flex: 1 }} />
         <button
           className="btn-ghost"
           style={{ fontSize: 13 }}
@@ -590,6 +655,46 @@ export default function BlogPostPage({ slug, onNav }) {
                 </section>
               )}
             </article>
+          )}
+
+          {/* Share buttons */}
+          {post && (
+            <div className="bpp-share">
+              <span className="bpp-share-label">Share:</span>
+              <a className="bpp-share-btn linkedin" href={shareLinkedIn} target="_blank" rel="noopener noreferrer">
+                <Linkedin size={14} /> LinkedIn
+              </a>
+              <a className="bpp-share-btn twitter" href={shareTwitter} target="_blank" rel="noopener noreferrer">
+                <Twitter size={14} /> X / Twitter
+              </a>
+              <a className="bpp-share-btn reddit" href={shareReddit} target="_blank" rel="noopener noreferrer">
+                🔺 Reddit
+              </a>
+            </div>
+          )}
+
+          {/* Continue Reading / Internal Links */}
+          {post && (
+            <div className="bpp-continue">
+              <hr className="bpp-divider" />
+              <p className="bpp-continue-title">Continue your placement preparation:</p>
+              <div className="bpp-continue-links">
+                <button className="bpp-continue-btn" onClick={() => navigate("/placement-preparation-complete-guide")}>🎯 Complete Placement Guide</button>
+                <button className="bpp-continue-btn" onClick={() => navigate("/placement-preparation")}>📘 Placement Prep Tips</button>
+                <button className="bpp-continue-btn" onClick={() => navigate("/aptitude-questions")}>📊 Aptitude Questions</button>
+                <button className="bpp-continue-btn" onClick={() => navigate("/coding-interview-questions")}>💻 Coding Interview Q&A</button>
+                <button className="bpp-continue-btn" onClick={() => navigate("/blog")}>📝 All Blog Posts</button>
+              </div>
+            </div>
+          )}
+
+          {/* CTA Block */}
+          {post && (
+            <div className="bpp-cta">
+              <h2 className="brig">Practice with AI Mock Interviews — Free</h2>
+              <p>PlacementDo simulates real placement interviews. Get instant feedback on your answers, communication, and technical accuracy.</p>
+              <button className="bpp-cta-btn" onClick={() => navigate("/")}>Start your mock interview →</button>
+            </div>
           )}
         </div>
       </main>

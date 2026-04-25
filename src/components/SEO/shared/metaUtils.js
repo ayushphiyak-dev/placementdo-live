@@ -20,3 +20,19 @@ export const upsertLink = (selector, attrs) => {
   }
   Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
 };
+
+/**
+ * Upsert a JSON-LD <script> block in <head>.
+ * @param {string} id — unique identifier for this JSON-LD block (used as data-ld-id)
+ * @param {object} data — the JSON-LD object to inject
+ */
+export const upsertJsonLd = (id, data) => {
+  let el = document.head.querySelector(`script[data-ld-id="${id}"]`);
+  if (!el) {
+    el = document.createElement("script");
+    el.type = "application/ld+json";
+    el.setAttribute("data-ld-id", id);
+    document.head.appendChild(el);
+  }
+  el.textContent = JSON.stringify(data);
+};
