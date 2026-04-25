@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { label: "Aptitude", href: "/aptitude-questions" },
   { label: "Coding", href: "/coding-interview-questions" },
   { label: "Resources", href: "/seo-resources" },
+  { label: "Demo", href: "/demo" },
 ];
 
 const FOOTER_LINKS = [
@@ -22,6 +23,7 @@ const FOOTER_LINKS = [
   { label: "TCS Questions", href: "/company-wise-questions/tcs" },
   { label: "Wipro Questions", href: "/company-wise-questions/wipro" },
   { label: "SEO Resources", href: "/seo-resources" },
+  { label: "Interactive Demo", href: "/demo" },
 ];
 
 const STYLES = `

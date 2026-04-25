@@ -8,6 +8,7 @@ const AptitudePage = lazy(() => import("./components/SEO/AptitudePage.jsx"));
 const CodingInterviewPage = lazy(() => import("./components/SEO/CodingInterviewPage.jsx"));
 const CompanyWisePage = lazy(() => import("./components/SEO/CompanyWisePage.jsx"));
 const SeoResourcesPage = lazy(() => import("./components/SEO/SeoResourcesPage.jsx"));
+const DemoPage = lazy(() => import("./components/SEO/DemoPage.jsx"));
 
 const SpeedInsights = lazy(() =>
   import('@vercel/speed-insights/react').then((mod) => ({ default: mod.SpeedInsights })),
@@ -25,6 +26,7 @@ const STANDALONE_ROUTES = [
   "/company-wise-questions/tcs",
   "/company-wise-questions/wipro",
   "/seo-resources",
+  "/demo",
 ];
 
 function AppRouter() {
@@ -105,6 +107,14 @@ function AppRouter() {
     return (
       <Suspense fallback={null}>
         <SeoResourcesPage onNav={navigate} />
+      </Suspense>
+    );
+  }
+
+  if (path === "/demo" || path === "/demo/") {
+    return (
+      <Suspense fallback={null}>
+        <DemoPage onNav={navigate} />
       </Suspense>
     );
   }
