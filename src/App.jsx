@@ -8,6 +8,7 @@ const AptitudePage = lazy(() => import("./components/SEO/AptitudePage.jsx"));
 const CodingInterviewPage = lazy(() => import("./components/SEO/CodingInterviewPage.jsx"));
 const CompanyWisePage = lazy(() => import("./components/SEO/CompanyWisePage.jsx"));
 const SeoResourcesPage = lazy(() => import("./components/SEO/SeoResourcesPage.jsx"));
+const PlacementCompleteGuidePage = lazy(() => import("./components/SEO/PlacementCompleteGuidePage.jsx"));
 
 const SpeedInsights = lazy(() =>
   import('@vercel/speed-insights/react').then((mod) => ({ default: mod.SpeedInsights })),
@@ -20,10 +21,15 @@ const Analytics = lazy(() =>
 const STANDALONE_ROUTES = [
   "/blog",
   "/placement-preparation",
+  "/placement-preparation-complete-guide",
   "/aptitude-questions",
   "/coding-interview-questions",
   "/company-wise-questions/tcs",
   "/company-wise-questions/wipro",
+  "/company-wise-questions/infosys",
+  "/company-wise-questions/accenture",
+  "/company-wise-questions/cognizant",
+  "/company-wise-questions/hcl",
   "/seo-resources",
 ];
 
@@ -97,6 +103,46 @@ function AppRouter() {
     return (
       <Suspense fallback={null}>
         <CompanyWisePage company="wipro" onNav={navigate} />
+      </Suspense>
+    );
+  }
+
+  if (path === "/placement-preparation-complete-guide" || path === "/placement-preparation-complete-guide/") {
+    return (
+      <Suspense fallback={null}>
+        <PlacementCompleteGuidePage onNav={navigate} />
+      </Suspense>
+    );
+  }
+
+  if (path === "/company-wise-questions/infosys" || path === "/company-wise-questions/infosys/") {
+    return (
+      <Suspense fallback={null}>
+        <CompanyWisePage company="infosys" onNav={navigate} />
+      </Suspense>
+    );
+  }
+
+  if (path === "/company-wise-questions/accenture" || path === "/company-wise-questions/accenture/") {
+    return (
+      <Suspense fallback={null}>
+        <CompanyWisePage company="accenture" onNav={navigate} />
+      </Suspense>
+    );
+  }
+
+  if (path === "/company-wise-questions/cognizant" || path === "/company-wise-questions/cognizant/") {
+    return (
+      <Suspense fallback={null}>
+        <CompanyWisePage company="cognizant" onNav={navigate} />
+      </Suspense>
+    );
+  }
+
+  if (path === "/company-wise-questions/hcl" || path === "/company-wise-questions/hcl/") {
+    return (
+      <Suspense fallback={null}>
+        <CompanyWisePage company="hcl" onNav={navigate} />
       </Suspense>
     );
   }

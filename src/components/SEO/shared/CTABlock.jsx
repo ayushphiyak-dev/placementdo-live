@@ -3,7 +3,8 @@
  */
 const STYLES = `
   .cta-block {
-    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 20px; padding: clamp(40px,6vw,64px) clamp(24px,5vw,60px);
     text-align: center; margin: 64px 0;
   }
@@ -14,11 +15,11 @@ const STYLES = `
   .cta-block-sub { font-size: 15.5px; color: rgba(255,255,255,.78); line-height: 1.65; margin: 0 0 28px; }
   .cta-block-btn {
     display: inline-flex; align-items: center; gap: 8px;
-    background: #fff; color: var(--teal-dark); border: none; cursor: pointer;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: #fff; border: none; cursor: pointer;
     font-size: 15px; font-weight: 700; padding: 13px 28px; border-radius: 999px;
     transition: transform 0.15s, box-shadow 0.15s; font-family: 'DM Sans', sans-serif;
   }
-  .cta-block-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+  .cta-block-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,148,136,.3); }
 `;
 
 export default function CTABlock({ heading, subtext, buttonLabel, onNav, buttonHref = "/" }) {
