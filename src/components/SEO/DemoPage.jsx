@@ -112,6 +112,27 @@ export default function DemoPage({ onNav }) {
             }}>
               Transform your <strong>placement preparation</strong> with our state-of-the-art <strong>AI mock interview</strong> platform. Get realistic <strong>interview practice</strong> tailored to your profile, complete with <strong>real-time feedback</strong> to help you land your dream job.
             </p>
+            
+            <div style={{ marginTop: '40px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
+              <div style={{ textAlign: 'left' }}>
+                <h3 className="brig" style={{ fontSize: '1.5rem', color: 'var(--slate)', marginBottom: '12px' }}>Resume-Aware Simulation</h3>
+                <p style={{ fontSize: '1rem', color: 'var(--slate-500)', lineHeight: '1.6' }}>
+                  Our AI doesn't just ask generic questions. It parses your CV to understand your specific projects, technologies, and experience levels. This ensures that your <strong>mock interview</strong> feels like a real-world technical or behavioral round where the interviewer has actually prepared.
+                </p>
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <h3 className="brig" style={{ fontSize: '1.5rem', color: 'var(--slate)', marginBottom: '12px' }}>Behavioral Calibration</h3>
+                <p style={{ fontSize: '1rem', color: 'var(--slate-500)', lineHeight: '1.6' }}>
+                  Practice with different interviewer personas, from supportive peers to high-pressure stress-testers. This helps you build the emotional resilience and communication clarity needed to handle any interview dynamic, ensuring you remain composed and professional throughout the session.
+                </p>
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <h3 className="brig" style={{ fontSize: '1.5rem', color: 'var(--slate)', marginBottom: '12px' }}>Metric-Driven Insights</h3>
+                <p style={{ fontSize: '1rem', color: 'var(--slate-500)', lineHeight: '1.6' }}>
+                  After every session, receive a comprehensive score breakdown across 10 key dimensions, including technical depth, STAR method adherence, and confidence signals. This data-driven approach to <strong>placement prep</strong> allows you to identify and fix specific weaknesses before they cost you an offer.
+                </p>
+              </div>
+            </div>
           </section>
 
           {/* 4. FEATURE HIGHLIGHTS */}
