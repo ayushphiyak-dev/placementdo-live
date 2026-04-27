@@ -1222,21 +1222,47 @@ const Landing = ({ onNav, onCheckout }) => {
         <strong style={{ color: "var(--slate-700)" }}>Launching soon.</strong>
       </motion.p>
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.35 }}
-        style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, width: "100%", maxWidth: 520 }}>
-        <WaitlistForm size="lg" />
-        <p style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 500 }}>No spam. No credit card. Just early access.</p>
-        <p className="hero-quick-links" style={{ fontSize: 12.5, color: "var(--slate-500)", display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", alignItems: "center" }}>
-          <a href="/demo" onClick={(e) => { e.preventDefault(); navigateTo("/demo"); }} style={{ color: "var(--teal-dark)", fontWeight: 700, display: "flex", alignItems: "center", gap: 4, background: "var(--teal-light)", padding: "4px 10px", borderRadius: 8 }}>
-            <Sparkles size={13} /> See Interactive Demo
+        style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", maxWidth: 520 }}>
+        
+        {/* Subtle, premium Demo Badge */}
+        <div style={{ marginBottom: 16 }}>
+          <a 
+            href="/demo" 
+            onClick={(e) => { e.preventDefault(); navigateTo("/demo"); }} 
+            className="glow-btn scale-in"
+            style={{ 
+              display: "inline-flex", 
+              alignItems: "center", 
+              gap: 8, 
+              fontSize: 13, 
+              fontWeight: 700, 
+              color: "var(--teal-dark)", 
+              background: "var(--white)", 
+              border: "1.5px solid var(--teal)", 
+              padding: "7px 18px", 
+              borderRadius: 99, 
+              textDecoration: "none", 
+              boxShadow: "var(--shadow-sm)",
+              transition: "all 0.2s ease"
+            }}
+          >
+            <div className="dot-live" style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--teal)" }} />
+            Try Interactive Demo
           </a>
+        </div>
+
+        <WaitlistForm size="lg" />
+        <p style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 500, marginTop: 12 }}>No spam. No credit card. Just early access.</p>
+        
+        <p className="hero-quick-links" style={{ fontSize: 12.5, color: "var(--slate-500)", display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", alignItems: "center", marginTop: 18 }}>
           <a href="/signin" onClick={(e) => { e.preventDefault(); onNav("signin"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
-            Sign in to continue practice
+            Sign in
           </a>
           <a href="/dashboard" onClick={(e) => { e.preventDefault(); onNav("dashboard"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
-            Start a new interview session
+            Dashboard
           </a>
           <a href="/support" onClick={(e) => { e.preventDefault(); onNav("support"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
-            Visit help and support
+            Help
           </a>
         </p>
       </motion.div>
