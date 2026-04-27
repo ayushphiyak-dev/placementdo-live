@@ -516,6 +516,38 @@ export default function BlogPage({ onNav }) {
             </div>
           )}
 
+          {/* Placement prep resources */}
+          <section style={{ marginTop: 56, padding: '36px 32px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 16 }}>
+            <p className="blog-section-label">Placement Resources</p>
+            <h2 className="brig" style={{ fontSize: 'clamp(20px,3vw,26px)', letterSpacing: '-0.02em', margin: '0 0 8px', color: 'var(--slate)' }}>
+              Continue Your Placement Preparation
+            </h2>
+            <p style={{ fontSize: 14, color: 'var(--slate-500)', lineHeight: 1.7, margin: '0 0 20px', maxWidth: 560 }}>
+              Explore our in-depth guides on aptitude tests, coding rounds, HR interviews, and company-specific preparation.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+              {[
+                { label: '🎯 Complete Placement Guide', href: '/placement-preparation-complete-guide' },
+                { label: '📘 Placement Prep Tips', href: '/placement-preparation' },
+                { label: '📊 Aptitude Questions', href: '/aptitude-questions' },
+                { label: '💻 Coding Interview Q&A', href: '/coding-interview-questions' },
+                { label: '🏢 TCS Placement Guide', href: '/company-wise-questions/tcs' },
+                { label: '🏢 Wipro Placement Guide', href: '/company-wise-questions/wipro' },
+                { label: '🏢 Infosys Placement Guide', href: '/company-wise-questions/infosys' },
+                { label: '🏢 Accenture Placement Guide', href: '/company-wise-questions/accenture' },
+              ].map(({ label, href }) => (
+                <button
+                  key={href}
+                  className="btn-ghost"
+                  style={{ fontSize: 13, fontWeight: 600, color: 'var(--teal-dark)', background: 'var(--teal-light)', borderColor: 'rgba(13,148,136,.2)', borderRadius: '999px', padding: '8px 16px' }}
+                  onClick={() => navigate(href)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </section>
+
           {/* Admin section */}
           <section className="admin-section">
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>

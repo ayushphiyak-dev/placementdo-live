@@ -173,7 +173,39 @@ export default function DemoPage({ onNav }) {
             </ul>
           </section>
 
-          {/* 5. FINAL CTA SECTION */}
+          {/* 5. INTERNAL LINKS SECTION */}
+          <section style={{ marginBottom: 'clamp(48px, 7vh, 80px)' }}>
+            <h2 className="brig" style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', color: 'var(--slate)', marginBottom: '20px', letterSpacing: '-0.02em', textAlign: 'center' }}>
+              Continue Your Placement Preparation
+            </h2>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
+              {[
+                { label: '🎯 Complete Placement Guide', href: '/placement-preparation-complete-guide' },
+                { label: '📘 Placement Prep Tips', href: '/placement-preparation' },
+                { label: '📊 Aptitude Questions', href: '/aptitude-questions' },
+                { label: '💻 Coding Interview Q&A', href: '/coding-interview-questions' },
+                { label: '🏢 TCS Placement Guide', href: '/company-wise-questions/tcs' },
+                { label: '📝 All Blog Posts', href: '/blog' },
+              ].map(({ label, href }) => (
+                <button
+                  key={href}
+                  onClick={() => onNav(href)}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    padding: '9px 18px', border: '1px solid var(--border)', borderRadius: '999px',
+                    fontSize: '13px', fontWeight: 600, color: 'var(--teal-dark)', background: 'var(--teal-light)',
+                    cursor: 'pointer', transition: 'all 0.18s', fontFamily: "'DM Sans', sans-serif",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--teal)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = 'var(--teal)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'var(--teal-light)'; e.currentTarget.style.color = 'var(--teal-dark)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          {/* 6. FINAL CTA SECTION */}
           <section style={{ 
             textAlign: 'center', 
             background: 'var(--slate)', 
