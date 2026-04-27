@@ -96,7 +96,7 @@ const COMPANIES = [
   { name: "Wipro", desc: "NLTH — aptitude, essay writing, coding. Elite NTHrive for top performers.", href: "/company-wise-questions/wipro" },
   { name: "Accenture", desc: "Cognitive and technical assessment + communication test. Conversational interviews.", href: "/blog/accenture-placement-preparation" },
   { name: "Cognizant", desc: "eSEAT test (aptitude + coding for GenC Next). High verbal ability weight.", href: "/blog/cognizant-placement-guide" },
-  { name: "HCL", desc: "HCL TechBee and HCLAT tests. Focus on aptitude and technical fundamentals.", href: "/blog" },
+  { name: "HCL", desc: "HCL TechBee and HCLAT tests. Focus on aptitude and technical fundamentals.", href: "/company-wise-questions/hcl" },
 ];
 
 const FAQS = [
