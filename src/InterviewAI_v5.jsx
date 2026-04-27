@@ -1045,16 +1045,16 @@ const Navbar = ({ view, onNav }) => {
         <Logo onClick={() => onNav("landing")} />
         <div className="nav-links-desk" style={{ display: "flex", gap: 4, alignItems: "center" }}>
           {isLanding && (<>
-            <a href="/#features-section" className="nav-link" onClick={(e) => { e.preventDefault(); scrollTo("features-section"); }}>Features</a>
-            <a href="/#pricing-section" className="nav-link" onClick={(e) => { e.preventDefault(); scrollTo("pricing-section"); }}>Pricing</a>
-            <a href="/#waitlist-section" className="nav-link" onClick={(e) => { e.preventDefault(); scrollTo("waitlist-section"); }}>Join Waitlist</a>
+            <button className="nav-link" onClick={() => scrollTo("features-section")}>Features</button>
+            <button className="nav-link" onClick={() => scrollTo("pricing-section")}>Pricing</button>
+            <button className="nav-link" onClick={() => scrollTo("waitlist-section")}>Join Waitlist</button>
             <div style={{ width: 1, height: 20, background: "var(--border)", margin: "0 6px" }} />
           </>)}
-          {!isLanding && <a href="/" className="btn-ghost" onClick={(e) => { e.preventDefault(); onNav("landing"); }}>← Home</a>}
-          <a href="/blog" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo("/blog"); }}>Blog</a>
-          <a href="/placement-preparation" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo("/placement-preparation"); }}>Placement Prep</a>
-          <a href="/signin" className="btn-secondary" onClick={(e) => { e.preventDefault(); onNav("signin"); }} style={{ fontSize: 13 }}><LogIn size={14} /> Sign in</a>
-          <a href="/dashboard" className="btn-primary" onClick={(e) => { e.preventDefault(); onNav("dashboard"); }} style={{ fontSize: 13 }}>Get started <ArrowUpRight size={14} /></a>
+          {!isLanding && <button className="btn-ghost" onClick={() => onNav("landing")}>← Home</button>}
+          <button className="nav-link" onClick={() => navigateTo("/blog")}>Blog</button>
+          <button className="nav-link" onClick={() => navigateTo("/placement-preparation")}>Placement Prep</button>
+          <button className="btn-secondary" onClick={() => onNav("signin")} style={{ fontSize: 13 }}><LogIn size={14} /> Sign in</button>
+          <button className="btn-primary" onClick={() => onNav("dashboard")} style={{ fontSize: 13 }}>Get started <ArrowUpRight size={14} /></button>
         </div>
         <button className="hamburger btn-ghost" style={{ display: "none", padding: 8 }} onClick={() => setMob(o => !o)}>
           {mob ? <X size={22} /> : <Menu size={22} />}
@@ -1065,16 +1065,16 @@ const Navbar = ({ view, onNav }) => {
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.22 }}
             style={{ position: "fixed", top: 64, left: 0, right: 0, zIndex: 99, background: "rgba(250,250,248,0.98)", backdropFilter: "blur(18px)", borderBottom: "1px solid var(--border)", padding: "16px 20px 24px", display: "flex", flexDirection: "column", gap: 8 }}>
             {isLanding && (<>
-              <a href="/#features-section" className="nav-link" style={{ textAlign: "left" }} onClick={(e) => { e.preventDefault(); scrollTo("features-section"); }}>Features</a>
-              <a href="/#pricing-section" className="nav-link" style={{ textAlign: "left" }} onClick={(e) => { e.preventDefault(); scrollTo("pricing-section"); }}>Pricing</a>
-              <a href="/#waitlist-section" className="nav-link" style={{ textAlign: "left" }} onClick={(e) => { e.preventDefault(); scrollTo("waitlist-section"); }}>Join Waitlist</a>
+              <button className="nav-link" style={{ textAlign: "left" }} onClick={() => scrollTo("features-section")}>Features</button>
+              <button className="nav-link" style={{ textAlign: "left" }} onClick={() => scrollTo("pricing-section")}>Pricing</button>
+              <button className="nav-link" style={{ textAlign: "left" }} onClick={() => scrollTo("waitlist-section")}>Join Waitlist</button>
               <div style={{ height: 1, background: "var(--border)", margin: "4px 0" }} />
             </>)}
-            {!isLanding && <a href="/" className="nav-link" style={{ textAlign: "left" }} onClick={(e) => { e.preventDefault(); onNav("landing"); }}>← Home</a>}
-            <a href="/blog" className="nav-link" style={{ textAlign: "left" }} onClick={(e) => { e.preventDefault(); navigateTo("/blog"); }}>Blog</a>
-            <a href="/placement-preparation" className="nav-link" style={{ textAlign: "left" }} onClick={(e) => { e.preventDefault(); navigateTo("/placement-preparation"); }}>Placement Prep</a>
-            <a href="/signin" className="btn-secondary" onClick={(e) => { e.preventDefault(); onNav("signin"); setMob(false); }} style={{ justifyContent: "center" }}><LogIn size={14} /> Sign in</a>
-            <a href="/dashboard" className="btn-primary" onClick={(e) => { e.preventDefault(); onNav("dashboard"); setMob(false); }} style={{ justifyContent: "center" }}>Get started <ArrowUpRight size={14} /></a>
+            {!isLanding && <button className="nav-link" style={{ textAlign: "left" }} onClick={() => onNav("landing")}>← Home</button>}
+            <button className="nav-link" style={{ textAlign: "left" }} onClick={() => navigateTo("/blog")}>Blog</button>
+            <button className="nav-link" style={{ textAlign: "left" }} onClick={() => navigateTo("/placement-preparation")}>Placement Prep</button>
+            <button className="btn-secondary" onClick={() => { onNav("signin"); setMob(false); }} style={{ justifyContent: "center" }}><LogIn size={14} /> Sign in</button>
+            <button className="btn-primary" onClick={() => { onNav("dashboard"); setMob(false); }} style={{ justifyContent: "center" }}>Get started <ArrowUpRight size={14} /></button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1170,10 +1170,10 @@ const Landing = ({ onNav, onCheckout }) => {
   };
 
   const productLinks = [
-    { label: "Features", path: "/features", action: () => onNav("features") },
-    { label: "Pricing", path: "/pricing", action: () => onNav("pricing") },
-    { label: "Personas", path: "/personas", action: () => onNav("personas") },
-    { label: "How it works", path: "/how-it-works", action: () => onNav("howItWorks") },
+    { label: "Features", action: () => onNav("features") },
+    { label: "Pricing", action: () => onNav("pricing") },
+    { label: "Personas", action: () => onNav("personas") },
+    { label: "How it works", action: () => onNav("howItWorks") },
   ];
 
   const navigateToBlog = () => {
@@ -1187,21 +1187,20 @@ const Landing = ({ onNav, onCheckout }) => {
   };
 
   const companyLinks = [
-    { label: "About", path: "/about", action: () => onNav("about") },
-    { label: "Blog", path: "/blog", action: navigateToBlog },
-    { label: "Careers", path: "/careers", action: () => onNav("careers") },
-    { label: "Privacy Policy", path: "/privacy-policy", action: () => onNav("privacy") },
-    { label: "Terms of Service", path: "/terms-of-service", action: () => onNav("terms") },
+    { label: "About", action: () => onNav("about") },
+    { label: "Blog", action: navigateToBlog },
+    { label: "Careers", action: () => onNav("careers") },
+    { label: "Privacy Policy", action: () => onNav("privacy") },
+    { label: "Terms of Service", action: () => onNav("terms") },
   ];
 
   const resourceLinks = [
-    { label: "Placement Prep", path: "/placement-preparation", action: () => navigateTo("/placement-preparation") },
-    { label: "Aptitude Q&A", path: "/aptitude-questions", action: () => navigateTo("/aptitude-questions") },
-    { label: "Coding Interview Q&A", path: "/coding-interview-questions", action: () => navigateTo("/coding-interview-questions") },
-    { label: "TCS Questions", path: "/company-wise-questions/tcs", action: () => navigateTo("/company-wise-questions/tcs") },
-    { label: "Wipro Questions", path: "/company-wise-questions/wipro", action: () => navigateTo("/company-wise-questions/wipro") },
-    { label: "Interactive Demo", path: "/demo", action: () => navigateTo("/demo") },
-    { label: "SEO Resources", path: "/seo-resources", action: () => navigateTo("/seo-resources") },
+    { label: "Placement Prep", action: () => navigateTo("/placement-preparation") },
+    { label: "Aptitude Q&A", action: () => navigateTo("/aptitude-questions") },
+    { label: "Coding Interview Q&A", action: () => navigateTo("/coding-interview-questions") },
+    { label: "TCS Questions", action: () => navigateTo("/company-wise-questions/tcs") },
+    { label: "Wipro Questions", action: () => navigateTo("/company-wise-questions/wipro") },
+    { label: "Interactive Demo", action: () => navigateTo("/demo") },
   ];
 
   return (
@@ -1582,8 +1581,8 @@ const Landing = ({ onNav, onCheckout }) => {
         <div>
           <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Product</div>
           <div className="footer-link-group">
-            {productLinks.map(({ label, path, action }) => (
-              <a key={label} href={path} className="footer-link" onClick={(e) => { e.preventDefault(); action(); }}>{label}</a>
+            {productLinks.map(({ label, action }) => (
+              <button key={label} className="footer-link" onClick={action}>{label}</button>
             ))}
           </div>
         </div>
@@ -1592,8 +1591,8 @@ const Landing = ({ onNav, onCheckout }) => {
         <div>
           <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Company</div>
           <div className="footer-link-group">
-            {companyLinks.map(({ label, path, action }) => (
-              <a key={label} href={path} className="footer-link" onClick={(e) => { e.preventDefault(); action(); }}>{label}</a>
+            {companyLinks.map(({ label, action }) => (
+              <button key={label} className="footer-link" onClick={action}>{label}</button>
             ))}
           </div>
         </div>
@@ -1602,8 +1601,8 @@ const Landing = ({ onNav, onCheckout }) => {
         <div>
           <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Resources</div>
           <div className="footer-link-group">
-            {resourceLinks.map(({ label, path, action }) => (
-              <a key={label} href={path} className="footer-link" onClick={(e) => { e.preventDefault(); action(); }}>{label}</a>
+            {resourceLinks.map(({ label, action }) => (
+              <button key={label} className="footer-link" onClick={action}>{label}</button>
             ))}
           </div>
         </div>
@@ -1621,14 +1620,14 @@ const Landing = ({ onNav, onCheckout }) => {
         <span style={{ fontSize: 12, color: "rgba(255,255,255,.25)" }}>© 2026 PlacementDo. All rights reserved.</span>
         <div style={{ display: "flex", gap: 16 }}>
           {[
-            { label: "Privacy", path: "/privacy-policy", action: () => onNav("privacy") },
-            { label: "Terms", path: "/terms-of-service", action: () => onNav("terms") },
-            { label: "Cookies", path: "/privacy-policy", action: () => onNav("privacy") },
-          ].map(({ label, path, action }) => (
-            <a key={label} href={path} style={{ fontSize: 12, color: "rgba(255,255,255,.25)", background: "none", border: "none", cursor: "pointer", transition: "color 0.15s", fontFamily: "'DM Sans',sans-serif", textDecoration: "none" }}
-              onClick={(e) => { e.preventDefault(); action(); }}
+            { label: "Privacy", action: () => onNav("privacy") },
+            { label: "Terms", action: () => onNav("terms") },
+            { label: "Cookies", action: () => onNav("privacy") },
+          ].map(({ label, action }) => (
+            <button key={label} style={{ fontSize: 12, color: "rgba(255,255,255,.25)", background: "none", border: "none", cursor: "pointer", transition: "color 0.15s", fontFamily: "'DM Sans',sans-serif" }}
+              onClick={action}
               onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,.6)"}
-              onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,.25)"}>{label}</a>
+              onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,.25)"}>{label}</button>
           ))}
         </div>
       </div>
