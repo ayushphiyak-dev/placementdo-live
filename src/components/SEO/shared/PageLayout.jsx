@@ -8,7 +8,7 @@ import { upsertMeta, upsertLink } from "./metaUtils.js";
 
 const NAV_LINKS = [
   { label: "Blog", href: "/blog" },
-  { label: "Placement Prep", href: "/placement-preparation" },
+  { label: "Placement Guide", href: "/placement-preparation-complete-guide" },
   { label: "Aptitude", href: "/aptitude-questions" },
   { label: "Coding", href: "/coding-interview-questions" },
   { label: "Resources", href: "/seo-resources" },
@@ -16,12 +16,17 @@ const NAV_LINKS = [
 ];
 
 const FOOTER_LINKS = [
-  { label: "Blog", href: "/blog" },
-  { label: "Placement Prep", href: "/placement-preparation" },
+  { label: "Complete Placement Guide", href: "/placement-preparation-complete-guide" },
+  { label: "Placement Prep Tips", href: "/placement-preparation" },
   { label: "Aptitude Q&A", href: "/aptitude-questions" },
   { label: "Coding Interview Q&A", href: "/coding-interview-questions" },
   { label: "TCS Questions", href: "/company-wise-questions/tcs" },
+  { label: "Infosys Questions", href: "/company-wise-questions/infosys" },
   { label: "Wipro Questions", href: "/company-wise-questions/wipro" },
+  { label: "Accenture Questions", href: "/company-wise-questions/accenture" },
+  { label: "Cognizant Questions", href: "/company-wise-questions/cognizant" },
+  { label: "HCL Questions", href: "/company-wise-questions/hcl" },
+  { label: "Blog", href: "/blog" },
   { label: "SEO Resources", href: "/seo-resources" },
   { label: "Interactive Demo", href: "/demo" },
 ];
@@ -174,7 +179,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
                 <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>Placement<span style={{ color: "var(--teal-mid)" }}>Do</span></span>
               </div>
               <p className="seo-footer-brand-desc">
-                A hyper-realistic AI interview simulator. Practice smarter. Land faster.
+                PlacementDo is India's AI-powered placement preparation platform — helping freshers crack campus placement at TCS, Infosys, Wipro, Accenture, and top tech companies. Practice smarter. Land faster.
               </p>
             </div>
             <div>
