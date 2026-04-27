@@ -1165,6 +1165,15 @@ const DashboardShell = ({ activeTab, onNav, onUpgrade, children }) => {
 
 /* ── Landing ── */
 const Landing = ({ onNav, onCheckout }) => {
+  useEffect(() => {
+    // Load the Storylane script dynamically so it executes properly in React
+    const script = document.createElement('script');
+    script.src = "https://js.storylane.io/js/v2/storylane.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => { if (document.body.contains(script)) document.body.removeChild(script); };
+  }, []);
+
   const goToSection = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
@@ -1200,7 +1209,7 @@ const Landing = ({ onNav, onCheckout }) => {
     { label: "Coding Interview Q&A", action: () => navigateTo("/coding-interview-questions") },
     { label: "TCS Questions", action: () => navigateTo("/company-wise-questions/tcs") },
     { label: "Wipro Questions", action: () => navigateTo("/company-wise-questions/wipro") },
-    { label: "Interactive Demo", action: () => navigateTo("/demo") },
+    { label: "Interactive Demo", action: () => goToSection("demo-section") },
   ];
 
   return (
@@ -1223,34 +1232,6 @@ const Landing = ({ onNav, onCheckout }) => {
       </motion.p>
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.35 }}
         style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", maxWidth: 520 }}>
-        
-        {/* Subtle, premium Demo Badge */}
-        <div style={{ marginBottom: 16 }}>
-          <a 
-            href="/demo" 
-            onClick={(e) => { e.preventDefault(); navigateTo("/demo"); }} 
-            className="glow-btn scale-in"
-            style={{ 
-              display: "inline-flex", 
-              alignItems: "center", 
-              gap: 8, 
-              fontSize: 13, 
-              fontWeight: 700, 
-              color: "var(--teal-dark)", 
-              background: "var(--white)", 
-              border: "1.5px solid var(--teal)", 
-              padding: "7px 18px", 
-              borderRadius: 99, 
-              textDecoration: "none", 
-              boxShadow: "var(--shadow-sm)",
-              transition: "all 0.2s ease"
-            }}
-          >
-            <div className="dot-live" style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--teal)" }} />
-            Try Interactive Demo
-          </a>
-        </div>
-
         <WaitlistForm size="lg" />
         <p style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 500, marginTop: 12 }}>No spam. No credit card. Just early access.</p>
         
@@ -1349,6 +1330,42 @@ const Landing = ({ onNav, onCheckout }) => {
             <p style={{ fontSize: 13.5, color: "var(--slate-500)", lineHeight: 1.68 }}>{desc}</p>
           </motion.div>
         ))}
+      </div>
+    </section>
+
+    {/* INTERACTIVE DEMO SECTION */}
+    <section id="demo-section" className="sec-pad" style={{ padding:"100px clamp(20px,5vw,60px)", background: "var(--slate-50)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
+        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} viewport={{ once: true }}>
+          <Tag color="teal">Experience</Tag>
+          <h2 className="brig" style={{ fontSize: "clamp(26px,4.5vw,50px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.03em", marginTop: 14, lineHeight: 1.1 }}>Take a test drive</h2>
+          <p style={{ fontSize: 16, color: "var(--slate-500)", maxWidth: 600, margin: "14px auto 48px", lineHeight: 1.65 }}>
+            See exactly how our AI interviewer interacts, challenges, and guides you through a real-world scenario. No signup required for the preview.
+          </p>
+        </motion.div>
+        
+        <motion.div initial={{ opacity: 0, y: 32, scale: 0.98 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} viewport={{ once: true }}
+          className="card" style={{ padding: 12, borderRadius: 28, background: "var(--white)", boxShadow: "0 42px 100px rgba(15,23,42,0.12)", overflow: "hidden" }}>
+          <div style={{ position: 'relative', width: '100%', height: 'clamp(500px, 70vh, 750px)' }}>
+            <iframe 
+              loading="lazy"
+              src="https://demo.storylane.com/demo/1j3kslnrp6q2?embed=inline"
+              title="PlacementDo Interactive Demo"
+              allow="fullscreen"
+              allowFullScreen
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                border: 'none',
+                borderRadius: '18px',
+                backgroundColor: 'var(--slate-50)'
+              }}
+            />
+          </div>
+        </motion.div>
       </div>
     </section>
 
