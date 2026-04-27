@@ -19,11 +19,8 @@ async function generate() {
     .png()
     .toFile("public/apple-touch-icon.png");
     
-  console.log("Removing default favicon.ico if it's the vite one");
-  // We can just create a small 32x32 ico file by simple renaming or just delete it.
-  if (fs.existsSync("public/favicon.ico")) {
-    fs.unlinkSync("public/favicon.ico");
-  }
+  console.log("Generating favicon.ico...");
+  fs.copyFileSync("public/favicon-32x32.png", "public/favicon.ico");
   // also rm vite.svg to avoid any confusion if versel fallback
   if (fs.existsSync("public/vite.svg")) {
     fs.unlinkSync("public/vite.svg");
