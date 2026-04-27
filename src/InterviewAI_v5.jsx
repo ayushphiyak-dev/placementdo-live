@@ -1222,21 +1222,50 @@ const Landing = ({ onNav, onCheckout }) => {
         <strong style={{ color: "var(--slate-700)" }}>Launching soon.</strong>
       </motion.p>
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.35 }}
-        style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, width: "100%", maxWidth: 520 }}>
-        <WaitlistForm size="lg" />
-        <p style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 500 }}>No spam. No credit card. Just early access.</p>
-        <p className="hero-quick-links" style={{ fontSize: 12.5, color: "var(--slate-500)", display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", alignItems: "center" }}>
-          <a href="/demo" onClick={(e) => { e.preventDefault(); navigateTo("/demo"); }} style={{ color: "var(--teal-dark)", fontWeight: 700, display: "flex", alignItems: "center", gap: 4, background: "var(--teal-light)", padding: "4px 10px", borderRadius: 8 }}>
-            <Sparkles size={13} /> See Interactive Demo
-          </a>
+        style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24, width: "100%", maxWidth: 600 }}>
+        
+        {/* Primary CTA: Demo Button */}
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+          <button 
+            onClick={() => navigateTo("/demo")} 
+            className="btn-secondary glow-btn" 
+            style={{ 
+              padding: "14px 28px", 
+              borderRadius: "14px", 
+              fontSize: "15px", 
+              fontWeight: 700, 
+              background: "var(--white)",
+              border: "2px solid var(--teal)",
+              color: "var(--teal-dark)",
+              boxShadow: "var(--shadow-md)"
+            }}
+          >
+            <Sparkles size={16} /> Try Interactive Demo
+          </button>
+          <button 
+            onClick={() => goToSection("features-section")} 
+            className="btn-ghost" 
+            style={{ padding: "14px 24px", fontSize: "15px", fontWeight: 600 }}
+          >
+            Explore Features
+          </button>
+        </div>
+
+        {/* Waitlist Section */}
+        <div style={{ width: "100%", background: "var(--slate-50)", padding: "24px", borderRadius: "20px", border: "1px solid var(--border)" }}>
+          <WaitlistForm size="lg" />
+          <p style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 500, marginTop: 12 }}>Join 2,400+ students in the early access waitlist. No credit card required.</p>
+        </div>
+
+        <p className="hero-quick-links" style={{ fontSize: 12.5, color: "var(--slate-500)", display: "flex", gap: 18, flexWrap: "wrap", justifyContent: "center", alignItems: "center" }}>
           <a href="/signin" onClick={(e) => { e.preventDefault(); onNav("signin"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
-            Sign in to continue practice
+            Sign in
           </a>
-          <a href="/dashboard" onClick={(e) => { e.preventDefault(); onNav("dashboard"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
-            Start a new interview session
+          <a href="/blog" onClick={(e) => { e.preventDefault(); navigateToBlog(); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
+            Read Blog
           </a>
-          <a href="/support" onClick={(e) => { e.preventDefault(); onNav("support"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
-            Visit help and support
+          <a href="/placement-preparation" onClick={(e) => { e.preventDefault(); navigateTo("/placement-preparation"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
+            Preparation Guide
           </a>
         </p>
       </motion.div>
