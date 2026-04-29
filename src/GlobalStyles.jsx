@@ -47,14 +47,14 @@ const GlobalStyles = () => (
     .card-interactive:active { transform: scale(0.99); }
 
     /* Buttons */
-    .btn-primary { background: var(--teal); color: #fff; font-family: 'DM Sans',sans-serif; font-weight: 600; font-size: 14px; padding: 11px 24px; border-radius: 12px; border: none; cursor: pointer; transition: background 0.2s, box-shadow 0.2s, transform 0.15s, opacity 0.2s; letter-spacing: -0.01em; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; user-select: none; }
+    .btn-primary { background: var(--teal); color: #fff; font-family: 'DM Sans',sans-serif; font-weight: 600; font-size: 14px; padding: 11px 24px; border-radius: 12px; border: none; cursor: pointer; transition: background 0.2s, box-shadow 0.2s, transform 0.15s, opacity 0.2s; letter-spacing: -0.01em; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; user-select: none; text-decoration: none; }
     .btn-primary:hover:not(:disabled) { background: var(--teal-dark); box-shadow: var(--shadow-teal); transform: translateY(-1px); }
     .btn-primary:active:not(:disabled) { transform: scale(0.97); box-shadow: none; }
     .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn-secondary { background: var(--white); color: var(--slate); font-family: 'DM Sans',sans-serif; font-weight: 500; font-size: 14px; padding: 10px 22px; border-radius: 12px; border: 1.5px solid var(--border-strong); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px; user-select: none; }
     .btn-secondary:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
     .btn-secondary:active { transform: scale(0.97); }
-    .btn-ghost { background: transparent; color: var(--slate-500); font-family: 'DM Sans',sans-serif; font-weight: 500; font-size: 14px; padding: 9px 16px; border-radius: 10px; border: none; cursor: pointer; transition: color 0.18s, background 0.18s, transform 0.15s; display: inline-flex; align-items: center; gap: 6px; user-select: none; }
+    .btn-ghost { background: transparent; color: var(--slate-500); font-family: 'DM Sans',sans-serif; font-weight: 500; font-size: 14px; padding: 9px 16px; border-radius: 10px; border: none; cursor: pointer; transition: color 0.18s, background 0.18s, transform 0.15s; display: inline-flex; align-items: center; gap: 6px; user-select: none; text-decoration: none; }
     .btn-ghost:hover { color: var(--slate); background: var(--slate-100); }
     .btn-ghost:active { transform: scale(0.97); }
     .btn-danger { display: flex; align-items: center; gap: 8px; padding: 10px 22px; background: rgba(220,38,38,.08); border: 1.5px solid rgba(220,38,38,.3); border-radius: 26px; cursor: pointer; color: #DC2626; font-family: 'DM Sans',sans-serif; font-weight: 600; font-size: 14px; transition: all 0.2s; user-select: none; }
@@ -69,7 +69,7 @@ const GlobalStyles = () => (
     label { font-size: 11.5px; font-weight: 700; color: var(--slate-600); margin-bottom: 6px; display: block; letter-spacing: 0.05em; text-transform: uppercase; }
 
     /* Nav */
-    .nav-link { font-size: 14px; font-weight: 500; color: var(--slate-500); padding: 6px 13px; border-radius: 8px; cursor: pointer; border: none; background: transparent; transition: color 0.18s, background 0.18s, transform 0.15s; white-space: nowrap; font-family: 'DM Sans',sans-serif; user-select: none; }
+    .nav-link { font-size: 14px; font-weight: 500; color: var(--slate-500); padding: 6px 13px; border-radius: 8px; cursor: pointer; border: none; background: transparent; transition: color 0.18s, background 0.18s, transform 0.15s; white-space: nowrap; font-family: 'DM Sans',sans-serif; user-select: none; text-decoration: none; display: inline-flex; align-items: center; }
     .nav-link:hover { color: var(--slate); background: var(--slate-100); transform: translateY(-1px); }
 
     /* Sidebar */

@@ -71,7 +71,7 @@ const G = () => (
     label { font-size: 11.5px; font-weight: 700; color: var(--slate-600); margin-bottom: 6px; display: block; letter-spacing: 0.05em; text-transform: uppercase; }
 
     /* Nav */
-    .nav-link { font-size: 14px; font-weight: 500; color: var(--slate-500); padding: 6px 13px; border-radius: 8px; cursor: pointer; border: none; background: transparent; transition: color 0.18s, background 0.18s, transform 0.15s; white-space: nowrap; font-family: 'DM Sans',sans-serif; user-select: none; }
+    .nav-link { font-size: 14px; font-weight: 500; color: var(--slate-500); padding: 6px 13px; border-radius: 8px; cursor: pointer; border: none; background: transparent; transition: color 0.18s, background 0.18s, transform 0.15s; white-space: nowrap; font-family: 'DM Sans',sans-serif; user-select: none; text-decoration: none; display: inline-flex; align-items: center; }
     .nav-link:hover { color: var(--slate); background: var(--slate-100); transform: translateY(-1px); }
 
     /* Sidebar */
@@ -405,7 +405,7 @@ const G = () => (
     /* ── Footer ── */
     .footer-grid { display:grid; grid-template-columns:2fr repeat(4,1fr); gap:clamp(28px,4vw,48px); padding:clamp(40px,8vh,64px) clamp(20px,5vw,60px) 40px; max-width:1200px; margin:0 auto; }
     .footer-link-group { display:flex; flex-direction:column; gap:8px; align-items:flex-start; }
-    .footer-link { font-size:13.5px; color:rgba(255,255,255,.72); background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); cursor:pointer; padding:7px 12px; display:inline-flex; align-items:center; text-align:left; font-family:'DM Sans',sans-serif; transition:color 0.18s, background 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s; border-radius:999px; width:fit-content; }
+    .footer-link { font-size:13.5px; color:rgba(255,255,255,.72); background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); cursor:pointer; padding:7px 12px; display:inline-flex; align-items:center; text-align:left; font-family:'DM Sans',sans-serif; transition:color 0.18s, background 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s; border-radius:999px; width:fit-content; text-decoration:none; }
     .footer-link:hover { color:#fff; background:rgba(13,148,136,.22); border-color:rgba(45,212,191,.56); transform:translateY(-1px); box-shadow:0 4px 14px rgba(13,148,136,.2); }
     .footer-link:focus-visible { outline:2px solid rgba(45,212,191,.75); outline-offset:2px; }
     .footer-social { width:36px; height:36px; border-radius:9px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; color:rgba(255,255,255,.5); }
@@ -1051,8 +1051,8 @@ const Navbar = ({ view, onNav }) => {
             <div style={{ width: 1, height: 20, background: "var(--border)", margin: "0 6px" }} />
           </>)}
           {!isLanding && <button className="btn-ghost" onClick={() => onNav("landing")}>← Home</button>}
-          <button className="nav-link" onClick={() => navigateTo("/blog")}>Blog</button>
-          <button className="nav-link" onClick={() => navigateTo("/placement-preparation")}>Placement Prep</button>
+          <a href="/blog" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo("/blog"); }}>Blog</a>
+          <a href="/placement-preparation" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo("/placement-preparation"); }}>Placement Prep</a>
           <button className="btn-secondary" onClick={() => onNav("signin")} style={{ fontSize: 13 }}><LogIn size={14} /> Sign in</button>
           <button className="btn-primary" onClick={() => onNav("dashboard")} style={{ fontSize: 13 }}>Get started <ArrowUpRight size={14} /></button>
         </div>
@@ -1071,8 +1071,8 @@ const Navbar = ({ view, onNav }) => {
               <div style={{ height: 1, background: "var(--border)", margin: "4px 0" }} />
             </>)}
             {!isLanding && <button className="nav-link" style={{ textAlign: "left" }} onClick={() => onNav("landing")}>← Home</button>}
-            <button className="nav-link" style={{ textAlign: "left" }} onClick={() => navigateTo("/blog")}>Blog</button>
-            <button className="nav-link" style={{ textAlign: "left" }} onClick={() => navigateTo("/placement-preparation")}>Placement Prep</button>
+            <a href="/blog" className="nav-link" style={{ textAlign: "left" }} onClick={(e) => { e.preventDefault(); navigateTo("/blog"); setMob(false); }}>Blog</a>
+            <a href="/placement-preparation" className="nav-link" style={{ textAlign: "left" }} onClick={(e) => { e.preventDefault(); navigateTo("/placement-preparation"); setMob(false); }}>Placement Prep</a>
             <button className="btn-secondary" onClick={() => { onNav("signin"); setMob(false); }} style={{ justifyContent: "center" }}><LogIn size={14} /> Sign in</button>
             <button className="btn-primary" onClick={() => { onNav("dashboard"); setMob(false); }} style={{ justifyContent: "center" }}>Get started <ArrowUpRight size={14} /></button>
           </motion.div>
@@ -1179,10 +1179,10 @@ const Landing = ({ onNav, onCheckout }) => {
   };
 
   const productLinks = [
-    { label: "Features", action: () => onNav("features") },
-    { label: "Pricing", action: () => onNav("pricing") },
-    { label: "Personas", action: () => onNav("personas") },
-    { label: "How it works", action: () => onNav("howItWorks") },
+    { label: "Features", href: "/features", action: () => onNav("features") },
+    { label: "Pricing", href: "/pricing", action: () => onNav("pricing") },
+    { label: "Personas", href: "/personas", action: () => onNav("personas") },
+    { label: "How it works", href: "/how-it-works", action: () => onNav("howItWorks") },
   ];
 
   const navigateToBlog = () => {
@@ -1196,20 +1196,20 @@ const Landing = ({ onNav, onCheckout }) => {
   };
 
   const companyLinks = [
-    { label: "About", action: () => onNav("about") },
-    { label: "Blog", action: navigateToBlog },
-    { label: "Careers", action: () => onNav("careers") },
-    { label: "Privacy Policy", action: () => onNav("privacy") },
-    { label: "Terms of Service", action: () => onNav("terms") },
+    { label: "About", href: "/about", action: () => onNav("about") },
+    { label: "Blog", href: "/blog", action: navigateToBlog },
+    { label: "Careers", href: "/careers", action: () => onNav("careers") },
+    { label: "Privacy Policy", href: "/privacy-policy", action: () => onNav("privacy") },
+    { label: "Terms of Service", href: "/terms-of-service", action: () => onNav("terms") },
   ];
 
   const resourceLinks = [
-    { label: "Placement Prep", action: () => navigateTo("/placement-preparation") },
-    { label: "Aptitude Q&A", action: () => navigateTo("/aptitude-questions") },
-    { label: "Coding Interview Q&A", action: () => navigateTo("/coding-interview-questions") },
-    { label: "TCS Questions", action: () => navigateTo("/company-wise-questions/tcs") },
-    { label: "Wipro Questions", action: () => navigateTo("/company-wise-questions/wipro") },
-    { label: "Interactive Demo", action: () => goToSection("demo-section") },
+    { label: "Placement Prep", href: "/placement-preparation", action: () => navigateTo("/placement-preparation") },
+    { label: "Aptitude Q&A", href: "/aptitude-questions", action: () => navigateTo("/aptitude-questions") },
+    { label: "Coding Interview Q&A", href: "/coding-interview-questions", action: () => navigateTo("/coding-interview-questions") },
+    { label: "TCS Questions", href: "/company-wise-questions/tcs", action: () => navigateTo("/company-wise-questions/tcs") },
+    { label: "Wipro Questions", href: "/company-wise-questions/wipro", action: () => navigateTo("/company-wise-questions/wipro") },
+    { label: "Interactive Demo", href: "/demo", action: () => navigateTo("/demo") },
   ];
 
   return (
@@ -1624,8 +1624,8 @@ const Landing = ({ onNav, onCheckout }) => {
         <div>
           <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Product</div>
           <div className="footer-link-group">
-            {productLinks.map(({ label, action }) => (
-              <button key={label} className="footer-link" onClick={action}>{label}</button>
+            {productLinks.map(({ label, href, action }) => (
+              <a key={label} href={href} className="footer-link" onClick={(e) => { e.preventDefault(); action(); }}>{label}</a>
             ))}
           </div>
         </div>
@@ -1634,8 +1634,8 @@ const Landing = ({ onNav, onCheckout }) => {
         <div>
           <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Company</div>
           <div className="footer-link-group">
-            {companyLinks.map(({ label, action }) => (
-              <button key={label} className="footer-link" onClick={action}>{label}</button>
+            {companyLinks.map(({ label, href, action }) => (
+              <a key={label} href={href} className="footer-link" onClick={(e) => { e.preventDefault(); action(); }}>{label}</a>
             ))}
           </div>
         </div>
@@ -1644,8 +1644,8 @@ const Landing = ({ onNav, onCheckout }) => {
         <div>
           <div className="brig" style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.35)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Resources</div>
           <div className="footer-link-group">
-            {resourceLinks.map(({ label, action }) => (
-              <button key={label} className="footer-link" onClick={action}>{label}</button>
+            {resourceLinks.map(({ label, href, action }) => (
+              <a key={label} href={href} className="footer-link" onClick={(e) => { e.preventDefault(); action(); }}>{label}</a>
             ))}
           </div>
         </div>

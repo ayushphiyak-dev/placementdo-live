@@ -61,7 +61,7 @@ const STYLES = `
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 clamp(20px,5vw,60px); gap: 16px;
   }
-  .blog-logo { display: inline-flex; align-items: center; gap: 10px; background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; }
+  .blog-logo { display: inline-flex; align-items: center; gap: 10px; background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; color: inherit; }
   .blog-logo-mark { background: var(--teal); height: 32px; width: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
   .blog-main { max-width: 1100px; margin: 0 auto; padding: 104px clamp(20px,5vw,60px) 80px; }
   .blog-search-bar { margin-bottom: 28px; }
@@ -358,19 +358,20 @@ export default function BlogPage({ onNav }) {
 
       {/* Header */}
       <header className="blog-header">
-        <button className="blog-logo" onClick={() => navigate("/")}>
+        <a href="/" className="blog-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
           <div className="blog-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
           <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
             Placement<span style={{ color: "var(--teal)" }}>Do</span>
           </span>
-        </button>
-        <button
+        </a>
+        <a
+          href="/"
           className="btn-ghost"
           style={{ fontSize: 13 }}
-          onClick={() => navigate("/")}
+          onClick={(e) => { e.preventDefault(); navigate("/"); }}
         >
           ← Home
-        </button>
+        </a>
       </header>
 
       <div className="blog-page">
@@ -425,13 +426,14 @@ export default function BlogPage({ onNav }) {
                   <h2 className="brig blog-featured-title">{featuredPost.title}</h2>
                   <p className="blog-featured-excerpt">{featuredPost.excerpt}</p>
                   <div>
-                    <button
+                    <a
+                      href={`/blog/${featuredPost.slug}`}
                       className="btn-primary"
                       style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-                      onClick={() => navigate(`/blog/${featuredPost.slug}`)}
+                      onClick={(e) => { e.preventDefault(); navigate(`/blog/${featuredPost.slug}`); }}
                     >
                       Read article <ArrowRight size={14} />
-                    </button>
+                    </a>
                   </div>
                   <div style={{ marginTop: 16, fontSize: 12, color: "var(--slate-400)", display: "inline-flex", alignItems: "center", gap: 4 }}>
                     <User size={11} /> {featuredPost.author}
@@ -502,13 +504,14 @@ export default function BlogPage({ onNav }) {
                       <span className="blog-card-author">
                         <User size={12} /> {post.author}
                       </span>
-                      <button
+                      <a
+                        href={`/blog/${post.slug}`}
                         className="btn-ghost"
                         style={{ fontSize: 13, paddingRight: 0, display: "inline-flex", alignItems: "center", gap: 4 }}
-                        onClick={() => navigate(`/blog/${post.slug}`)}
+                        onClick={(e) => { e.preventDefault(); navigate(`/blog/${post.slug}`); }}
                       >
                         Read more <ArrowRight size={13} />
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </article>
@@ -536,14 +539,15 @@ export default function BlogPage({ onNav }) {
                 { label: '🏢 Infosys Placement Guide', href: '/company-wise-questions/infosys' },
                 { label: '🏢 Accenture Placement Guide', href: '/company-wise-questions/accenture' },
               ].map(({ label, href }) => (
-                <button
+                <a
                   key={href}
+                  href={href}
                   className="btn-ghost"
                   style={{ fontSize: 13, fontWeight: 600, color: 'var(--teal-dark)', background: 'var(--teal-light)', borderColor: 'rgba(13,148,136,.2)', borderRadius: '999px', padding: '8px 16px' }}
-                  onClick={() => navigate(href)}
+                  onClick={(e) => { e.preventDefault(); navigate(href); }}
                 >
                   {label}
-                </button>
+                </a>
               ))}
             </div>
           </section>

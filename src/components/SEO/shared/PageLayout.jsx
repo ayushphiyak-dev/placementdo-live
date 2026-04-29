@@ -75,7 +75,7 @@ const STYLES = `
     background: none; border: none; text-align: left; padding: 10px 12px;
     font-size: 15px; font-weight: 500; color: var(--slate-700); cursor: pointer;
     border-radius: 8px; transition: background 0.15s, color 0.15s;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'DM Sans', sans-serif; text-decoration: none; display: block;
   }
   .seo-mob-link:hover { background: var(--slate-100); color: var(--teal-dark); }
   .seo-footer { background: var(--slate); border-top: 1px solid rgba(255,255,255,.06); margin-top: 80px; }
@@ -141,26 +141,26 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
       <div className="seo-layout">
         <header>
           <nav className="seo-header">
-            <button className="seo-header-logo" onClick={() => navigate("/")}>
+            <a href="/" className="seo-header-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
               <div className="seo-header-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
               <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
                 Placement<span style={{ color: "var(--teal)" }}>Do</span>
               </span>
-            </button>
+            </a>
             <div className="seo-header-nav">
               {NAV_LINKS.map(({ label, href }) => (
-                <button key={href} className="nav-link" onClick={() => navigate(href)}>{label}</button>
+                <a key={href} href={href} className="nav-link" onClick={(e) => { e.preventDefault(); navigate(href); }}>{label}</a>
               ))}
             </div>
-            <button className="seo-header-cta" onClick={() => navigate("/")}>Get started →</button>
+            <a href="/" className="seo-header-cta" onClick={(e) => { e.preventDefault(); navigate("/"); }}>Get started →</a>
             <button className="seo-ham" onClick={() => setMob(o => !o)} aria-label="Menu">☰</button>
           </nav>
           {mob && (
             <div className="seo-mob-menu">
               {NAV_LINKS.map(({ label, href }) => (
-                <button key={href} className="seo-mob-link" onClick={() => navigate(href)}>{label}</button>
+                <a key={href} href={href} className="seo-mob-link" onClick={(e) => { e.preventDefault(); navigate(href); }}>{label}</a>
               ))}
-              <button className="seo-header-cta" style={{ marginTop: 8, textAlign: "center" }} onClick={() => navigate("/")}>Get started →</button>
+              <a href="/" className="seo-header-cta" style={{ marginTop: 8, textAlign: "center" }} onClick={(e) => { e.preventDefault(); navigate("/"); }}>Get started →</a>
             </div>
           )}
         </header>
@@ -186,7 +186,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
               <div className="seo-footer-col-title">Prep Resources</div>
               <div className="seo-footer-links">
                 {FOOTER_LINKS.slice(0, 4).map(({ label, href }) => (
-                  <button key={href} className="seo-footer-link" onClick={() => navigate(href)}>{label}</button>
+                  <a key={href} href={href} className="seo-footer-link" onClick={(e) => { e.preventDefault(); navigate(href); }}>{label}</a>
                 ))}
               </div>
             </div>
@@ -194,7 +194,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
               <div className="seo-footer-col-title">Company Guides</div>
               <div className="seo-footer-links">
                 {FOOTER_LINKS.slice(4).map(({ label, href }) => (
-                  <button key={href} className="seo-footer-link" onClick={() => navigate(href)}>{label}</button>
+                  <a key={href} href={href} className="seo-footer-link" onClick={(e) => { e.preventDefault(); navigate(href); }}>{label}</a>
                 ))}
               </div>
             </div>

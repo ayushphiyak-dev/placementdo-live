@@ -106,7 +106,7 @@ const STYLES = `
     background: var(--white);
     padding: 104px clamp(20px,5vw,60px) 80px;
   }
-  .blog-logo { display: inline-flex; align-items: center; gap: 10px; background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; }
+  .blog-logo { display: inline-flex; align-items: center; gap: 10px; background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; color: inherit; }
   .blog-logo-mark { background: var(--teal); height: 32px; width: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
   .bpp-inner {
     max-width: 760px;
@@ -241,7 +241,7 @@ const STYLES = `
   .bpp-continue { margin: 40px 0 0; }
   .bpp-continue-title { font-size: 18px; font-weight: 700; color: var(--slate); margin: 0 0 16px; letter-spacing: -0.02em; }
   .bpp-continue-links { display: flex; flex-wrap: wrap; gap: 10px; }
-  .bpp-continue-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--teal-dark); background: var(--teal-light); cursor: pointer; transition: all .18s; font-family: 'DM Sans', sans-serif; }
+  .bpp-continue-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--teal-dark); background: var(--teal-light); cursor: pointer; transition: all .18s; font-family: 'DM Sans', sans-serif; text-decoration: none; }
   .bpp-continue-btn:hover { background: var(--teal); color: #fff; border-color: var(--teal); }
   /* Responsive */
   @media (max-width: 680px) {
@@ -402,31 +402,33 @@ export default function BlogPostPage({ slug, onNav }) {
           gap: 16,
         }}
       >
-        <button className="blog-logo" onClick={() => navigate("/")}>
+        <a href="/" className="blog-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
           <div className="blog-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
           <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
             Placement<span style={{ color: "var(--teal)" }}>Do</span>
           </span>
-        </button>
-        <button
+        </a>
+        <a
+          href="/blog"
           className="btn-ghost"
           style={{ fontSize: 13 }}
-          onClick={() => navigate("/blog")}
+          onClick={(e) => { e.preventDefault(); navigate("/blog"); }}
         >
           ← Blog
-        </button>
+        </a>
       </header>
 
       <main className="bpp-page">
         <div className="bpp-inner">
           {/* Back link */}
-          <button
+          <a
+            href="/blog"
             className="btn-ghost"
             style={{ paddingLeft: 0, marginBottom: 24 }}
-            onClick={() => navigate("/blog")}
+            onClick={(e) => { e.preventDefault(); navigate("/blog"); }}
           >
             <ArrowLeft size={15} /> Back to blog
-          </button>
+          </a>
 
           {loading ? (
             <div className="bpp-not-found">
@@ -448,13 +450,14 @@ export default function BlogPostPage({ slug, onNav }) {
                 The post you are looking for does not exist or may have been
                 moved.
               </p>
-              <button
+              <a
+                href="/blog"
                 className="btn-primary"
                 style={{ marginTop: 20 }}
-                onClick={() => navigate("/blog")}
+                onClick={(e) => { e.preventDefault(); navigate("/blog"); }}
               >
                 Browse all posts
-              </button>
+              </a>
             </div>
           ) : (
             <article>
@@ -586,8 +589,9 @@ export default function BlogPostPage({ slug, onNav }) {
                   </h2>
                   <div style={{ display: "grid", gap: 12 }}>
                     {relatedPosts.map((item) => (
-                      <button
+                      <a
                         key={item.id}
+                        href={`/blog/${item.slug}`}
                         className="card card-lift"
                         style={{
                           padding: 16,
@@ -596,8 +600,10 @@ export default function BlogPostPage({ slug, onNav }) {
                           gap: 6,
                           cursor: "pointer",
                           background: "var(--white)",
+                          textDecoration: "none",
+                          color: "inherit",
                         }}
-                        onClick={() => navigate(`/blog/${item.slug}`)}
+                        onClick={(e) => { e.preventDefault(); navigate(`/blog/${item.slug}`); }}
                       >
                         <div
                           style={{
@@ -649,7 +655,7 @@ export default function BlogPostPage({ slug, onNav }) {
                         >
                           {item.excerpt}
                         </div>
-                      </button>
+                      </a>
                     ))}
                   </div>
                 </section>
@@ -679,11 +685,11 @@ export default function BlogPostPage({ slug, onNav }) {
               <hr className="bpp-divider" />
               <p className="bpp-continue-title">Continue your placement preparation:</p>
               <div className="bpp-continue-links">
-                <button className="bpp-continue-btn" onClick={() => navigate("/placement-preparation-complete-guide")}>🎯 Complete Placement Guide</button>
-                <button className="bpp-continue-btn" onClick={() => navigate("/placement-preparation")}>📘 Placement Prep Tips</button>
-                <button className="bpp-continue-btn" onClick={() => navigate("/aptitude-questions")}>📊 Aptitude Questions</button>
-                <button className="bpp-continue-btn" onClick={() => navigate("/coding-interview-questions")}>💻 Coding Interview Q&A</button>
-                <button className="bpp-continue-btn" onClick={() => navigate("/blog")}>📝 All Blog Posts</button>
+                <a href="/placement-preparation-complete-guide" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/placement-preparation-complete-guide"); }}>🎯 Complete Placement Guide</a>
+                <a href="/placement-preparation" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/placement-preparation"); }}>📘 Placement Prep Tips</a>
+                <a href="/aptitude-questions" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/aptitude-questions"); }}>📊 Aptitude Questions</a>
+                <a href="/coding-interview-questions" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/coding-interview-questions"); }}>💻 Coding Interview Q&A</a>
+                <a href="/blog" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/blog"); }}>📝 All Blog Posts</a>
               </div>
             </div>
           )}
