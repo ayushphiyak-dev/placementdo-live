@@ -17,7 +17,7 @@ const GlobalStyles = () => (
     html { scroll-behavior: smooth; }
     body { background: #FAFAF8; color: #0F172A; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
     :root {
-      --teal: #0D9488; --teal-light: #CCFBF1; --teal-mid: #14B8A6; --teal-dark: #0F766E;
+      --teal: #0D9488; --teal-light: #CCFBF1; --teal-mid: #14B8A6; --teal-dark: #0F766E; --teal-border-hover: rgba(13,148,136,.35);
       --slate: #0F172A; --slate-800: #1E293B; --slate-700: #334155; --slate-600: #475569;
       --slate-500: #64748B; --slate-400: #94A3B8; --slate-300: #CBD5E1;
       --slate-200: #E2E8F0; --slate-100: #F1F5F9; --slate-50: #F8FAFC;
@@ -81,7 +81,7 @@ const GlobalStyles = () => (
     /* Feature cards */
     .feature-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(min(290px,100%),1fr)); gap: 20px; align-items: stretch; }
     .feature-card { padding: 28px; border-radius: 16px; border: 1.5px solid var(--border); background: var(--ivory); transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s, background 0.25s; display: flex; flex-direction: column; height: 100%; }
-    .feature-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); background: var(--white); border-color: var(--border-strong); }
+    .feature-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); background: var(--white); border-color: var(--teal-border-hover); }
 
     /* Pricing */
     .pricing-card { border-radius: 20px; padding: 32px 28px; position: relative; transition: transform 0.25s, box-shadow 0.25s; display: flex; flex-direction: column; }

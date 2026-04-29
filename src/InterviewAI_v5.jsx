@@ -19,7 +19,7 @@ const G = () => (
     html { scroll-behavior: smooth; }
     body { background: #FAFAF8; color: #0F172A; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
     :root {
-      --teal: #0D9488; --teal-light: #CCFBF1; --teal-mid: #14B8A6; --teal-dark: #0F766E;
+      --teal: #0D9488; --teal-light: #CCFBF1; --teal-mid: #14B8A6; --teal-dark: #0F766E; --teal-border-hover: rgba(13,148,136,.35);
       --slate: #0F172A; --slate-800: #1E293B; --slate-700: #334155; --slate-600: #475569;
       --slate-500: #64748B; --slate-400: #94A3B8; --slate-300: #CBD5E1;
       --slate-200: #E2E8F0; --slate-100: #F1F5F9; --slate-50: #F8FAFC;
@@ -83,7 +83,7 @@ const G = () => (
     /* Feature cards — auto-fill equal-height grid adapts to any viewport */
     .feature-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(min(290px,100%),1fr)); gap: 20px; align-items: stretch; }
     .feature-card { padding: 28px; border-radius: 16px; border: 1.5px solid var(--border); background: var(--ivory); transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s, background 0.25s; display: flex; flex-direction: column; height: 100%; }
-    .feature-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); background: var(--white); border-color: var(--border-strong); }
+    .feature-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); background: var(--white); border-color: var(--teal-border-hover); }
     .feature-card .fc-icon { width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; flex-shrink: 0; border-width: 1px; border-style: solid; transition: transform 0.25s, background 0.25s; }
     .feature-card:hover .fc-icon { transform: scale(1.12) rotate(-3deg); }
     .feature-card h3 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15.5px; font-weight: 700; color: var(--slate); margin-bottom: 8px; letter-spacing: -0.01em; line-height: 1.25; }
@@ -1380,11 +1380,11 @@ const Landing = ({ onNav, onCheckout }) => {
         <div className="feature-grid stagger">
           {[
             { icon: <Brain size={20} />, title: "CV-contextual questions", desc: "AI reads your resume and generates hyper-specific questions about your exact projects, claims, and gaps.", color: "var(--teal)" },
-            { icon: <Globe size={20} />, title: "28 languages + code-switching", desc: "Practice in English, Mandarin, Hindi, French, Arabic, and 23 more. Mix languages mid-interview seamlessly.", color: "#0369A1" },
-            { icon: <Zap size={20} />, title: "Real-time filler detection", desc: "Get flagged on filler words, pacing, and over-qualification as they happen. Fix bad habits before they cost you.", color: "var(--amber)" },
-            { icon: <Shield size={20} />, title: "Company interview DNA", desc: "Google's Googleyness, McKinsey case frameworks, Amazon LP — each session is precisely calibrated to your target.", color: "#7C3AED" },
-            { icon: <BarChart2 size={20} />, title: "10-metric score breakdown", desc: "Technical depth, STAR method, communication clarity, culture-fit alignment, and six more scored dimensions.", color: "#BE185D" },
-            { icon: <RefreshCw size={20} />, title: "Report rechecks", desc: "Disagree with your analysis? Request a recheck from a different AI perspective, up to your plan limits.", color: "var(--green)" },
+            { icon: <Globe size={20} />, title: "28 languages + code-switching", desc: "Practice in English, Mandarin, Hindi, French, Arabic, and 23 more. Mix languages mid-interview seamlessly.", color: "var(--teal-mid)" },
+            { icon: <Zap size={20} />, title: "Real-time filler detection", desc: "Get flagged on filler words, pacing, and over-qualification as they happen. Fix bad habits before they cost you.", color: "var(--teal-dark)" },
+            { icon: <Shield size={20} />, title: "Company interview DNA", desc: "Google's Googleyness, McKinsey case frameworks, Amazon LP — each session is precisely calibrated to your target.", color: "var(--teal)" },
+            { icon: <BarChart2 size={20} />, title: "10-metric score breakdown", desc: "Technical depth, STAR method, communication clarity, culture-fit alignment, and six more scored dimensions.", color: "var(--teal-mid)" },
+            { icon: <RefreshCw size={20} />, title: "Report rechecks", desc: "Disagree with your analysis? Request a recheck from a different AI perspective, up to your plan limits.", color: "var(--teal-dark)" },
           ].map(({ icon, title, desc, color }, i) => (
             <motion.div key={title} initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.42, delay: i * 0.07 }} viewport={{ once: true }} className="feature-card">
               <div className="fc-icon" style={{ background: `${color}12`, borderColor: `${color}20`, color }}
@@ -4341,14 +4341,14 @@ const StaticPage = ({ title, description, sections = [] }) => (
 const FeaturesPage = ({ onNav }) => {
   const features = [
     { icon: <Brain size={22} />, title: "CV-Contextual Questions", desc: "Upload your resume and our AI reads every project, skill claim, and gap — then crafts hyper-specific questions that expose exactly what a real interviewer would probe. No generic questions. Every session is built around your actual background.", color: "var(--teal)" },
-    { icon: <Globe size={22} />, title: "28 Languages + Code-Switching", desc: "Practice interviews in English, Mandarin, Hindi, French, Spanish, Arabic, and 22 more languages. Switch languages mid-session seamlessly. Perfect for candidates targeting global companies or bilingual roles.", color: "#0369A1" },
-    { icon: <Zap size={22} />, title: "Real-Time Filler Detection", desc: "Get flagged on filler words (um, uh, like), pacing issues, and over-qualification as they happen — not after. Build habits before a real interviewer silently judges you for the same patterns.", color: "var(--amber)" },
-    { icon: <Shield size={22} />, title: "Company Interview DNA", desc: "Each company has its own interview style. Google's Googleyness questions, McKinsey's case frameworks, Amazon's Leadership Principles — PlacementDo calibrates every session to the exact culture and expectations of your target.", color: "#7C3AED" },
-    { icon: <BarChart2 size={22} />, title: "10-Metric Score Breakdown", desc: "Walk away with structured scoring across technical depth, STAR method adherence, communication clarity, cultural fit alignment, logical reasoning, and six more tracked dimensions — so you know exactly where to improve next.", color: "#BE185D" },
-    { icon: <RefreshCw size={22} />, title: "Report Rechecks", desc: "Disagree with your analysis? Believe the AI missed context? Request a recheck from a different AI perspective. Pro gets 10, Elite gets 30. Useful when you want a second opinion on ambiguous or edge-case responses.", color: "var(--green)" },
-    { icon: <Award size={22} />, title: "AI Assistance Mode", desc: "Stuck mid-answer? In Assistance Mode, the AI can gently nudge you toward a better structure without just giving you the answer. Ideal for learning STAR method or case frameworks while practising.", color: "var(--amber)" },
-    { icon: <TrendingUp size={22} />, title: "Progress Tracking", desc: "Every interview session feeds into a long-term progress chart. Track your scores week over week, see which dimensions are improving fastest, and get targeted coaching on persistent weak spots.", color: "var(--teal)" },
-    { icon: <Target size={22} />, title: "Role + Level Targeting", desc: "Set the exact title, seniority level, and focus area (Behavioral / Technical / Case Study / Mixed). The AI adjusts question complexity, expected answer depth, and scoring criteria accordingly.", color: "#0369A1" },
+    { icon: <Globe size={22} />, title: "28 Languages + Code-Switching", desc: "Practice interviews in English, Mandarin, Hindi, French, Spanish, Arabic, and 22 more languages. Switch languages mid-session seamlessly. Perfect for candidates targeting global companies or bilingual roles.", color: "var(--teal-mid)" },
+    { icon: <Zap size={22} />, title: "Real-Time Filler Detection", desc: "Get flagged on filler words (um, uh, like), pacing issues, and over-qualification as they happen — not after. Build habits before a real interviewer silently judges you for the same patterns.", color: "var(--teal-dark)" },
+    { icon: <Shield size={22} />, title: "Company Interview DNA", desc: "Each company has its own interview style. Google's Googleyness questions, McKinsey's case frameworks, Amazon's Leadership Principles — PlacementDo calibrates every session to the exact culture and expectations of your target.", color: "var(--teal)" },
+    { icon: <BarChart2 size={22} />, title: "10-Metric Score Breakdown", desc: "Walk away with structured scoring across technical depth, STAR method adherence, communication clarity, cultural fit alignment, logical reasoning, and six more tracked dimensions — so you know exactly where to improve next.", color: "var(--teal-mid)" },
+    { icon: <RefreshCw size={22} />, title: "Report Rechecks", desc: "Disagree with your analysis? Believe the AI missed context? Request a recheck from a different AI perspective. Pro gets 10, Elite gets 30. Useful when you want a second opinion on ambiguous or edge-case responses.", color: "var(--teal-dark)" },
+    { icon: <Award size={22} />, title: "AI Assistance Mode", desc: "Stuck mid-answer? In Assistance Mode, the AI can gently nudge you toward a better structure without just giving you the answer. Ideal for learning STAR method or case frameworks while practising.", color: "var(--teal)" },
+    { icon: <TrendingUp size={22} />, title: "Progress Tracking", desc: "Every interview session feeds into a long-term progress chart. Track your scores week over week, see which dimensions are improving fastest, and get targeted coaching on persistent weak spots.", color: "var(--teal-mid)" },
+    { icon: <Target size={22} />, title: "Role + Level Targeting", desc: "Set the exact title, seniority level, and focus area (Behavioral / Technical / Case Study / Mixed). The AI adjusts question complexity, expected answer depth, and scoring criteria accordingly.", color: "var(--teal-dark)" },
   ];
 
   const stats = [
