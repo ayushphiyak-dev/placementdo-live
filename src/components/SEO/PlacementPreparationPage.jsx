@@ -274,10 +274,10 @@ export default function PlacementPreparationPage({ onNav }) {
           <div style={{ marginTop: 32 }}>
             <SectionHeading label="Explore More" heading="Continue your preparation" />
             <div className="pp-links-row">
-              <button className="pp-link-btn" onClick={() => onNav("/aptitude-questions")}>📊 Aptitude Questions</button>
-              <button className="pp-link-btn" onClick={() => onNav("/coding-interview-questions")}>💻 Coding Questions</button>
-              <button className="pp-link-btn" onClick={() => onNav("/company-wise-questions/tcs")}>🏢 TCS Placement Guide</button>
-              <button className="pp-link-btn" onClick={() => onNav("/company-wise-questions/wipro")}>🏢 Wipro Placement Guide</button>
+              <a href="/aptitude-questions" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/aptitude-questions"); }}>📊 Aptitude Questions</a>
+              <a href="/coding-interview-questions" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/coding-interview-questions"); }}>💻 Coding Questions</a>
+              <a href="/company-wise-questions/tcs" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/company-wise-questions/tcs"); }}>🏢 TCS Placement Guide</a>
+              <a href="/company-wise-questions/wipro" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/company-wise-questions/wipro"); }}>🏢 Wipro Placement Guide</a>
             </div>
           </div>
         </section>
