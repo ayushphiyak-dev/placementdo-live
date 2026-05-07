@@ -1,4 +1,5 @@
 import MotionReveal from "./MotionReveal.jsx";
+import useMagneticEffect from "./useMagneticEffect.js";
 
 /**
  * PageHero — hero section for SEO content pages.
@@ -39,18 +40,7 @@ const STYLES = `
 `;
 
 export default function PageHero({ tag, heading, subheading, ctaButtons }) {
-  const handleMagneticMove = (event) => {
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - bounds.left - bounds.width / 2;
-    const y = event.clientY - bounds.top - bounds.height / 2;
-    event.currentTarget.style.setProperty("--mx", `${x * 0.06}px`);
-    event.currentTarget.style.setProperty("--my", `${y * 0.08}px`);
-  };
-
-  const resetMagneticMove = (event) => {
-    event.currentTarget.style.setProperty("--mx", "0px");
-    event.currentTarget.style.setProperty("--my", "0px");
-  };
+  const magneticProps = useMagneticEffect();
 
   return (
     <>
@@ -78,8 +68,8 @@ export default function PageHero({ tag, heading, subheading, ctaButtons }) {
                   <button
                     className={`${i === 0 ? "btn-primary" : "btn-secondary"} magnetic-btn`}
                     onClick={btn.onClick}
-                    onMouseMove={handleMagneticMove}
-                    onMouseLeave={resetMagneticMove}
+                    onMouseMove={magneticProps.onMouseMove}
+                    onMouseLeave={magneticProps.onMouseLeave}
                     style={{ fontSize: 14, padding: "11px 22px" }}
                   >
                     {btn.label}

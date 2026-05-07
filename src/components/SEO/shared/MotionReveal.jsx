@@ -1,4 +1,6 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { motion as Motion, useReducedMotion } from "framer-motion";
+
+const INITIAL_REVEAL_SCALE = 0.992;
 
 export default function MotionReveal({
   children,
@@ -10,21 +12,20 @@ export default function MotionReveal({
   once = true,
 }) {
   const reduceMotion = useReducedMotion();
-  const MotionDiv = motion.div;
 
   if (reduceMotion) {
     return <div className={className}>{children}</div>;
   }
 
   return (
-    <MotionDiv
+    <Motion.div
       className={className}
-      initial={{ opacity: 0, y: distance, scale: 0.992 }}
+      initial={{ opacity: 0, y: distance, scale: INITIAL_REVEAL_SCALE }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once, amount }}
       transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
-    </MotionDiv>
+    </Motion.div>
   );
 }

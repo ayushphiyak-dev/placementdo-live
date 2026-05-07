@@ -30,6 +30,8 @@ const FOOTER_LINKS = [
   { label: "SEO Resources", href: "/seo-resources" },
   { label: "Interactive Demo", href: "/demo" },
 ];
+// Small offset helps the header become solid as soon as body content starts moving under it.
+const HEADER_SOLID_SCROLL_THRESHOLD = 18;
 
 const STYLES = `
   .seo-layout { min-height: 100vh; background: var(--ivory); }
@@ -144,7 +146,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
       if (ticking) return;
       ticking = true;
       window.requestAnimationFrame(() => {
-        setSolidHeader(window.scrollY > 18);
+        setSolidHeader(window.scrollY > HEADER_SOLID_SCROLL_THRESHOLD);
         ticking = false;
       });
     };
@@ -163,7 +165,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
       <style>{STYLES}</style>
       <div className="seo-layout">
         <header>
-            <nav className={`seo-header ${solidHeader || mob ? "is-solid" : ""}`}>
+          <nav className={`seo-header ${solidHeader || mob ? "is-solid" : ""}`}>
             <a href="/" className="seo-header-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
               <div className="seo-header-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
               <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>

@@ -43,16 +43,16 @@ const GlobalStyles = () => (
     .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-sm); }
     .card-lift { transition: box-shadow 0.3s var(--ease-premium), transform 0.3s var(--ease-premium); }
     .card-lift:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
-    .card-interactive { transition: box-shadow 0.28s var(--ease-premium), transform 0.28s var(--ease-premium), background 0.28s var(--ease-premium); cursor: pointer; will-change: transform; }
+    .card-interactive { transition: box-shadow 0.28s var(--ease-premium), transform 0.28s var(--ease-premium), background 0.28s var(--ease-premium); cursor: pointer; }
     .card-interactive:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
     .card-interactive:active { transform: scale(0.99); }
 
     /* Buttons */
-    .btn-primary { background: var(--teal); color: #fff; font-family: 'DM Sans',sans-serif; font-weight: 600; font-size: 14px; padding: 11px 24px; border-radius: 12px; border: none; cursor: pointer; transition: background 0.24s var(--ease-premium), box-shadow 0.24s var(--ease-premium), transform 0.18s var(--ease-premium), opacity 0.2s; letter-spacing: -0.01em; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; user-select: none; text-decoration: none; will-change: transform; }
+    .btn-primary { background: var(--teal); color: #fff; font-family: 'DM Sans',sans-serif; font-weight: 600; font-size: 14px; padding: 11px 24px; border-radius: 12px; border: none; cursor: pointer; transition: background 0.24s var(--ease-premium), box-shadow 0.24s var(--ease-premium), transform 0.18s var(--ease-premium), opacity 0.2s; letter-spacing: -0.01em; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; user-select: none; text-decoration: none; }
     .btn-primary:hover:not(:disabled) { background: var(--teal-dark); box-shadow: var(--shadow-teal); transform: translateY(-2px); }
     .btn-primary:active:not(:disabled) { transform: scale(0.97); box-shadow: none; }
     .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-secondary { background: var(--white); color: var(--slate); font-family: 'DM Sans',sans-serif; font-weight: 500; font-size: 14px; padding: 10px 22px; border-radius: 12px; border: 1.5px solid var(--border-strong); cursor: pointer; transition: border-color 0.22s var(--ease-premium), color 0.22s var(--ease-premium), background 0.22s var(--ease-premium), box-shadow 0.22s var(--ease-premium), transform 0.18s var(--ease-premium); display: inline-flex; align-items: center; gap: 7px; user-select: none; will-change: transform; }
+    .btn-secondary { background: var(--white); color: var(--slate); font-family: 'DM Sans',sans-serif; font-weight: 500; font-size: 14px; padding: 10px 22px; border-radius: 12px; border: 1.5px solid var(--border-strong); cursor: pointer; transition: border-color 0.22s var(--ease-premium), color 0.22s var(--ease-premium), background 0.22s var(--ease-premium), box-shadow 0.22s var(--ease-premium), transform 0.18s var(--ease-premium); display: inline-flex; align-items: center; gap: 7px; user-select: none; }
     .btn-secondary:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
     .btn-secondary:active { transform: scale(0.97); }
     .btn-ghost { background: transparent; color: var(--slate-500); font-family: 'DM Sans',sans-serif; font-weight: 500; font-size: 14px; padding: 9px 16px; border-radius: 10px; border: none; cursor: pointer; transition: color 0.18s, background 0.18s, transform 0.15s; display: inline-flex; align-items: center; gap: 6px; user-select: none; text-decoration: none; }
@@ -126,7 +126,6 @@ const GlobalStyles = () => (
     .border-glow-active { animation: border-glow 2.5s ease-in-out infinite; }
 
     .magnetic-btn { transform: translate3d(var(--mx, 0px), var(--my, 0px), 0); transition: transform 0.22s var(--ease-premium); }
-    .magnetic-btn:hover { --mx: 0px; --my: 0px; }
 
     /* Layout utilities */
     .hero-pad { padding: clamp(64px,10vh,96px) clamp(20px,5vw,60px) clamp(40px,6vh,64px); }
@@ -141,9 +140,9 @@ const GlobalStyles = () => (
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after {
-        animation-duration: 0.01ms !important;
+        animation-duration: 0ms !important;
         animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+        transition-duration: 0ms !important;
         scroll-behavior: auto !important;
       }
       .magnetic-btn { transform: none !important; }
