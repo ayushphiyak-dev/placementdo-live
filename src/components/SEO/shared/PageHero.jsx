@@ -1,3 +1,5 @@
+import MotionReveal from "./MotionReveal.jsx";
+
 /**
  * PageHero — hero section for SEO content pages.
  */
@@ -11,6 +13,7 @@ const STYLES = `
     position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
     width: 900px; height: 600px; pointer-events: none;
     background: radial-gradient(ellipse, rgba(13,148,136,.08) 0%, transparent 70%);
+    animation: hero-glow-shift 8s ease-in-out infinite;
   }
   .page-hero-inner { position: relative; max-width: 860px; margin: 0 auto; }
   .page-hero-tag {
@@ -29,33 +32,63 @@ const STYLES = `
     max-width: 640px; margin: 0 auto 32px; line-height: 1.68;
   }
   .page-hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  @keyframes hero-glow-shift {
+    0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: .75; }
+    50% { transform: translate(-50%,-51%) scale(1.05); opacity: 1; }
+  }
 `;
 
 export default function PageHero({ tag, heading, subheading, ctaButtons }) {
+  const handleMagneticMove = (event) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - bounds.left - bounds.width / 2;
+    const y = event.clientY - bounds.top - bounds.height / 2;
+    event.currentTarget.style.setProperty("--mx", `${x * 0.06}px`);
+    event.currentTarget.style.setProperty("--my", `${y * 0.08}px`);
+  };
+
+  const resetMagneticMove = (event) => {
+    event.currentTarget.style.setProperty("--mx", "0px");
+    event.currentTarget.style.setProperty("--my", "0px");
+  };
+
   return (
     <>
       <style>{STYLES}</style>
       <section className="page-hero">
         <div className="page-hero-bg" />
-        <div className="page-hero-inner fade-in-up">
-          {tag && <div className="page-hero-tag">{tag}</div>}
-          <h1 className="brig page-hero-heading">{heading}</h1>
-          {subheading && <p className="page-hero-sub">{subheading}</p>}
+        <MotionReveal className="page-hero-inner" distance={22}>
+          {tag && (
+            <MotionReveal className="page-hero-tag" delay={0.05} distance={14} duration={0.45}>
+              {tag}
+            </MotionReveal>
+          )}
+          <MotionReveal delay={0.1} distance={16} duration={0.5}>
+            <h1 className="brig page-hero-heading">{heading}</h1>
+          </MotionReveal>
+          {subheading && (
+            <MotionReveal delay={0.16} distance={16} duration={0.5}>
+              <p className="page-hero-sub">{subheading}</p>
+            </MotionReveal>
+          )}
           {ctaButtons && ctaButtons.length > 0 && (
             <div className="page-hero-ctas">
               {ctaButtons.map((btn, i) => (
-                <button
-                  key={i}
-                  className={i === 0 ? "btn-primary" : "btn-secondary"}
-                  onClick={btn.onClick}
-                  style={{ fontSize: 14, padding: "11px 22px" }}
-                >
-                  {btn.label}
-                </button>
+                <MotionReveal key={i} delay={0.2 + i * 0.06} distance={12} duration={0.45} amount={0.1}>
+                  <button
+                    className={`${i === 0 ? "btn-primary" : "btn-secondary"} magnetic-btn`}
+                    onClick={btn.onClick}
+                    onMouseMove={handleMagneticMove}
+                    onMouseLeave={resetMagneticMove}
+                    style={{ fontSize: 14, padding: "11px 22px" }}
+                  >
+                    {btn.label}
+                  </button>
+                </MotionReveal>
               ))}
             </div>
           )}
-        </div>
+        </MotionReveal>
       </section>
     </>
   );
