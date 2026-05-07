@@ -30,16 +30,20 @@ const FOOTER_LINKS = [
   { label: "SEO Resources", href: "/seo-resources" },
   { label: "Interactive Demo", href: "/demo" },
 ];
+// Small offset helps the header become solid as soon as body content starts moving under it.
+const HEADER_SOLID_SCROLL_THRESHOLD = 18;
 
 const STYLES = `
   .seo-layout { min-height: 100vh; background: var(--ivory); }
   .seo-header {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(250,250,248,.96); backdrop-filter: blur(12px);
+    background: rgba(250,250,248,.78); backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border); height: 64px;
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 clamp(20px,5vw,60px); gap: 16px;
+    transition: background 0.26s cubic-bezier(0.22,1,0.36,1), box-shadow 0.26s cubic-bezier(0.22,1,0.36,1), backdrop-filter 0.26s cubic-bezier(0.22,1,0.36,1);
   }
+  .seo-header.is-solid { background: rgba(250,250,248,.96); backdrop-filter: blur(12px); box-shadow: var(--shadow-sm); }
   .seo-header-logo {
     display: flex; align-items: center; gap: 9px; cursor: pointer;
     text-decoration: none; color: inherit; flex-shrink: 0;
@@ -70,6 +74,7 @@ const STYLES = `
     background: rgba(250,250,248,.98); backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border); padding: 16px 20px 24px;
     display: flex; flex-direction: column; gap: 8px;
+    animation: seo-menu-in 0.24s cubic-bezier(0.22,1,0.36,1) both;
   }
   .seo-mob-link {
     background: none; border: none; text-align: left; padding: 10px 12px;
@@ -106,6 +111,10 @@ const STYLES = `
     flex-wrap: wrap; gap: 10px; max-width: 1200px; margin: 0 auto;
   }
   .seo-footer-copy { font-size: 12px; color: rgba(255,255,255,.25); }
+  @keyframes seo-menu-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
   @media (max-width: 900px) {
     .seo-header-nav { display: none; }
     .seo-ham { display: flex; }
@@ -118,6 +127,7 @@ const STYLES = `
 
 export default function PageLayout({ title, metaDescription, children, onNav }) {
   const [mob, setMob] = useState(false);
+  const [solidHeader, setSolidHeader] = useState(false);
   // Capture the pathname once at mount; each SPA route mounts a fresh PageLayout instance.
   const [canonicalPath] = useState(() => window.location.pathname);
 
@@ -130,6 +140,21 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: `${window.location.origin}${canonicalPath}` });
   }, [title, metaDescription, canonicalPath]);
 
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        setSolidHeader(window.scrollY > HEADER_SOLID_SCROLL_THRESHOLD);
+        ticking = false;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const navigate = (href) => {
     onNav(href);
     setMob(false);
@@ -140,7 +165,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
       <style>{STYLES}</style>
       <div className="seo-layout">
         <header>
-          <nav className="seo-header">
+          <nav className={`seo-header ${solidHeader || mob ? "is-solid" : ""}`}>
             <a href="/" className="seo-header-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
               <div className="seo-header-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
               <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
