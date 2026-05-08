@@ -35,6 +35,7 @@ const STANDALONE_ROUTES = [
   "/seo-resources",
   "/demo",
 ];
+const NAVIGATION_LOADING_DURATION_MS = 220;
 
 function AppRouter() {
   const [path, setPath] = useState(() => window.location.pathname);
@@ -47,7 +48,7 @@ function AppRouter() {
     setPath(url);
     window.requestAnimationFrame(() => {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      window.setTimeout(() => setIsNavigating(false), 220);
+      window.setTimeout(() => setIsNavigating(false), NAVIGATION_LOADING_DURATION_MS);
     });
   }, [path]);
 

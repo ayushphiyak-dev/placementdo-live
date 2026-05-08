@@ -250,7 +250,13 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
                 </li>
               ))}
             </ul>
-            <MagneticButton as="a" href="/" className="seo-header-cta" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
+            <MagneticButton
+              as="a"
+              href="/"
+              className="seo-header-cta"
+              aria-label="Get started with PlacementDo"
+              onClick={(e) => { e.preventDefault(); navigate("/"); }}
+            >
               Get started →
             </MagneticButton>
             <button
@@ -289,6 +295,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
                   href="/"
                   className="seo-header-cta"
                   style={{ marginTop: 8, textAlign: "center", display: "inline-flex", justifyContent: "center" }}
+                  aria-label="Get started with PlacementDo"
                   onClick={(e) => { e.preventDefault(); navigate("/"); }}
                 >
                   Get started →

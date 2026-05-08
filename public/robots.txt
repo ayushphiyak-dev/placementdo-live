@@ -6,5 +6,4 @@ User-agent: Googlebot
 Allow: /
 Crawl-delay: 1
 
-Host: https://placementdo.app
 Sitemap: https://placementdo.app/sitemap.xml
