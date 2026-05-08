@@ -35,7 +35,7 @@ const STANDALONE_ROUTES = [
   "/seo-resources",
   "/demo",
 ];
-const NAVIGATION_LOADING_DURATION_MS = 220;
+const NAVIGATION_LOADING_DURATION_MS = 420;
 
 function AppRouter() {
   const [path, setPath] = useState(() => window.location.pathname);

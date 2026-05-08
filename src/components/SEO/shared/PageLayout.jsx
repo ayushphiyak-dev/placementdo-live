@@ -135,7 +135,7 @@ const STYLES = `
   @media (max-width: 900px) {
     .seo-header-nav { display: none; }
     .seo-ham { display: flex; }
-    .seo-header-cta { display: none; }
+    .seo-header-cta { padding: 7px 13px; font-size: 12px; }
     .seo-footer-inner { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 580px) {
@@ -161,7 +161,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
       })),
     ];
   }, [canonicalPath]);
-  const pageLanguage = document.documentElement.lang || "en";
+  const pageLanguage = document.documentElement.lang || "en-IN";
 
   useEffect(() => {
     if (title) document.title = title;

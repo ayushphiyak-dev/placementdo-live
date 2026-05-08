@@ -14,7 +14,7 @@ const GlobalStyles = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; text-size-adjust: 100%; }
+    html { text-size-adjust: 100%; }
     body { background: #FAFAF8; color: #0F172A; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; text-rendering: optimizeLegibility; }
     :root {
       --teal: #0D9488; --teal-light: #CCFBF1; --teal-mid: #14B8A6; --teal-dark: #0F766E; --teal-border-hover: rgba(13,148,136,.35);
@@ -206,7 +206,32 @@ const GlobalStyles = () => (
         background: #020617;
         color: #e2e8f0;
       }
+      .seo-layout { background: #020617; color: #e2e8f0; }
+      .seo-header, .seo-mob-menu {
+        background: rgba(2,6,23,.88) !important;
+        border-color: rgba(148,163,184,.24) !important;
+      }
+      .seo-header.is-solid { box-shadow: 0 8px 30px rgba(0,0,0,.35); }
+      .seo-header-logo .brig, .nav-link { color: #cbd5e1 !important; }
+      .nav-link:hover { color: #f8fafc !important; }
+      .btn-primary { background: #14b8a6; color: #022c22; }
+      .btn-primary:hover:not(:disabled) { background: #2dd4bf; }
+      .btn-secondary {
+        background: rgba(15,23,42,.7); color: #e2e8f0; border-color: rgba(148,163,184,.34);
+      }
+      .btn-secondary:hover { background: rgba(20,184,166,.2); color: #99f6e4; border-color: rgba(45,212,191,.56); }
+      .btn-ghost { color: #94a3b8; }
+      .btn-ghost:hover { color: #f8fafc; background: rgba(148,163,184,.14); }
+      input, select, textarea {
+        background: rgba(15,23,42,.78);
+        color: #e2e8f0;
+        border-color: rgba(148,163,184,.3);
+      }
       .card {
+        background: rgba(15,23,42,.76);
+        border-color: rgba(148,163,184,.24);
+      }
+      .content-card, .feature-card {
         background: rgba(15,23,42,.76);
         border-color: rgba(148,163,184,.24);
       }
@@ -217,6 +242,10 @@ const GlobalStyles = () => (
       ::-webkit-scrollbar-track { background: #020617; }
       ::-webkit-scrollbar-thumb { background: #334155; }
       * { scrollbar-color: #334155 #020617; }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
     }
 
     @media (prefers-reduced-motion: reduce) {

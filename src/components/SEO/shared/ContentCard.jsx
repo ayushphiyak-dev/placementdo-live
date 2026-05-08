@@ -32,7 +32,7 @@ export default function ContentCard({ icon, title, description, tags, linkText, 
   return (
     <>
       <style>{STYLES}</style>
-      <MotionReveal className="content-card card-premium" distance={14} duration={0.45}>
+      <MotionReveal className="content-card" distance={14} duration={0.45}>
         {icon && <div className="content-card-icon">{icon}</div>}
         <h3 className="brig content-card-title">{title}</h3>
         {description && <p className="content-card-desc">{description}</p>}
