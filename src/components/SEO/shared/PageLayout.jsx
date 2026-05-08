@@ -161,6 +161,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
       })),
     ];
   }, [canonicalPath]);
+  const pageLanguage = document.documentElement.lang || "en";
 
   useEffect(() => {
     if (title) document.title = title;
@@ -188,11 +189,11 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
       description: metaDescription,
       url: canonicalUrl,
       isPartOf: { "@type": "WebSite", name: "PlacementDo", url: BASE_URL },
-      inLanguage: "en-IN",
+      inLanguage: pageLanguage,
     });
     upsertMeta('meta[name="theme-color"]', { name: "theme-color", content: "#0D9488" });
     upsertMeta('meta[name="color-scheme"]', { name: "color-scheme", content: "light dark" });
-  }, [title, metaDescription, canonicalUrl, breadcrumbItems]);
+  }, [title, metaDescription, canonicalUrl, breadcrumbItems, pageLanguage]);
 
   useEffect(() => {
     let ticking = false;

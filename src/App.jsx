@@ -47,7 +47,8 @@ function AppRouter() {
     window.history.pushState({}, "", url);
     setPath(url);
     window.requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, left: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
       window.setTimeout(() => setIsNavigating(false), NAVIGATION_LOADING_DURATION_MS);
     });
   }, [path]);
