@@ -7,9 +7,10 @@ const STYLES = `
   .content-card {
     background: var(--white); border: 1px solid var(--border); border-radius: 14px;
     padding: 24px 26px; display: flex; flex-direction: column; gap: 10px;
-    transition: box-shadow 0.24s cubic-bezier(0.22,1,0.36,1), transform 0.24s cubic-bezier(0.22,1,0.36,1), border-color 0.24s cubic-bezier(0.22,1,0.36,1);
+    transition: box-shadow 0.24s cubic-bezier(0.22,1,0.36,1), transform 0.24s cubic-bezier(0.22,1,0.36,1), border-color 0.24s cubic-bezier(0.22,1,0.36,1), background 0.24s cubic-bezier(0.22,1,0.36,1);
+    transform: translateZ(0);
   }
-  .content-card:hover { box-shadow: 0 14px 34px rgba(15,23,42,.11); transform: translateY(-4px); border-color: var(--teal-border-hover); }
+  .content-card:hover { box-shadow: 0 14px 34px rgba(15,23,42,.11); transform: translateY(-4px); border-color: var(--teal-border-hover); background: linear-gradient(180deg, var(--white), rgba(248,250,252,.7)); }
   .content-card-icon { font-size: 28px; line-height: 1; }
   .content-card-title { font-size: 16.5px; font-weight: 700; color: var(--slate); letter-spacing: -0.015em; margin: 0; }
   .content-card-desc { font-size: 14px; color: var(--slate-500); line-height: 1.7; margin: 0; flex: 1; }
@@ -41,7 +42,7 @@ export default function ContentCard({ icon, title, description, tags, linkText, 
           </div>
         )}
         {linkText && onClick && (
-          <button className="content-card-link" onClick={onClick}>{linkText} →</button>
+          <button className="content-card-link" onClick={onClick} aria-label={`${linkText} for ${title}`}>{linkText} →</button>
         )}
       </MotionReveal>
     </>
