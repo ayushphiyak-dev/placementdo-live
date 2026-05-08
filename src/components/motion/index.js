@@ -11,5 +11,6 @@
 export { default as FadeUpReveal } from "./FadeUpReveal.jsx";
 export { StaggerContainer, StaggerItem } from "./StaggerContainer.jsx";
 export { default as MagneticButton } from "./MagneticButton.jsx";
+export { default as PageTransition } from "./PageTransition.jsx";
 // Re-export the underlying hook for components that need raw magnetic control
 export { default as useMagneticEffect } from "../SEO/shared/useMagneticEffect.js";

@@ -2,11 +2,19 @@
   "name": "PlacementDo",
   "short_name": "PlacementDo",
   "description": "AI-powered placement preparation and mock interview platform for freshers.",
+  "lang": "en-IN",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0D9488",
   "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/icon-192x192.png",
       "sizes": "192x192",
