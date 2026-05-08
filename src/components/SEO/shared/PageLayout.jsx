@@ -35,8 +35,9 @@ const FOOTER_LINKS = [
 // Small offset helps the header become solid as soon as body content starts moving under it.
 const HEADER_SOLID_SCROLL_THRESHOLD = 18;
 const BASE_URL = "https://placementdo.app";
+const DEFAULT_LANGUAGE = "en-IN";
 
-const toCrumbLabel = (segment) =>
+const formatBreadcrumbLabel = (segment) =>
   decodeURIComponent(segment)
     .replace(/-/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
@@ -156,12 +157,12 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
     return [
       { name: "Home", item: BASE_URL },
       ...chunks.map((segment, idx) => ({
-        name: toCrumbLabel(segment),
+        name: formatBreadcrumbLabel(segment),
         item: `${BASE_URL}/${chunks.slice(0, idx + 1).join("/")}`,
       })),
     ];
   }, [canonicalPath]);
-  const pageLanguage = document.documentElement.lang || "en-IN";
+  const pageLanguage = document.documentElement.lang || DEFAULT_LANGUAGE;
 
   useEffect(() => {
     if (title) document.title = title;
@@ -231,7 +232,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
             transition={headerTransition}
             aria-label="Primary navigation"
           >
-            <a href="/" className="seo-header-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
+            <a href="/" className="seo-header-logo" aria-label="PlacementDo home" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
               <div className="seo-header-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
               <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
                 Placement<span style={{ color: "var(--teal)" }}>Do</span>
@@ -267,7 +268,8 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
               aria-expanded={mob}
               aria-controls="seo-mobile-menu"
             >
-              ☰
+              <span aria-hidden="true">☰</span>
+              <span className="sr-only">Toggle menu</span>
             </button>
           </Motion.nav>
           <AnimatePresence>
