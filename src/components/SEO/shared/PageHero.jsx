@@ -1,5 +1,5 @@
 import MotionReveal from "./MotionReveal.jsx";
-import { MagneticButton, StaggerContainer, StaggerItem } from "../../motion/index.js";
+import useMagneticEffect from "./useMagneticEffect.js";
 
 /**
  * PageHero — hero section for SEO content pages.
@@ -33,7 +33,6 @@ const STYLES = `
     max-width: 640px; margin: 0 auto 32px; line-height: 1.68;
   }
   .page-hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .page-hero-trust { margin-top: 16px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
   @keyframes hero-glow-shift {
     0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: .75; }
     50% { transform: translate(-50%,-51%) scale(1.05); opacity: 1; }
@@ -41,6 +40,8 @@ const STYLES = `
 `;
 
 export default function PageHero({ tag, heading, subheading, ctaButtons }) {
+  const magneticProps = useMagneticEffect();
+
   return (
     <>
       <style>{STYLES}</style>
@@ -61,26 +62,22 @@ export default function PageHero({ tag, heading, subheading, ctaButtons }) {
             </MotionReveal>
           )}
           {ctaButtons && ctaButtons.length > 0 && (
-            <StaggerContainer className="page-hero-ctas" amount={0.12}>
+            <div className="page-hero-ctas">
               {ctaButtons.map((btn, i) => (
-                <StaggerItem key={i}>
-                  <MagneticButton
-                    className={i === 0 ? "btn-primary" : "btn-secondary"}
+                <MotionReveal key={i} delay={0.2 + i * 0.06} distance={12} duration={0.45} amount={0.1}>
+                  <button
+                    className={`${i === 0 ? "btn-primary" : "btn-secondary"} magnetic-btn`}
                     onClick={btn.onClick}
+                    onMouseMove={magneticProps.onMouseMove}
+                    onMouseLeave={magneticProps.onMouseLeave}
                     style={{ fontSize: 14, padding: "11px 22px" }}
                   >
                     {btn.label}
-                  </MagneticButton>
-                </StaggerItem>
+                  </button>
+                </MotionReveal>
               ))}
-            </StaggerContainer>
-          )}
-          <MotionReveal delay={0.24} distance={10} duration={0.45}>
-            <div className="page-hero-trust" aria-label="Trust indicators">
-              <span className="trust-chip">2,400+ students onboarded</span>
-              <span className="trust-chip">Real-time AI feedback</span>
             </div>
-          </MotionReveal>
+          )}
         </MotionReveal>
       </section>
     </>

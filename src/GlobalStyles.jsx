@@ -14,8 +14,8 @@ const GlobalStyles = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { text-size-adjust: 100%; }
-    body { background: #FAFAF8; color: #0F172A; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; text-rendering: optimizeLegibility; }
+    html { scroll-behavior: smooth; }
+    body { background: #FAFAF8; color: #0F172A; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
     :root {
       --teal: #0D9488; --teal-light: #CCFBF1; --teal-mid: #14B8A6; --teal-dark: #0F766E; --teal-border-hover: rgba(13,148,136,.35);
       --slate: #0F172A; --slate-800: #1E293B; --slate-700: #334155; --slate-600: #475569;
@@ -43,7 +43,6 @@ const GlobalStyles = () => (
     ::-webkit-scrollbar-track { background: var(--ivory); }
     ::-webkit-scrollbar-thumb { background: var(--slate-300); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--slate-400); }
-    * { scrollbar-color: var(--slate-300) var(--ivory); scrollbar-width: thin; }
 
     /* Focus-visible ring — keyboard accessible */
     :focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
@@ -73,12 +72,6 @@ const GlobalStyles = () => (
       pointer-events: none; border-radius: inherit;
     }
     .card-premium:hover::after { opacity: 1; }
-    .trust-chip {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 5px 12px; border-radius: 999px;
-      background: rgba(13,148,136,.1); border: 1px solid rgba(13,148,136,.24);
-      color: var(--teal-dark); font-size: 12px; font-weight: 700; letter-spacing: .02em;
-    }
 
     /* Buttons */
     .btn-primary { background: var(--teal); color: #fff; font-family: 'DM Sans',sans-serif; font-weight: 600; font-size: 14px; padding: 11px 24px; border-radius: 12px; border: none; cursor: pointer; transition: background 0.24s var(--ease-premium), box-shadow 0.24s var(--ease-premium), transform 0.18s var(--ease-premium), opacity 0.2s; letter-spacing: -0.01em; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; user-select: none; text-decoration: none; }
@@ -173,17 +166,6 @@ const GlobalStyles = () => (
 
     /* Magnetic button */
     .magnetic-btn { transform: translate3d(var(--mx, 0px), var(--my, 0px), 0); transition: transform 0.22s var(--ease-premium); will-change: transform; }
-    .skeleton-line {
-      height: 11px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(148,163,184,.24) 20%, rgba(148,163,184,.38) 38%, rgba(148,163,184,.24) 58%);
-      background-size: 200% 100%;
-      animation: skeleton-wave 1.4s ease-in-out infinite;
-    }
-    @keyframes skeleton-wave {
-      0% { background-position: 170% 0; }
-      100% { background-position: -40% 0; }
-    }
 
     /* Layout utilities */
     .hero-pad { padding: clamp(64px,10vh,96px) clamp(20px,5vw,60px) clamp(40px,6vh,64px); }
@@ -199,53 +181,6 @@ const GlobalStyles = () => (
 
     @media(max-width:768px){
       .report-top { grid-template-columns: 1fr !important; }
-    }
-
-    @media (prefers-color-scheme: dark) {
-      body {
-        background: #020617;
-        color: #e2e8f0;
-      }
-      .seo-layout { background: #020617; color: #e2e8f0; }
-      .seo-header, .seo-mob-menu {
-        background: rgba(2,6,23,.88) !important;
-        border-color: rgba(148,163,184,.24) !important;
-      }
-      .seo-header.is-solid { box-shadow: 0 8px 30px rgba(0,0,0,.35); }
-      .seo-header-logo .brig, .nav-link { color: #cbd5e1 !important; }
-      .nav-link:hover { color: #f8fafc !important; }
-      .btn-primary { background: #14b8a6; color: #022c22; }
-      .btn-primary:hover:not(:disabled) { background: #2dd4bf; }
-      .btn-secondary {
-        background: rgba(15,23,42,.7); color: #e2e8f0; border-color: rgba(148,163,184,.34);
-      }
-      .btn-secondary:hover { background: rgba(20,184,166,.2); color: #99f6e4; border-color: rgba(45,212,191,.56); }
-      .btn-ghost { color: #94a3b8; }
-      .btn-ghost:hover { color: #f8fafc; background: rgba(148,163,184,.14); }
-      input, select, textarea {
-        background: rgba(15,23,42,.78);
-        color: #e2e8f0;
-        border-color: rgba(148,163,184,.3);
-      }
-      .card {
-        background: rgba(15,23,42,.76);
-        border-color: rgba(148,163,184,.24);
-      }
-      .content-card, .feature-card {
-        background: rgba(15,23,42,.76);
-        border-color: rgba(148,163,184,.24);
-      }
-      .nav-link:hover {
-        background: rgba(148,163,184,.16);
-        color: #e2e8f0;
-      }
-      ::-webkit-scrollbar-track { background: #020617; }
-      ::-webkit-scrollbar-thumb { background: #334155; }
-      * { scrollbar-color: #334155 #020617; }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-      html { scroll-behavior: smooth; }
     }
 
     @media (prefers-reduced-motion: reduce) {

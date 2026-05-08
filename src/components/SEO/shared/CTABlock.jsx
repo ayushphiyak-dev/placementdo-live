@@ -1,5 +1,5 @@
 import MotionReveal from "./MotionReveal.jsx";
-import { MagneticButton } from "../../motion/index.js";
+import useMagneticEffect from "./useMagneticEffect.js";
 
 /**
  * CTABlock — full-width centered CTA section.
@@ -39,6 +39,8 @@ const STYLES = `
 `;
 
 export default function CTABlock({ heading, subtext, buttonLabel, onNav, buttonHref = "/" }) {
+  const magneticProps = useMagneticEffect();
+
   return (
     <>
       <style>{STYLES}</style>
@@ -52,12 +54,14 @@ export default function CTABlock({ heading, subtext, buttonLabel, onNav, buttonH
           </MotionReveal>
         )}
         <MotionReveal delay={0.12} distance={10} duration={0.4}>
-          <MagneticButton
+          <button
             className="cta-block-btn magnetic-btn"
             onClick={() => onNav(buttonHref)}
+            onMouseMove={magneticProps.onMouseMove}
+            onMouseLeave={magneticProps.onMouseLeave}
           >
             {buttonLabel} →
-          </MagneticButton>
+          </button>
         </MotionReveal>
       </MotionReveal>
     </>
