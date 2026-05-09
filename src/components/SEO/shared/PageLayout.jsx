@@ -5,6 +5,7 @@
 import { useEffect, useState } from "react";
 import { Zap } from "lucide-react";
 import { upsertMeta, upsertLink } from "./metaUtils.js";
+import { normalizePath } from "../../../utils/seoUtils.js";
 
 const NAV_LINKS = [
   { label: "Blog", href: "/blog" },
@@ -30,6 +31,7 @@ const FOOTER_LINKS = [
   { label: "SEO Resources", href: "/seo-resources" },
   { label: "Interactive Demo", href: "/demo" },
 ];
+
 // Small offset helps the header become solid as soon as body content starts moving under it.
 const HEADER_SOLID_SCROLL_THRESHOLD = 18;
 
@@ -137,9 +139,9 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
   const [solidHeader, setSolidHeader] = useState(false);
   // Capture the pathname once at mount; each SPA route mounts a fresh PageLayout instance.
   const [canonicalPath] = useState(() => window.location.pathname);
-  const normalizedPath = canonicalPath.endsWith("/") && canonicalPath !== "/" ? canonicalPath.slice(0, -1) : canonicalPath;
+  const normalizedPath = normalizePath(canonicalPath);
   const isNavLinkActive = (href) => {
-    const normalizedHref = href.endsWith("/") && href !== "/" ? href.slice(0, -1) : href;
+    const normalizedHref = normalizePath(href);
     return normalizedPath === normalizedHref;
   };
   const activeNavStyle = {

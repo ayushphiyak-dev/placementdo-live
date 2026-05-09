@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DEFAULT_OG_IMAGE, getImageMimeType, normalizePath } from "./utils/seoUtils.js";
 import {
   Upload, Building2, Video, Mic, MicOff, VideoOff, PhoneOff,
   Check, Zap, BarChart2, Brain, RefreshCw, Shield, Award,
@@ -1049,9 +1050,9 @@ const Navbar = ({ view, onNav }) => {
   const isLanding = view === "landing";
   const isDash = ["dashboard", "reports", "progress", "avatars", "settings"].includes(view);
   const forceSolidHeader = FORCE_SOLID_HEADER_VIEWS.has(view);
-  const currentPath = window.location.pathname;
+  const currentPath = normalizePath(window.location.pathname);
   const isBlogActive = currentPath === "/blog" || currentPath.startsWith("/blog/");
-  const isPlacementPrepActive = currentPath === "/placement-preparation" || currentPath === "/placement-preparation/";
+  const isPlacementPrepActive = currentPath === "/placement-preparation";
   const activeNavLinkStyle = {
     color: "var(--teal-dark)",
     background: "var(--teal-light)",
@@ -5291,7 +5292,7 @@ const PATH_TO_ROUTE = Object.fromEntries(
 );
 
 const parseRouteFromPath = (pathname) => {
-  const normalized = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+  const normalized = normalizePath(pathname);
   if (normalized === "/blog") return { route: "blog", slug: "" };
   if (normalized.startsWith("/blog/") && normalized !== "/blog/admin") {
     const slug = decodeURIComponent(normalized.replace("/blog/", "")).trim();
@@ -5299,6 +5300,22 @@ const parseRouteFromPath = (pathname) => {
   }
   return { route: PATH_TO_ROUTE[normalized] || "landing", slug: "" };
 };
+
+const WEB_PAGE_SCHEMA_VIEWS = new Set([
+  "landing",
+  "signin",
+  "signup",
+  "features",
+  "pricing",
+  "personas",
+  "blog",
+  "blogPost",
+  "about",
+  "careers",
+  "privacy",
+  "terms",
+  "howItWorks",
+]);
 
 const SEO_MAP = {
   landing: {
@@ -5591,9 +5608,9 @@ export default function App() {
       const parsed = parseRouteFromPath(window.location.pathname);
       setView(parsed.route);
       setBlogSlug(parsed.slug);
-       if (parsed.route !== "blogPost") {
-         setBlogPostSeo({ title: "", excerpt: "", publishedAt: "", updatedAt: "", author: "", image: "" });
-       }
+      if (parsed.route !== "blogPost") {
+        setBlogPostSeo({ title: "", excerpt: "", publishedAt: "", updatedAt: "", author: "", image: "" });
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -5610,16 +5627,9 @@ export default function App() {
     const origin = window.location.origin;
     const path = view === "blogPost" && blogSlug ? `/blog/${encodeURIComponent(blogSlug)}` : (ROUTE_TO_PATH[view] || "/");
     const canonicalUrl = `${origin}${path}`;
-    const fallbackImageUrl = `${origin}/og-image.svg`;
+    const fallbackImageUrl = `${origin}${DEFAULT_OG_IMAGE}`;
     const imageUrl = blogPostSeo.image || fallbackImageUrl;
-    const normalizedImagePath = imageUrl.split("?")[0].toLowerCase();
-    const imageType = normalizedImagePath.endsWith(".png")
-      ? "image/png"
-      : normalizedImagePath.endsWith(".jpg") || normalizedImagePath.endsWith(".jpeg")
-        ? "image/jpeg"
-        : normalizedImagePath.endsWith(".webp")
-          ? "image/webp"
-          : "image/svg+xml";
+    const imageType = getImageMimeType(imageUrl);
 
     document.title = seo.title;
 
@@ -5750,7 +5760,7 @@ export default function App() {
       "breadcrumb",
     );
 
-    if (view !== "blogAdmin" && !DASH_VIEWS.includes(view) && view !== "interview" && view !== "report") {
+    if (WEB_PAGE_SCHEMA_VIEWS.has(view)) {
       appendSchema(
         {
           "@context": "https://schema.org",
@@ -5798,8 +5808,10 @@ export default function App() {
           description: blogPostSeo.excerpt || seo.description,
           image: imageUrl,
           mainEntityOfPage: canonicalUrl,
-          datePublished: blogPostSeo.publishedAt || undefined,
-          dateModified: blogPostSeo.updatedAt || blogPostSeo.publishedAt || undefined,
+          ...(blogPostSeo.publishedAt ? { datePublished: blogPostSeo.publishedAt } : {}),
+          ...(blogPostSeo.updatedAt || blogPostSeo.publishedAt
+            ? { dateModified: blogPostSeo.updatedAt || blogPostSeo.publishedAt }
+            : {}),
           author: {
             "@type": "Person",
             name: blogPostSeo.author || "PlacementDo Team",
@@ -5858,9 +5870,9 @@ export default function App() {
       <a className="skip-link" href="#main-content">Skip to main content</a>
       {view !== "interview" && <Navbar view={view} onNav={go} />}
       <AnimatePresence mode="wait">
-        <motion.div id="main-content" tabIndex={-1} key={view} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}>
+        <motion.main id="main-content" tabIndex={-1} key={view} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}>
           {renderView()}
-        </motion.div>
+        </motion.main>
       </AnimatePresence>
       <AnimatePresence>
         {checkoutPlan && <CheckoutModal plan={checkoutPlan} onClose={closeCheckout} />}
