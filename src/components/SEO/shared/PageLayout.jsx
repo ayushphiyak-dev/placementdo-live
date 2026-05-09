@@ -35,6 +35,13 @@ const HEADER_SOLID_SCROLL_THRESHOLD = 18;
 
 const STYLES = `
   .seo-layout { min-height: 100vh; background: var(--ivory); }
+  .seo-skip-link {
+    position: fixed; top: -48px; left: 12px; z-index: 160;
+    padding: 10px 14px; border-radius: 10px; background: var(--slate); color: #fff;
+    text-decoration: none; font-size: 13px; font-weight: 600; transition: top .2s ease;
+    box-shadow: var(--shadow-lg);
+  }
+  .seo-skip-link:focus { top: 12px; }
   .seo-header {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     background: rgba(250,250,248,.78); backdrop-filter: blur(8px);
@@ -130,6 +137,16 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
   const [solidHeader, setSolidHeader] = useState(false);
   // Capture the pathname once at mount; each SPA route mounts a fresh PageLayout instance.
   const [canonicalPath] = useState(() => window.location.pathname);
+  const normalizedPath = canonicalPath.endsWith("/") && canonicalPath !== "/" ? canonicalPath.slice(0, -1) : canonicalPath;
+  const isNavLinkActive = (href) => {
+    const normalizedHref = href.endsWith("/") && href !== "/" ? href.slice(0, -1) : href;
+    return normalizedPath === normalizedHref;
+  };
+  const activeNavStyle = {
+    color: "var(--teal-dark)",
+    background: "var(--teal-light)",
+    border: "1px solid rgba(13,148,136,.2)",
+  };
 
   useEffect(() => {
     if (title) document.title = title;
@@ -164,6 +181,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
     <>
       <style>{STYLES}</style>
       <div className="seo-layout">
+        <a className="seo-skip-link" href="#seo-main-content">Skip to main content</a>
         <header>
           <nav className={`seo-header ${solidHeader || mob ? "is-solid" : ""}`}>
             <a href="/" className="seo-header-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
@@ -174,7 +192,16 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
             </a>
             <div className="seo-header-nav">
               {NAV_LINKS.map(({ label, href }) => (
-                <a key={href} href={href} className="nav-link" onClick={(e) => { e.preventDefault(); navigate(href); }}>{label}</a>
+                <a
+                  key={href}
+                  href={href}
+                  className="nav-link"
+                  aria-current={isNavLinkActive(href) ? "page" : undefined}
+                  style={isNavLinkActive(href) ? activeNavStyle : undefined}
+                  onClick={(e) => { e.preventDefault(); navigate(href); }}
+                >
+                  {label}
+                </a>
               ))}
             </div>
             <a href="/" className="seo-header-cta" onClick={(e) => { e.preventDefault(); navigate("/"); }}>Get started →</a>
@@ -183,14 +210,23 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
           {mob && (
             <div className="seo-mob-menu">
               {NAV_LINKS.map(({ label, href }) => (
-                <a key={href} href={href} className="seo-mob-link" onClick={(e) => { e.preventDefault(); navigate(href); }}>{label}</a>
+                <a
+                  key={href}
+                  href={href}
+                  className="seo-mob-link"
+                  aria-current={isNavLinkActive(href) ? "page" : undefined}
+                  style={isNavLinkActive(href) ? activeNavStyle : undefined}
+                  onClick={(e) => { e.preventDefault(); navigate(href); }}
+                >
+                  {label}
+                </a>
               ))}
               <a href="/" className="seo-header-cta" style={{ marginTop: 8, textAlign: "center" }} onClick={(e) => { e.preventDefault(); navigate("/"); }}>Get started →</a>
             </div>
           )}
         </header>
 
-        <main style={{ paddingTop: 64 }}>
+        <main id="seo-main-content" tabIndex={-1} style={{ paddingTop: 64 }}>
           {children}
         </main>
 
