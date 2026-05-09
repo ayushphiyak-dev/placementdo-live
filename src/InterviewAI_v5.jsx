@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DEFAULT_OG_IMAGE, getImageMimeType, normalizePath } from "./utils/seoUtils.js";
 import {
   Upload, Building2, Video, Mic, MicOff, VideoOff, PhoneOff,
   Check, Zap, BarChart2, Brain, RefreshCw, Shield, Award,
@@ -111,6 +112,22 @@ const G = () => (
     .spin { animation: spin-anim 0.9s linear infinite; display: inline-block; }
     @keyframes spin-anim { to { transform: rotate(360deg); } }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .skip-link {
+      position: fixed;
+      top: -48px;
+      left: 12px;
+      z-index: 160;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--slate);
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: top .2s ease;
+      box-shadow: var(--shadow-lg);
+    }
+    .skip-link:focus { top: 12px; }
     .bounce-in { animation: bounceIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both; }
     @keyframes bounceIn { 0% { transform: scale(0.6); opacity: 0; } 70% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
     /* Extra animations */
@@ -1033,6 +1050,14 @@ const Navbar = ({ view, onNav }) => {
   const isLanding = view === "landing";
   const isDash = ["dashboard", "reports", "progress", "avatars", "settings"].includes(view);
   const forceSolidHeader = FORCE_SOLID_HEADER_VIEWS.has(view);
+  const currentPath = normalizePath(window.location.pathname);
+  const isBlogActive = currentPath === "/blog" || currentPath.startsWith("/blog/");
+  const isPlacementPrepActive = currentPath === "/placement-preparation";
+  const activeNavLinkStyle = {
+    color: "var(--teal-dark)",
+    background: "var(--teal-light)",
+    border: "1px solid rgba(13,148,136,.2)",
+  };
   useEffect(() => { const fn = () => setSolid(window.scrollY > 30); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
   useEffect(() => setMob(false), [view]);
   const scrollTo = id => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMob(false); };
@@ -1051,8 +1076,24 @@ const Navbar = ({ view, onNav }) => {
             <div style={{ width: 1, height: 20, background: "var(--border)", margin: "0 6px" }} />
           </>)}
           {!isLanding && <button className="btn-ghost" onClick={() => onNav("landing")}>← Home</button>}
-          <a href="/blog" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo("/blog"); }}>Blog</a>
-          <a href="/placement-preparation" className="nav-link" onClick={(e) => { e.preventDefault(); navigateTo("/placement-preparation"); }}>Placement Prep</a>
+          <a
+            href="/blog"
+            className="nav-link"
+            aria-current={isBlogActive ? "page" : undefined}
+            style={isBlogActive ? activeNavLinkStyle : undefined}
+            onClick={(e) => { e.preventDefault(); navigateTo("/blog"); }}
+          >
+            Blog
+          </a>
+          <a
+            href="/placement-preparation"
+            className="nav-link"
+            aria-current={isPlacementPrepActive ? "page" : undefined}
+            style={isPlacementPrepActive ? activeNavLinkStyle : undefined}
+            onClick={(e) => { e.preventDefault(); navigateTo("/placement-preparation"); }}
+          >
+            Placement Prep
+          </a>
           <button className="btn-secondary" onClick={() => onNav("signin")} style={{ fontSize: 13 }}><LogIn size={14} /> Sign in</button>
           <button className="btn-primary" onClick={() => onNav("dashboard")} style={{ fontSize: 13 }}>Get started <ArrowUpRight size={14} /></button>
         </div>
@@ -1071,8 +1112,24 @@ const Navbar = ({ view, onNav }) => {
               <div style={{ height: 1, background: "var(--border)", margin: "4px 0" }} />
             </>)}
             {!isLanding && <button className="nav-link" style={{ textAlign: "left" }} onClick={() => onNav("landing")}>← Home</button>}
-            <a href="/blog" className="nav-link" style={{ textAlign: "left" }} onClick={(e) => { e.preventDefault(); navigateTo("/blog"); setMob(false); }}>Blog</a>
-            <a href="/placement-preparation" className="nav-link" style={{ textAlign: "left" }} onClick={(e) => { e.preventDefault(); navigateTo("/placement-preparation"); setMob(false); }}>Placement Prep</a>
+            <a
+              href="/blog"
+              className="nav-link"
+              aria-current={isBlogActive ? "page" : undefined}
+              style={{ textAlign: "left", ...(isBlogActive ? activeNavLinkStyle : {}) }}
+              onClick={(e) => { e.preventDefault(); navigateTo("/blog"); setMob(false); }}
+            >
+              Blog
+            </a>
+            <a
+              href="/placement-preparation"
+              className="nav-link"
+              aria-current={isPlacementPrepActive ? "page" : undefined}
+              style={{ textAlign: "left", ...(isPlacementPrepActive ? activeNavLinkStyle : {}) }}
+              onClick={(e) => { e.preventDefault(); navigateTo("/placement-preparation"); setMob(false); }}
+            >
+              Placement Prep
+            </a>
             <button className="btn-secondary" onClick={() => { onNav("signin"); setMob(false); }} style={{ justifyContent: "center" }}><LogIn size={14} /> Sign in</button>
             <button className="btn-primary" onClick={() => { onNav("dashboard"); setMob(false); }} style={{ justifyContent: "center" }}>Get started <ArrowUpRight size={14} /></button>
           </motion.div>
@@ -4048,7 +4105,14 @@ const BlogPost = ({ slug, onNav, onPostLoaded }) => {
           const normalizedPost = normalizeBlogMeta(postData?.post || null, responseDefaults);
           setPost(normalizedPost);
           if (normalizedPost && onPostLoaded) {
-            onPostLoaded({ title: normalizedPost.title, excerpt: normalizedPost.excerpt });
+            onPostLoaded({
+              title: normalizedPost.title,
+              excerpt: normalizedPost.excerpt,
+              publishedAt: normalizedPost.publishedAt || "",
+              updatedAt: normalizedPost.updatedAt || normalizedPost.publishedAt || "",
+              author: normalizedPost.author || "",
+              image: normalizedPost.coverImage || "",
+            });
           }
           const listedPosts = listResponse.ok && Array.isArray(listData?.posts)
             ? listData.posts.map((item) => normalizeBlogMeta(item, responseDefaults))
@@ -5228,7 +5292,7 @@ const PATH_TO_ROUTE = Object.fromEntries(
 );
 
 const parseRouteFromPath = (pathname) => {
-  const normalized = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+  const normalized = normalizePath(pathname);
   if (normalized === "/blog") return { route: "blog", slug: "" };
   if (normalized.startsWith("/blog/") && normalized !== "/blog/admin") {
     const slug = decodeURIComponent(normalized.replace("/blog/", "")).trim();
@@ -5236,6 +5300,22 @@ const parseRouteFromPath = (pathname) => {
   }
   return { route: PATH_TO_ROUTE[normalized] || "landing", slug: "" };
 };
+
+const WEB_PAGE_SCHEMA_VIEWS = new Set([
+  "landing",
+  "signin",
+  "signup",
+  "features",
+  "pricing",
+  "personas",
+  "blog",
+  "blogPost",
+  "about",
+  "careers",
+  "privacy",
+  "terms",
+  "howItWorks",
+]);
 
 const SEO_MAP = {
   landing: {
@@ -5491,7 +5571,14 @@ const SECTION_PAGE_CONTENT = {
 export default function App() {
   const [view, setView] = useState(() => parseRouteFromPath(window.location.pathname).route);
   const [blogSlug, setBlogSlug] = useState(() => parseRouteFromPath(window.location.pathname).slug);
-  const [blogPostSeo, setBlogPostSeo] = useState({ title: "", excerpt: "" });
+  const [blogPostSeo, setBlogPostSeo] = useState({
+    title: "",
+    excerpt: "",
+    publishedAt: "",
+    updatedAt: "",
+    author: "",
+    image: "",
+  });
   const [checkoutPlan, setCheckout] = useState(null);
   const [toast, setToast] = useState(null);
 
@@ -5499,7 +5586,9 @@ export default function App() {
     const nextSlug = typeof options.slug === "string" ? options.slug.trim() : "";
     setView(v);
     setBlogSlug(v === "blogPost" ? nextSlug : "");
-    if (v !== "blogPost") setBlogPostSeo({ title: "", excerpt: "" });
+    if (v !== "blogPost") {
+      setBlogPostSeo({ title: "", excerpt: "", publishedAt: "", updatedAt: "", author: "", image: "" });
+    }
     const nextPath = v === "blogPost" && nextSlug ? `/blog/${encodeURIComponent(nextSlug)}` : (ROUTE_TO_PATH[v] || "/");
     if (window.location.pathname !== nextPath) {
       window.history.pushState({}, "", nextPath);
@@ -5519,7 +5608,9 @@ export default function App() {
       const parsed = parseRouteFromPath(window.location.pathname);
       setView(parsed.route);
       setBlogSlug(parsed.slug);
-      if (parsed.route !== "blogPost") setBlogPostSeo({ title: "", excerpt: "" });
+      if (parsed.route !== "blogPost") {
+        setBlogPostSeo({ title: "", excerpt: "", publishedAt: "", updatedAt: "", author: "", image: "" });
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
@@ -5536,7 +5627,9 @@ export default function App() {
     const origin = window.location.origin;
     const path = view === "blogPost" && blogSlug ? `/blog/${encodeURIComponent(blogSlug)}` : (ROUTE_TO_PATH[view] || "/");
     const canonicalUrl = `${origin}${path}`;
-    const imageUrl = `${origin}/og-image.svg`;
+    const fallbackImageUrl = `${origin}${DEFAULT_OG_IMAGE}`;
+    const imageUrl = blogPostSeo.image || fallbackImageUrl;
+    const imageType = getImageMimeType(imageUrl);
 
     document.title = seo.title;
 
@@ -5579,16 +5672,32 @@ export default function App() {
     upsertMeta('meta[property="og:title"]', { property: "og:title", content: seo.title });
     upsertMeta('meta[property="og:description"]', { property: "og:description", content: seo.description });
     upsertMeta('meta[property="og:image"]', { property: "og:image", content: imageUrl });
+    upsertMeta('meta[property="og:image:width"]', { property: "og:image:width", content: "1200" });
+    upsertMeta('meta[property="og:image:height"]', { property: "og:image:height", content: "630" });
+    upsertMeta('meta[property="og:image:type"]', { property: "og:image:type", content: imageType });
     upsertMeta('meta[property="og:image:alt"]', { property: "og:image:alt", content: "PlacementDo AI interview practice platform preview" });
     upsertMeta('meta[property="og:url"]', { property: "og:url", content: canonicalUrl });
     upsertMeta('meta[property="og:type"]', { property: "og:type", content: seo.type });
 
     upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" });
+    upsertMeta('meta[name="twitter:site"]', { name: "twitter:site", content: "@placementdo" });
     upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: seo.title });
     upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: seo.description });
     upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: canonicalUrl });
     upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: imageUrl });
     upsertMeta('meta[name="twitter:image:alt"]', { name: "twitter:image:alt", content: "PlacementDo AI interview practice platform preview" });
+    upsertMeta('meta[name="twitter:creator"]', { name: "twitter:creator", content: "@placementdo" });
+
+    upsertLink('link[rel="alternate"][hreflang="en"]', {
+      rel: "alternate",
+      hreflang: "en",
+      href: canonicalUrl,
+    });
+    upsertLink('link[rel="alternate"][hreflang="x-default"]', {
+      rel: "alternate",
+      hreflang: "x-default",
+      href: canonicalUrl,
+    });
 
     const scripts = Array.from(document.querySelectorAll("script[data-seo-schema='true']"));
     scripts.forEach((script) => script.remove());
@@ -5650,6 +5759,75 @@ export default function App() {
       },
       "breadcrumb",
     );
+
+    if (WEB_PAGE_SCHEMA_VIEWS.has(view)) {
+      appendSchema(
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: seo.title,
+          description: seo.description,
+          url: canonicalUrl,
+          inLanguage: "en",
+          isPartOf: {
+            "@type": "WebSite",
+            name: "PlacementDo",
+            url: origin,
+          },
+        },
+        "webpage",
+      );
+    }
+
+    if (view === "landing") {
+      appendSchema(
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "PlacementDo",
+          applicationCategory: "EducationApplication",
+          operatingSystem: "Web",
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "INR",
+          },
+          url: canonicalUrl,
+          description: seo.description,
+        },
+        "software-application",
+      );
+    }
+
+    if (view === "blogPost" && blogPostSeo.title) {
+      appendSchema(
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: blogPostSeo.title,
+          description: blogPostSeo.excerpt || seo.description,
+          image: imageUrl,
+          mainEntityOfPage: canonicalUrl,
+          ...(blogPostSeo.publishedAt ? { datePublished: blogPostSeo.publishedAt } : {}),
+          ...(blogPostSeo.updatedAt || blogPostSeo.publishedAt
+            ? { dateModified: blogPostSeo.updatedAt || blogPostSeo.publishedAt }
+            : {}),
+          author: {
+            "@type": "Person",
+            name: blogPostSeo.author || "PlacementDo Team",
+          },
+          publisher: {
+            "@type": "Organization",
+            name: "PlacementDo",
+            logo: {
+              "@type": "ImageObject",
+              url: `${origin}/apple-touch-icon.png`,
+            },
+          },
+        },
+        "article",
+      );
+    }
   }, [view, blogSlug, blogPostSeo]);
 
   const renderView = () => {
@@ -5689,11 +5867,12 @@ export default function App() {
   return (
     <>
       <G />
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       {view !== "interview" && <Navbar view={view} onNav={go} />}
       <AnimatePresence mode="wait">
-        <motion.div key={view} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}>
+        <motion.main id="main-content" tabIndex={-1} key={view} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}>
           {renderView()}
-        </motion.div>
+        </motion.main>
       </AnimatePresence>
       <AnimatePresence>
         {checkoutPlan && <CheckoutModal plan={checkoutPlan} onClose={closeCheckout} />}
