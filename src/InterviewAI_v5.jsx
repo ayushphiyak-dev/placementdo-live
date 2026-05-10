@@ -2892,7 +2892,7 @@ const InterviewLoading = ({ persona, onReady }) => {
     gradientTo: "#CBD5E1",
   };
   const personaEmoji = p.emoji || "👤";
-  const personaEmojiLabel = `Persona type indicator for ${p.title || "interviewer"}`;
+  const personaEmojiLabel = `Avatar badge for ${p.title || "interviewer"}`;
   return (
     <div style={{ position: "fixed", inset: 0, background: "var(--slate)", zIndex: 300 }}>
       {/* Background gradient blobs */}
@@ -2927,6 +2927,7 @@ const InterviewLoading = ({ persona, onReady }) => {
             <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", fontFamily: "'DM Sans',sans-serif", display: "inline-flex", alignItems: "center", gap: 5 }}>
               <span aria-hidden="true">{personaEmoji}</span>
               <span>AI Interviewer</span>
+              <span className="sr-only">{`Persona: ${p.title || "interviewer"}`}</span>
             </div>
           </motion.div>
           {/* Step list */}
