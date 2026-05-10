@@ -2892,6 +2892,7 @@ const InterviewLoading = ({ persona, onReady }) => {
     gradientTo: "#CBD5E1",
   };
   const personaEmoji = p.emoji || "👤";
+  const personaEmojiLabel = `Persona emoji for ${p.title || "interviewer"}`;
   return (
     <div style={{ position: "fixed", inset: 0, background: "var(--slate)", zIndex: 300 }}>
       {/* Background gradient blobs */}
@@ -2913,7 +2914,7 @@ const InterviewLoading = ({ persona, onReady }) => {
             <motion.div animate={{ scale: [1, 1.45, 1], opacity: [0.6, 0, 0.6] }} transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
               style={{ position: "absolute", inset: -6, borderRadius: "50%", border: "2px solid rgba(13,148,136,.5)" }} />
             <PersonaAvatar persona={p} size={96} borderWidth={2.5} />
-            <span role="img" aria-label="Persona avatar indicator" style={{ position: "absolute", right: -4, bottom: -4, width: 30, height: 30, borderRadius: "50%", border: "1px solid rgba(255,255,255,.22)", background: "rgba(15,23,42,.72)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, lineHeight: 1 }}>
+            <span role="img" aria-label={personaEmojiLabel} style={{ position: "absolute", right: -4, bottom: -4, width: 30, height: 30, borderRadius: "50%", border: "1px solid rgba(255,255,255,.22)", background: "rgba(15,23,42,.72)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, lineHeight: 1 }}>
               {personaEmoji}
             </span>
           </motion.div>
@@ -2924,7 +2925,7 @@ const InterviewLoading = ({ persona, onReady }) => {
               {p.title}
             </div>
             <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", fontFamily: "'DM Sans',sans-serif", display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <span role="img" aria-label="Persona emoji">{personaEmoji}</span>
+              <span role="img" aria-label={personaEmojiLabel}>{personaEmoji}</span>
               <span>AI Interviewer</span>
             </div>
           </motion.div>
