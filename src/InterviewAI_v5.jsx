@@ -2892,7 +2892,7 @@ const InterviewLoading = ({ persona, onReady }) => {
     gradientTo: "#CBD5E1",
   };
   const personaEmoji = p.emoji || "👤";
-  const personaEmojiLabel = `Persona emoji for ${p.title || "interviewer"}`;
+  const personaEmojiLabel = `Persona type indicator for ${p.title || "interviewer"}`;
   return (
     <div style={{ position: "fixed", inset: 0, background: "var(--slate)", zIndex: 300 }}>
       {/* Background gradient blobs */}
@@ -2925,7 +2925,7 @@ const InterviewLoading = ({ persona, onReady }) => {
               {p.title}
             </div>
             <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", fontFamily: "'DM Sans',sans-serif", display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <span role="img" aria-label={personaEmojiLabel}>{personaEmoji}</span>
+              <span aria-hidden="true">{personaEmoji}</span>
               <span>AI Interviewer</span>
             </div>
           </motion.div>
