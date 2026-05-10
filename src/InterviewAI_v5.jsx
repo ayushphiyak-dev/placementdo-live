@@ -501,7 +501,8 @@ const PERSONAS = [
     id: 1, tier: "starter",
     title: "The Friendly Peer",
     emoji: "😄",
-    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=320&q=80",
+    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=320&q=80&utm_source=placementdo&utm_medium=referral",
+    avatarAlt: "Professional headshot of a friendly young interviewer",
     handle: "@jordan",
     vibe: "A young, upbeat interviewer who treats it like a casual coffee chat — dangerously easy to overshare with.",
     style: "Conversational · Disarmingly warm",
@@ -517,7 +518,8 @@ const PERSONAS = [
     id: 2, tier: "pro",
     title: "The Empathetic Listener",
     emoji: "🌸",
-    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=320&q=80",
+    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=320&q=80&utm_source=placementdo&utm_medium=referral",
+    avatarAlt: "Professional portrait of a calm empathetic interviewer",
     handle: "@maya",
     vibe: "Soft-spoken and patient, she gives you all the space in the world — then quietly dismantles your emotional intelligence.",
     style: "Reflective · Deep EQ probing",
@@ -533,7 +535,8 @@ const PERSONAS = [
     id: 3, tier: "pro",
     title: "The Stress-Tester",
     emoji: "⚡",
-    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=320&q=80",
+    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=320&q=80&utm_source=placementdo&utm_medium=referral",
+    avatarAlt: "Portrait of a serious interviewer with a direct expression",
     handle: "@rex",
     vibe: "Rapid-fire questions, intentional interruptions, and barely-concealed skepticism — engineered to make you crack.",
     style: "Aggressive · High-velocity",
@@ -549,7 +552,8 @@ const PERSONAS = [
     id: 4, tier: "elite",
     title: "The Stoic Veteran",
     emoji: "🗿",
-    avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=320&q=80",
+    avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=320&q=80&utm_source=placementdo&utm_medium=referral",
+    avatarAlt: "Portrait of an experienced interviewer with a stoic expression",
     handle: "@harold",
     vibe: "Decades of experience, a face carved from stone, and a silence after your answer that lasts exactly three beats too long.",
     style: "Expressionless · Unreadable",
@@ -565,7 +569,8 @@ const PERSONAS = [
     id: 5, tier: "elite",
     title: "The Devil's Advocate",
     emoji: "🎭",
-    avatarUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=320&q=80",
+    avatarUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=320&q=80&utm_source=placementdo&utm_medium=referral",
+    avatarAlt: "Portrait of an interviewer with an analytical challenging demeanor",
     handle: "@victor",
     vibe: "Disagrees with everything you say on principle — forcing you to defend your reasoning under sustained intellectual pressure.",
     style: "Contrarian · Logic-stress",
@@ -581,7 +586,8 @@ const PERSONAS = [
     id: 6, tier: "elite",
     title: "The Silent Analyst",
     emoji: "🔍",
-    avatarUrl: "https://images.unsplash.com/photo-1521119989659-a83eee488004?auto=format&fit=crop&w=320&q=80",
+    avatarUrl: "https://images.unsplash.com/photo-1521119989659-a83eee488004?auto=format&fit=crop&w=320&q=80&utm_source=placementdo&utm_medium=referral",
+    avatarAlt: "Portrait of a focused interviewer taking analytical notes",
     handle: "@dr_chen",
     vibe: "Types notes constantly, asks one forensic question at a time, and lets silence do most of the heavy lifting.",
     style: "Clinical · Methodical",
@@ -647,13 +653,19 @@ const PersonaAvatar = ({ persona, size = 40, borderWidth = 2, shadow = false }) 
       {showImage ? (
         <img
           src={persona.avatarUrl}
-          alt={persona?.title ? `${persona.title} portrait` : "Interviewer portrait"}
-          loading="lazy"
+          alt={persona?.avatarAlt || persona?.title || "Interviewer portrait"}
+          loading="eager"
           onError={() => setImgFailed(true)}
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
         />
       ) : (
-        <span style={{ fontSize: "clamp(12px,2vw,22px)", lineHeight: 1 }}>{persona?.emoji || "👤"}</span>
+        <span
+          role="img"
+          aria-label={persona?.title || "Interviewer avatar"}
+          style={{ fontSize: "clamp(12px,2vw,22px)", lineHeight: 1 }}
+        >
+          {persona?.emoji || "👤"}
+        </span>
       )}
     </div>
   );
