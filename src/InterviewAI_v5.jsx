@@ -2865,7 +2865,15 @@ const InterviewLoading = ({ persona, onReady }) => {
     return () => { clearInterval(dotsT); clearInterval(stepT); clearTimeout(doneT); };
   }, [onReady]);
   const defaultPersona = PERSONAS.find((x) => x.id === 3) || PERSONAS[0];
-  const p = persona || defaultPersona || { title: "The Stress-Tester", handle: "@rex", accentColor: "#0D9488" };
+  const p = persona || defaultPersona || {
+    title: "The Stress-Tester",
+    handle: "@rex",
+    accentColor: "#0D9488",
+    avatarUrl: "",
+    emoji: "👤",
+    gradientFrom: "#E2E8F0",
+    gradientTo: "#CBD5E1",
+  };
   return (
     <div style={{ position: "fixed", inset: 0, background: "var(--slate)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 300, gap: 0 }}>
       {/* Background gradient blobs */}
