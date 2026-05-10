@@ -623,27 +623,41 @@ const Logo = ({ onClick, light = false }) => (
   </button>
 );
 
-const PersonaAvatar = ({ persona, size = 40, borderWidth = 2, shadow = false }) => (
-  <div
-    style={{
-      width: size,
-      height: size,
-      borderRadius: "50%",
-      overflow: "hidden",
-      border: `${borderWidth}px solid ${(persona?.accentColor || "#94A3B8")}30`,
-      background: `linear-gradient(135deg,${persona?.gradientFrom || "#E2E8F0"},${persona?.gradientTo || "#CBD5E1"})`,
-      boxShadow: shadow ? `0 4px 14px ${(persona?.accentColor || "#94A3B8")}20` : undefined,
-      flexShrink: 0,
-    }}
-  >
-    <img
-      src={persona?.avatarUrl}
-      alt={persona?.title ? `${persona.title} portrait` : "Interviewer portrait"}
-      loading="lazy"
-      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-    />
-  </div>
-);
+const PersonaAvatar = ({ persona, size = 40, borderWidth = 2, shadow = false }) => {
+  const [imgFailed, setImgFailed] = useState(false);
+  const avatarSize = typeof size === "number" ? `${size}px` : size;
+  const showImage = Boolean(persona?.avatarUrl) && !imgFailed;
+
+  return (
+    <div
+      style={{
+        width: avatarSize,
+        height: avatarSize,
+        borderRadius: "50%",
+        overflow: "hidden",
+        border: `${borderWidth}px solid ${(persona?.accentColor || "#94A3B8")}30`,
+        background: `linear-gradient(135deg,${persona?.gradientFrom || "#E2E8F0"},${persona?.gradientTo || "#CBD5E1"})`,
+        boxShadow: shadow ? `0 4px 14px ${(persona?.accentColor || "#94A3B8")}20` : undefined,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+      }}
+    >
+      {showImage ? (
+        <img
+          src={persona.avatarUrl}
+          alt={persona?.title ? `${persona.title} portrait` : "Interviewer portrait"}
+          loading="lazy"
+          onError={() => setImgFailed(true)}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        />
+      ) : (
+        <span style={{ fontSize: "clamp(12px,2vw,22px)", lineHeight: 1 }}>{persona?.emoji || "👤"}</span>
+      )}
+    </div>
+  );
+};
 
 const Tag = ({ children, color = "teal", size = "sm" }) => {
   const P = { teal: { bg: "var(--teal-light)", color: "var(--teal-dark)" }, amber: { bg: "var(--amber-light)", color: "var(--amber)" }, green: { bg: "var(--green-light)", color: "var(--green)" }, red: { bg: "var(--red-light)", color: "var(--red)" }, slate: { bg: "var(--slate-100)", color: "var(--slate-700)" }, purple: { bg: "var(--purple-light)", color: "var(--purple)" } };
@@ -2850,7 +2864,8 @@ const InterviewLoading = ({ persona, onReady }) => {
     const doneT = setTimeout(() => { clearInterval(dotsT); clearInterval(stepT); onReady(); }, 3800);
     return () => { clearInterval(dotsT); clearInterval(stepT); clearTimeout(doneT); };
   }, [onReady]);
-  const p = persona || { avatarUrl: PERSONAS[2].avatarUrl, title: "The Stress-Tester", handle: "@rex", accentColor: "#0D9488" };
+  const defaultPersona = PERSONAS.find((x) => x.id === 3) || PERSONAS[0];
+  const p = persona || defaultPersona || { title: "The Stress-Tester", handle: "@rex", accentColor: "#0D9488" };
   return (
     <div style={{ position: "fixed", inset: 0, background: "var(--slate)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 300, gap: 0 }}>
       {/* Background gradient blobs */}
