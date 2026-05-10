@@ -2892,7 +2892,7 @@ const InterviewLoading = ({ persona, onReady }) => {
     gradientTo: "#CBD5E1",
   };
   return (
-    <div style={{ position: "fixed", inset: 0, background: "var(--slate)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 300, gap: 0 }}>
+    <div style={{ position: "fixed", inset: 0, background: "var(--slate)", zIndex: 300 }}>
       {/* Background gradient blobs */}
       <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
         <div style={{ position: "absolute", top: "15%", left: "20%", width: 420, height: 420, borderRadius: "50%", background: "radial-gradient(circle, rgba(13,148,136,.12) 0%, transparent 70%)", filter: "blur(60px)" }} />
@@ -2903,39 +2903,46 @@ const InterviewLoading = ({ persona, onReady }) => {
         style={{ position: "absolute", top: 28, left: 32 }}>
         <Logo light />
       </motion.div>
-      {/* Persona avatar */}
-      <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.55, type: "spring", stiffness: 240, damping: 18 }}
-        style={{ marginBottom: 28, boxShadow: "0 0 0 0 rgba(13,148,136,.5)", position: "relative", borderRadius: "50%" }}>
-        {/* Pulse ring */}
-        <motion.div animate={{ scale: [1, 1.45, 1], opacity: [0.6, 0, 0.6] }} transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
-          style={{ position: "absolute", inset: -6, borderRadius: "50%", border: "2px solid rgba(13,148,136,.5)" }} />
-        <PersonaAvatar persona={p} size={96} borderWidth={2.5} />
-      </motion.div>
-      {/* Interviewer name */}
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-        style={{ textAlign: "center", marginBottom: 36 }}>
-        <div className="brig" style={{ fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", marginBottom: 4 }}>
-          {p.title}
-        </div>
-        <div style={{ fontSize: 13, color: "rgba(255,255,255,.4)", fontFamily: "'JetBrains Mono',monospace" }}>{p.handle}</div>
-      </motion.div>
-      {/* Step list */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%", maxWidth: 320, marginBottom: 40 }}>
-        {STEPS.map((s, i) => (
-          <motion.div key={i} initial={{ opacity: 0, x: -14 }} animate={{ opacity: i <= step ? 1 : 0.22, x: 0 }} transition={{ delay: i * 0.12, duration: 0.38 }}
-            style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 18px", borderRadius: 12, background: i === step ? "rgba(13,148,136,.15)" : "rgba(255,255,255,.03)", border: `1px solid ${i === step ? "rgba(13,148,136,.35)" : "rgba(255,255,255,.05)"}`, transition: "all 0.3s" }}>
-            <span style={{ fontSize: 16 }}>{s.icon}</span>
-            <span style={{ fontSize: 13.5, color: i < step ? "rgba(255,255,255,.5)" : i === step ? "rgba(255,255,255,.9)" : "rgba(255,255,255,.25)", fontWeight: i === step ? 600 : 400, fontFamily: "'DM Sans',sans-serif", flex: 1 }}>
-              {s.label}{i === step ? dots : ""}
+      <div style={{ position: "relative", zIndex: 1, minHeight: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "96px 20px 120px" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", maxWidth: 340 }}>
+          {/* Persona avatar */}
+          <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.55, type: "spring", stiffness: 240, damping: 18 }}
+            style={{ marginBottom: 28, boxShadow: "0 0 0 0 rgba(13,148,136,.5)", position: "relative", borderRadius: "50%" }}>
+            {/* Pulse ring */}
+            <motion.div animate={{ scale: [1, 1.45, 1], opacity: [0.6, 0, 0.6] }} transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
+              style={{ position: "absolute", inset: -6, borderRadius: "50%", border: "2px solid rgba(13,148,136,.5)" }} />
+            <PersonaAvatar persona={p} size={96} borderWidth={2.5} />
+            <span style={{ position: "absolute", right: -4, bottom: -4, width: 30, height: 30, borderRadius: "50%", border: "1px solid rgba(255,255,255,.22)", background: "rgba(15,23,42,.72)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, lineHeight: 1 }}>
+              {p.emoji || "👤"}
             </span>
-            {i < step && <Check size={14} color="var(--teal-mid)" strokeWidth={3} />}
-            {i === step && <div className="spin" style={{ width: 14, height: 14, border: "2px solid rgba(13,148,136,.3)", borderTop: "2px solid var(--teal-mid)", borderRadius: "50%" }} />}
           </motion.div>
-        ))}
+          {/* Interviewer name */}
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+            style={{ textAlign: "center", marginBottom: 30 }}>
+            <div className="brig" style={{ fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", marginBottom: 4 }}>
+              {p.title}
+            </div>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", fontFamily: "'DM Sans',sans-serif" }}>{(p.emoji || "👤")} AI Interviewer</div>
+          </motion.div>
+          {/* Step list */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%" }}>
+            {STEPS.map((s, i) => (
+              <motion.div key={i} initial={{ opacity: 0, x: -14 }} animate={{ opacity: i <= step ? 1 : 0.22, x: 0 }} transition={{ delay: i * 0.12, duration: 0.38 }}
+                style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 18px", borderRadius: 12, background: i === step ? "rgba(13,148,136,.15)" : "rgba(255,255,255,.03)", border: `1px solid ${i === step ? "rgba(13,148,136,.35)" : "rgba(255,255,255,.05)"}`, transition: "all 0.3s" }}>
+                <span style={{ fontSize: 16 }}>{s.icon}</span>
+                <span style={{ fontSize: 13.5, color: i < step ? "rgba(255,255,255,.5)" : i === step ? "rgba(255,255,255,.9)" : "rgba(255,255,255,.25)", fontWeight: i === step ? 600 : 400, fontFamily: "'DM Sans',sans-serif", flex: 1 }}>
+                  {s.label}{i === step ? dots : ""}
+                </span>
+                {i < step && <Check size={14} color="var(--teal-mid)" strokeWidth={3} />}
+                {i === step && <div className="spin" style={{ width: 14, height: 14, border: "2px solid rgba(13,148,136,.3)", borderTop: "2px solid var(--teal-mid)", borderRadius: "50%" }} />}
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
       {/* Bottom tip */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
-        style={{ fontSize: 12, color: "rgba(255,255,255,.22)", textAlign: "center", maxWidth: 280 }}>
+        style={{ position: "absolute", bottom: 26, left: "50%", transform: "translateX(-50%)", fontSize: 12, color: "rgba(255,255,255,.22)", textAlign: "center", maxWidth: 320, width: "calc(100% - 24px)" }}>
         Tip: Press <kbd style={{ background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontFamily: "'JetBrains Mono',monospace" }}>Space</kbd> to mute · <kbd style={{ background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontFamily: "'JetBrains Mono',monospace" }}>→</kbd> next question · <kbd style={{ background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontFamily: "'JetBrains Mono',monospace" }}>Esc</kbd> end
       </motion.div>
     </div>
