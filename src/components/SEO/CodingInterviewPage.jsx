@@ -172,7 +172,7 @@ export default function CodingInterviewPage({ onNav }) {
       <style>{STYLES}</style>
 
       <PageHero
-        tag="💻 DSA + System Design · 2026"
+        tag="DSA + System Design · 2026"
         heading="Coding Interview Questions"
         subheading="Master the topics that matter — from easy arrays for service companies to hard system design for FAANG. Practice with AI-powered mock interviews."
         ctaButtons={[
@@ -277,10 +277,10 @@ export default function CodingInterviewPage({ onNav }) {
           <div style={{ marginTop: 32 }}>
             <SectionHeading label="Related Resources" heading="Continue preparing" />
             <div className="ci-links-row">
-              <button className="ci-link-btn" onClick={() => onNav("/placement-preparation")}>📘 Placement Guide</button>
-              <button className="ci-link-btn" onClick={() => onNav("/aptitude-questions")}>📊 Aptitude Questions</button>
-              <button className="ci-link-btn" onClick={() => onNav("/company-wise-questions/tcs")}>🏢 TCS Guide</button>
-              <button className="ci-link-btn" onClick={() => onNav("/company-wise-questions/wipro")}>🏢 Wipro Guide</button>
+              <button className="ci-link-btn" onClick={() => onNav("/placement-preparation")}>Placement Guide</button>
+              <button className="ci-link-btn" onClick={() => onNav("/aptitude-questions")}>Aptitude Questions</button>
+              <button className="ci-link-btn" onClick={() => onNav("/company-wise-questions/tcs")}>TCS Guide</button>
+              <button className="ci-link-btn" onClick={() => onNav("/company-wise-questions/wipro")}>Wipro Guide</button>
             </div>
           </div>
         </section>

@@ -618,10 +618,15 @@ const PLANS = [
 /* ── Atoms ── */
 const Logo = ({ onClick, light = false }) => (
   <button onClick={onClick} style={{ display: "flex", alignItems: "center", gap: 9, background: "none", border: "none", cursor: "pointer", padding: 0, flexShrink: 0 }}>
-    <div style={{ width: 34, height: 34, borderRadius: 10, background: "var(--teal)", display: "flex", alignItems: "center", justifyContent: "center", transition: "transform 0.2s, box-shadow 0.2s" }}
+    <div style={{ width: 34, height: 34, borderRadius: 10, overflow: "hidden", border: "1px solid var(--border)", display: "block", transition: "transform 0.2s, box-shadow 0.2s" }}
       onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.08)"; e.currentTarget.style.boxShadow = "var(--shadow-teal)"; }}
       onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}>
-      <Zap size={18} color="#fff" strokeWidth={2.5} />
+      <img
+        src="/apple-touch-icon.png"
+        alt="PlacementDo logo"
+        loading="eager"
+        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+      />
     </div>
     <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: light ? "#ffffff" : "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
       Placement<span style={{ color: light ? "var(--teal-mid)" : "var(--teal)" }}>Do</span>

@@ -4,7 +4,7 @@
  * Fetches the post matching `slug` from /api/blog?slug=<slug>.
  */
 import { useMemo, useReducer, useEffect, useCallback } from "react";
-import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon, Share2, Linkedin, Twitter, Zap } from "lucide-react";
+import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon, Share2, Linkedin, Twitter } from "lucide-react";
 import { upsertMeta, upsertLink, upsertJsonLd } from "../SEO/shared/metaUtils.js";
 import SEED_POSTS from "../../data/blogPosts.json";
 
@@ -107,7 +107,8 @@ const STYLES = `
     padding: 104px clamp(20px,5vw,60px) 80px;
   }
   .blog-logo { display: inline-flex; align-items: center; gap: 10px; background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; color: inherit; }
-  .blog-logo-mark { background: var(--teal); height: 32px; width: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .blog-logo-mark { height: 32px; width: 32px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); display: block; }
+  .blog-logo-mark img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .bpp-inner {
     max-width: 760px;
     margin: 0 auto;
@@ -403,7 +404,7 @@ export default function BlogPostPage({ slug, onNav }) {
         }}
       >
         <a href="/" className="blog-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
-          <div className="blog-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
+          <div className="blog-logo-mark"><img src="/apple-touch-icon.png" alt="PlacementDo logo" loading="eager" /></div>
           <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
             Placement<span style={{ color: "var(--teal)" }}>Do</span>
           </span>
@@ -674,7 +675,7 @@ export default function BlogPostPage({ slug, onNav }) {
                 <Twitter size={14} /> X / Twitter
               </a>
               <a className="bpp-share-btn reddit" href={shareReddit} target="_blank" rel="noopener noreferrer">
-                🔺 Reddit
+                Reddit
               </a>
             </div>
           )}
@@ -685,11 +686,11 @@ export default function BlogPostPage({ slug, onNav }) {
               <hr className="bpp-divider" />
               <p className="bpp-continue-title">Continue your placement preparation:</p>
               <div className="bpp-continue-links">
-                <a href="/placement-preparation-complete-guide" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/placement-preparation-complete-guide"); }}>🎯 Complete Placement Guide</a>
-                <a href="/placement-preparation" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/placement-preparation"); }}>📘 Placement Prep Tips</a>
-                <a href="/aptitude-questions" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/aptitude-questions"); }}>📊 Aptitude Questions</a>
-                <a href="/coding-interview-questions" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/coding-interview-questions"); }}>💻 Coding Interview Q&A</a>
-                <a href="/blog" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/blog"); }}>📝 All Blog Posts</a>
+                <a href="/placement-preparation-complete-guide" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/placement-preparation-complete-guide"); }}>Complete Placement Guide</a>
+                <a href="/placement-preparation" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/placement-preparation"); }}>Placement Prep Tips</a>
+                <a href="/aptitude-questions" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/aptitude-questions"); }}>Aptitude Questions</a>
+                <a href="/coding-interview-questions" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/coding-interview-questions"); }}>Coding Interview Q&A</a>
+                <a href="/blog" className="bpp-continue-btn" onClick={(e) => { e.preventDefault(); navigate("/blog"); }}>All Blog Posts</a>
               </div>
             </div>
           )}

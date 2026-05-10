@@ -167,7 +167,7 @@ export default function PlacementPreparationPage({ onNav }) {
       <style>{STYLES}</style>
 
       <PageHero
-        tag="📘 Complete Guide · 2026"
+        tag="Complete Guide · 2026"
         heading="Your Complete Placement Preparation Guide"
         subheading="From aptitude tests to final HR rounds — a structured roadmap to help you crack campus placements at top companies in 2026."
         ctaButtons={[
@@ -274,10 +274,10 @@ export default function PlacementPreparationPage({ onNav }) {
           <div style={{ marginTop: 32 }}>
             <SectionHeading label="Explore More" heading="Continue your preparation" />
             <div className="pp-links-row">
-              <a href="/aptitude-questions" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/aptitude-questions"); }}>📊 Aptitude Questions</a>
-              <a href="/coding-interview-questions" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/coding-interview-questions"); }}>💻 Coding Questions</a>
-              <a href="/company-wise-questions/tcs" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/company-wise-questions/tcs"); }}>🏢 TCS Placement Guide</a>
-              <a href="/company-wise-questions/wipro" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/company-wise-questions/wipro"); }}>🏢 Wipro Placement Guide</a>
+              <a href="/aptitude-questions" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/aptitude-questions"); }}>Aptitude Questions</a>
+              <a href="/coding-interview-questions" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/coding-interview-questions"); }}>Coding Questions</a>
+              <a href="/company-wise-questions/tcs" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/company-wise-questions/tcs"); }}>TCS Placement Guide</a>
+              <a href="/company-wise-questions/wipro" className="pp-link-btn" onClick={(e) => { e.preventDefault(); onNav("/company-wise-questions/wipro"); }}>Wipro Placement Guide</a>
             </div>
           </div>
         </section>

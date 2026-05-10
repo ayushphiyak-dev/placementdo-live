@@ -57,7 +57,7 @@ const STYLES = `
 const TCS_DATA = {
   title: "TCS Placement Questions 2026 | PlacementDo",
   meta: "Complete TCS placement preparation guide — TCS NQT syllabus, previous year questions, aptitude, coding, and interview rounds with AI practice.",
-  tag: "🏢 TCS NQT · 2026 Edition",
+  tag: "TCS NQT · 2026 Edition",
   heading: "TCS Placement Preparation 2026",
   subheading: "Everything you need to crack TCS NQT — from syllabus and previous year patterns to aptitude shortcuts and coding strategies.",
 
@@ -124,7 +124,7 @@ const TCS_DATA = {
 const INFOSYS_DATA = {
   title: "Infosys Placement Questions 2026 | PlacementDo",
   meta: "Complete Infosys placement preparation — InfyTQ, Hackwithinfy, aptitude test pattern, and interview rounds. Practice with AI mock interviews.",
-  tag: "🏢 Infosys · 2026 Edition",
+  tag: "Infosys · 2026 Edition",
   heading: "Infosys Placement Preparation 2026",
   subheading: "Crack Infosys campus recruitment with our complete guide — InfyTQ platform, aptitude pattern, technical and HR interview tips for freshers.",
   overviewCards: [
@@ -153,7 +153,7 @@ const INFOSYS_DATA = {
 const ACCENTURE_DATA = {
   title: "Accenture Placement Questions 2026 | PlacementDo",
   meta: "Complete Accenture placement preparation — CTA test pattern, communication assessment, and interview tips. Practice with AI mock interviews on PlacementDo.",
-  tag: "🏢 Accenture · 2026 Edition",
+  tag: "Accenture · 2026 Edition",
   heading: "Accenture Placement Preparation 2026",
   subheading: "Crack Accenture's Cognitive and Technical Assessment, Communication Test, and interview rounds with this complete preparation guide.",
   overviewCards: [
@@ -181,7 +181,7 @@ const ACCENTURE_DATA = {
 const COGNIZANT_DATA = {
   title: "Cognizant Placement Questions 2026 | PlacementDo",
   meta: "Complete Cognizant GenC and GenC Next placement preparation — eSEAT test pattern, aptitude, coding, and interview tips for 2026 freshers.",
-  tag: "🏢 Cognizant GenC · 2026 Edition",
+  tag: "Cognizant GenC · 2026 Edition",
   heading: "Cognizant Placement Preparation 2026",
   subheading: "Crack Cognizant's GenC and GenC Next recruitment with complete eSEAT test preparation, coding strategies, and interview tips.",
   overviewCards: [
@@ -208,7 +208,7 @@ const COGNIZANT_DATA = {
 const HCL_DATA = {
   title: "HCL Placement Questions 2026 | PlacementDo",
   meta: "Complete HCL placement preparation — HCLAT test, TechBee programme, aptitude, and interview rounds. AI mock interview practice on PlacementDo.",
-  tag: "🏢 HCL TechBee · 2026 Edition",
+  tag: "HCL TechBee · 2026 Edition",
   heading: "HCL Placement Preparation 2026",
   subheading: "Crack HCL's campus recruitment process — HCLAT test, technical interview, and HR round with this comprehensive preparation guide.",
   overviewCards: [
@@ -235,7 +235,7 @@ const HCL_DATA = {
 const WIPRO_DATA = {
   title: "Wipro Placement Questions 2026 | PlacementDo",
   meta: "Complete Wipro placement preparation — NLTH test pattern, aptitude, coding, and interview rounds. Practice with AI-powered mock interviews.",
-  tag: "🏢 Wipro NLTH · 2026 Edition",
+  tag: "Wipro NLTH · 2026 Edition",
   heading: "Wipro Placement Preparation 2026",
   subheading: "Crack Wipro's NLTH assessment with our comprehensive guide — test pattern, syllabus, previous year questions, and interview tips.",
 
@@ -446,12 +446,12 @@ export default function CompanyWisePage({ company, onNav }) {
           <div style={{ marginTop: 32 }}>
             <SectionHeading label="Related Resources" heading="Explore more guides" />
             <div className="cw-links-row">
-              <button className="cw-link-btn" onClick={() => onNav("/placement-preparation-complete-guide")}>🎯 Complete Placement Guide</button>
-              <button className="cw-link-btn" onClick={() => onNav("/placement-preparation")}>📘 Placement Prep Tips</button>
-              <button className="cw-link-btn" onClick={() => onNav("/aptitude-questions")}>📊 Aptitude Questions</button>
-              <button className="cw-link-btn" onClick={() => onNav("/coding-interview-questions")}>💻 Coding Questions</button>
+              <button className="cw-link-btn" onClick={() => onNav("/placement-preparation-complete-guide")}>Complete Placement Guide</button>
+              <button className="cw-link-btn" onClick={() => onNav("/placement-preparation")}>Placement Prep Tips</button>
+              <button className="cw-link-btn" onClick={() => onNav("/aptitude-questions")}>Aptitude Questions</button>
+              <button className="cw-link-btn" onClick={() => onNav("/coding-interview-questions")}>Coding Questions</button>
               {otherLinks.map(({ key, label }) => (
-                <button key={key} className="cw-link-btn" onClick={() => onNav(`/company-wise-questions/${key}`)}>🏢 {label}</button>
+                <button key={key} className="cw-link-btn" onClick={() => onNav(`/company-wise-questions/${key}`)}>{label}</button>
               ))}
             </div>
           </div>

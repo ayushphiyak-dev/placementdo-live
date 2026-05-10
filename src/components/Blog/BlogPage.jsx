@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import {
   Calendar, User, ArrowRight, ShieldCheck, BookOpen,
-  AlertCircle, Check, Loader, Trash2, PlusCircle, LogOut, Zap,
+  AlertCircle, Check, Loader, Trash2, PlusCircle, LogOut,
 } from "lucide-react";
 import SEED_POSTS from "../../data/blogPosts.json";
 import { upsertMeta, upsertLink } from "../SEO/shared/metaUtils.js";
@@ -62,7 +62,8 @@ const STYLES = `
     padding: 0 clamp(20px,5vw,60px); gap: 16px;
   }
   .blog-logo { display: inline-flex; align-items: center; gap: 10px; background: none; border: none; padding: 0; cursor: pointer; text-decoration: none; color: inherit; }
-  .blog-logo-mark { background: var(--teal); height: 32px; width: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .blog-logo-mark { height: 32px; width: 32px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); display: block; }
+  .blog-logo-mark img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .blog-main { max-width: 1100px; margin: 0 auto; padding: 104px clamp(20px,5vw,60px) 80px; }
   .blog-search-bar { margin-bottom: 28px; }
   .blog-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); }
@@ -359,7 +360,7 @@ export default function BlogPage({ onNav }) {
       {/* Header */}
       <header className="blog-header">
         <a href="/" className="blog-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
-          <div className="blog-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
+          <div className="blog-logo-mark"><img src="/apple-touch-icon.png" alt="PlacementDo logo" loading="eager" /></div>
           <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
             Placement<span style={{ color: "var(--teal)" }}>Do</span>
           </span>
@@ -530,14 +531,14 @@ export default function BlogPage({ onNav }) {
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
               {[
-                { label: '🎯 Complete Placement Guide', href: '/placement-preparation-complete-guide' },
-                { label: '📘 Placement Prep Tips', href: '/placement-preparation' },
-                { label: '📊 Aptitude Questions', href: '/aptitude-questions' },
-                { label: '💻 Coding Interview Q&A', href: '/coding-interview-questions' },
-                { label: '🏢 TCS Placement Guide', href: '/company-wise-questions/tcs' },
-                { label: '🏢 Wipro Placement Guide', href: '/company-wise-questions/wipro' },
-                { label: '🏢 Infosys Placement Guide', href: '/company-wise-questions/infosys' },
-                { label: '🏢 Accenture Placement Guide', href: '/company-wise-questions/accenture' },
+                { label: 'Complete Placement Guide', href: '/placement-preparation-complete-guide' },
+                { label: 'Placement Prep Tips', href: '/placement-preparation' },
+                { label: 'Aptitude Questions', href: '/aptitude-questions' },
+                { label: 'Coding Interview Q&A', href: '/coding-interview-questions' },
+                { label: 'TCS Placement Guide', href: '/company-wise-questions/tcs' },
+                { label: 'Wipro Placement Guide', href: '/company-wise-questions/wipro' },
+                { label: 'Infosys Placement Guide', href: '/company-wise-questions/infosys' },
+                { label: 'Accenture Placement Guide', href: '/company-wise-questions/accenture' },
               ].map(({ label, href }) => (
                 <a
                   key={href}
