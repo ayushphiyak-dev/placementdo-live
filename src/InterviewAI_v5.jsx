@@ -2923,7 +2923,10 @@ const InterviewLoading = ({ persona, onReady }) => {
             <div className="brig" style={{ fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", marginBottom: 4 }}>
               {p.title}
             </div>
-            <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", fontFamily: "'DM Sans',sans-serif" }}>{personaEmoji} AI Interviewer</div>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", fontFamily: "'DM Sans',sans-serif", display: "inline-flex", alignItems: "center", gap: 5 }}>
+              <span role="img" aria-label="Persona emoji">{personaEmoji}</span>
+              <span>AI Interviewer</span>
+            </div>
           </motion.div>
           {/* Step list */}
           <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%" }}>
