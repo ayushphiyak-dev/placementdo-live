@@ -2891,6 +2891,7 @@ const InterviewLoading = ({ persona, onReady }) => {
     gradientFrom: "#E2E8F0",
     gradientTo: "#CBD5E1",
   };
+  const personaEmoji = p.emoji || "👤";
   return (
     <div style={{ position: "fixed", inset: 0, background: "var(--slate)", zIndex: 300 }}>
       {/* Background gradient blobs */}
@@ -2912,8 +2913,8 @@ const InterviewLoading = ({ persona, onReady }) => {
             <motion.div animate={{ scale: [1, 1.45, 1], opacity: [0.6, 0, 0.6] }} transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
               style={{ position: "absolute", inset: -6, borderRadius: "50%", border: "2px solid rgba(13,148,136,.5)" }} />
             <PersonaAvatar persona={p} size={96} borderWidth={2.5} />
-            <span style={{ position: "absolute", right: -4, bottom: -4, width: 30, height: 30, borderRadius: "50%", border: "1px solid rgba(255,255,255,.22)", background: "rgba(15,23,42,.72)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, lineHeight: 1 }}>
-              {p.emoji || "👤"}
+            <span role="img" aria-label="Persona avatar indicator" style={{ position: "absolute", right: -4, bottom: -4, width: 30, height: 30, borderRadius: "50%", border: "1px solid rgba(255,255,255,.22)", background: "rgba(15,23,42,.72)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, lineHeight: 1 }}>
+              {personaEmoji}
             </span>
           </motion.div>
           {/* Interviewer name */}
@@ -2922,7 +2923,7 @@ const InterviewLoading = ({ persona, onReady }) => {
             <div className="brig" style={{ fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", marginBottom: 4 }}>
               {p.title}
             </div>
-            <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", fontFamily: "'DM Sans',sans-serif" }}>{(p.emoji || "👤")} AI Interviewer</div>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", fontFamily: "'DM Sans',sans-serif" }}>{personaEmoji} AI Interviewer</div>
           </motion.div>
           {/* Step list */}
           <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%" }}>
