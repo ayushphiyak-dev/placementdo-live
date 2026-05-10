@@ -501,6 +501,7 @@ const PERSONAS = [
     id: 1, tier: "starter",
     title: "The Friendly Peer",
     emoji: "😄",
+    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=320&q=80",
     handle: "@jordan",
     vibe: "A young, upbeat interviewer who treats it like a casual coffee chat — dangerously easy to overshare with.",
     style: "Conversational · Disarmingly warm",
@@ -516,6 +517,7 @@ const PERSONAS = [
     id: 2, tier: "pro",
     title: "The Empathetic Listener",
     emoji: "🌸",
+    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=320&q=80",
     handle: "@maya",
     vibe: "Soft-spoken and patient, she gives you all the space in the world — then quietly dismantles your emotional intelligence.",
     style: "Reflective · Deep EQ probing",
@@ -531,6 +533,7 @@ const PERSONAS = [
     id: 3, tier: "pro",
     title: "The Stress-Tester",
     emoji: "⚡",
+    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=320&q=80",
     handle: "@rex",
     vibe: "Rapid-fire questions, intentional interruptions, and barely-concealed skepticism — engineered to make you crack.",
     style: "Aggressive · High-velocity",
@@ -546,6 +549,7 @@ const PERSONAS = [
     id: 4, tier: "elite",
     title: "The Stoic Veteran",
     emoji: "🗿",
+    avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=320&q=80",
     handle: "@harold",
     vibe: "Decades of experience, a face carved from stone, and a silence after your answer that lasts exactly three beats too long.",
     style: "Expressionless · Unreadable",
@@ -561,6 +565,7 @@ const PERSONAS = [
     id: 5, tier: "elite",
     title: "The Devil's Advocate",
     emoji: "🎭",
+    avatarUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=320&q=80",
     handle: "@victor",
     vibe: "Disagrees with everything you say on principle — forcing you to defend your reasoning under sustained intellectual pressure.",
     style: "Contrarian · Logic-stress",
@@ -576,6 +581,7 @@ const PERSONAS = [
     id: 6, tier: "elite",
     title: "The Silent Analyst",
     emoji: "🔍",
+    avatarUrl: "https://images.unsplash.com/photo-1521119989659-a83eee488004?auto=format&fit=crop&w=320&q=80",
     handle: "@dr_chen",
     vibe: "Types notes constantly, asks one forensic question at a time, and lets silence do most of the heavy lifting.",
     style: "Clinical · Methodical",
@@ -615,6 +621,28 @@ const Logo = ({ onClick, light = false }) => (
       Placement<span style={{ color: light ? "var(--teal-mid)" : "var(--teal)" }}>Do</span>
     </span>
   </button>
+);
+
+const PersonaAvatar = ({ persona, size = 40, borderWidth = 2, shadow = false }) => (
+  <div
+    style={{
+      width: size,
+      height: size,
+      borderRadius: "50%",
+      overflow: "hidden",
+      border: `${borderWidth}px solid ${(persona?.accentColor || "#94A3B8")}30`,
+      background: `linear-gradient(135deg,${persona?.gradientFrom || "#E2E8F0"},${persona?.gradientTo || "#CBD5E1"})`,
+      boxShadow: shadow ? `0 4px 14px ${(persona?.accentColor || "#94A3B8")}20` : undefined,
+      flexShrink: 0,
+    }}
+  >
+    <img
+      src={persona?.avatarUrl}
+      alt={persona?.title ? `${persona.title} portrait` : "Interviewer portrait"}
+      loading="lazy"
+      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+    />
+  </div>
 );
 
 const Tag = ({ children, color = "teal", size = "sm" }) => {
@@ -1491,16 +1519,16 @@ const Landing = ({ onNav, onCheckout }) => {
             {/* Right — mini persona stack */}
             <div className="pf-right">
               {[
-                { emoji: "⚡", title: "The Stress-Tester", diff: "Brutal", diffColor: "#FCA5A5", bg: "rgba(220,38,38,.18)", bd: "rgba(220,38,38,.35)" },
-                { emoji: "😄", title: "The Friendly Peer", diff: "Deceptive", diffColor: "#FCD34D", bg: "rgba(217,119,6,.18)", bd: "rgba(217,119,6,.35)" },
-                { emoji: "🌸", title: "The Empath", diff: "Medium", diffColor: "#7DD3FC", bg: "rgba(3,105,161,.18)", bd: "rgba(3,105,161,.35)" },
-                { emoji: "🗿", title: "The Stoic Veteran", diff: "Psychological", diffColor: "#CBD5E1", bg: "rgba(71,85,105,.18)", bd: "rgba(71,85,105,.35)" },
-                { emoji: "🎭", title: "The Devil's Advocate", diff: "Hard", diffColor: "#C4B5FD", bg: "rgba(124,58,237,.18)", bd: "rgba(124,58,237,.35)" },
-              ].map(({ emoji, title, diff, diffColor, bg, bd }) => (
+                { id: 3, title: "The Stress-Tester", diff: "Brutal", diffColor: "#FCA5A5", bg: "rgba(220,38,38,.18)", bd: "rgba(220,38,38,.35)" },
+                { id: 1, title: "The Friendly Peer", diff: "Deceptive", diffColor: "#FCD34D", bg: "rgba(217,119,6,.18)", bd: "rgba(217,119,6,.35)" },
+                { id: 2, title: "The Empath", diff: "Medium", diffColor: "#7DD3FC", bg: "rgba(3,105,161,.18)", bd: "rgba(3,105,161,.35)" },
+                { id: 4, title: "The Stoic Veteran", diff: "Psychological", diffColor: "#CBD5E1", bg: "rgba(71,85,105,.18)", bd: "rgba(71,85,105,.35)" },
+                { id: 5, title: "The Devil's Advocate", diff: "Hard", diffColor: "#C4B5FD", bg: "rgba(124,58,237,.18)", bd: "rgba(124,58,237,.35)" },
+              ].map(({ id, title, diff, diffColor, bg, bd }) => (
                 <div key={title} style={{ display: "flex", alignItems: "center", gap: 10, background: bg, border: `1px solid ${bd}`, borderRadius: 11, padding: "10px 13px", transition: "transform 0.2s" }}
                   onMouseEnter={e => e.currentTarget.style.transform = "translateX(-3px)"}
                   onMouseLeave={e => e.currentTarget.style.transform = ""}>
-                  <span style={{ fontSize: 18, flexShrink: 0 }}>{emoji}</span>
+                  <PersonaAvatar persona={PERSONAS.find(p => p.id === id)} size={30} borderWidth={1.5} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.88)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{title}</div>
                     <div style={{ fontSize: 10.5, color: diffColor, fontWeight: 700, marginTop: 1 }}>{diff}</div>
@@ -2045,8 +2073,7 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
               <div key={p.id} onClick={() => setAvatar(p.id)} style={{ display: "flex", gap: 12, alignItems: "center", padding: "10px 13px", borderRadius: 11, cursor: "pointer", marginBottom: 10, background: avatar === p.id ? "var(--teal-light)" : "var(--slate-50)", border: `1.5px solid ${avatar === p.id ? "rgba(13,148,136,.4)" : "var(--border)"}`, transition: "all 0.2s", overflow: "hidden" }}
                 onMouseEnter={e => { if (avatar !== p.id) { e.currentTarget.style.borderColor = "rgba(13,148,136,.25)"; e.currentTarget.style.background = "rgba(204,251,241,.4)"; } }}
                 onMouseLeave={e => { if (avatar !== p.id) { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--slate-50)"; } }}>
-                {/* Color-banded emoji avatar */}
-                <div style={{ width: 38, height: 38, borderRadius: "50%", background: `linear-gradient(135deg,${p.gradientFrom},${p.gradientTo})`, border: `2px solid ${p.accentColor}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>{p.emoji}</div>
+                <PersonaAvatar persona={p} size={38} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="brig" style={{ fontSize: 13.5, fontWeight: 700, color: "var(--slate)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.title}</div>
                   <div style={{ fontSize: 11, color: p.accentColor, fontWeight: 600, marginTop: 1 }}>{p.difficulty}</div>
@@ -2088,13 +2115,13 @@ const MyReports = ({ onNav }) => {
   const [showFilter, setShowFilter] = useState(false);
   const FILTERS = ["All", "Technical", "Behavioral", "Case Study", "Balanced"];
   const S = [
-    { co: "Google", role: "Software Engineer L5", score: 78, date: "Feb 21, 2026", dur: "34:12", persona: "⚡ Stress-Tester", tag: "Technical" },
-    { co: "Stripe", role: "Software Engineer", score: 82, date: "Feb 18, 2026", dur: "28:44", persona: "😄 Friendly Peer", tag: "Balanced" },
-    { co: "Meta", role: "Product Manager", score: 74, date: "Feb 14, 2026", dur: "41:05", persona: "🌸 Empath Listener", tag: "Behavioral" },
-    { co: "Deloitte", role: "Business Analyst", score: 91, date: "Feb 9, 2026", dur: "35:20", persona: "🗿 Stoic Veteran", tag: "Case Study" },
-    { co: "McKinsey", role: "Associate Consultant", score: 69, date: "Feb 3, 2026", dur: "38:15", persona: "🎭 Devil's Advocate", tag: "Case Study" },
-    { co: "Goldman", role: "Investment Banking Analyst", score: 85, date: "Jan 28, 2026", dur: "29:58", persona: "🔍 Silent Analyst", tag: "Behavioral" },
-    { co: "Amazon", role: "SDE II", score: 71, date: "Jan 22, 2026", dur: "33:44", persona: "⚡ Stress-Tester", tag: "Technical" },
+    { co: "Google", role: "Software Engineer L5", score: 78, date: "Feb 21, 2026", dur: "34:12", persona: "Stress-Tester", tag: "Technical" },
+    { co: "Stripe", role: "Software Engineer", score: 82, date: "Feb 18, 2026", dur: "28:44", persona: "Friendly Peer", tag: "Balanced" },
+    { co: "Meta", role: "Product Manager", score: 74, date: "Feb 14, 2026", dur: "41:05", persona: "Empath Listener", tag: "Behavioral" },
+    { co: "Deloitte", role: "Business Analyst", score: 91, date: "Feb 9, 2026", dur: "35:20", persona: "Stoic Veteran", tag: "Case Study" },
+    { co: "McKinsey", role: "Associate Consultant", score: 69, date: "Feb 3, 2026", dur: "38:15", persona: "Devil's Advocate", tag: "Case Study" },
+    { co: "Goldman", role: "Investment Banking Analyst", score: 85, date: "Jan 28, 2026", dur: "29:58", persona: "Silent Analyst", tag: "Behavioral" },
+    { co: "Amazon", role: "SDE II", score: 71, date: "Jan 22, 2026", dur: "33:44", persona: "Stress-Tester", tag: "Technical" },
   ];
   const filtered = filter === "All" ? S : S.filter(s => s.tag === filter);
   return (
@@ -2277,11 +2304,11 @@ const Progress = () => {
           {["Role", "Persona", "Score", "Date"].map((h, i) => <div key={i} style={{ fontSize: 10.5, fontWeight: 700, color: "var(--slate-400)", letterSpacing: "0.07em", textTransform: "uppercase" }}>{h}</div>)}
         </div>
         {[
-          { role: "SWE L5 – Google", persona: "⚡ Stress-Tester", score: 78, date: "Feb 21", sc: "var(--amber)" },
-          { role: "SWE – Stripe", persona: "😄 Friendly Peer", score: 82, date: "Feb 18", sc: "var(--green)" },
-          { role: "PM – Meta", persona: "🌸 Empath Listener", score: 74, date: "Feb 14", sc: "var(--amber)" },
-          { role: "Analyst – Deloitte", persona: "🗿 Stoic Veteran", score: 91, date: "Feb 9", sc: "var(--green)" },
-          { role: "Consultant – McKinsey", persona: "🎭 Devil's Advocate", score: 69, date: "Feb 3", sc: "var(--red)" },
+          { role: "SWE L5 – Google", persona: "Stress-Tester", score: 78, date: "Feb 21", sc: "var(--amber)" },
+          { role: "SWE – Stripe", persona: "Friendly Peer", score: 82, date: "Feb 18", sc: "var(--green)" },
+          { role: "PM – Meta", persona: "Empath Listener", score: 74, date: "Feb 14", sc: "var(--amber)" },
+          { role: "Analyst – Deloitte", persona: "Stoic Veteran", score: 91, date: "Feb 9", sc: "var(--green)" },
+          { role: "Consultant – McKinsey", persona: "Devil's Advocate", score: 69, date: "Feb 3", sc: "var(--red)" },
         ].map(({ role, persona, score, date, sc }, i, arr) => (
           <div key={i} className="phist-row"
             style={{ borderBottom: i < arr.length - 1 ? "1px solid var(--border)" : "none", cursor: "default" }}
@@ -2373,19 +2400,10 @@ const AvatarsView = ({ onUpgrade, onNav, onSelectPersona }) => {
                 {/* Top row: emoji avatar + lock/check */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
                   <div style={{ position: "relative" }}>
-                    {/* Emoji in gradient circle */}
-                    <div style={{
-                      width: 62, height: 62, borderRadius: "50%",
-                      background: `linear-gradient(135deg, ${p.gradientFrom}, ${p.gradientTo})`,
-                      border: `2px solid ${p.accentColor}30`,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 28,
-                      boxShadow: `0 4px 14px ${p.accentColor}20`,
-                      transition: "transform 0.25s",
-                    }}
+                    <div style={{ transition: "transform 0.25s", borderRadius: "50%" }}
                       onMouseEnter={e => { if (!locked) e.currentTarget.style.transform = "scale(1.1)"; }}
                       onMouseLeave={e => e.currentTarget.style.transform = ""}>
-                      {p.emoji}
+                      <PersonaAvatar persona={p} size={62} shadow />
                     </div>
                     {/* Online indicator dot */}
                     {!locked && (
@@ -2438,9 +2456,7 @@ const AvatarsView = ({ onUpgrade, onNav, onSelectPersona }) => {
             style={{ background: "var(--slate)", borderRadius: 18, padding: "clamp(18px,4vw,28px) clamp(16px,5vw,32px)", boxShadow: "var(--shadow-xl)", border: "1px solid rgba(255,255,255,.05)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: "-30%", right: "-5%", width: 400, height: 350, background: `radial-gradient(ellipse,${selected.accentColor}22 0%,transparent 65%)`, pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1, display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
-              <div style={{ width: 56, height: 56, borderRadius: "50%", background: `linear-gradient(135deg,${selected.gradientFrom}30,${selected.gradientTo}20)`, border: `2px solid ${selected.accentColor}40`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, flexShrink: 0 }}>
-                {selected.emoji}
-              </div>
+              <PersonaAvatar persona={selected} size={56} />
               <div style={{ flex: 1, minWidth: 220 }}>
                 <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 6, flexWrap: "wrap" }}>
                   <span className="brig" style={{ fontSize: 20, fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>{selected.title}</span>
@@ -2559,8 +2575,8 @@ const CountdownModal = ({ persona, onStart, onCancel }) => {
       style={{ position: "fixed", inset: 0, background: "rgba(9,17,34,.88)", backdropFilter: "blur(16px)", zIndex: 500, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 32 }}>
       {/* Persona avatar */}
       <motion.div initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} style={{ textAlign: "center" }}>
-        <div style={{ width: 90, height: 90, borderRadius: "50%", background: `linear-gradient(135deg,${persona.gradientFrom}50,${persona.gradientTo}50)`, border: `3px solid ${persona.accentColor}60`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 44, margin: "0 auto 16px", boxShadow: `0 0 48px ${persona.accentColor}40` }}>
-          {persona.emoji}
+        <div style={{ margin: "0 auto 16px", boxShadow: `0 0 48px ${persona.accentColor}40`, borderRadius: "50%" }}>
+          <PersonaAvatar persona={persona} size={90} borderWidth={3} />
         </div>
         <div className="brig" style={{ fontSize: 22, fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>{persona.title}</div>
         <div style={{ fontSize: 13, color: "rgba(255,255,255,.5)", marginTop: 5 }}>is ready for your interview</div>
@@ -2834,7 +2850,7 @@ const InterviewLoading = ({ persona, onReady }) => {
     const doneT = setTimeout(() => { clearInterval(dotsT); clearInterval(stepT); onReady(); }, 3800);
     return () => { clearInterval(dotsT); clearInterval(stepT); clearTimeout(doneT); };
   }, [onReady]);
-  const p = persona || { emoji: "⚡", title: "The Stress-Tester", handle: "@rex" };
+  const p = persona || { avatarUrl: PERSONAS[2].avatarUrl, title: "The Stress-Tester", handle: "@rex", accentColor: "#0D9488" };
   return (
     <div style={{ position: "fixed", inset: 0, background: "var(--slate)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 300, gap: 0 }}>
       {/* Background gradient blobs */}
@@ -2849,11 +2865,11 @@ const InterviewLoading = ({ persona, onReady }) => {
       </motion.div>
       {/* Persona avatar */}
       <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.55, type: "spring", stiffness: 240, damping: 18 }}
-        style={{ width: 96, height: 96, borderRadius: "50%", background: "linear-gradient(135deg,var(--teal-dark),var(--teal-mid))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40, marginBottom: 28, boxShadow: "0 0 0 0 rgba(13,148,136,.5)", position: "relative" }}>
+        style={{ marginBottom: 28, boxShadow: "0 0 0 0 rgba(13,148,136,.5)", position: "relative", borderRadius: "50%" }}>
         {/* Pulse ring */}
         <motion.div animate={{ scale: [1, 1.45, 1], opacity: [0.6, 0, 0.6] }} transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
           style={{ position: "absolute", inset: -6, borderRadius: "50%", border: "2px solid rgba(13,148,136,.5)" }} />
-        <span>{p.emoji}</span>
+        <PersonaAvatar persona={p} size={96} borderWidth={2.5} />
       </motion.div>
       {/* Interviewer name */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
@@ -2965,9 +2981,9 @@ const InterviewRoom = ({ onNav, persona }) => {
           <Logo onClick={() => onNav("landing")} light />
         </div>
 
-        {/* Persona emoji + name (always visible) */}
+        {/* Persona photo + name (always visible) */}
         <div className="int-topbar-persona-info">
-          <span style={{ fontSize:18, lineHeight:1 }}>{activePersona.emoji}</span>
+          <PersonaAvatar persona={activePersona} size={20} borderWidth={1.25} />
           <span style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,.8)", whiteSpace:"nowrap" }}
             className="int-topbar-logo">{activePersona.title}</span>
         </div>
@@ -3064,16 +3080,8 @@ const InterviewRoom = ({ onNav, persona }) => {
 
                   {/* Avatar circle — scales down on small screens */}
                   <div style={{ position: "relative", flexShrink: 0 }}>
-                    <div style={{
-                      width: "clamp(80px,18vw,140px)", height: "clamp(80px,18vw,140px)",
-                      borderRadius: "50%",
-                      background: `linear-gradient(135deg,${activePersona.gradientFrom}40,${activePersona.gradientTo}40)`,
-                      border: `3px solid ${activePersona.accentColor}60`,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: "clamp(36px,8vw,64px)",
-                      boxShadow: `0 0 60px ${activePersona.accentColor}30`,
-                    }}>
-                      {activePersona.emoji}
+                    <div style={{ boxShadow: `0 0 60px ${activePersona.accentColor}30`, borderRadius: "50%" }}>
+                      <PersonaAvatar persona={activePersona} size={"clamp(80px,18vw,140px)"} borderWidth={3} />
                     </div>
                     <div style={{ position: "absolute", inset: -8, borderRadius: "50%", border: `2px solid ${activePersona.accentColor}40`, animation: "ping 2s cubic-bezier(0,0,.2,1) infinite" }} />
                     <style>{`@keyframes ping { 75%,100% { transform:scale(1.2); opacity:0; } }`}</style>
@@ -4478,7 +4486,7 @@ const FeaturesPage = ({ onNav }) => {
         <div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 1 }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(340px,100%),1fr))", gap: 48, alignItems: "center" }}>
             <div>
-              <Tag color="teal">🎭 Unique Feature</Tag>
+              <Tag color="teal">Unique Feature</Tag>
               <h2 className="brig" style={{ fontSize: "clamp(24px,3.5vw,38px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.025em", lineHeight: 1.18, marginTop: 14, marginBottom: 16 }}>
                 6 Distinct AI Interviewer Personalities
               </h2>
@@ -4496,13 +4504,13 @@ const FeaturesPage = ({ onNav }) => {
             </div>
             <div style={{ display: "grid", gap: 10 }}>
               {[
-                { emoji: "⚡", title: "The Stress-Tester", desc: "Rapid-fire questions, deliberate interruptions, zero encouragement.", color: "#DC2626", bg: "rgba(220,38,38,.16)", bd: "rgba(220,38,38,.3)" },
-                { emoji: "😄", title: "The Friendly Peer", desc: "Deceptively warm — probes oversharing and unclear boundaries.", color: "#D97706", bg: "rgba(217,119,6,.16)", bd: "rgba(217,119,6,.3)" },
-                { emoji: "🎭", title: "The Devil's Advocate", desc: "Disagrees on principle. Forces you to defend every claim.", color: "#7C3AED", bg: "rgba(124,58,237,.16)", bd: "rgba(124,58,237,.3)" },
-                { emoji: "🗿", title: "The Stoic Veteran", desc: "Zero reaction. Three-beat silence after every answer.", color: "#475569", bg: "rgba(71,85,105,.2)", bd: "rgba(71,85,105,.35)" },
-              ].map(({ emoji, title, desc, color, bg, bd }) => (
+                { id: 3, title: "The Stress-Tester", desc: "Rapid-fire questions, deliberate interruptions, zero encouragement.", color: "#DC2626", bg: "rgba(220,38,38,.16)", bd: "rgba(220,38,38,.3)" },
+                { id: 1, title: "The Friendly Peer", desc: "Deceptively warm — probes oversharing and unclear boundaries.", color: "#D97706", bg: "rgba(217,119,6,.16)", bd: "rgba(217,119,6,.3)" },
+                { id: 5, title: "The Devil's Advocate", desc: "Disagrees on principle. Forces you to defend every claim.", color: "#7C3AED", bg: "rgba(124,58,237,.16)", bd: "rgba(124,58,237,.3)" },
+                { id: 4, title: "The Stoic Veteran", desc: "Zero reaction. Three-beat silence after every answer.", color: "#475569", bg: "rgba(71,85,105,.2)", bd: "rgba(71,85,105,.35)" },
+              ].map(({ id, title, desc, color, bg, bd }) => (
                 <div key={title} style={{ display: "flex", alignItems: "flex-start", gap: 12, background: bg, border: `1px solid ${bd}`, borderRadius: 12, padding: "12px 16px" }}>
-                  <span style={{ fontSize: 22, flexShrink: 0, lineHeight: 1 }}>{emoji}</span>
+                  <PersonaAvatar persona={PERSONAS.find(p => p.id === id)} size={34} borderWidth={1.5} />
                   <div>
                     <div style={{ fontSize: 13.5, fontWeight: 700, color: "#fff", marginBottom: 3 }}>{title}</div>
                     <div style={{ fontSize: 12.5, color: "rgba(255,255,255,.55)", lineHeight: 1.5 }}>{desc}</div>
@@ -4675,7 +4683,7 @@ const PersonasPage = ({ onNav }) => {
         <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: 800, height: 500, background: "radial-gradient(ellipse,rgba(13,148,136,.18) 0%,transparent 65%)", pointerEvents: "none" }} />
         <div style={{ position: "absolute", bottom: "-10%", right: "5%", width: 360, height: 300, background: "radial-gradient(ellipse,rgba(124,58,237,.14) 0%,transparent 65%)", pointerEvents: "none" }} />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ position: "relative", zIndex: 1 }}>
-          <Tag color="teal">🎭 Interviewer Personas</Tag>
+          <Tag color="teal">Interviewer Personas</Tag>
           <h1 className="brig" style={{ fontSize: "clamp(32px,5vw,60px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", marginTop: 16, lineHeight: 1.08, maxWidth: 800, margin: "16px auto" }}>
             Survive any interviewer personality
           </h1>
@@ -4705,9 +4713,7 @@ const PersonasPage = ({ onNav }) => {
                 <div style={{ height: 5, background: `linear-gradient(90deg, ${p.accentColor}, ${p.accentColor}88)` }} />
                 <div style={{ padding: "22px 24px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
-                    <div style={{ width: 60, height: 60, borderRadius: "50%", background: `linear-gradient(135deg, ${p.gradientFrom}, ${p.gradientTo})`, border: `2px solid ${p.accentColor}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26 }}>
-                      {p.emoji}
-                    </div>
+                    <PersonaAvatar persona={p} size={60} />
                     <div style={{ background: p.diffBg, color: p.diffColor, fontSize: 10.5, fontWeight: 700, padding: "4px 11px", borderRadius: 20, border: `1px solid ${p.accentColor}28` }}>{p.difficulty}</div>
                   </div>
                   <div className="brig" style={{ fontSize: 18, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.015em", marginBottom: 3 }}>{p.title}</div>
