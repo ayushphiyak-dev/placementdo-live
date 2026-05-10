@@ -16,7 +16,8 @@ const STYLES = `
     padding: 32px 36px; margin-bottom: 20px;
   }
   .sr-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-  .sr-card-icon { font-size: 32px; line-height: 1; }
+  .sr-card-icon { width: 32px; height: 32px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); flex-shrink: 0; }
+  .sr-card-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .sr-card-title { font-size: 20px; font-weight: 700; color: var(--slate); letter-spacing: -0.02em; margin: 0; }
   .sr-card-subtitle { font-size: 13px; color: var(--slate-400); margin: 2px 0 0; }
   .sr-card p { font-size: 14.5px; color: var(--slate-600); line-height: 1.75; margin: 0 0 16px; }
@@ -52,7 +53,8 @@ const STYLES = `
     background: var(--teal-light); border: 1px solid rgba(13,148,136,.2); border-radius: 10px;
     font-size: 13.5px; color: var(--teal-dark); line-height: 1.65; margin-top: 12px;
   }
-  .sr-tip-icon { font-size: 18px; flex-shrink: 0; }
+  .sr-tip-icon { width: 18px; height: 18px; border-radius: 4px; overflow: hidden; border: 1px solid rgba(13,148,136,.2); flex-shrink: 0; display: inline-block; }
+  .sr-tip-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
 `;
 
 function CopyButton({ text }) {
@@ -112,7 +114,7 @@ export default function SeoResourcesPage({ onNav }) {
       <style>{STYLES}</style>
 
       <PageHero
-        tag="🌱 Community Growth"
+        tag="Community Growth"
         heading="Help Us Grow"
         subheading="PlacementDo is built for students, by people who remember what placement prep felt like. If you find it useful, sharing takes 2 minutes and helps thousands of students discover it."
       />
@@ -128,7 +130,7 @@ export default function SeoResourcesPage({ onNav }) {
           />
           <div className="sr-card">
             <div className="sr-card-header">
-              <div className="sr-card-icon">💼</div>
+              <div className="sr-card-icon"><img src="/apple-touch-icon.png" alt="Section icon" loading="lazy" /></div>
               <div>
                 <h3 className="brig sr-card-title">LinkedIn Post Template</h3>
                 <p className="sr-card-subtitle">~30 seconds to post · Reaches 100–500+ connections</p>
@@ -143,7 +145,7 @@ export default function SeoResourcesPage({ onNav }) {
               {LINKEDIN_POST}
             </div>
             <div className="sr-tip">
-              <span className="sr-tip-icon">💡</span>
+              <span className="sr-tip-icon"><img src="/apple-touch-icon.png" alt="" aria-hidden="true" loading="lazy" /></span>
               <span>Adding a personal story ("I practiced 3 TCS mock interviews and felt much more confident") gets 3–5× more engagement than generic posts.</span>
             </div>
           </div>
@@ -158,7 +160,7 @@ export default function SeoResourcesPage({ onNav }) {
           />
           <div className="sr-card">
             <div className="sr-card-header">
-              <div className="sr-card-icon">🤖</div>
+              <div className="sr-card-icon"><img src="/apple-touch-icon.png" alt="Section icon" loading="lazy" /></div>
               <div>
                 <h3 className="brig sr-card-title">Suggested Subreddits</h3>
                 <p className="sr-card-subtitle">High-traffic communities for placement prep</p>
@@ -178,7 +180,7 @@ export default function SeoResourcesPage({ onNav }) {
               {REDDIT_POST}
             </div>
             <div className="sr-tip">
-              <span className="sr-tip-icon">💡</span>
+              <span className="sr-tip-icon"><img src="/apple-touch-icon.png" alt="" aria-hidden="true" loading="lazy" /></span>
               <span>Post during active hours (weekdays 8–10 AM IST or 8–11 PM IST) for maximum visibility. Reply to comments to boost engagement.</span>
             </div>
           </div>
@@ -193,7 +195,7 @@ export default function SeoResourcesPage({ onNav }) {
           />
           <div className="sr-card">
             <div className="sr-card-header">
-              <div className="sr-card-icon">🐙</div>
+              <div className="sr-card-icon"><img src="/apple-touch-icon.png" alt="Section icon" loading="lazy" /></div>
               <div>
                 <h3 className="brig sr-card-title">Markdown Badge</h3>
                 <p className="sr-card-subtitle">One-line addition to any README</p>
@@ -221,7 +223,7 @@ export default function SeoResourcesPage({ onNav }) {
           />
           <div className="sr-card">
             <div className="sr-card-header">
-              <div className="sr-card-icon">📂</div>
+              <div className="sr-card-icon"><img src="/apple-touch-icon.png" alt="Section icon" loading="lazy" /></div>
               <div>
                 <h3 className="brig sr-card-title">Where to List</h3>
                 <p className="sr-card-subtitle">Free & paid discovery platforms</p>

@@ -149,7 +149,7 @@ export default function PlacementCompleteGuidePage({ onNav }) {
       <style>{STYLES}</style>
 
       <PageHero
-        tag="🎯 The Definitive Guide · Placement 2026"
+        tag="The Definitive Guide · Placement 2026"
         heading="Placement Preparation: Complete Roadmap to Crack Any Interview"
         subheading="Everything you need to go from zero to placed — the placement process, preparation roadmap, company-specific strategies, and the AI tools that give you an unfair advantage."
         ctaButtons={[
@@ -325,8 +325,8 @@ export default function PlacementCompleteGuidePage({ onNav }) {
           </div>
 
           <div className="pcg-nav-links">
-            <button className="pcg-nav-btn" onClick={() => onNav("/")}>🤖 Start AI Mock Interview</button>
-            <button className="pcg-nav-btn" onClick={() => onNav("/blog/mock-interview-preparation-tips")}>📖 Mock Interview Tips Guide</button>
+            <button className="pcg-nav-btn" onClick={() => onNav("/")}>Start AI Mock Interview</button>
+            <button className="pcg-nav-btn" onClick={() => onNav("/blog/mock-interview-preparation-tips")}>Mock Interview Tips Guide</button>
           </div>
         </section>
 
@@ -359,14 +359,14 @@ export default function PlacementCompleteGuidePage({ onNav }) {
         <section className="pcg-section">
           <SectionHeading label="Explore More" heading="Continue your placement preparation" />
           <div className="pcg-nav-links">
-            <button className="pcg-nav-btn" onClick={() => onNav("/placement-preparation")}>📘 Placement Prep Guide</button>
-            <button className="pcg-nav-btn" onClick={() => onNav("/aptitude-questions")}>📊 Aptitude Questions</button>
-            <button className="pcg-nav-btn" onClick={() => onNav("/coding-interview-questions")}>💻 Coding Interview Q&A</button>
-            <button className="pcg-nav-btn" onClick={() => onNav("/company-wise-questions/tcs")}>🏢 TCS Placement Guide</button>
-            <button className="pcg-nav-btn" onClick={() => onNav("/company-wise-questions/wipro")}>🏢 Wipro Placement Guide</button>
-            <button className="pcg-nav-btn" onClick={() => onNav("/blog")}>📝 All Blog Posts</button>
-            <button className="pcg-nav-btn" onClick={() => onNav("/blog/placement-preparation-for-freshers")}>🎓 Freshers Placement Guide</button>
-            <button className="pcg-nav-btn" onClick={() => onNav("/blog/hr-interview-questions-for-freshers")}>🤝 HR Interview Questions</button>
+            <button className="pcg-nav-btn" onClick={() => onNav("/placement-preparation")}>Placement Prep Guide</button>
+            <button className="pcg-nav-btn" onClick={() => onNav("/aptitude-questions")}>Aptitude Questions</button>
+            <button className="pcg-nav-btn" onClick={() => onNav("/coding-interview-questions")}>Coding Interview Q&A</button>
+            <button className="pcg-nav-btn" onClick={() => onNav("/company-wise-questions/tcs")}>TCS Placement Guide</button>
+            <button className="pcg-nav-btn" onClick={() => onNav("/company-wise-questions/wipro")}>Wipro Placement Guide</button>
+            <button className="pcg-nav-btn" onClick={() => onNav("/blog")}>All Blog Posts</button>
+            <button className="pcg-nav-btn" onClick={() => onNav("/blog/placement-preparation-for-freshers")}>Freshers Placement Guide</button>
+            <button className="pcg-nav-btn" onClick={() => onNav("/blog/hr-interview-questions-for-freshers")}>HR Interview Questions</button>
           </div>
         </section>
 

@@ -1,4 +1,4 @@
-export const DEFAULT_OG_IMAGE = "/og-image.svg";
+export const DEFAULT_OG_IMAGE = "/og-image.png";
 
 export const normalizePath = (path = "/") => (
   path.endsWith("/") && path !== "/" ? path.slice(0, -1) : path

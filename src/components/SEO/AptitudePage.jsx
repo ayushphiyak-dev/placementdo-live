@@ -130,7 +130,7 @@ export default function AptitudePage({ onNav }) {
       <style>{STYLES}</style>
 
       <PageHero
-        tag="📊 500+ Questions · Updated 2026"
+        tag="500+ Questions · Updated 2026"
         heading="Aptitude Questions for Placement"
         subheading="Comprehensive aptitude preparation covering quantitative, logical, and verbal sections — the three pillars of every campus placement online assessment."
         ctaButtons={[
@@ -226,10 +226,10 @@ export default function AptitudePage({ onNav }) {
           <div style={{ marginTop: 32 }}>
             <SectionHeading label="Related Resources" heading="Continue preparing" />
             <div className="ap-links-row">
-              <button className="ap-link-btn" onClick={() => onNav("/placement-preparation")}>📘 Full Placement Guide</button>
-              <button className="ap-link-btn" onClick={() => onNav("/coding-interview-questions")}>💻 Coding Questions</button>
-              <button className="ap-link-btn" onClick={() => onNav("/company-wise-questions/tcs")}>🏢 TCS NQT Guide</button>
-              <button className="ap-link-btn" onClick={() => onNav("/company-wise-questions/wipro")}>🏢 Wipro NLTH Guide</button>
+              <button className="ap-link-btn" onClick={() => onNav("/placement-preparation")}>Full Placement Guide</button>
+              <button className="ap-link-btn" onClick={() => onNav("/coding-interview-questions")}>Coding Questions</button>
+              <button className="ap-link-btn" onClick={() => onNav("/company-wise-questions/tcs")}>TCS NQT Guide</button>
+              <button className="ap-link-btn" onClick={() => onNav("/company-wise-questions/wipro")}>Wipro NLTH Guide</button>
             </div>
           </div>
         </section>

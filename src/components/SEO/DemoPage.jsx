@@ -180,12 +180,12 @@ export default function DemoPage({ onNav }) {
             </h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
               {[
-                { label: '🎯 Complete Placement Guide', href: '/placement-preparation-complete-guide' },
-                { label: '📘 Placement Prep Tips', href: '/placement-preparation' },
-                { label: '📊 Aptitude Questions', href: '/aptitude-questions' },
-                { label: '💻 Coding Interview Q&A', href: '/coding-interview-questions' },
-                { label: '🏢 TCS Placement Guide', href: '/company-wise-questions/tcs' },
-                { label: '📝 All Blog Posts', href: '/blog' },
+                { label: 'Complete Placement Guide', href: '/placement-preparation-complete-guide' },
+                { label: 'Placement Prep Tips', href: '/placement-preparation' },
+                { label: 'Aptitude Questions', href: '/aptitude-questions' },
+                { label: 'Coding Interview Q&A', href: '/coding-interview-questions' },
+                { label: 'TCS Placement Guide', href: '/company-wise-questions/tcs' },
+                { label: 'All Blog Posts', href: '/blog' },
               ].map(({ label, href }) => (
                 <button
                   key={href}

@@ -3,7 +3,6 @@
  * Provides a fixed header with PlacementDo branding and a dark footer.
  */
 import { useEffect, useState } from "react";
-import { Zap } from "lucide-react";
 import { upsertMeta, upsertLink } from "./metaUtils.js";
 import { normalizePath } from "../../../utils/seoUtils.js";
 
@@ -59,11 +58,12 @@ const STYLES = `
     background: none; border: none; padding: 0;
   }
   .seo-header-logo-mark {
-    width: 34px; height: 34px; border-radius: 10px;
-    background: var(--teal);
-    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 10px; overflow: hidden;
+    border: 1px solid var(--border);
+    display: block;
     transition: transform 0.2s, box-shadow 0.2s; flex-shrink: 0;
   }
+  .seo-header-logo-mark img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .seo-header-logo-mark:hover {
     transform: scale(1.08); box-shadow: var(--shadow-teal);
   }
@@ -187,7 +187,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
         <header>
           <nav className={`seo-header ${solidHeader || mob ? "is-solid" : ""}`}>
             <a href="/" className="seo-header-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
-              <div className="seo-header-logo-mark"><Zap size={18} color="#fff" strokeWidth={2.5} /></div>
+              <div className="seo-header-logo-mark"><img src="/apple-touch-icon.png" alt="PlacementDo logo" loading="eager" /></div>
               <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
                 Placement<span style={{ color: "var(--teal)" }}>Do</span>
               </span>
@@ -237,7 +237,7 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
                 <div className="seo-header-logo-mark" style={{ width: 34, height: 34, borderRadius: 10, background: "var(--teal)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <Zap size={18} color="#fff" strokeWidth={2.5} />
+                  <img src="/apple-touch-icon.png" alt="PlacementDo logo" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
                 <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>Placement<span style={{ color: "var(--teal-mid)" }}>Do</span></span>
               </div>
