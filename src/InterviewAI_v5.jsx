@@ -478,6 +478,31 @@ const G = () => (
     .mth-bar { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:default; }
     .mth-bar:hover .mth-fill { filter:brightness(1.12); }
     .mth-fill { width:100%; border-radius:6px; transition:filter 0.2s; }
+
+    /* ── Interview Loading Screen (redesigned) ── */
+    .il-wrap { position:fixed; inset:0; background:#080D18; z-index:300; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:'DM Sans',system-ui,sans-serif; }
+    .il-bg { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+    .il-glow-c { position:absolute; top:30%; left:50%; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle,rgba(13,148,136,.22) 0%,transparent 65%); filter:blur(80px); width:min(720px,120vw); height:min(720px,120vw); }
+    .il-glow-br { position:absolute; bottom:10%; right:5%; width:min(280px,50vw); height:min(280px,50vw); border-radius:50%; background:radial-gradient(circle,rgba(124,58,237,.15) 0%,transparent 70%); filter:blur(60px); }
+    .il-glow-tl { position:absolute; top:5%; left:5%; width:min(200px,35vw); height:min(200px,35vw); border-radius:50%; background:radial-gradient(circle,rgba(13,148,136,.1) 0%,transparent 70%); filter:blur(50px); }
+    .il-logo { position:absolute; top:clamp(16px,4vh,28px); left:clamp(16px,4vw,28px); z-index:2; }
+    .il-content { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; width:100%; max-width:min(440px,90vw); padding:0 clamp(16px,5vw,24px); gap:clamp(14px,3.5vh,26px); }
+    .il-avatar-wrap { position:relative; display:flex; align-items:center; justify-content:center; }
+    .il-ring { position:absolute; border-radius:50%; }
+    .il-name { font-family:'Bricolage Grotesque',sans-serif; font-size:clamp(19px,4.5vw,25px); font-weight:800; color:#fff; letter-spacing:-0.025em; margin:0 0 5px; text-align:center; }
+    .il-sub { font-size:clamp(11px,2.5vw,13px); color:rgba(255,255,255,.38); display:flex; align-items:center; justify-content:center; gap:6px; }
+    .il-dot { color:rgba(255,255,255,.18); }
+    .il-status { font-size:clamp(12.5px,2.5vw,14.5px); color:rgba(255,255,255,.52); text-align:center; min-height:1.6em; margin:0; }
+    .il-progress-wrap { width:100%; }
+    .il-track { width:100%; height:4px; background:rgba(255,255,255,.07); border-radius:4px; overflow:hidden; }
+    .il-fill { height:100%; background:linear-gradient(90deg,var(--teal-dark),var(--teal-mid),rgba(45,212,191,.85)); border-radius:4px; box-shadow:0 0 10px rgba(13,148,136,.6); position:relative; overflow:hidden; transition:width .09s linear; }
+    .il-fill::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,rgba(255,255,255,.02) 25%,rgba(255,255,255,.14) 50%,rgba(255,255,255,.02) 75%); background-size:280px 100%; animation:shimmer 1.6s linear infinite; }
+    .il-pct { font-size:11px; font-weight:600; font-family:'JetBrains Mono',monospace; color:rgba(255,255,255,.32); margin-top:8px; text-align:right; }
+    .il-kbd-row { position:absolute; bottom:clamp(14px,3vh,28px); left:0; right:0; display:flex; gap:clamp(14px,3vw,24px); align-items:center; justify-content:center; flex-wrap:wrap; padding:0 24px; }
+    .il-kbd-tip { display:flex; align-items:center; gap:7px; font-size:12px; color:rgba(255,255,255,.3); white-space:nowrap; }
+    .il-kbd { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.15); border-radius:5px; padding:2px 9px; font-size:11px; font-family:'JetBrains Mono',monospace; color:rgba(255,255,255,.5); line-height:1.7; }
+    @media(max-width:480px){ .il-kbd-row { display:none; } }
+    @media(max-width:360px){ .il-content { gap:12px; } }
   `}</style>
 );
 
@@ -2866,22 +2891,35 @@ const CodePanel = ({ activePersona, qIdx, elapsed }) => {
 };
 
 /* ── Interview Loading Screen ── */
+const IL_STATUSES = [
+  "Connecting to AI interviewer…",
+  "Loading your interview profile…",
+  "Securing your session…",
+  "Everything's ready ✓",
+];
+
+const IL_TICK_MS = 80;
+const IL_TOTAL_MS = 3800;
+const IL_INCREMENT = (100 / IL_TOTAL_MS) * IL_TICK_MS;
+
+const IL_KEYBOARD_SHORTCUTS = [
+  ["Space", "Mute mic"],
+  ["→", "Next question"],
+  ["Esc", "End session"],
+];
+
 const InterviewLoading = ({ persona, onReady }) => {
-  const [step, setStep] = useState(0);
-  const [dots, setDots] = useState(".");
-  const STEPS = [
-    { icon: "🎙", label: "Initialising AI interviewer…" },
-    { icon: "📋", label: "Loading your interview profile…" },
-    { icon: "🔒", label: "Securing the session…" },
-    { icon: "✅", label: "Everything is ready!" },
-  ];
+  const [progress, setProgress] = useState(0);
+  const [statusIdx, setStatusIdx] = useState(0);
+
   useEffect(() => {
-    const dotsT = setInterval(() => setDots(d => d.length >= 3 ? "." : d + "."), 480);
-    const stepT = setInterval(() => setStep(s => s < STEPS.length - 1 ? s + 1 : s), 900);
-    const doneT = setTimeout(() => { clearInterval(dotsT); clearInterval(stepT); onReady(); }, 3800);
-    return () => { clearInterval(dotsT); clearInterval(stepT); clearTimeout(doneT); };
+    const progressT = setInterval(() => setProgress(p => Math.min(p + IL_INCREMENT, 100)), IL_TICK_MS);
+    const statusT = setInterval(() => setStatusIdx(i => Math.min(i + 1, IL_STATUSES.length - 1)), IL_TOTAL_MS / IL_STATUSES.length);
+    const doneT = setTimeout(() => { clearInterval(progressT); clearInterval(statusT); onReady(); }, IL_TOTAL_MS);
+    return () => { clearInterval(progressT); clearInterval(statusT); clearTimeout(doneT); };
   }, [onReady]);
-  const defaultPersona = PERSONAS.find((x) => x.id === 3) || PERSONAS[0];
+
+  const defaultPersona = PERSONAS.find(x => x.id === 3) || PERSONAS[0];
   const p = persona || defaultPersona || {
     title: "The Stress-Tester",
     handle: "@rex",
@@ -2891,65 +2929,125 @@ const InterviewLoading = ({ persona, onReady }) => {
     gradientFrom: "#E2E8F0",
     gradientTo: "#CBD5E1",
   };
-  const personaEmoji = p.emoji || "👤";
-  const personaEmojiLabel = `Avatar badge for ${p.title || "interviewer"}`;
+  const pEmoji = p.emoji || "👤";
+
   return (
-    <div style={{ position: "fixed", inset: 0, background: "var(--slate)", zIndex: 300 }}>
-      {/* Background gradient blobs */}
-      <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
-        <div style={{ position: "absolute", top: "15%", left: "20%", width: 420, height: 420, borderRadius: "50%", background: "radial-gradient(circle, rgba(13,148,136,.12) 0%, transparent 70%)", filter: "blur(60px)" }} />
-        <div style={{ position: "absolute", bottom: "20%", right: "15%", width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, rgba(124,58,237,.1) 0%, transparent 70%)", filter: "blur(50px)" }} />
+    <div className="il-wrap">
+      {/* Atmospheric background blobs */}
+      <div className="il-bg" aria-hidden="true">
+        <div className="il-glow-c" />
+        <div className="il-glow-br" />
+        <div className="il-glow-tl" />
       </div>
-      {/* Logo */}
-      <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-        style={{ position: "absolute", top: 28, left: 32 }}>
+
+      {/* Logo — top-left */}
+      <motion.div
+        className="il-logo"
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45 }}
+      >
         <Logo light />
       </motion.div>
-      <div style={{ position: "relative", zIndex: 1, minHeight: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "96px 20px 120px" }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", maxWidth: 340 }}>
-          {/* Persona avatar */}
-          <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.55, type: "spring", stiffness: 240, damping: 18 }}
-            style={{ marginBottom: 28, boxShadow: "0 0 0 0 rgba(13,148,136,.5)", position: "relative", borderRadius: "50%" }}>
-            {/* Pulse ring */}
-            <motion.div animate={{ scale: [1, 1.45, 1], opacity: [0.6, 0, 0.6] }} transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
-              style={{ position: "absolute", inset: -6, borderRadius: "50%", border: "2px solid rgba(13,148,136,.5)" }} />
-            <PersonaAvatar persona={p} size={96} borderWidth={2.5} />
-            <span role="img" aria-label={personaEmojiLabel} style={{ position: "absolute", right: -4, bottom: -4, width: 30, height: 30, borderRadius: "50%", border: "1px solid rgba(255,255,255,.22)", background: "rgba(15,23,42,.72)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, lineHeight: 1 }}>
-              {personaEmoji}
-            </span>
-          </motion.div>
-          {/* Interviewer name */}
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-            style={{ textAlign: "center", marginBottom: 30 }}>
-            <div className="brig" style={{ fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", marginBottom: 4 }}>
-              {p.title}
-            </div>
-            <div style={{ fontSize: 13, color: "rgba(255,255,255,.45)", fontFamily: "'DM Sans',sans-serif", display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <span aria-hidden="true">{personaEmoji}</span>
-              <span>AI Interviewer</span>
-              <span className="sr-only">{`Persona: ${p.title || "interviewer"}`}</span>
-            </div>
-          </motion.div>
-          {/* Step list */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%" }}>
-            {STEPS.map((s, i) => (
-              <motion.div key={i} initial={{ opacity: 0, x: -14 }} animate={{ opacity: i <= step ? 1 : 0.22, x: 0 }} transition={{ delay: i * 0.12, duration: 0.38 }}
-                style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 18px", borderRadius: 12, background: i === step ? "rgba(13,148,136,.15)" : "rgba(255,255,255,.03)", border: `1px solid ${i === step ? "rgba(13,148,136,.35)" : "rgba(255,255,255,.05)"}`, transition: "all 0.3s" }}>
-                <span style={{ fontSize: 16 }}>{s.icon}</span>
-                <span style={{ fontSize: 13.5, color: i < step ? "rgba(255,255,255,.5)" : i === step ? "rgba(255,255,255,.9)" : "rgba(255,255,255,.25)", fontWeight: i === step ? 600 : 400, fontFamily: "'DM Sans',sans-serif", flex: 1 }}>
-                  {s.label}{i === step ? dots : ""}
-                </span>
-                {i < step && <Check size={14} color="var(--teal-mid)" strokeWidth={3} />}
-                {i === step && <div className="spin" style={{ width: 14, height: 14, border: "2px solid rgba(13,148,136,.3)", borderTop: "2px solid var(--teal-mid)", borderRadius: "50%" }} />}
-              </motion.div>
-            ))}
+
+      {/* Central content */}
+      <div className="il-content">
+        {/* Persona avatar with pulsing rings */}
+        <motion.div
+          className="il-avatar-wrap"
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6, type: "spring", stiffness: 200, damping: 18 }}
+        >
+          <motion.div
+            className="il-ring"
+            animate={{ scale: [1, 1.55, 1], opacity: [0.55, 0, 0.55] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+            style={{ width: 138, height: 138, border: "1.5px solid rgba(13,148,136,.55)" }}
+          />
+          <motion.div
+            className="il-ring"
+            animate={{ scale: [1, 1.28, 1], opacity: [0.7, 0, 0.7] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: 0.55 }}
+            style={{ width: 110, height: 110, border: "2px solid rgba(13,148,136,.38)" }}
+          />
+          <PersonaAvatar persona={p} size={84} borderWidth={3} />
+          <span
+            role="img"
+            aria-label={`Avatar badge for ${p.title || "interviewer"}`}
+            style={{
+              position: "absolute", right: -2, bottom: -2,
+              width: 28, height: 28, borderRadius: "50%",
+              border: "1.5px solid rgba(255,255,255,.18)",
+              background: "rgba(8,13,24,.9)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 13, lineHeight: 1,
+            }}
+          >
+            {pEmoji}
+          </span>
+        </motion.div>
+
+        {/* Persona name & handle */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.45 }}
+          style={{ textAlign: "center" }}
+        >
+          <h2 className="il-name">{p.title}</h2>
+          <div className="il-sub">
+            <span aria-hidden="true">{pEmoji}</span>
+            <span>AI Interviewer</span>
+            <span className="il-dot" aria-hidden="true">·</span>
+            <span>{p.handle}</span>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Cycling status text */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+          <AnimatePresence mode="wait">
+            <motion.p
+              className="il-status"
+              key={statusIdx}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.26 }}
+            >
+              {IL_STATUSES[statusIdx]}
+            </motion.p>
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Progress bar */}
+        <motion.div
+          className="il-progress-wrap"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.65 }}
+        >
+          <div className="il-track">
+            <div className="il-fill" style={{ width: `${progress}%` }} />
+          </div>
+          <div className="il-pct">{Math.round(progress)}%</div>
+        </motion.div>
       </div>
-      {/* Bottom tip */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
-        style={{ position: "absolute", bottom: 26, left: "50%", transform: "translateX(-50%)", fontSize: 12, color: "rgba(255,255,255,.22)", textAlign: "center", maxWidth: 320, width: "calc(100% - 24px)" }}>
-        Tip: Press <kbd style={{ background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontFamily: "'JetBrains Mono',monospace" }}>Space</kbd> to mute · <kbd style={{ background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontFamily: "'JetBrains Mono',monospace" }}>→</kbd> next question · <kbd style={{ background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontFamily: "'JetBrains Mono',monospace" }}>Esc</kbd> end
+
+      {/* Keyboard shortcut hints — hidden on phones via CSS */}
+      <motion.div
+        className="il-kbd-row"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        aria-hidden="true"
+      >
+        {IL_KEYBOARD_SHORTCUTS.map(([key, label]) => (
+          <div key={key} className="il-kbd-tip">
+            <kbd className="il-kbd">{key}</kbd>
+            <span>{label}</span>
+          </div>
+        ))}
       </motion.div>
     </div>
   );
