@@ -2898,17 +2898,24 @@ const IL_STATUSES = [
   "Everything's ready ✓",
 ];
 
+const IL_TICK_MS = 80;
+const IL_TOTAL_MS = 3800;
+const IL_INCREMENT = (100 / IL_TOTAL_MS) * IL_TICK_MS;
+
+const IL_KEYBOARD_SHORTCUTS = [
+  ["Space", "Mute mic"],
+  ["→", "Next question"],
+  ["Esc", "End session"],
+];
+
 const InterviewLoading = ({ persona, onReady }) => {
   const [progress, setProgress] = useState(0);
   const [statusIdx, setStatusIdx] = useState(0);
 
   useEffect(() => {
-    const totalMs = 3800;
-    const tickMs = 80;
-    const increment = (100 / totalMs) * tickMs;
-    const progressT = setInterval(() => setProgress(p => Math.min(+(p + increment).toFixed(2), 100)), tickMs);
-    const statusT = setInterval(() => setStatusIdx(i => Math.min(i + 1, IL_STATUSES.length - 1)), totalMs / IL_STATUSES.length);
-    const doneT = setTimeout(() => { clearInterval(progressT); clearInterval(statusT); onReady(); }, totalMs);
+    const progressT = setInterval(() => setProgress(p => Math.min(p + IL_INCREMENT, 100)), IL_TICK_MS);
+    const statusT = setInterval(() => setStatusIdx(i => Math.min(i + 1, IL_STATUSES.length - 1)), IL_TOTAL_MS / IL_STATUSES.length);
+    const doneT = setTimeout(() => { clearInterval(progressT); clearInterval(statusT); onReady(); }, IL_TOTAL_MS);
     return () => { clearInterval(progressT); clearInterval(statusT); clearTimeout(doneT); };
   }, [onReady]);
 
@@ -3035,7 +3042,7 @@ const InterviewLoading = ({ persona, onReady }) => {
         transition={{ delay: 1.2 }}
         aria-hidden="true"
       >
-        {[["Space", "Mute mic"], ["→", "Next question"], ["Esc", "End session"]].map(([key, label]) => (
+        {IL_KEYBOARD_SHORTCUTS.map(([key, label]) => (
           <div key={key} className="il-kbd-tip">
             <kbd className="il-kbd">{key}</kbd>
             <span>{label}</span>

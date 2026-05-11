@@ -74,8 +74,9 @@ const createGeneratedIcon = (title = "", icon = "") => {
 };
 
 export default function ContentCard({ icon, title, description, tags, linkText, onClick }) {
-  // Show emoji directly if the icon prop contains non-alphanumeric characters (e.g. 📋 🎯 💻)
-  const isEmoji = icon && !/^[a-zA-Z0-9\s]+$/.test(icon);
+  // Treat icon as an emoji when its first code point is above the Basic Latin range (> U+007F).
+  // This reliably detects all Unicode emoji/symbols while ignoring plain ASCII abbreviations.
+  const isEmoji = icon ? (icon.codePointAt(0) > 127) : false;
   const generatedIcon = isEmoji ? null : createGeneratedIcon(title, icon);
   return (
     <>
