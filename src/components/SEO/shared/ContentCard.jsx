@@ -11,10 +11,15 @@ const STYLES = `
   }
   .content-card:hover { box-shadow: 0 14px 34px rgba(15,23,42,.11); transform: translateY(-4px); border-color: var(--teal-border-hover); }
   .content-card-icon {
-    width: 44px; height: 44px; border-radius: 12px; overflow: hidden;
+    width: 46px; height: 46px; border-radius: 13px; overflow: hidden;
     border: 1px solid var(--border); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
   }
   .content-card-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .content-card-icon-emoji {
+    background: var(--teal-light); border-color: rgba(13,148,136,.25);
+    font-size: 22px; line-height: 1;
+  }
   .content-card-title { font-size: 16.5px; font-weight: 700; color: var(--slate); letter-spacing: -0.015em; margin: 0; }
   .content-card-desc { font-size: 14px; color: var(--slate-500); line-height: 1.7; margin: 0; flex: 1; }
   .content-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
@@ -69,14 +74,19 @@ const createGeneratedIcon = (title = "", icon = "") => {
 };
 
 export default function ContentCard({ icon, title, description, tags, linkText, onClick }) {
-  const generatedIcon = createGeneratedIcon(title, icon);
+  // Show emoji directly if the icon prop contains non-alphanumeric characters (e.g. 📋 🎯 💻)
+  const isEmoji = icon && !/^[a-zA-Z0-9\s]+$/.test(icon);
+  const generatedIcon = isEmoji ? null : createGeneratedIcon(title, icon);
   return (
     <>
       <style>{STYLES}</style>
       <MotionReveal className="content-card" distance={14} duration={0.45}>
         {(icon || title) && (
-          <div className="content-card-icon">
-            <img src={generatedIcon} alt={`${title} icon`} loading="lazy" />
+          <div className={`content-card-icon${isEmoji ? " content-card-icon-emoji" : ""}`}>
+            {isEmoji
+              ? <span role="img" aria-label={title}>{icon}</span>
+              : <img src={generatedIcon} alt={`${title} icon`} loading="lazy" />
+            }
           </div>
         )}
         <h3 className="brig content-card-title">{title}</h3>
