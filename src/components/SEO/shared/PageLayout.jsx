@@ -143,13 +143,13 @@ const DEFAULT_SEO_KEYWORDS = [
   "coding interview questions",
   "HR interview questions",
 ];
-const EMPTY_KEYWORDS = [];
 
-export default function PageLayout({ title, metaDescription, keywords = EMPTY_KEYWORDS, children, onNav }) {
+export default function PageLayout({ title, metaDescription, keywords = [], children, onNav }) {
   const [mob, setMob] = useState(false);
   const [solidHeader, setSolidHeader] = useState(false);
   // Capture the pathname once at mount; each SPA route mounts a fresh PageLayout instance.
   const [canonicalPath] = useState(() => window.location.pathname);
+  const keywordsKey = Array.isArray(keywords) ? keywords.join("|") : "";
   const normalizedPath = normalizePath(canonicalPath);
   const isNavLinkActive = (href) => {
     const normalizedHref = normalizePath(href);
@@ -166,7 +166,7 @@ export default function PageLayout({ title, metaDescription, keywords = EMPTY_KE
     if (metaDescription) {
       upsertMeta('meta[name="description"]', { name: "description", content: metaDescription });
     }
-    const mergedKeywords = [...new Set([...DEFAULT_SEO_KEYWORDS, ...keywords])].join(", ");
+    const mergedKeywords = [...new Set([...DEFAULT_SEO_KEYWORDS, ...(Array.isArray(keywords) ? keywords : [])])].join(", ");
     upsertMeta('meta[name="keywords"]', { name: "keywords", content: mergedKeywords });
     upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
     upsertMeta('meta[property="og:type"]', { property: "og:type", content: "website" });
@@ -180,7 +180,7 @@ export default function PageLayout({ title, metaDescription, keywords = EMPTY_KE
     upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: `${window.location.origin}/twitter-image.png` });
     upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: `${window.location.origin}${canonicalPath}` });
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: `${window.location.origin}${canonicalPath}` });
-  }, [title, metaDescription, keywords, canonicalPath]);
+  }, [title, metaDescription, keywordsKey, canonicalPath]);
 
   useEffect(() => {
     let ticking = false;
