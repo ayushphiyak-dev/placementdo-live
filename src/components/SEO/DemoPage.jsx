@@ -21,6 +21,7 @@ export default function DemoPage({ onNav }) {
     <PageLayout
       title="PlacementDo Demo | AI Mock Interview Platform"
       metaDescription="Try PlacementDo interactive demo. Practice AI mock interviews with real-time feedback and improve your placement preparation."
+      keywords={["placementdo demo", "AI mock interview demo", "placement interview simulator", "campus placement prep demo"]}
       onNav={onNav}
     >
       <div style={{ background: "var(--ivory)", minHeight: "100vh", paddingBottom: "80px" }}>

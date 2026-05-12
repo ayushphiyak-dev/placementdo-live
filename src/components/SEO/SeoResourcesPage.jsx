@@ -39,13 +39,15 @@ const STYLES = `
     display: inline-flex; align-items: center; gap: 5px;
     padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
     background: #FF4500; color: #fff; border: none; cursor: default;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'DM Sans', sans-serif; text-decoration: none;
   }
   .sr-directory-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin-top: 16px; }
   .sr-directory-item {
     background: var(--slate-50); border: 1px solid var(--border); border-radius: 10px;
-    padding: 14px 16px;
+    padding: 14px 16px; display: block; text-decoration: none; color: inherit;
+    transition: border-color 0.18s, transform 0.18s, background 0.18s;
   }
+  .sr-directory-item:hover { border-color: rgba(13,148,136,.35); background: #f0fdfa; transform: translateY(-1px); }
   .sr-directory-item h4 { font-size: 14px; font-weight: 700; color: var(--slate); margin: 0 0 4px; }
   .sr-directory-item p { font-size: 12.5px; color: var(--slate-500); margin: 0; line-height: 1.5; }
   .sr-tip {
@@ -109,6 +111,7 @@ export default function SeoResourcesPage({ onNav }) {
     <PageLayout
       title="Grow PlacementDo | Share & Support | PlacementDo"
       metaDescription="Help spread the word about PlacementDo — share on LinkedIn, Reddit, GitHub, and directories. Grow the community."
+      keywords={["placementdo", "placement preparation platform", "AI interview practice", "placementdo backlinks", "campus placement resources"]}
       onNav={onNav}
     >
       <style>{STYLES}</style>
@@ -167,8 +170,14 @@ export default function SeoResourcesPage({ onNav }) {
               </div>
             </div>
             <div className="sr-subreddit-list">
-              {["r/cscareerquestions", "r/india", "r/placementseason", "r/EngineeringStudents", "r/developersIndia"].map((sub) => (
-                <div key={sub} className="sr-subreddit">{sub}</div>
+              {[
+                { label: "r/cscareerquestions", url: "https://www.reddit.com/r/cscareerquestions/" },
+                { label: "r/india", url: "https://www.reddit.com/r/india/" },
+                { label: "r/placementseason", url: "https://www.reddit.com/r/placementseason/" },
+                { label: "r/EngineeringStudents", url: "https://www.reddit.com/r/EngineeringStudents/" },
+                { label: "r/developersIndia", url: "https://www.reddit.com/r/developersIndia/" },
+              ].map(({ label, url }) => (
+                <a key={label} className="sr-subreddit" href={url} target="_blank" rel="noopener noreferrer nofollow">{label}</a>
               ))}
             </div>
             <p style={{ marginTop: 16 }}>
@@ -233,21 +242,21 @@ export default function SeoResourcesPage({ onNav }) {
               If you're an early supporter, you can help by upvoting PlacementDo on launch platforms or
               suggesting it in relevant communities and directories.
             </p>
-            <div className="sr-directory-list">
-              {[
-                { name: "Product Hunt", desc: "Upvote on launch day for maximum impact" },
-                { name: "Hacker News", desc: "Show HN post — technical audience" },
-                { name: "BetaList", desc: "Early-stage product discovery" },
-                { name: "AlternativeTo", desc: "Add as alternative to interview prep tools" },
-                { name: "LinkedIn Groups", desc: "Share in placement prep groups" },
-                { name: "WhatsApp Groups", desc: "College placement prep groups" },
-              ].map(({ name, desc }) => (
-                <div key={name} className="sr-directory-item">
-                  <h4>{name}</h4>
-                  <p>{desc}</p>
-                </div>
-              ))}
-            </div>
+              <div className="sr-directory-list">
+                {[
+                  { name: "Product Hunt", desc: "Upvote on launch day for maximum impact", url: "https://www.producthunt.com/" },
+                  { name: "Hacker News", desc: "Show HN post — technical audience", url: "https://news.ycombinator.com/" },
+                  { name: "BetaList", desc: "Early-stage product discovery", url: "https://betalist.com/" },
+                  { name: "AlternativeTo", desc: "Add as alternative to interview prep tools", url: "https://alternativeto.net/" },
+                  { name: "LinkedIn Groups", desc: "Share in placement prep groups", url: "https://www.linkedin.com/groups/" },
+                  { name: "WhatsApp Groups", desc: "College placement prep groups", url: "https://www.whatsapp.com/" },
+                ].map(({ name, desc, url }) => (
+                  <a key={name} className="sr-directory-item" href={url} target="_blank" rel="noopener noreferrer nofollow">
+                    <h4>{name}</h4>
+                    <p>{desc}</p>
+                  </a>
+                ))}
+              </div>
           </div>
         </section>
 

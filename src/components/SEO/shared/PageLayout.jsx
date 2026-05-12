@@ -134,11 +134,22 @@ const STYLES = `
   }
 `;
 
-export default function PageLayout({ title, metaDescription, children, onNav }) {
+const DEFAULT_SEO_KEYWORDS = [
+  "PlacementDo",
+  "placement preparation",
+  "campus placement",
+  "AI mock interview",
+  "aptitude questions",
+  "coding interview questions",
+  "HR interview questions",
+];
+
+export default function PageLayout({ title, metaDescription, keywords = [], children, onNav }) {
   const [mob, setMob] = useState(false);
   const [solidHeader, setSolidHeader] = useState(false);
   // Capture the pathname once at mount; each SPA route mounts a fresh PageLayout instance.
   const [canonicalPath] = useState(() => window.location.pathname);
+  const keywordsDependency = Array.isArray(keywords) ? keywords.join("|") : "";
   const normalizedPath = normalizePath(canonicalPath);
   const isNavLinkActive = (href) => {
     const normalizedHref = normalizePath(href);
@@ -155,9 +166,21 @@ export default function PageLayout({ title, metaDescription, children, onNav }) 
     if (metaDescription) {
       upsertMeta('meta[name="description"]', { name: "description", content: metaDescription });
     }
+    const mergedKeywords = [...new Set([...DEFAULT_SEO_KEYWORDS, ...(Array.isArray(keywords) ? keywords : [])])].join(", ");
+    upsertMeta('meta[name="keywords"]', { name: "keywords", content: mergedKeywords });
     upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
+    upsertMeta('meta[property="og:type"]', { property: "og:type", content: "website" });
+    upsertMeta('meta[property="og:title"]', { property: "og:title", content: title || "PlacementDo" });
+    upsertMeta('meta[property="og:description"]', { property: "og:description", content: metaDescription || "" });
+    upsertMeta('meta[property="og:url"]', { property: "og:url", content: `${window.location.origin}${canonicalPath}` });
+    upsertMeta('meta[property="og:image"]', { property: "og:image", content: `${window.location.origin}/opengraph-image.png` });
+    upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" });
+    upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: title || "PlacementDo" });
+    upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: metaDescription || "" });
+    upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: `${window.location.origin}/twitter-image.png` });
+    upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: `${window.location.origin}${canonicalPath}` });
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: `${window.location.origin}${canonicalPath}` });
-  }, [title, metaDescription, canonicalPath]);
+  }, [title, metaDescription, keywordsDependency, canonicalPath]);
 
   useEffect(() => {
     let ticking = false;

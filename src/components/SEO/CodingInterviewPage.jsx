@@ -167,6 +167,7 @@ export default function CodingInterviewPage({ onNav }) {
     <PageLayout
       title="Coding Interview Questions 2026 | PlacementDo"
       metaDescription="Top coding interview questions from FAANG, product companies, and service companies. Arrays, trees, DP, system design — practice with AI feedback."
+      keywords={["coding interview questions", "DSA interview questions", "placement coding preparation", "technical interview questions", "placementdo coding"]}
       onNav={onNav}
     >
       <style>{STYLES}</style>

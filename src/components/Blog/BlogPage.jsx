@@ -182,10 +182,25 @@ export default function BlogPage({ onNav }) {
   }, [fetchPosts]);
 
   useEffect(() => {
+    const canonicalUrl = `${window.location.origin}/blog`;
     document.title = "Blog | PlacementDo";
     upsertMeta('meta[name="description"]', { name: "description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
+    upsertMeta('meta[name="keywords"]', {
+      name: "keywords",
+      content: "placement blog, placement preparation blog, interview tips for freshers, campus placement guide, PlacementDo blog",
+    });
     upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
-    upsertLink('link[rel="canonical"]', { rel: "canonical", href: `${window.location.origin}/blog` });
+    upsertMeta('meta[property="og:type"]', { property: "og:type", content: "website" });
+    upsertMeta('meta[property="og:title"]', { property: "og:title", content: "Blog | PlacementDo" });
+    upsertMeta('meta[property="og:description"]', { property: "og:description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
+    upsertMeta('meta[property="og:url"]', { property: "og:url", content: canonicalUrl });
+    upsertMeta('meta[property="og:image"]', { property: "og:image", content: `${window.location.origin}/opengraph-image.png` });
+    upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" });
+    upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: "Blog | PlacementDo" });
+    upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
+    upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: canonicalUrl });
+    upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: `${window.location.origin}/twitter-image.png` });
+    upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
   }, []);
 
   const [search, setSearch] = useState("");
