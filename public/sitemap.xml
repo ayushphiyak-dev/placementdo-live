@@ -4,7 +4,7 @@
   <!-- Core Pages -->
   <url>
     <loc>https://placementdo.app/</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
   <!-- PILLAR PAGE: Primary target for "placement" keyword -->
   <url>
     <loc>https://placementdo.app/placement-preparation-complete-guide</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.98</priority>
   </url>
@@ -20,19 +20,19 @@
   <!-- SEO Content Pages -->
   <url>
     <loc>https://placementdo.app/placement-preparation</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://placementdo.app/aptitude-questions</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://placementdo.app/coding-interview-questions</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
@@ -40,37 +40,37 @@
   <!-- Company-Wise Pages -->
   <url>
     <loc>https://placementdo.app/company-wise-questions/tcs</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
     <loc>https://placementdo.app/company-wise-questions/infosys</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
     <loc>https://placementdo.app/company-wise-questions/wipro</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
     <loc>https://placementdo.app/company-wise-questions/accenture</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
     <loc>https://placementdo.app/company-wise-questions/cognizant</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
     <loc>https://placementdo.app/company-wise-questions/hcl</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
@@ -145,6 +145,18 @@
     <lastmod>2026-04-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://placementdo.app/blog/placementdo-review-for-freshers</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.86</priority>
+  </url>
+  <url>
+    <loc>https://placementdo.app/blog/placementdo-vs-manual-interview-preparation</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.84</priority>
   </url>
 
   <!-- Blog Posts: HR Interview cluster -->

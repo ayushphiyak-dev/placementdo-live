@@ -337,14 +337,29 @@ export default function BlogPostPage({ slug, onNav }) {
     const canonicalUrl = `${window.location.origin}/blog/${encodeURIComponent(slug)}`;
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
     if (post) {
+      const description = post.excerpt || "Read detailed interview guidance and product updates from the PlacementDo blog.";
+      const keywordText = Array.isArray(post.tags) && post.tags.length
+        ? `${post.tags.join(", ")}, placement preparation, interview preparation, PlacementDo`
+        : "placement preparation, interview preparation, campus placements, PlacementDo blog";
       document.title = `${post.title} | PlacementDo`;
-      upsertMeta('meta[name="description"]', { name: "description", content: post.excerpt || "Read detailed interview guidance and product updates from the PlacementDo blog." });
+      upsertMeta('meta[name="description"]', { name: "description", content: description });
+      upsertMeta('meta[name="keywords"]', { name: "keywords", content: keywordText });
+      upsertMeta('meta[property="og:type"]', { property: "og:type", content: "article" });
+      upsertMeta('meta[property="og:title"]', { property: "og:title", content: `${post.title} | PlacementDo` });
+      upsertMeta('meta[property="og:description"]', { property: "og:description", content: description });
+      upsertMeta('meta[property="og:url"]', { property: "og:url", content: canonicalUrl });
+      upsertMeta('meta[property="og:image"]', { property: "og:image", content: post.coverImage || `${window.location.origin}/opengraph-image.png` });
+      upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" });
+      upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: `${post.title} | PlacementDo` });
+      upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: description });
+      upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: canonicalUrl });
+      upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: post.coverImage || `${window.location.origin}/twitter-image.png` });
       // Article JSON-LD
       upsertJsonLd("blog-article", {
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": post.title,
-        "description": post.excerpt || "",
+        "description": description,
         "author": { "@type": "Organization", "name": "PlacementDo" },
         "publisher": { "@type": "Organization", "name": "PlacementDo", "url": "https://placementdo.app" },
         "url": canonicalUrl,

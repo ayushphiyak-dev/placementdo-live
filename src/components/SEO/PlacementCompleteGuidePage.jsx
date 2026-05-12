@@ -144,6 +144,7 @@ export default function PlacementCompleteGuidePage({ onNav }) {
     <PageLayout
       title="Placement Preparation Guide 2026 – Complete Roadmap to Crack Interviews | PlacementDo"
       metaDescription="The most complete placement preparation guide for freshers in 2026. Covers placement process, 6-month roadmap, company-wise tips, AI mock interviews, and FAQs."
+      keywords={["what is placement", "placement preparation roadmap", "campus placements 2026", "fresher interview guide", "placementdo complete guide"]}
       onNav={onNav}
     >
       <style>{STYLES}</style>

@@ -162,6 +162,7 @@ export default function PlacementPreparationPage({ onNav }) {
     <PageLayout
       title="Placement Preparation Guide 2026 | PlacementDo"
       metaDescription="Master placement preparation with our complete guide — aptitude tests, coding rounds, HR interviews, and company-specific tips. Practice with AI-powered mock interviews."
+      keywords={["placement preparation", "campus placement preparation", "placement guide 2026", "AI mock interviews", "placementdo"]}
       onNav={onNav}
     >
       <style>{STYLES}</style>

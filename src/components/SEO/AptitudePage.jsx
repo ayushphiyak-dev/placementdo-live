@@ -125,6 +125,7 @@ export default function AptitudePage({ onNav }) {
     <PageLayout
       title="Aptitude Questions for Placement 2026 | PlacementDo"
       metaDescription="Practice 500+ aptitude questions with solutions — quantitative aptitude, logical reasoning, verbal ability, and data interpretation. Boost your placement test score."
+      keywords={["aptitude questions for placement", "quantitative aptitude", "logical reasoning", "placement aptitude test", "placementdo aptitude"]}
       onNav={onNav}
     >
       <style>{STYLES}</style>

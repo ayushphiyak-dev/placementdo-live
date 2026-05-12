@@ -328,6 +328,13 @@ export default function CompanyWisePage({ company, onNav }) {
     <PageLayout
       title={data.title}
       metaDescription={data.meta}
+      keywords={[
+        `${company} placement preparation`,
+        `${company} interview questions`,
+        `${company} aptitude questions`,
+        "company wise placement questions",
+        "placementdo",
+      ]}
       onNav={onNav}
     >
       <style>{STYLES}</style>
