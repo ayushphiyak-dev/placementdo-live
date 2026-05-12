@@ -149,7 +149,7 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
   const [solidHeader, setSolidHeader] = useState(false);
   // Capture the pathname once at mount; each SPA route mounts a fresh PageLayout instance.
   const [canonicalPath] = useState(() => window.location.pathname);
-  const keywordsKey = Array.isArray(keywords) ? keywords.join("|") : "";
+  const keywordsDependency = Array.isArray(keywords) ? keywords.join("|") : "";
   const normalizedPath = normalizePath(canonicalPath);
   const isNavLinkActive = (href) => {
     const normalizedHref = normalizePath(href);
@@ -180,7 +180,7 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
     upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: `${window.location.origin}/twitter-image.png` });
     upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: `${window.location.origin}${canonicalPath}` });
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: `${window.location.origin}${canonicalPath}` });
-  }, [title, metaDescription, keywordsKey, canonicalPath]);
+  }, [title, metaDescription, keywordsDependency, canonicalPath]);
 
   useEffect(() => {
     let ticking = false;
