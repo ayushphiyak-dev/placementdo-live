@@ -1406,8 +1406,8 @@ const Landing = ({ onNav, onCheckout }) => {
         <WaitlistForm size="lg" />
         <p style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 500, marginTop: 12 }}>No spam. No credit card. Just early access.</p>
         <div className="hero-cta-row">
-          <button type="button" className="btn-secondary" aria-label="Try interactive demo" onClick={() => goToSection("demo-section")}><Video size={14} /><span>Try interactive demo</span></button>
-          <button type="button" className="btn-ghost" aria-label="See pricing" onClick={() => goToSection("pricing-section")} style={{ color: "var(--teal-dark)" }}><CreditCard size={14} /><span>See pricing</span></button>
+          <button type="button" className="btn-secondary" onClick={() => goToSection("demo-section")}><Video size={14} /><span>Try interactive demo</span></button>
+          <button type="button" className="btn-ghost" onClick={() => goToSection("pricing-section")} style={{ color: "var(--teal-dark)" }}><CreditCard size={14} /><span>See pricing</span></button>
         </div>
         
         <p className="hero-quick-links" style={{ fontSize: 12.5, color: "var(--slate-500)", display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", alignItems: "center", marginTop: 18 }}>
