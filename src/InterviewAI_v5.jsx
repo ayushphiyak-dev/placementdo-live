@@ -2007,13 +2007,15 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
 
   useEffect(() => {
     if (!isStartPending) return;
-    if (startCountdown === 0) {
-      onSelectPersona?.(selAv);
-      onNav?.("interview");
-      return;
-    }
     const timeoutId = setTimeout(() => {
-      setStartCountdown(prev => Math.max(prev - 1, 0));
+      if (startCountdown <= 1) {
+        setIsStartPending(false);
+        setStartCountdown(3);
+        onSelectPersona?.(selAv);
+        onNav?.("interview");
+        return;
+      }
+      setStartCountdown(prev => prev - 1);
     }, 1000);
     return () => clearTimeout(timeoutId);
   }, [isStartPending, startCountdown, onSelectPersona, onNav, selAv]);
