@@ -4,14 +4,19 @@ import PageLayout from './shared/PageLayout.jsx';
 export default function DemoPage({ onNav }) {
   useEffect(() => {
     // Load the Storylane script dynamically so it executes properly in React
-    const script = document.createElement('script');
-    script.src = "https://js.storylane.io/js/v2/storylane.js";
-    script.async = true;
-    document.body.appendChild(script);
+    const existingScript = document.querySelector('script[data-storylane-sdk="true"]');
+    let script = null;
+    if (!existingScript) {
+      script = document.createElement('script');
+      script.src = "https://js.storylane.io/js/v2/storylane.js";
+      script.async = true;
+      script.dataset.storylaneSdk = "true";
+      document.body.appendChild(script);
+    }
 
     return () => {
-      // Cleanup script on unmount
-      if (document.body.contains(script)) {
+      // Cleanup only if this page created the script
+      if (script && document.body.contains(script)) {
         document.body.removeChild(script);
       }
     };
@@ -78,11 +83,13 @@ export default function DemoPage({ onNav }) {
           }}>
             {/* Using the exact structure provided by Storylane, adapted for JSX */}
             <div>
-              <div style={{ position: 'relative', width: '100%', height: '700px' }}>
+              <div style={{ position: 'relative', width: '100%', height: 'clamp(420px, 72vh, 760px)' }}>
                 <iframe 
                   loading="lazy"
                   src="https://demo.storylane.com/demo/1j3kslnrp6q2?embed=inline"
+                  title="PlacementDo interactive demo"
                   allow="fullscreen"
+                  referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
                   style={{
                     position: 'absolute',
@@ -96,6 +103,9 @@ export default function DemoPage({ onNav }) {
                   }}>
                 </iframe>
               </div>
+              <p style={{ fontSize: 12, color: 'var(--slate-500)', textAlign: 'center', marginTop: 10 }}>
+                Demo not loading? <a href="https://demo.storylane.com/demo/1j3kslnrp6q2" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal-dark)', fontWeight: 600 }}>Open it in a new tab</a>.
+              </p>
             </div>
           </div>
         </section>
