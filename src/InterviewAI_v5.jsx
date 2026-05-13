@@ -2004,8 +2004,8 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
   const tip = TIPS[new Date().getDay() % TIPS.length];
 
   const startInterview = () => {
-    if (onSelectPersona) onSelectPersona(selAv);
-    if (onNav) onNav("interview");
+    onSelectPersona?.(selAv);
+    onNav?.("interview");
   };
 
   return (
