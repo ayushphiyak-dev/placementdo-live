@@ -1982,10 +1982,11 @@ const SignUp = ({ onNav }) => {
 
 
 const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
+  const START_DELAY_SECONDS = 3;
   const [cv, setCv] = useState(false);
   const [avatar, setAvatar] = useState(1);
   const [isStartPending, setIsStartPending] = useState(false);
-  const [startCountdown, setStartCountdown] = useState(3);
+  const [startCountdown, setStartCountdown] = useState(START_DELAY_SECONDS);
   const [form, setForm] = useState({ company: "Google", role: "Software Engineer L5", level: "Mid-Level (3–5 yrs)", language: "English", focus: "Balanced (Technical + Behavioral)" });
   const selAv = PERSONAS.find(a => a.id === avatar);
 
@@ -2008,9 +2009,9 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
   useEffect(() => {
     if (!isStartPending) return;
     const timeoutId = setTimeout(() => {
-      if (startCountdown <= 1) {
+      if (startCountdown === 1) {
         setIsStartPending(false);
-        setStartCountdown(3);
+        setStartCountdown(START_DELAY_SECONDS);
         onSelectPersona?.(selAv);
         onNav?.("interview");
         return;
@@ -2018,17 +2019,17 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
       setStartCountdown(prev => prev - 1);
     }, 1000);
     return () => clearTimeout(timeoutId);
-  }, [isStartPending, startCountdown, onSelectPersona, onNav, selAv]);
+  }, [isStartPending, startCountdown, onSelectPersona, onNav, selAv, START_DELAY_SECONDS]);
 
   const startInterview = () => {
     if (isStartPending) return;
-    setStartCountdown(3);
+    setStartCountdown(START_DELAY_SECONDS);
     setIsStartPending(true);
   };
 
   const cancelInterviewStart = () => {
     setIsStartPending(false);
-    setStartCountdown(3);
+    setStartCountdown(START_DELAY_SECONDS);
   };
 
   return (
