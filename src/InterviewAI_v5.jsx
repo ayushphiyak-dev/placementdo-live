@@ -2005,7 +2005,7 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
 
   const startInterview = () => {
     if (onSelectPersona) onSelectPersona(selAv);
-    onNav("interview");
+    if (onNav) onNav("interview");
   };
 
   return (
