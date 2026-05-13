@@ -2023,7 +2023,6 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
 
   const startInterview = () => {
     if (isStartPending) return;
-    setStartCountdown(START_DELAY_SECONDS);
     setIsStartPending(true);
   };
 
