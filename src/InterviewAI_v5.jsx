@@ -1311,6 +1311,10 @@ const DashboardShell = ({ activeTab, onNav, onUpgrade, children }) => {
 
 /* ── Landing ── */
 const Landing = ({ onNav, onCheckout }) => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+
   useEffect(() => {
     // Load the Storylane script dynamically so it executes properly in React
     const existingScript = document.querySelector('script[data-storylane-sdk="true"]');
@@ -1325,12 +1329,21 @@ const Landing = ({ onNav, onCheckout }) => {
     return () => { if (script && document.body.contains(script)) document.body.removeChild(script); };
   }, []);
 
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = (event) => setPrefersReducedMotion(event.matches);
+    if (typeof media.addEventListener === "function") {
+      media.addEventListener("change", onChange);
+      return () => media.removeEventListener("change", onChange);
+    }
+    media.addListener(onChange);
+    return () => media.removeListener(onChange);
+  }, []);
+
   const goToSection = (id) => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     document.getElementById(id)?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
   };
   const scrollToTop = () => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
   };
 
