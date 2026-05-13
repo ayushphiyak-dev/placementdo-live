@@ -1359,9 +1359,9 @@ const Landing = ({ onNav, onCheckout }) => {
   ];
 
   const socialLinks = [
-    { icon: <Mail size={15} />, label: "Email", href: "mailto:support@placementdo.com?subject=PlacementDo%20Support", external: true },
-    { icon: <Hash size={15} />, label: "Blog", href: "/blog", action: () => navigateTo("/blog") },
-    { icon: <Github size={15} />, label: "GitHub", href: "https://github.com/ayushphiyak-dev/placementdo-live", external: true },
+    { icon: <Mail size={15} />, label: "Email", href: "mailto:support@placementdo.com?subject=PlacementDo%20Support" },
+    { icon: <Hash size={15} />, label: "Blog", href: "/blog" },
+    { icon: <Github size={15} />, label: "GitHub", href: "https://github.com/ayushphiyak-dev/placementdo-live", newTab: true },
   ];
 
   return (
@@ -1766,20 +1766,14 @@ const Landing = ({ onNav, onCheckout }) => {
             A hyper-realistic AI interview simulator that knows your CV, the company, and the exact role. Practice smarter. Land faster.
           </p>
           <div style={{ display: "flex", gap: 8, marginTop: 20 }}>
-            {socialLinks.map(({ icon, label, href, action, external }) => (
+            {socialLinks.map(({ icon, label, href, newTab }) => (
               <a
                 key={label}
                 className="footer-social wiggle"
                 title={label}
                 href={href}
-                target={external ? "_blank" : undefined}
-                rel={external ? "noopener noreferrer" : undefined}
-                onClick={(e) => {
-                  if (action) {
-                    e.preventDefault();
-                    action();
-                  }
-                }}
+                target={newTab ? "_blank" : undefined}
+                rel={newTab ? "noopener noreferrer" : undefined}
               >
                 {icon}
               </a>
