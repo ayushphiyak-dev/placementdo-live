@@ -83,7 +83,7 @@ export default function DemoPage({ onNav }) {
           }}>
             {/* Using the exact structure provided by Storylane, adapted for JSX */}
             <div>
-              <div style={{ position: 'relative', width: '100%', height: 'clamp(420px, 72dvh, 760px)' }}>
+              <div style={{ position: 'relative', width: '100%', height: 'clamp(420px, 72vh, 760px)' }}>
                 <iframe 
                   loading="lazy"
                   src="https://demo.storylane.com/demo/1j3kslnrp6q2?embed=inline"
