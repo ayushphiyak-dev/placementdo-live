@@ -2019,7 +2019,7 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
       setStartCountdown(prev => prev - 1);
     }, 1000);
     return () => clearTimeout(timeoutId);
-  }, [isStartPending, startCountdown, onSelectPersona, onNav, selAv, START_DELAY_SECONDS]);
+  }, [isStartPending, startCountdown, onSelectPersona, onNav, selAv]);
 
   const startInterview = () => {
     if (isStartPending) return;
