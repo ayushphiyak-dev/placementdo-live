@@ -1308,11 +1308,16 @@ const DashboardShell = ({ activeTab, onNav, onUpgrade, children }) => {
 const Landing = ({ onNav, onCheckout }) => {
   useEffect(() => {
     // Load the Storylane script dynamically so it executes properly in React
-    const script = document.createElement('script');
-    script.src = "https://js.storylane.io/js/v2/storylane.js";
-    script.async = true;
-    document.body.appendChild(script);
-    return () => { if (document.body.contains(script)) document.body.removeChild(script); };
+    const existingScript = document.querySelector('script[data-storylane-sdk="true"]');
+    let script = null;
+    if (!existingScript) {
+      script = document.createElement('script');
+      script.src = "https://js.storylane.io/js/v2/storylane.js";
+      script.async = true;
+      script.dataset.storylaneSdk = "true";
+      document.body.appendChild(script);
+    }
+    return () => { if (script && document.body.contains(script)) document.body.removeChild(script); };
   }, []);
 
   const goToSection = (id) => {
@@ -1351,6 +1356,12 @@ const Landing = ({ onNav, onCheckout }) => {
     { label: "TCS Questions", href: "/company-wise-questions/tcs", action: () => navigateTo("/company-wise-questions/tcs") },
     { label: "Wipro Questions", href: "/company-wise-questions/wipro", action: () => navigateTo("/company-wise-questions/wipro") },
     { label: "Interactive Demo", href: "/demo", action: () => navigateTo("/demo") },
+  ];
+
+  const socialLinks = [
+    { icon: <MessageSquare size={15} />, label: "Email", href: "mailto:support@placementdo.com?subject=PlacementDo%20Support", external: true },
+    { icon: <Hash size={15} />, label: "Blog", href: "/blog", action: () => navigateTo("/blog") },
+    { icon: <Bookmark size={15} />, label: "GitHub", href: "https://github.com/ayushphiyak-dev/placementdo-live", external: true },
   ];
 
   return (
@@ -1493,6 +1504,7 @@ const Landing = ({ onNav, onCheckout }) => {
               src="https://demo.storylane.com/demo/1j3kslnrp6q2?embed=inline"
               title="PlacementDo Interactive Demo"
               allow="fullscreen"
+              referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
               style={{
                 position: 'absolute',
@@ -1506,6 +1518,9 @@ const Landing = ({ onNav, onCheckout }) => {
               }}
             />
           </div>
+          <p style={{ fontSize: 12, color: "var(--slate-500)", marginTop: 12 }}>
+            Demo not loading? <a href="https://demo.storylane.com/demo/1j3kslnrp6q2" target="_blank" rel="noopener noreferrer" style={{ color: "var(--teal-dark)", fontWeight: 600 }}>Open it in a new tab</a>.
+          </p>
         </motion.div>
       </div>
     </section>
@@ -1751,12 +1766,23 @@ const Landing = ({ onNav, onCheckout }) => {
             A hyper-realistic AI interview simulator that knows your CV, the company, and the exact role. Practice smarter. Land faster.
           </p>
           <div style={{ display: "flex", gap: 8, marginTop: 20 }}>
-            {[
-              { icon: <MessageSquare size={15} />, label: "Twitter/X" },
-              { icon: <Hash size={15} />, label: "LinkedIn" },
-              { icon: <Bookmark size={15} />, label: "GitHub" },
-            ].map(({ icon, label }) => (
-              <div key={label} className="footer-social wiggle" title={label}>{icon}</div>
+            {socialLinks.map(({ icon, label, href, action, external }) => (
+              <a
+                key={label}
+                className="footer-social wiggle"
+                title={label}
+                href={href}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noopener noreferrer" : undefined}
+                onClick={(e) => {
+                  if (action) {
+                    e.preventDefault();
+                    action();
+                  }
+                }}
+              >
+                {icon}
+              </a>
             ))}
           </div>
         </div>
