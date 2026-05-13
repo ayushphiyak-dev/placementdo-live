@@ -9,8 +9,8 @@ import {
   Mail, Bell, LogIn, Lock, Target, CheckCircle2, UserPlus,
   CreditCard, Palette, Menu, X, AlertTriangle, UserCircle,
   Star, MessageSquare, HelpCircle, Flame, Pencil,
-  ChevronDown, ChevronUp, Calendar, Hash, Bookmark,
-  LifeBuoy, Send, Bot
+  ChevronDown, ChevronUp, Calendar, Hash,
+  LifeBuoy, Send, Bot, Github
 } from "lucide-react";
 
 const G = () => (
@@ -1359,9 +1359,9 @@ const Landing = ({ onNav, onCheckout }) => {
   ];
 
   const socialLinks = [
-    { icon: <MessageSquare size={15} />, label: "Email", href: "mailto:support@placementdo.com?subject=PlacementDo%20Support", external: true },
+    { icon: <Mail size={15} />, label: "Email", href: "mailto:support@placementdo.com?subject=PlacementDo%20Support", external: true },
     { icon: <Hash size={15} />, label: "Blog", href: "/blog", action: () => navigateTo("/blog") },
-    { icon: <Bookmark size={15} />, label: "GitHub", href: "https://github.com/ayushphiyak-dev/placementdo-live", external: true },
+    { icon: <Github size={15} />, label: "GitHub", href: "https://github.com/ayushphiyak-dev/placementdo-live", external: true },
   ];
 
   return (
