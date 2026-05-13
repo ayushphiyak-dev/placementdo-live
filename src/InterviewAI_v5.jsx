@@ -1985,7 +1985,6 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
   const [cv, setCv] = useState(false);
   const [avatar, setAvatar] = useState(1);
   const [form, setForm] = useState({ company: "Google", role: "Software Engineer L5", level: "Mid-Level (3–5 yrs)", language: "English", focus: "Balanced (Technical + Behavioral)" });
-  const [showCountdown, setShowCountdown] = useState(false);
   const selAv = PERSONAS.find(a => a.id === avatar);
 
   const PRESETS = [
@@ -2011,16 +2010,6 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
 
   return (
     <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} style={{ position: "relative" }}>
-      <AnimatePresence>
-        {showCountdown && (
-          <CountdownModal
-            persona={selAv}
-            onStart={() => { setShowCountdown(false); onNav("interview"); }}
-            onCancel={() => setShowCountdown(false)}
-          />
-        )}
-      </AnimatePresence>
-
       <div style={{ marginBottom: 20 }}>
         <h1 className="brig" style={{ fontSize: "clamp(22px,3vw,28px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.03em" }}>New Interview Session</h1>
         <p style={{ fontSize: 14, color: "var(--slate-500)", marginTop: 5 }}>Configure your session below, then start when ready.</p>
