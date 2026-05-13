@@ -1358,11 +1358,11 @@ const Landing = ({ onNav, onCheckout }) => {
     { label: "Interactive Demo", href: "/demo", action: () => navigateTo("/demo") },
   ];
 
-  const socialLinks = [
+  const socialLinks = useMemo(() => [
     { icon: <Mail size={15} />, label: "Email", href: "mailto:support@placementdo.com?subject=PlacementDo%20Support" },
     { icon: <Hash size={15} />, label: "Blog", href: "/blog" },
     { icon: <Github size={15} />, label: "GitHub", href: "https://github.com/ayushphiyak-dev/placementdo-live", newTab: true },
-  ];
+  ], []);
 
   return (
     <>
@@ -1771,6 +1771,7 @@ const Landing = ({ onNav, onCheckout }) => {
                 key={label}
                 className="footer-social wiggle"
                 title={label}
+                aria-label={label}
                 href={href}
                 target={newTab ? "_blank" : undefined}
                 rel={newTab ? "noopener noreferrer" : undefined}
