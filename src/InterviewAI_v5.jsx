@@ -427,9 +427,14 @@ const G = () => (
     .footer-link:focus-visible { outline:2px solid rgba(45,212,191,.75); outline-offset:2px; }
     .footer-social { width:36px; height:36px; border-radius:9px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; color:rgba(255,255,255,.5); }
     .footer-social:hover { background:rgba(13,148,136,.25); border-color:rgba(13,148,136,.5); color:var(--teal-mid); transform:translateY(-2px); }
+    .hero-cta-row { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:16px; }
+    .footer-bottom-action { font-size:12px; color:rgba(255,255,255,.25); background:none; border:none; cursor:pointer; transition:color 0.15s, transform 0.15s; font-family:'DM Sans',sans-serif; }
+    .footer-bottom-action:hover { color:rgba(255,255,255,.6); transform:translateY(-1px); }
+    .footer-bottom-action:focus-visible { outline:2px solid rgba(45,212,191,.75); outline-offset:2px; border-radius:6px; }
     @media(max-width:1100px){ .footer-grid { grid-template-columns:1fr 1fr 1fr; gap:32px; } }
     @media(max-width:900px){ .footer-grid { grid-template-columns:1fr 1fr; gap:36px; } }
     @media(max-width:580px){ .footer-grid { grid-template-columns:1fr; gap:28px; padding:48px 20px 32px; } }
+    @media(max-width:480px){ .hero-cta-row { flex-direction:column; width:100%; } .hero-cta-row button { width:100%; justify-content:center; } }
 
     /* ── Score counter animation ── */
     @keyframes score-pop { 0%{transform:scale(0.75);opacity:0;} 75%{transform:scale(1.06);} 100%{transform:scale(1);opacity:1;} }
@@ -1323,6 +1328,7 @@ const Landing = ({ onNav, onCheckout }) => {
   const goToSection = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   const productLinks = [
     { label: "Features", href: "/features", action: () => onNav("features") },
@@ -1386,6 +1392,10 @@ const Landing = ({ onNav, onCheckout }) => {
         style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", maxWidth: 520 }}>
         <WaitlistForm size="lg" />
         <p style={{ fontSize: 12, color: "var(--slate-400)", fontWeight: 500, marginTop: 12 }}>No spam. No credit card. Just early access.</p>
+        <div className="hero-cta-row">
+          <button type="button" className="btn-secondary" onClick={() => goToSection("demo-section")}><Video size={14} /> Try interactive demo</button>
+          <button type="button" className="btn-ghost" onClick={() => goToSection("pricing-section")} style={{ color: "var(--teal-dark)" }}><CreditCard size={14} /> See pricing</button>
+        </div>
         
         <p className="hero-quick-links" style={{ fontSize: 12.5, color: "var(--slate-500)", display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", alignItems: "center", marginTop: 18 }}>
           <a href="/signin" onClick={(e) => { e.preventDefault(); onNav("signin"); }} style={{ color: "var(--teal-dark)", fontWeight: 600 }}>
@@ -1834,11 +1844,9 @@ const Landing = ({ onNav, onCheckout }) => {
             { label: "Privacy", action: () => onNav("privacy") },
             { label: "Terms", action: () => onNav("terms") },
             { label: "Cookies", action: () => onNav("privacy") },
+            { label: "Back to top", action: scrollToTop },
           ].map(({ label, action }) => (
-            <button key={label} style={{ fontSize: 12, color: "rgba(255,255,255,.25)", background: "none", border: "none", cursor: "pointer", transition: "color 0.15s", fontFamily: "'DM Sans',sans-serif" }}
-              onClick={action}
-              onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,.6)"}
-              onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,.25)"}>{label}</button>
+            <button key={label} type="button" className="footer-bottom-action" onClick={action}>{label}</button>
           ))}
         </div>
       </div>
