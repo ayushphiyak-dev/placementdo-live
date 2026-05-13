@@ -2006,7 +2006,7 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
 
   const startInterview = () => {
     if (onSelectPersona) onSelectPersona(selAv);
-    setShowCountdown(true);
+    onNav("interview");
   };
 
   return (
