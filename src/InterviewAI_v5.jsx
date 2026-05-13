@@ -1982,8 +1982,11 @@ const SignUp = ({ onNav }) => {
 
 
 const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
+  const START_DELAY_SECONDS = 3;
   const [cv, setCv] = useState(false);
   const [avatar, setAvatar] = useState(1);
+  const [isStartPending, setIsStartPending] = useState(false);
+  const [startCountdown, setStartCountdown] = useState(START_DELAY_SECONDS);
   const [form, setForm] = useState({ company: "Google", role: "Software Engineer L5", level: "Mid-Level (3–5 yrs)", language: "English", focus: "Balanced (Technical + Behavioral)" });
   const selAv = PERSONAS.find(a => a.id === avatar);
 
@@ -2003,9 +2006,29 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
   ];
   const tip = TIPS[new Date().getDay() % TIPS.length];
 
+  useEffect(() => {
+    if (!isStartPending) return;
+    const timeoutId = setTimeout(() => {
+      if (startCountdown === 1) {
+        setIsStartPending(false);
+        setStartCountdown(START_DELAY_SECONDS);
+        onSelectPersona?.(selAv);
+        onNav?.("interview");
+        return;
+      }
+      setStartCountdown(prev => prev - 1);
+    }, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [isStartPending, startCountdown, onSelectPersona, onNav, selAv]);
+
   const startInterview = () => {
-    onSelectPersona?.(selAv);
-    onNav?.("interview");
+    if (isStartPending) return;
+    setIsStartPending(true);
+  };
+
+  const cancelInterviewStart = () => {
+    setIsStartPending(false);
+    setStartCountdown(START_DELAY_SECONDS);
   };
 
   return (
@@ -2170,9 +2193,29 @@ const NewInterview = ({ onNav, onUpgrade, onSelectPersona, showToast }) => {
               ))}
             </div>
             <div style={{ height: 1, background: "rgba(255,255,255,.08)", margin: "18px 0" }} />
-            <button className="btn-primary" onClick={startInterview} style={{ width: "100%", justifyContent: "center", fontSize: 14, padding: "13px" }}>
-              <div className="dot-live" style={{ width: 8, height: 8, borderRadius: "50%", background: "#fff" }} /> Start Live Interview
+            <button className="btn-primary" onClick={startInterview} disabled={isStartPending} style={{ width: "100%", justifyContent: "center", fontSize: 14, padding: "13px", opacity: isStartPending ? 0.88 : 1 }}>
+              <div className="dot-live" style={{ width: 8, height: 8, borderRadius: "50%", background: "#fff", animationPlayState: isStartPending ? "paused" : "running" }} />
+              {isStartPending ? `Starting in ${startCountdown}s…` : "Start Live Interview"}
             </button>
+            <AnimatePresence>
+              {isStartPending && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ marginTop: 12, borderRadius: 12, border: "1px solid rgba(255,255,255,.16)", background: "rgba(255,255,255,.06)", padding: "11px 12px", display: "flex", gap: 10, alignItems: "center", justifyContent: "space-between" }}
+                >
+                  <p style={{ margin: 0, fontSize: 11.5, color: "rgba(255,255,255,.78)", lineHeight: 1.45 }}>
+                    Starting in <strong style={{ color: "#fff" }}>{startCountdown}</strong> sec.
+                    <span style={{ color: "rgba(255,255,255,.56)" }}> Press cancel if you clicked by mistake.</span>
+                  </p>
+                  <button className="btn-secondary" onClick={cancelInterviewStart} style={{ flexShrink: 0, borderColor: "rgba(255,255,255,.24)", color: "#fff", background: "rgba(15,23,42,.4)", padding: "6px 10px", fontSize: 12 }}>
+                    Cancel
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
             <p style={{ fontSize: 11, color: "rgba(255,255,255,.28)", textAlign: "center", marginTop: 9 }}>Uses 1 interview credit</p>
           </div>
         </div>
