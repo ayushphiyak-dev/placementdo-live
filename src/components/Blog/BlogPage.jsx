@@ -503,7 +503,7 @@ export default function BlogPage({ onNav }) {
                   {featuredPost.coverImage ? (
                     <img
                       src={featuredPost.coverImage}
-                      alt={featuredPost.title}
+                      alt={`${featuredPost.title} cover image`}
                       className="blog-featured-img"
                       onError={(e) => { e.currentTarget.style.display = "none"; }}
                     />
@@ -614,7 +614,7 @@ export default function BlogPage({ onNav }) {
                   {post.coverImage && (
                     <img
                       src={post.coverImage}
-                      alt={post.title}
+                      alt={`${post.title} cover image`}
                       className="blog-card-cover"
                       loading="lazy"
                       onError={(e) => { e.currentTarget.style.display = "none"; }}
