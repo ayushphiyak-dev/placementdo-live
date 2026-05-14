@@ -208,7 +208,7 @@ export default function BlogPage({ onNav }) {
           ? "Unable to refresh posts from server right now."
           : "Unable to refresh posts from server. Showing local fallback content."
       );
-      if (!token) setPosts(FALLBACK_POSTS);
+      if (!token) setPosts((prev) => (prev.length > 0 ? prev : FALLBACK_POSTS));
     } finally {
       setPostsLoading(false);
     }

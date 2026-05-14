@@ -271,7 +271,7 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
               className="seo-ham"
               ref={menuButtonRef}
               onClick={() => setMob((o) => !o)}
-              aria-label="Menu"
+              aria-label={mob ? "Close menu" : "Open menu"}
               aria-expanded={mob}
               aria-controls="seo-mobile-menu"
               type="button"
