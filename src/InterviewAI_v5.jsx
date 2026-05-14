@@ -1872,41 +1872,71 @@ const Landing = ({ onNav, onCheckout }) => {
 const SignIn = ({ onNav }) => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [resetSent, setResetSent] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(false);
-  const submit = e => { e.preventDefault(); setLoading(true); setTimeout(() => { setLoading(false); setShowComingSoon(true); }, 1200); };
-  const handleForgot = () => { setResetSent(true); setTimeout(() => setResetSent(false), 4000); };
+  const submit = e => { e.preventDefault(); setLoading(true); setTimeout(() => { setLoading(false); setShowComingSoon(true); }, 900); };
   return (
-    <main style={{ minHeight: "100vh", background: "var(--slate-50)", display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 20px" }}>
-      <motion.div initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }} style={{ width: "100%", maxWidth: 420 }}>
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}><Logo onClick={() => onNav("landing")} /></div>
-          <h1 className="brig" style={{ fontSize: 28, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.03em" }}>Welcome back</h1>
-          <p style={{ fontSize: 14, color: "var(--slate-500)", marginTop: 6 }}>Sign in to continue your practice sessions.</p>
+    <main style={{ minHeight: "100vh", background: "var(--ivory)", display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 20px" }}>
+      <motion.div initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }} style={{ width: "100%", maxWidth: 440 }}>
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}><Logo onClick={() => onNav("landing")} /></div>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--teal-light)", color: "var(--teal-dark)", fontSize: 12, fontWeight: 700, padding: "5px 14px", borderRadius: 999, marginBottom: 14, letterSpacing: "0.04em", border: "1px solid rgba(13,148,136,.2)" }}>
+            <Sparkles size={11} /> LAUNCHING SOON
+          </div>
+          <h1 className="brig" style={{ fontSize: 30, fontWeight: 800, color: "var(--slate)", letterSpacing: "-0.03em", margin: "0 0 8px" }}>Welcome back</h1>
+          <p style={{ fontSize: 15, color: "var(--slate-500)", margin: 0, lineHeight: 1.6 }}>Sign in will be available at launch. Join the waitlist to get early access.</p>
         </div>
-        <div className="card" style={{ padding: 32 }}>
-          <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            <div><label>Email Address</label><input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" disabled={loading} /></div>
+
+        {/* Card */}
+        <div className="card" style={{ padding: "32px 36px", boxShadow: "var(--shadow-lg)" }}>
+          {/* Coming-soon banner inside card */}
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 10, background: "var(--amber-light)", border: "1px solid rgba(217,119,6,.25)", borderRadius: 10, padding: "12px 14px", marginBottom: 22 }}>
+            <Bell size={15} style={{ color: "var(--amber)", flexShrink: 0, marginTop: 1 }} />
+            <p style={{ margin: 0, fontSize: 13, color: "#92400E", lineHeight: 1.55 }}>
+              <strong style={{ color: "#78350F" }}>Sign-in is not live yet.</strong> We&apos;re launching soon — join the waitlist to get notified the moment we go live.
+            </p>
+          </div>
+
+          <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                <label style={{ margin: 0 }}>Password</label>
-                <span style={{ fontSize: 12, color: resetSent ? "var(--green)" : "var(--teal)", cursor: "pointer", fontWeight: 600, transition: "color 0.15s" }}
-                  onClick={handleForgot}
-                  onMouseEnter={e => e.currentTarget.style.color = resetSent ? "var(--green)" : "var(--teal-dark)"} onMouseLeave={e => e.currentTarget.style.color = resetSent ? "var(--green)" : "var(--teal)"}>
-                  {resetSent ? "✓ Reset email sent!" : "Forgot password?"}
-                </span>
-              </div>
-              <input type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} placeholder="••••••••" disabled={loading} />
+              <label style={{ fontSize: 13, fontWeight: 600, color: "var(--slate-700)", marginBottom: 6, display: "block", textTransform: "none", letterSpacing: 0 }}>Email Address</label>
+              <input
+                type="email"
+                value={form.email}
+                onChange={e => setForm({ ...form, email: e.target.value })}
+                placeholder="you@example.com"
+                disabled={loading}
+                style={{ fontSize: 15 }}
+              />
             </div>
-            <button type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", justifyContent: "center", fontSize: 15, padding: "13px", marginTop: 4 }}>
+            <div>
+              <label style={{ fontSize: 13, fontWeight: 600, color: "var(--slate-700)", marginBottom: 6, display: "block", textTransform: "none", letterSpacing: 0 }}>Password</label>
+              <input
+                type="password"
+                value={form.password}
+                onChange={e => setForm({ ...form, password: e.target.value })}
+                placeholder="••••••••"
+                disabled={loading}
+                style={{ fontSize: 15 }}
+              />
+            </div>
+            <button type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", justifyContent: "center", fontSize: 15, padding: "13px", marginTop: 4, borderRadius: 12 }}>
               {loading ? <><span className="spin"><RefreshCw size={16} /></span> Signing in…</> : <><LogIn size={16} /> Sign in</>}
             </button>
           </form>
+
           <div style={{ height: 1, background: "var(--border)", margin: "22px 0" }} />
-          <p style={{ textAlign: "center", fontSize: 13.5, color: "var(--slate-500)" }}>
-            Don't have an account?{" "}
-            <span onClick={() => onNav("landing")} style={{ color: "var(--teal)", fontWeight: 600, cursor: "pointer", transition: "color 0.15s" }}
-              onMouseEnter={e => e.currentTarget.style.color = "var(--teal-dark)"} onMouseLeave={e => e.currentTarget.style.color = "var(--teal)"}>Join the waitlist →</span>
+
+          <button
+            className="btn-secondary"
+            onClick={() => onNav("landing")}
+            style={{ width: "100%", justifyContent: "center", fontSize: 14, padding: "12px" }}
+          >
+            <Bell size={14} /> Join the Waitlist
+          </button>
+
+          <p style={{ textAlign: "center", fontSize: 13, color: "var(--slate-400)", marginTop: 16 }}>
+            Get early access when we launch · No spam
           </p>
         </div>
       </motion.div>
@@ -1918,20 +1948,25 @@ const SignIn = ({ onNav }) => {
             style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.65)", backdropFilter: "blur(10px)", zIndex: 999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}
             onClick={e => e.target === e.currentTarget && setShowComingSoon(false)}>
             <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 12 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              style={{ background: "var(--white)", border: "1px solid var(--border)", borderRadius: 20, boxShadow: "0 32px 80px rgba(15,23,42,.35)", width: "100%", maxWidth: 400, textAlign: "center", padding: "56px 40px 48px" }}>
+              style={{ background: "var(--white)", border: "1px solid var(--border)", borderRadius: 20, boxShadow: "0 32px 80px rgba(15,23,42,.35)", width: "100%", maxWidth: 400, textAlign: "center", padding: "48px 36px 40px" }}>
               <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 280, damping: 18, delay: 0.1 }}
-                style={{ width: 72, height: 72, borderRadius: "50%", background: "var(--teal-light)", border: "2px solid var(--teal)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", boxShadow: "0 8px 24px rgba(20,184,166,.25)" }}>
-                <LogIn size={32} style={{ color: "var(--teal)" }} strokeWidth={2.5} />
+                style={{ width: 72, height: 72, borderRadius: "50%", background: "var(--teal-light)", border: "2px solid var(--teal)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", boxShadow: "0 8px 24px rgba(20,184,166,.25)" }}>
+                <Sparkles size={30} style={{ color: "var(--teal)" }} strokeWidth={2} />
               </motion.div>
-              <h2 className="brig" style={{ fontSize: 22, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", marginBottom: 10 }}>Sign In Coming Soon 🚀</h2>
-              <p style={{ fontSize: 14.5, color: "var(--slate-500)", lineHeight: 1.65, marginBottom: 28 }}>
-                The sign-in function will be available after our launch date.<br />
-                <strong style={{ color: "var(--slate)" }}>Kindly wait — we'll notify you!</strong>
+              <h2 className="brig" style={{ fontSize: 24, fontWeight: 800, color: "var(--slate)", letterSpacing: "-0.02em", marginBottom: 10 }}>Coming Soon 🚀</h2>
+              <p style={{ fontSize: 15, color: "var(--slate-500)", lineHeight: 1.65, marginBottom: 24 }}>
+                We&apos;re launching soon! Join the waitlist to get notified the moment sign-in goes live.
               </p>
-              <button className="btn-primary" onClick={() => setShowComingSoon(false)}
-                style={{ width: "100%", justifyContent: "center", fontSize: 15, padding: "13px 24px", borderRadius: 13 }}>
-                Got it
-              </button>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <button className="btn-primary" onClick={() => { setShowComingSoon(false); onNav("landing"); }}
+                  style={{ width: "100%", justifyContent: "center", fontSize: 15, padding: "13px 24px", borderRadius: 13 }}>
+                  <Bell size={15} /> Join the Waitlist
+                </button>
+                <button className="btn-ghost" onClick={() => setShowComingSoon(false)}
+                  style={{ width: "100%", justifyContent: "center", fontSize: 14 }}>
+                  Close
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -4922,7 +4957,7 @@ const PersonasPage = ({ onNav }) => {
             Real interviews aren't just about what you know — they're about who's asking. PlacementDo trains how you react to 6 distinct behavioral archetypes, from the dangerously charming to the psychologically intense.
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <button className="btn-primary" onClick={() => onNav("signin")}><Zap size={14} /> Start Practicing</button>
+            <button className="btn-primary" onClick={() => onNav("landing")}><Zap size={14} /> Join Waitlist</button>
             <button className="btn-secondary" onClick={() => onNav("features")}>See All Features <ChevronRight size={14} /></button>
           </div>
         </motion.div>
@@ -5063,7 +5098,7 @@ const HowItWorksPage = ({ onNav }) => {
             A structured, repeatable practice workflow designed to deliver measurable improvement with every session — from your first practice through to your offer.
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <button className="btn-primary" onClick={() => onNav("signin")}><Zap size={14} /> Start Now</button>
+            <button className="btn-primary" onClick={() => onNav("landing")}><Zap size={14} /> Join Waitlist</button>
             <button className="btn-secondary" onClick={() => onNav("features")}>See Features <ChevronRight size={14} /></button>
           </div>
         </motion.div>
