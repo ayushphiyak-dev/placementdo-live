@@ -206,61 +206,7 @@ export default function BlogPage({ onNav }) {
     fetchPosts();
   }, [fetchPosts]);
 
-  useEffect(() => {
-    const canonicalUrl = `${window.location.origin}/blog`;
-    document.title = "Blog | PlacementDo";
-    upsertMeta('meta[name="description"]', { name: "description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
-    upsertMeta('meta[name="keywords"]', {
-      name: "keywords",
-      content: "placement blog, placement preparation blog, interview tips for freshers, campus placement guide, PlacementDo blog",
-    });
-    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
-    upsertMeta('meta[property="og:type"]', { property: "og:type", content: "website" });
-    upsertMeta('meta[property="og:title"]', { property: "og:title", content: "Blog | PlacementDo" });
-    upsertMeta('meta[property="og:description"]', { property: "og:description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
-    upsertMeta('meta[property="og:url"]', { property: "og:url", content: canonicalUrl });
-    upsertMeta('meta[property="og:image"]', { property: "og:image", content: `${window.location.origin}/opengraph-image.png` });
-    upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" });
-    upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: "Blog | PlacementDo" });
-    upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
-    upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: canonicalUrl });
-    upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: `${window.location.origin}/twitter-image.png` });
-    upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
-  }, []);
-
-  useEffect(() => {
-    if (!categories.includes(activeCategory)) {
-      setActiveCategory("All");
-    }
-  }, [categories, activeCategory]);
-
-  useEffect(() => {
-    const canonicalUrl = `${window.location.origin}/blog`;
-    upsertJsonLd("blog-listing", {
-      "@context": "https://schema.org",
-      "@type": "Blog",
-      "name": "PlacementDo Blog",
-      "description": "Interview preparation insights, guides, and product updates from PlacementDo.",
-      "url": canonicalUrl,
-      "publisher": {
-        "@type": "Organization",
-        "name": "PlacementDo",
-        "url": window.location.origin,
-      },
-      "blogPost": publishedPosts.map((post) => ({
-        "@type": "BlogPosting",
-        "headline": post.title,
-        "url": `${window.location.origin}/blog/${post.slug}`,
-        "datePublished": post.date || post.publishedAt || "",
-        "author": { "@type": "Person", "name": post.author || "PlacementDo Team" },
-      })),
-    });
-    return () => {
-      const el = document.head.querySelector('script[data-ld-id="blog-listing"]');
-      if (el) el.remove();
-    };
-  }, [publishedPosts]);
-
+  // --- State and derived data (must be declared before useEffects that reference them) ---
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
@@ -297,6 +243,64 @@ export default function BlogPage({ onNav }) {
     if (!q && activeCategory === "All") return bySearch.slice(1);
     return bySearch;
   }, [publishedPosts, search, activeCategory]);
+
+  // --- SEO meta tags ---
+  useEffect(() => {
+    const canonicalUrl = `${window.location.origin}/blog`;
+    document.title = "Blog | PlacementDo — Interview Tips & Placement Guides";
+    upsertMeta('meta[name="description"]', { name: "description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
+    upsertMeta('meta[name="keywords"]', {
+      name: "keywords",
+      content: "placement blog, placement preparation blog, interview tips for freshers, campus placement guide, PlacementDo blog, aptitude test tips, HR interview questions, resume writing tips",
+    });
+    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
+    upsertMeta('meta[property="og:type"]', { property: "og:type", content: "website" });
+    upsertMeta('meta[property="og:title"]', { property: "og:title", content: "Blog | PlacementDo" });
+    upsertMeta('meta[property="og:description"]', { property: "og:description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
+    upsertMeta('meta[property="og:url"]', { property: "og:url", content: canonicalUrl });
+    upsertMeta('meta[property="og:image"]', { property: "og:image", content: `${window.location.origin}/opengraph-image.png` });
+    upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" });
+    upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: "Blog | PlacementDo" });
+    upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
+    upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: canonicalUrl });
+    upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: `${window.location.origin}/twitter-image.png` });
+    upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
+  }, []);
+
+  // Reset active category if it no longer exists in the available categories
+  useEffect(() => {
+    if (!categories.includes(activeCategory)) {
+      setActiveCategory("All");
+    }
+  }, [categories, activeCategory]);
+
+  // JSON-LD structured data for blog listing
+  useEffect(() => {
+    const canonicalUrl = `${window.location.origin}/blog`;
+    upsertJsonLd("blog-listing", {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "PlacementDo Blog",
+      "description": "Interview preparation insights, guides, and product updates from PlacementDo.",
+      "url": canonicalUrl,
+      "publisher": {
+        "@type": "Organization",
+        "name": "PlacementDo",
+        "url": window.location.origin,
+      },
+      "blogPost": publishedPosts.map((post) => ({
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "url": `${window.location.origin}/blog/${post.slug}`,
+        "datePublished": post.date || post.publishedAt || "",
+        "author": { "@type": "Person", "name": post.author || "PlacementDo Team" },
+      })),
+    });
+    return () => {
+      const el = document.head.querySelector('script[data-ld-id="blog-listing"]');
+      if (el) el.remove();
+    };
+  }, [publishedPosts]);
 
   // --- Admin auth ---
   const [adminToken, setAdminToken] = useState(getStoredToken);
