@@ -35,6 +35,24 @@ const STANDALONE_ROUTES = [
   "/demo",
 ];
 
+const RouteLoadingFallback = () => (
+  <div
+    role="status"
+    aria-live="polite"
+    style={{
+      minHeight: "48vh",
+      display: "grid",
+      placeItems: "center",
+      padding: "32px 20px",
+      color: "var(--slate-500)",
+      fontSize: 14,
+      background: "var(--ivory)",
+    }}
+  >
+    Loading…
+  </div>
+);
+
 function AppRouter() {
   const [path, setPath] = useState(() => window.location.pathname);
 
@@ -52,7 +70,7 @@ function AppRouter() {
   // Public blog listing — /blog and /blog/
   if (path === "/blog" || path === "/blog/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <BlogPage onNav={navigate} />
       </Suspense>
     );
@@ -62,7 +80,7 @@ function AppRouter() {
   if (path.startsWith("/blog/")) {
     const slug = decodeURIComponent(path.replace("/blog/", "")).trim();
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <BlogPostPage slug={slug} onNav={navigate} />
       </Suspense>
     );
@@ -71,7 +89,7 @@ function AppRouter() {
   // SEO content pages
   if (path === "/placement-preparation" || path === "/placement-preparation/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <PlacementPreparationPage onNav={navigate} />
       </Suspense>
     );
@@ -79,7 +97,7 @@ function AppRouter() {
 
   if (path === "/aptitude-questions" || path === "/aptitude-questions/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <AptitudePage onNav={navigate} />
       </Suspense>
     );
@@ -87,7 +105,7 @@ function AppRouter() {
 
   if (path === "/coding-interview-questions" || path === "/coding-interview-questions/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <CodingInterviewPage onNav={navigate} />
       </Suspense>
     );
@@ -95,7 +113,7 @@ function AppRouter() {
 
   if (path === "/company-wise-questions/tcs" || path === "/company-wise-questions/tcs/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="tcs" onNav={navigate} />
       </Suspense>
     );
@@ -103,7 +121,7 @@ function AppRouter() {
 
   if (path === "/company-wise-questions/wipro" || path === "/company-wise-questions/wipro/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="wipro" onNav={navigate} />
       </Suspense>
     );
@@ -111,7 +129,7 @@ function AppRouter() {
 
   if (path === "/placement-preparation-complete-guide" || path === "/placement-preparation-complete-guide/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <PlacementCompleteGuidePage onNav={navigate} />
       </Suspense>
     );
@@ -119,7 +137,7 @@ function AppRouter() {
 
   if (path === "/company-wise-questions/infosys" || path === "/company-wise-questions/infosys/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="infosys" onNav={navigate} />
       </Suspense>
     );
@@ -127,7 +145,7 @@ function AppRouter() {
 
   if (path === "/company-wise-questions/accenture" || path === "/company-wise-questions/accenture/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="accenture" onNav={navigate} />
       </Suspense>
     );
@@ -135,7 +153,7 @@ function AppRouter() {
 
   if (path === "/company-wise-questions/cognizant" || path === "/company-wise-questions/cognizant/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="cognizant" onNav={navigate} />
       </Suspense>
     );
@@ -143,7 +161,7 @@ function AppRouter() {
 
   if (path === "/company-wise-questions/hcl" || path === "/company-wise-questions/hcl/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="hcl" onNav={navigate} />
       </Suspense>
     );
@@ -151,7 +169,7 @@ function AppRouter() {
 
   if (path === "/seo-resources" || path === "/seo-resources/" || path === "/resources" || path === "/resources/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <SeoResourcesPage onNav={navigate} />
       </Suspense>
     );
@@ -159,14 +177,14 @@ function AppRouter() {
 
   if (path === "/demo" || path === "/demo/") {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteLoadingFallback />}>
         <DemoPage onNav={navigate} />
       </Suspense>
     );
   }
 
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<RouteLoadingFallback />}>
       <InterviewAI />
     </Suspense>
   );
@@ -185,7 +203,7 @@ export default function App() {
       <GlobalStyles />
       <AppRouter />
       {enableTelemetry && (
-        <Suspense fallback={null}>
+        <Suspense fallback={<RouteLoadingFallback />}>
           <SpeedInsights />
           <Analytics />
         </Suspense>

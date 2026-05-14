@@ -56,6 +56,7 @@ export default function CTABlock({ heading, subtext, buttonLabel, onNav, buttonH
         <MotionReveal delay={0.12} distance={10} duration={0.4}>
           <button
             className="cta-block-btn magnetic-btn"
+            type="button"
             onClick={() => onNav(buttonHref)}
             onMouseMove={magneticProps.onMouseMove}
             onMouseLeave={magneticProps.onMouseLeave}

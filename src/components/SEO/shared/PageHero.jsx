@@ -67,6 +67,7 @@ export default function PageHero({ tag, heading, subheading, ctaButtons }) {
                 <MotionReveal key={i} delay={0.2 + i * 0.06} distance={12} duration={0.45} amount={0.1}>
                   <button
                     className={`${i === 0 ? "btn-primary" : "btn-secondary"} magnetic-btn`}
+                    type="button"
                     onClick={btn.onClick}
                     onMouseMove={magneticProps.onMouseMove}
                     onMouseLeave={magneticProps.onMouseLeave}
