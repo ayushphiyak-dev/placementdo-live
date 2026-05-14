@@ -74,7 +74,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const configuredUrl = process.env.GOOGLE_APPS_SCRIPT_URL || DEFAULT_SCRIPT_URL;
+  const configuredUrl = globalThis?.process?.env?.GOOGLE_APPS_SCRIPT_URL || DEFAULT_SCRIPT_URL;
   const scriptUrl = isScriptUrlAllowed(configuredUrl) ? configuredUrl : DEFAULT_SCRIPT_URL;
 
   const controller = new AbortController();
