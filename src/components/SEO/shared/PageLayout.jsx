@@ -2,7 +2,7 @@
  * PageLayout — shared layout wrapper for SEO content pages.
  * Provides a fixed header with PlacementDo branding and a dark footer.
  */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { upsertMeta, upsertLink } from "./metaUtils.js";
 import { normalizePath } from "../../../utils/seoUtils.js";
 
@@ -33,6 +33,7 @@ const FOOTER_LINKS = [
 
 // Small offset helps the header become solid as soon as body content starts moving under it.
 const HEADER_SOLID_SCROLL_THRESHOLD = 18;
+const MOBILE_NAV_BREAKPOINT = 900;
 
 const STYLES = `
   .seo-layout { min-height: 100vh; background: var(--ivory); }
@@ -124,7 +125,7 @@ const STYLES = `
     from { opacity: 0; transform: translateY(-6px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  @media (max-width: 900px) {
+  @media (max-width: ${MOBILE_NAV_BREAKPOINT}px) {
     .seo-header-nav { display: none; }
     .seo-ham { display: flex; }
     .seo-footer-inner { grid-template-columns: 1fr 1fr; }
@@ -147,6 +148,8 @@ const DEFAULT_SEO_KEYWORDS = [
 export default function PageLayout({ title, metaDescription, keywords = [], children, onNav }) {
   const [mob, setMob] = useState(false);
   const [solidHeader, setSolidHeader] = useState(false);
+  const mobileMenuRef = useRef(null);
+  const menuButtonRef = useRef(null);
   // Capture the pathname once at mount; each SPA route mounts a fresh PageLayout instance.
   const [canonicalPath] = useState(() => window.location.pathname);
   const keywordsDependency = Array.isArray(keywords) ? keywords.join("|") : "";
@@ -197,6 +200,40 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!mob) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setMob(false);
+    };
+
+    const handlePointerDown = (event) => {
+      const targetNode = event.target;
+      if (!(targetNode instanceof Node)) return;
+      const clickedInsideMenu = mobileMenuRef.current?.contains(targetNode);
+      const clickedMenuButton = menuButtonRef.current?.contains(targetNode);
+      if (!clickedInsideMenu && !clickedMenuButton) setMob(false);
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [mob]);
+
+  useEffect(() => {
+    const closeMenuOnDesktop = () => {
+      if (window.innerWidth > MOBILE_NAV_BREAKPOINT) setMob(false);
+    };
+    window.addEventListener("resize", closeMenuOnDesktop);
+    return () => window.removeEventListener("resize", closeMenuOnDesktop);
+  }, []);
+
   const navigate = (href) => {
     onNav(href);
     setMob(false);
@@ -232,17 +269,18 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
             <a href="/dashboard" className="seo-header-cta" onClick={(e) => { e.preventDefault(); navigate("/dashboard"); }}>Get started →</a>
             <button
               className="seo-ham"
+              ref={menuButtonRef}
               onClick={() => setMob((o) => !o)}
-              aria-label="Menu"
+              aria-label={mob ? "Close menu" : "Open menu"}
               aria-expanded={mob}
               aria-controls="seo-mobile-menu"
               type="button"
             >
-              ☰
+              {mob ? "✕" : "☰"}
             </button>
           </nav>
           {mob && (
-            <div id="seo-mobile-menu" className="seo-mob-menu">
+            <div id="seo-mobile-menu" className="seo-mob-menu" ref={mobileMenuRef}>
               {NAV_LINKS.map(({ label, href }) => (
                 <a
                   key={href}

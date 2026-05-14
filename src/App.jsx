@@ -53,8 +53,16 @@ const RouteLoadingFallback = () => (
   </div>
 );
 
+const normalizeRoutePath = (value) => {
+  if (!value) return "/";
+  const singleSlashPath = value.replace(/\/{2,}/g, "/");
+  if (singleSlashPath !== "/") return singleSlashPath.replace(/\/+$/, "");
+  return singleSlashPath;
+};
+
 function AppRouter() {
   const [path, setPath] = useState(() => window.location.pathname);
+  const normalizedPath = normalizeRoutePath(path);
 
   const navigate = useCallback((url) => {
     const nextUrl = new URL(url, window.location.origin);
@@ -78,7 +86,7 @@ function AppRouter() {
   }, []);
 
   // Public blog listing — /blog and /blog/
-  if (path === "/blog" || path === "/blog/") {
+  if (normalizedPath === "/blog") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <BlogPage onNav={navigate} />
@@ -87,8 +95,21 @@ function AppRouter() {
   }
 
   // Public blog post — /blog/:slug
-  if (path.startsWith("/blog/")) {
-    const slug = decodeURIComponent(path.replace("/blog/", "")).trim();
+  if (normalizedPath.startsWith("/blog/")) {
+    const rawSlug = normalizedPath.slice("/blog/".length).trim();
+    if (!rawSlug) {
+      return (
+        <Suspense fallback={<RouteLoadingFallback />}>
+          <BlogPage onNav={navigate} />
+        </Suspense>
+      );
+    }
+    let slug = rawSlug;
+    try {
+      slug = decodeURIComponent(rawSlug);
+    } catch {
+      slug = rawSlug;
+    }
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <BlogPostPage slug={slug} onNav={navigate} />
@@ -97,7 +118,7 @@ function AppRouter() {
   }
 
   // SEO content pages
-  if (path === "/placement-preparation" || path === "/placement-preparation/") {
+  if (normalizedPath === "/placement-preparation") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <PlacementPreparationPage onNav={navigate} />
@@ -105,7 +126,7 @@ function AppRouter() {
     );
   }
 
-  if (path === "/aptitude-questions" || path === "/aptitude-questions/") {
+  if (normalizedPath === "/aptitude-questions") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <AptitudePage onNav={navigate} />
@@ -113,7 +134,7 @@ function AppRouter() {
     );
   }
 
-  if (path === "/coding-interview-questions" || path === "/coding-interview-questions/") {
+  if (normalizedPath === "/coding-interview-questions") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <CodingInterviewPage onNav={navigate} />
@@ -121,7 +142,7 @@ function AppRouter() {
     );
   }
 
-  if (path === "/company-wise-questions/tcs" || path === "/company-wise-questions/tcs/") {
+  if (normalizedPath === "/company-wise-questions/tcs") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="tcs" onNav={navigate} />
@@ -129,7 +150,7 @@ function AppRouter() {
     );
   }
 
-  if (path === "/company-wise-questions/wipro" || path === "/company-wise-questions/wipro/") {
+  if (normalizedPath === "/company-wise-questions/wipro") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="wipro" onNav={navigate} />
@@ -137,7 +158,7 @@ function AppRouter() {
     );
   }
 
-  if (path === "/placement-preparation-complete-guide" || path === "/placement-preparation-complete-guide/") {
+  if (normalizedPath === "/placement-preparation-complete-guide") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <PlacementCompleteGuidePage onNav={navigate} />
@@ -145,7 +166,7 @@ function AppRouter() {
     );
   }
 
-  if (path === "/company-wise-questions/infosys" || path === "/company-wise-questions/infosys/") {
+  if (normalizedPath === "/company-wise-questions/infosys") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="infosys" onNav={navigate} />
@@ -153,7 +174,7 @@ function AppRouter() {
     );
   }
 
-  if (path === "/company-wise-questions/accenture" || path === "/company-wise-questions/accenture/") {
+  if (normalizedPath === "/company-wise-questions/accenture") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="accenture" onNav={navigate} />
@@ -161,7 +182,7 @@ function AppRouter() {
     );
   }
 
-  if (path === "/company-wise-questions/cognizant" || path === "/company-wise-questions/cognizant/") {
+  if (normalizedPath === "/company-wise-questions/cognizant") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="cognizant" onNav={navigate} />
@@ -169,7 +190,7 @@ function AppRouter() {
     );
   }
 
-  if (path === "/company-wise-questions/hcl" || path === "/company-wise-questions/hcl/") {
+  if (normalizedPath === "/company-wise-questions/hcl") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <CompanyWisePage company="hcl" onNav={navigate} />
@@ -177,7 +198,7 @@ function AppRouter() {
     );
   }
 
-  if (path === "/seo-resources" || path === "/seo-resources/" || path === "/resources" || path === "/resources/") {
+  if (normalizedPath === "/seo-resources" || normalizedPath === "/resources") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <SeoResourcesPage onNav={navigate} />
@@ -185,7 +206,7 @@ function AppRouter() {
     );
   }
 
-  if (path === "/demo" || path === "/demo/") {
+  if (normalizedPath === "/demo") {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <DemoPage onNav={navigate} />
