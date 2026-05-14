@@ -57,8 +57,18 @@ function AppRouter() {
   const [path, setPath] = useState(() => window.location.pathname);
 
   const navigate = useCallback((url) => {
-    window.history.pushState({}, "", url);
-    setPath(url);
+    const nextUrl = new URL(url, window.location.origin);
+    window.history.pushState({}, "", `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`);
+    setPath(nextUrl.pathname);
+
+    if (nextUrl.hash) {
+      const targetId = decodeURIComponent(nextUrl.hash.slice(1));
+      window.requestAnimationFrame(() => {
+        document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    } else {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
   }, []);
 
   useEffect(() => {

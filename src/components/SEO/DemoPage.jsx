@@ -56,7 +56,7 @@ export default function DemoPage({ onNav }) {
             Experience our AI-powered mock interview platform with real-time feedback.
           </p>
           <button 
-            onClick={() => onNav('/')}
+            onClick={() => onNav('/dashboard')}
             className="btn-primary"
             style={{
               padding: '16px 32px',
@@ -241,7 +241,7 @@ export default function DemoPage({ onNav }) {
                 Ready to improve your placement performance?
               </h2>
               <button 
-                onClick={() => onNav('/')}
+                onClick={() => onNav('/dashboard')}
                 className="btn-primary"
                 style={{
                   padding: '16px 36px',

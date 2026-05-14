@@ -229,7 +229,7 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
                 </a>
               ))}
             </div>
-            <a href="/" className="seo-header-cta" onClick={(e) => { e.preventDefault(); navigate("/"); }}>Get started →</a>
+            <a href="/dashboard" className="seo-header-cta" onClick={(e) => { e.preventDefault(); navigate("/dashboard"); }}>Get started →</a>
             <button
               className="seo-ham"
               onClick={() => setMob((o) => !o)}
@@ -255,7 +255,7 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
                   {label}
                 </a>
               ))}
-              <a href="/" className="seo-header-cta" style={{ marginTop: 8, textAlign: "center" }} onClick={(e) => { e.preventDefault(); navigate("/"); }}>Get started →</a>
+              <a href="/dashboard" className="seo-header-cta" style={{ marginTop: 8, textAlign: "center" }} onClick={(e) => { e.preventDefault(); navigate("/dashboard"); }}>Get started →</a>
             </div>
           )}
         </header>
@@ -297,7 +297,7 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
           <div className="seo-footer-bottom">
             <span className="seo-footer-copy">© 2026 PlacementDo. All rights reserved.</span>
             <div style={{ display: "flex", gap: 16 }}>
-              {[{ label: "Privacy", href: "/" }, { label: "Terms", href: "/" }].map(({ label, href }) => (
+              {[{ label: "Privacy", href: "/privacy-policy" }, { label: "Terms", href: "/terms-of-service" }].map(({ label, href }) => (
                 <button key={label} onClick={() => navigate(href)}
                   style={{ fontSize: 12, color: "rgba(255,255,255,.25)", background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}
                   onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,.6)"}
