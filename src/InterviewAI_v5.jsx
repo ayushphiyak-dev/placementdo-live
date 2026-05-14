@@ -1316,16 +1316,16 @@ const Landing = ({ onNav, onCheckout }) => {
     window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
   const demoSectionRef = useRef(null);
-  const [loadDemoEmbed, setLoadDemoEmbed] = useState(false);
+  const [shouldLoadDemoEmbed, setShouldLoadDemoEmbed] = useState(false);
 
   useEffect(() => {
-    if (loadDemoEmbed) return;
+    if (shouldLoadDemoEmbed) return;
     const target = demoSectionRef.current;
     if (!target || !("IntersectionObserver" in window)) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
-          setLoadDemoEmbed(true);
+          setShouldLoadDemoEmbed(true);
           observer.disconnect();
         }
       },
@@ -1333,10 +1333,10 @@ const Landing = ({ onNav, onCheckout }) => {
     );
     observer.observe(target);
     return () => observer.disconnect();
-  }, [loadDemoEmbed]);
+  }, [shouldLoadDemoEmbed]);
 
   useEffect(() => {
-    if (!loadDemoEmbed) return;
+    if (!shouldLoadDemoEmbed) return;
     if (document.querySelector('script[data-storylane-sdk="true"]')) return;
     const script = document.createElement("script");
     script.src = "https://js.storylane.io/js/v2/storylane.js";
@@ -1346,7 +1346,7 @@ const Landing = ({ onNav, onCheckout }) => {
     return () => {
       if (document.body.contains(script)) document.body.removeChild(script);
     };
-  }, [loadDemoEmbed]);
+  }, [shouldLoadDemoEmbed]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -1541,7 +1541,7 @@ const Landing = ({ onNav, onCheckout }) => {
         <motion.div initial={{ opacity: 0, y: 32, scale: 0.98 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} viewport={{ once: true }}
           className="card" style={{ padding: 12, borderRadius: 28, background: "var(--white)", boxShadow: "0 42px 100px rgba(15,23,42,0.12)", overflow: "hidden" }}>
           <div style={{ position: 'relative', width: '100%', height: 'clamp(500px, 70vh, 750px)' }}>
-            {loadDemoEmbed ? (
+            {shouldLoadDemoEmbed ? (
               <iframe
                 loading="lazy"
                 src="https://demo.storylane.com/demo/1j3kslnrp6q2?embed=inline"
@@ -1567,7 +1567,7 @@ const Landing = ({ onNav, onCheckout }) => {
                   <p style={{ marginBottom: 12, color: "var(--slate-600)", lineHeight: 1.6 }}>
                     Demo will load when this section is in view to keep the page fast.
                   </p>
-                  <button type="button" className="btn-secondary" onClick={() => setLoadDemoEmbed(true)}>
+                  <button type="button" className="btn-secondary" onClick={() => setShouldLoadDemoEmbed(true)}>
                     <Video size={14} /> Load demo now
                   </button>
                 </div>

@@ -1,7 +1,11 @@
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MAX_EMAIL_LENGTH = 254;
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
-const RATE_LIMIT_MAX_REQUESTS = 5;
+const toPositiveNumber = (value, fallback) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
+const RATE_LIMIT_WINDOW_MS = toPositiveNumber(globalThis?.process?.env?.WAITLIST_RATE_LIMIT_WINDOW_MS, 10 * 60 * 1000);
+const RATE_LIMIT_MAX_REQUESTS = toPositiveNumber(globalThis?.process?.env?.WAITLIST_RATE_LIMIT_MAX_REQUESTS, 5);
 const REQUEST_TIMEOUT_MS = 8000;
 const DEFAULT_SCRIPT_URL = "https://script.google.com/a/macros/nsec.ac.in/s/AKfycbygJi9HO-X3Bd5YbtEdRGBLfSYXBicC49Fe2ORLOWfYFmphvBZ-xw6krhBPOn6qqCgX/exec";
 const RATE_LIMIT_STORE = globalThis.__placementdoWaitlistRateLimit || new Map();
@@ -28,9 +32,10 @@ const getClientKey = (req) => {
 const isRateLimited = (clientKey, now) => {
   const attempts = RATE_LIMIT_STORE.get(clientKey) || [];
   const freshAttempts = attempts.filter((ts) => now - ts < RATE_LIMIT_WINDOW_MS);
-  freshAttempts.push(now);
+  const limitReached = freshAttempts.length >= RATE_LIMIT_MAX_REQUESTS;
+  if (!limitReached) freshAttempts.push(now);
   RATE_LIMIT_STORE.set(clientKey, freshAttempts);
-  return freshAttempts.length > RATE_LIMIT_MAX_REQUESTS;
+  return limitReached;
 };
 
 const isScriptUrlAllowed = (value) => {
@@ -88,12 +93,12 @@ export default async function handler(req, res) {
       signal: controller.signal,
     });
     if (!r.ok) {
-      res.status(502).json({ error: "Waitlist service is unavailable. Please retry." });
+      res.status(503).json({ error: "Waitlist service is unavailable. Please retry." });
       return;
     }
     res.status(200).json({ success: true });
   } catch {
-    res.status(502).json({ error: "Waitlist service is unavailable. Please retry." });
+    res.status(503).json({ error: "Waitlist service is unavailable. Please retry." });
   } finally {
     clearTimeout(timeoutId);
   }
