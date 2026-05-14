@@ -1318,12 +1318,12 @@ const Landing = ({ onNav, onCheckout }) => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() =>
     window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
-  const demoSectionRef = useRef(null);
+  const demoSectionElementRef = useRef(null);
   const [shouldLoadDemoEmbed, setShouldLoadDemoEmbed] = useState(false);
 
   useEffect(() => {
     if (shouldLoadDemoEmbed) return;
-    const target = demoSectionRef.current;
+    const target = demoSectionElementRef.current;
     if (!target || !("IntersectionObserver" in window)) return;
     const observer = new IntersectionObserver(
       (entries) => {
@@ -1531,7 +1531,7 @@ const Landing = ({ onNav, onCheckout }) => {
     </section>
 
     {/* INTERACTIVE DEMO SECTION */}
-    <section ref={demoSectionRef} id="demo-section" className="sec-pad defer-render" style={{ padding:"100px clamp(20px,5vw,60px)", background: "var(--slate-50)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+    <section ref={demoSectionElementRef} id="demo-section" className="sec-pad defer-render" style={{ padding:"100px clamp(20px,5vw,60px)", background: "var(--slate-50)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} viewport={{ once: true }}>
           <Tag color="teal">Experience</Tag>

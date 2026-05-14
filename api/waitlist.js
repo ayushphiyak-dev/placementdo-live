@@ -93,12 +93,12 @@ export default async function handler(req, res) {
       signal: controller.signal,
     });
     if (!r.ok) {
-      res.status(503).json({ error: "Waitlist service is unavailable. Please retry." });
+      res.status(503).json({ error: "Waitlist service is unavailable. Please try again in a few moments." });
       return;
     }
     res.status(200).json({ success: true });
   } catch {
-    res.status(503).json({ error: "Waitlist service is unavailable. Please retry." });
+    res.status(503).json({ error: "Waitlist service is unavailable. Please try again in a few moments." });
   } finally {
     clearTimeout(timeoutId);
   }
