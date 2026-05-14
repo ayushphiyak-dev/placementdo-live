@@ -203,7 +203,11 @@ export default function BlogPage({ onNav }) {
       const list = Array.isArray(data?.posts) ? normalizePosts(data.posts) : [];
       setPosts(list);
     } catch {
-      setPostsError("Unable to refresh posts from server. Showing local fallback content.");
+      setPostsError(
+        token
+          ? "Unable to refresh posts from server right now."
+          : "Unable to refresh posts from server. Showing local fallback content."
+      );
       if (!token) setPosts(FALLBACK_POSTS);
     } finally {
       setPostsLoading(false);

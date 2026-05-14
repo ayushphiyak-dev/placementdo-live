@@ -33,6 +33,7 @@ const FOOTER_LINKS = [
 
 // Small offset helps the header become solid as soon as body content starts moving under it.
 const HEADER_SOLID_SCROLL_THRESHOLD = 18;
+const MOBILE_NAV_BREAKPOINT = 900;
 
 const STYLES = `
   .seo-layout { min-height: 100vh; background: var(--ivory); }
@@ -124,7 +125,7 @@ const STYLES = `
     from { opacity: 0; transform: translateY(-6px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  @media (max-width: 900px) {
+  @media (max-width: ${MOBILE_NAV_BREAKPOINT}px) {
     .seo-header-nav { display: none; }
     .seo-ham { display: flex; }
     .seo-footer-inner { grid-template-columns: 1fr 1fr; }
@@ -227,7 +228,7 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
 
   useEffect(() => {
     const closeMenuOnDesktop = () => {
-      if (window.innerWidth > 900) setMob(false);
+      if (window.innerWidth > MOBILE_NAV_BREAKPOINT) setMob(false);
     };
     window.addEventListener("resize", closeMenuOnDesktop);
     return () => window.removeEventListener("resize", closeMenuOnDesktop);
