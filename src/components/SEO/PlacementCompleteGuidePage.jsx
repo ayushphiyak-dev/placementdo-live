@@ -149,15 +149,15 @@ export default function PlacementCompleteGuidePage({ onNav }) {
     >
       <style>{STYLES}</style>
 
-      <PageHero
-        tag="The Definitive Guide · Placement 2026"
-        heading="Placement Preparation: Complete Roadmap to Crack Any Interview"
-        subheading="Everything you need to go from zero to placed — the placement process, preparation roadmap, company-specific strategies, and the AI tools that give you an unfair advantage."
-        ctaButtons={[
-          { label: "Start AI Mock Interview", onClick: () => onNav("/") },
+        <PageHero
+          tag="The Definitive Guide · Placement 2026"
+          heading="Placement Preparation: Complete Roadmap to Crack Any Interview"
+          subheading="Everything you need to go from zero to placed — the placement process, preparation roadmap, company-specific strategies, and the AI tools that give you an unfair advantage."
+          ctaButtons={[
+          { label: "Start AI Mock Interview", onClick: () => onNav("/dashboard") },
           { label: "Placement Prep Tips", onClick: () => onNav("/placement-preparation") },
-        ]}
-      />
+          ]}
+        />
 
       <div className="pcg-page">
 
@@ -296,7 +296,19 @@ export default function PlacementCompleteGuidePage({ onNav }) {
           />
           <div className="pcg-company-grid">
             {COMPANIES.map((c) => (
-              <div key={c.name} className="pcg-company-card" onClick={() => onNav(c.href)} role="button" tabIndex={0} onKeyDown={(e) => (e.key === "Enter") && onNav(c.href)}>
+              <div
+                key={c.name}
+                className="pcg-company-card"
+                onClick={() => onNav(c.href)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    onNav(c.href);
+                  }
+                }}
+              >
                 <div className="brig pcg-company-name">{c.name}</div>
                 <p className="pcg-company-desc">{c.desc}</p>
               </div>
@@ -326,7 +338,7 @@ export default function PlacementCompleteGuidePage({ onNav }) {
           </div>
 
           <div className="pcg-nav-links">
-            <button className="pcg-nav-btn" onClick={() => onNav("/")}>Start AI Mock Interview</button>
+            <button className="pcg-nav-btn" onClick={() => onNav("/dashboard")}>Start AI Mock Interview</button>
             <button className="pcg-nav-btn" onClick={() => onNav("/blog/mock-interview-preparation-tips")}>Mock Interview Tips Guide</button>
           </div>
         </section>

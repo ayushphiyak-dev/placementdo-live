@@ -288,7 +288,7 @@ export default function SeoResourcesPage({ onNav }) {
           subtext="Join 2,400+ students on the PlacementDo waitlist. Free early access for waitlist members."
           buttonLabel="Join the waitlist"
           onNav={onNav}
-          buttonHref="/"
+          buttonHref="/#waitlist-section"
         />
       </div>
     </PageLayout>
