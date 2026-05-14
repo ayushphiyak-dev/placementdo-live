@@ -6,7 +6,7 @@ const toPositiveNumber = (value, fallback) => {
 };
 const RATE_LIMIT_WINDOW_MS = toPositiveNumber(globalThis?.process?.env?.WAITLIST_RATE_LIMIT_WINDOW_MS, 10 * 60 * 1000);
 const RATE_LIMIT_MAX_REQUESTS = toPositiveNumber(globalThis?.process?.env?.WAITLIST_RATE_LIMIT_MAX_REQUESTS, 5);
-const REQUEST_TIMEOUT_MS = 8000;
+const REQUEST_TIMEOUT_MS = toPositiveNumber(globalThis?.process?.env?.WAITLIST_REQUEST_TIMEOUT_MS, 8000);
 const DEFAULT_SCRIPT_URL = "https://script.google.com/a/macros/nsec.ac.in/s/AKfycbygJi9HO-X3Bd5YbtEdRGBLfSYXBicC49Fe2ORLOWfYFmphvBZ-xw6krhBPOn6qqCgX/exec";
 const RATE_LIMIT_STORE = globalThis.__placementdoWaitlistRateLimit || new Map();
 

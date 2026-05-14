@@ -13,6 +13,9 @@ import {
   LifeBuoy, Send, Bot, Github
 } from "lucide-react";
 
+const DEMO_LOAD_ROOT_MARGIN = "320px 0px";
+const DEFER_RENDER_INTRINSIC_SIZE = "1px 860px";
+
 const G = () => (
   <style>{`
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -140,7 +143,7 @@ const G = () => (
     @property --angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
     .live-ring { animation: live-ring-pulse 2.5s ease-in-out infinite; }
     @keyframes live-ring-pulse { 0%,100% { opacity:.5; transform:scale(1); } 50% { opacity:1; transform:scale(1.06); } }
-    .defer-render { content-visibility: auto; contain-intrinsic-size: 1px 860px; }
+    .defer-render { content-visibility: auto; contain-intrinsic-size: ${DEFER_RENDER_INTRINSIC_SIZE}; }
 
     /* ── New animations ── */
     @keyframes fade-in-up { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
@@ -1329,7 +1332,7 @@ const Landing = ({ onNav, onCheckout }) => {
           observer.disconnect();
         }
       },
-      { rootMargin: "320px 0px" },
+      { rootMargin: DEMO_LOAD_ROOT_MARGIN },
     );
     observer.observe(target);
     return () => observer.disconnect();
