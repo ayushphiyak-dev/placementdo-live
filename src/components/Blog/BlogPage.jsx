@@ -189,16 +189,24 @@ export default function BlogPage({ onNav }) {
 
   // --- Posts ---
   const [posts, setPosts] = useState(FALLBACK_POSTS);
+  const [postsLoading, setPostsLoading] = useState(true);
+  const [postsError, setPostsError] = useState("");
 
   const fetchPosts = useCallback(async (token = "") => {
+    setPostsLoading(true);
+    setPostsError("");
     try {
       const headers = token ? { "x-admin-token": token } : {};
       const r = await fetch("/api/blog", { headers });
+      if (!r.ok) throw new Error("Failed to fetch blog posts.");
       const data = await r.json();
       const list = Array.isArray(data?.posts) ? normalizePosts(data.posts) : [];
-      if (list.length > 0) setPosts(list);
+      setPosts(list);
     } catch {
-      // Keep fallback posts when API fetch fails.
+      setPostsError("Unable to refresh posts from server. Showing local fallback content.");
+      if (!token) setPosts(FALLBACK_POSTS);
+    } finally {
+      setPostsLoading(false);
     }
   }, []);
 
@@ -322,7 +330,8 @@ export default function BlogPage({ onNav }) {
           setAuthed(true);
           const data = await r.json();
           const list = Array.isArray(data?.posts) ? normalizePosts(data.posts) : [];
-          if (list.length > 0) setPosts(list);
+          setPosts(list);
+          setPostsError("");
         } else {
           setAuthError("Invalid token. Please check and try again.");
         }
@@ -480,6 +489,12 @@ export default function BlogPage({ onNav }) {
               Interview tips, career advice, and product updates — all in one place.
             </p>
           </div>
+          {postsError && (
+            <div className="admin-msg error" style={{ marginBottom: 20 }}>
+              <AlertCircle size={14} style={{ flexShrink: 0, marginTop: 1 }} />
+              {postsError}
+            </div>
+          )}
 
           <div className="blog-stats-row" aria-label="Blog stats">
             <span className="blog-stat-pill">{publishedPosts.length} published articles</span>
@@ -587,7 +602,11 @@ export default function BlogPage({ onNav }) {
           </div>
 
           {/* Blog grid */}
-          {filteredPosts.length === 0 ? (
+          {postsLoading ? (
+            <div className="blog-empty">
+              <p style={{ fontSize: 16, fontWeight: 500 }}>Loading posts…</p>
+            </div>
+          ) : filteredPosts.length === 0 ? (
             <div className="blog-empty">
               <p style={{ fontSize: 16, fontWeight: 500 }}>No posts found.</p>
               {search && (
