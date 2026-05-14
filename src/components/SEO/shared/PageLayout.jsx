@@ -230,10 +230,19 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
               ))}
             </div>
             <a href="/" className="seo-header-cta" onClick={(e) => { e.preventDefault(); navigate("/"); }}>Get started →</a>
-            <button className="seo-ham" onClick={() => setMob(o => !o)} aria-label="Menu">☰</button>
+            <button
+              className="seo-ham"
+              onClick={() => setMob((o) => !o)}
+              aria-label="Menu"
+              aria-expanded={mob}
+              aria-controls="seo-mobile-menu"
+              type="button"
+            >
+              ☰
+            </button>
           </nav>
           {mob && (
-            <div className="seo-mob-menu">
+            <div id="seo-mobile-menu" className="seo-mob-menu">
               {NAV_LINKS.map(({ label, href }) => (
                 <a
                   key={href}

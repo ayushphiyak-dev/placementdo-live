@@ -4,7 +4,7 @@ import {
   AlertCircle, Check, Loader, Trash2, PlusCircle, LogOut,
 } from "lucide-react";
 import SEED_POSTS from "../../data/blogPosts.json";
-import { upsertMeta, upsertLink } from "../SEO/shared/metaUtils.js";
+import { upsertMeta, upsertLink, upsertJsonLd } from "../SEO/shared/metaUtils.js";
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -14,6 +14,12 @@ const formatDate = (dateStr) => {
     month: "long",
     day: "numeric",
   }).format(date);
+};
+
+const estimateReadingMinutes = (content = "") => {
+  const words = String(content || "").trim().split(/\s+/).filter(Boolean).length;
+  if (words <= 0) return "2 min read";
+  return `${Math.max(1, Math.round(words / 220))} min read`;
 };
 
 const slugify = (v = "") =>
@@ -27,8 +33,8 @@ const slugify = (v = "") =>
 // Admin session helpers (sessionStorage only — cleared when tab closes)
 const ADMIN_KEY = "pd:admin:token";
 const getStoredToken = () => { try { return window.sessionStorage.getItem(ADMIN_KEY) || ""; } catch { return ""; } };
-const storeToken = (t) => { try { window.sessionStorage.setItem(ADMIN_KEY, t); } catch {} };
-const clearToken = () => { try { window.sessionStorage.removeItem(ADMIN_KEY); } catch {} };
+const storeToken = (t) => { try { window.sessionStorage.setItem(ADMIN_KEY, t); } catch { /* ignore sessionStorage errors */ } };
+const clearToken = () => { try { window.sessionStorage.removeItem(ADMIN_KEY); } catch { /* ignore sessionStorage errors */ } };
 
 const normalizePosts = (arr) =>
   arr.map((p) => ({
@@ -65,7 +71,24 @@ const STYLES = `
   .blog-logo-mark { height: 32px; width: 32px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); display: block; }
   .blog-logo-mark img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .blog-main { max-width: 1100px; margin: 0 auto; padding: 104px clamp(20px,5vw,60px) 80px; }
+  .blog-stats-row {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;
+  }
+  .blog-stat-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: var(--slate-600);
+    background: var(--white); border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 12px;
+  }
   .blog-search-bar { margin-bottom: 28px; }
+  .blog-category-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .blog-category-chip {
+    border: 1px solid var(--border); background: var(--white); color: var(--slate-600);
+    border-radius: 999px; padding: 7px 14px; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.18s; font-family: 'DM Sans', sans-serif;
+  }
+  .blog-category-chip:hover { border-color: rgba(13,148,136,.35); color: var(--teal-dark); }
+  .blog-category-chip.is-active { background: var(--teal-light); color: var(--teal-dark); border-color: rgba(13,148,136,.22); }
   .blog-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); }
   .blog-card {
     background: var(--white); border: 1px solid var(--border); border-radius: 14px;
@@ -174,7 +197,9 @@ export default function BlogPage({ onNav }) {
       const data = await r.json();
       const list = Array.isArray(data?.posts) ? normalizePosts(data.posts) : [];
       if (list.length > 0) setPosts(list);
-    } catch {}
+    } catch {
+      // Keep fallback posts when API fetch fails.
+    }
   }, []);
 
   useEffect(() => {
@@ -203,24 +228,75 @@ export default function BlogPage({ onNav }) {
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
   }, []);
 
+  useEffect(() => {
+    if (!categories.includes(activeCategory)) {
+      setActiveCategory("All");
+    }
+  }, [categories, activeCategory]);
+
+  useEffect(() => {
+    const canonicalUrl = `${window.location.origin}/blog`;
+    upsertJsonLd("blog-listing", {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "PlacementDo Blog",
+      "description": "Interview preparation insights, guides, and product updates from PlacementDo.",
+      "url": canonicalUrl,
+      "publisher": {
+        "@type": "Organization",
+        "name": "PlacementDo",
+        "url": window.location.origin,
+      },
+      "blogPost": publishedPosts.map((post) => ({
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "url": `${window.location.origin}/blog/${post.slug}`,
+        "datePublished": post.date || post.publishedAt || "",
+        "author": { "@type": "Person", "name": post.author || "PlacementDo Team" },
+      })),
+    });
+    return () => {
+      const el = document.head.querySelector('script[data-ld-id="blog-listing"]');
+      if (el) el.remove();
+    };
+  }, [publishedPosts]);
+
   const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const publishedPosts = useMemo(
+    () => [...posts]
+      .filter((p) => p.status === "published")
+      .sort((a, b) => new Date(b.date) - new Date(a.date)),
+    [posts]
+  );
+
+  const categories = useMemo(() => {
+    const unique = new Set(
+      publishedPosts
+        .map((p) => (p.category || "").trim())
+        .filter(Boolean)
+    );
+    return ["All", ...Array.from(unique)];
+  }, [publishedPosts]);
 
   const filteredPosts = useMemo(() => {
-    const publicPosts = posts.filter((p) => p.status === "published");
-    const sorted = [...publicPosts].sort(
-      (a, b) => new Date(b.date) - new Date(a.date)
-    );
     const q = search.trim().toLowerCase();
-    if (!q) {
-      // Hide the featured (first/most recent) post from the grid so it isn't shown twice
-      return sorted.slice(1);
-    }
-    return sorted.filter((p) =>
-      `${p.title} ${p.excerpt} ${p.author} ${(p.tags || []).join(" ")} ${p.category || ""}`
-        .toLowerCase()
-        .includes(q)
-    );
-  }, [posts, search]);
+    const basePosts = activeCategory === "All"
+      ? publishedPosts
+      : publishedPosts.filter((p) => (p.category || "").trim() === activeCategory);
+
+    const bySearch = q
+      ? basePosts.filter((p) =>
+        `${p.title} ${p.excerpt} ${p.author} ${(p.tags || []).join(" ")} ${p.category || ""}`
+          .toLowerCase()
+          .includes(q)
+      )
+      : basePosts;
+
+    if (!q && activeCategory === "All") return bySearch.slice(1);
+    return bySearch;
+  }, [publishedPosts, search, activeCategory]);
 
   // --- Admin auth ---
   const [adminToken, setAdminToken] = useState(getStoredToken);
@@ -354,13 +430,11 @@ export default function BlogPage({ onNav }) {
     [adminToken, fetchPosts]
   );
 
-  // Featured post = most recent published post (not shown again in grid when searching)
+  // Featured post = most recent published post (only for the default listing view)
   const featuredPost = useMemo(() => {
-    const published = posts.filter((p) => p.status === "published");
-    return published.length > 0
-      ? [...published].sort((a, b) => new Date(b.date) - new Date(a.date))[0]
-      : null;
-  }, [posts]);
+    if (activeCategory !== "All" || search.trim()) return null;
+    return publishedPosts.length > 0 ? publishedPosts[0] : null;
+  }, [publishedPosts, activeCategory, search]);
 
   // Posts list shown in admin panel (all statuses)
   const adminPosts = useMemo(
@@ -403,8 +477,18 @@ export default function BlogPage({ onNav }) {
             </p>
           </div>
 
+          <div className="blog-stats-row" aria-label="Blog stats">
+            <span className="blog-stat-pill">{publishedPosts.length} published articles</span>
+            {publishedPosts[0]?.date && (
+              <span className="blog-stat-pill">
+                <Calendar size={12} />
+                Updated {formatDate(publishedPosts[0].date)}
+              </span>
+            )}
+          </div>
+
           {/* Featured post */}
-          {!search && featuredPost && (
+          {!search.trim() && featuredPost && (
             <div style={{ marginBottom: 48 }}>
               <p className="blog-section-label">Featured Post</p>
               <div
@@ -419,7 +503,7 @@ export default function BlogPage({ onNav }) {
                   {featuredPost.coverImage ? (
                     <img
                       src={featuredPost.coverImage}
-                      alt={featuredPost.title}
+                      alt={`${featuredPost.title} cover image`}
                       className="blog-featured-img"
                       onError={(e) => { e.currentTarget.style.display = "none"; }}
                     />
@@ -437,6 +521,9 @@ export default function BlogPage({ onNav }) {
                     )}
                     <span style={{ fontSize: 12, color: "var(--slate-400)", display: "inline-flex", alignItems: "center", gap: 4 }}>
                       <Calendar size={12} /> {formatDate(featuredPost.date)}
+                    </span>
+                    <span style={{ fontSize: 12, color: "var(--slate-400)" }}>
+                      {estimateReadingMinutes(featuredPost.content)}
                     </span>
                   </div>
                   <h2 className="brig blog-featured-title">{featuredPost.title}</h2>
@@ -459,10 +546,28 @@ export default function BlogPage({ onNav }) {
             </div>
           )}
 
+          {/* Categories */}
+          {categories.length > 1 && (
+            <div className="blog-category-row" role="tablist" aria-label="Filter posts by category">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeCategory === category}
+                  className={`blog-category-chip${activeCategory === category ? " is-active" : ""}`}
+                  onClick={() => setActiveCategory(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* All posts heading + search */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 20 }}>
             <p className="blog-section-label" style={{ margin: 0 }}>
-              {search ? "Search results" : "All Posts"}
+              {search ? "Search results" : activeCategory === "All" ? "All Posts" : `${activeCategory} Posts`}
             </p>
             {/* Search bar */}
             <div className="blog-search-bar" style={{ margin: 0 }}>
@@ -483,11 +588,22 @@ export default function BlogPage({ onNav }) {
               <p style={{ fontSize: 16, fontWeight: 500 }}>No posts found.</p>
               {search && (
                 <button
+                  type="button"
                   className="btn-ghost"
                   style={{ marginTop: 10 }}
                   onClick={() => setSearch("")}
                 >
                   Clear search
+                </button>
+              )}
+              {activeCategory !== "All" && (
+                <button
+                  type="button"
+                  className="btn-ghost"
+                  style={{ marginTop: 10, marginLeft: 8 }}
+                  onClick={() => setActiveCategory("All")}
+                >
+                  View all categories
                 </button>
               )}
             </div>
@@ -498,7 +614,7 @@ export default function BlogPage({ onNav }) {
                   {post.coverImage && (
                     <img
                       src={post.coverImage}
-                      alt=""
+                      alt={`${post.title} cover image`}
                       className="blog-card-cover"
                       loading="lazy"
                       onError={(e) => { e.currentTarget.style.display = "none"; }}
@@ -512,6 +628,9 @@ export default function BlogPage({ onNav }) {
                       <span className="blog-card-meta-item">
                         <Calendar size={12} />
                         {formatDate(post.date)}
+                      </span>
+                      <span className="blog-card-meta-item">
+                        {estimateReadingMinutes(post.content)}
                       </span>
                     </div>
                     <h2 className="brig blog-card-h2">{post.title}</h2>

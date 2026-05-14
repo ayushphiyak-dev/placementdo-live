@@ -3,8 +3,8 @@
  *
  * Fetches the post matching `slug` from /api/blog?slug=<slug>.
  */
-import { useMemo, useReducer, useEffect, useCallback } from "react";
-import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon, Share2, Linkedin, Twitter } from "lucide-react";
+import { useMemo, useReducer, useEffect } from "react";
+import { Calendar, User, ArrowLeft, BookOpen, Tag as TagIcon, Linkedin, Twitter } from "lucide-react";
 import { upsertMeta, upsertLink, upsertJsonLd } from "../SEO/shared/metaUtils.js";
 import SEED_POSTS from "../../data/blogPosts.json";
 
@@ -16,6 +16,12 @@ const formatDate = (dateStr) => {
     month: "long",
     day: "numeric",
   }).format(date);
+};
+
+const estimateReadingMinutes = (content = "") => {
+  const words = String(content || "").trim().split(/\s+/).filter(Boolean).length;
+  if (words <= 0) return "2 min read";
+  return `${Math.max(1, Math.round(words / 220))} min read`;
 };
 
 /**
@@ -335,12 +341,14 @@ export default function BlogPostPage({ slug, onNav }) {
   useEffect(() => {
     upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
     const canonicalUrl = `${window.location.origin}/blog/${encodeURIComponent(slug)}`;
+    const articleImage = post?.coverImage || post?.featured_image || `${window.location.origin}/opengraph-image.png`;
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
     if (post) {
       const description = post.excerpt || "Read detailed interview guidance and product updates from the PlacementDo blog.";
       const keywordText = Array.isArray(post.tags) && post.tags.length
         ? `${post.tags.join(", ")}, placement preparation, interview preparation, PlacementDo`
         : "placement preparation, interview preparation, campus placements, PlacementDo blog";
+      const readingTime = estimateReadingMinutes(post.content);
       document.title = `${post.title} | PlacementDo`;
       upsertMeta('meta[name="description"]', { name: "description", content: description });
       upsertMeta('meta[name="keywords"]', { name: "keywords", content: keywordText });
@@ -348,12 +356,12 @@ export default function BlogPostPage({ slug, onNav }) {
       upsertMeta('meta[property="og:title"]', { property: "og:title", content: `${post.title} | PlacementDo` });
       upsertMeta('meta[property="og:description"]', { property: "og:description", content: description });
       upsertMeta('meta[property="og:url"]', { property: "og:url", content: canonicalUrl });
-      upsertMeta('meta[property="og:image"]', { property: "og:image", content: post.coverImage || `${window.location.origin}/opengraph-image.png` });
+      upsertMeta('meta[property="og:image"]', { property: "og:image", content: articleImage });
       upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" });
       upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: `${post.title} | PlacementDo` });
       upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: description });
       upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: canonicalUrl });
-      upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: post.coverImage || `${window.location.origin}/twitter-image.png` });
+      upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: articleImage });
       // Article JSON-LD
       upsertJsonLd("blog-article", {
         "@context": "https://schema.org",
@@ -363,15 +371,29 @@ export default function BlogPostPage({ slug, onNav }) {
         "author": { "@type": "Organization", "name": "PlacementDo" },
         "publisher": { "@type": "Organization", "name": "PlacementDo", "url": "https://placementdo.app" },
         "url": canonicalUrl,
+        "image": articleImage,
         "datePublished": post.publishedAt || post.date || "",
         "dateModified": post.updatedAt || post.publishedAt || post.date || "",
+        "timeRequired": readingTime,
+        "articleSection": post.category || "Placement Preparation",
         "keywords": Array.isArray(post.tags) ? post.tags.join(", ") : "",
         "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrl },
       });
+      upsertJsonLd("blog-breadcrumb", {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": window.location.origin },
+          { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${window.location.origin}/blog` },
+          { "@type": "ListItem", "position": 3, "name": post.title, "item": canonicalUrl },
+        ],
+      });
     }
     return () => {
-      const el = document.head.querySelector('script[data-ld-id="blog-article"]');
-      if (el) el.remove();
+      ["blog-article", "blog-breadcrumb"].forEach((id) => {
+        const el = document.head.querySelector(`script[data-ld-id="${id}"]`);
+        if (el) el.remove();
+      });
     };
   }, [slug, post]);
 
@@ -493,6 +515,7 @@ export default function BlogPostPage({ slug, onNav }) {
                   <User size={13} />
                   {post.author}
                 </span>
+                <span className="bpp-meta-item">{estimateReadingMinutes(post.content)}</span>
               </div>
 
               {/* Title */}
@@ -683,13 +706,13 @@ export default function BlogPostPage({ slug, onNav }) {
           {post && (
             <div className="bpp-share">
               <span className="bpp-share-label">Share:</span>
-              <a className="bpp-share-btn linkedin" href={shareLinkedIn} target="_blank" rel="noopener noreferrer">
+              <a className="bpp-share-btn linkedin" href={shareLinkedIn} target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn">
                 <Linkedin size={14} /> LinkedIn
               </a>
-              <a className="bpp-share-btn twitter" href={shareTwitter} target="_blank" rel="noopener noreferrer">
+              <a className="bpp-share-btn twitter" href={shareTwitter} target="_blank" rel="noopener noreferrer" aria-label="Share on X or Twitter">
                 <Twitter size={14} /> X / Twitter
               </a>
-              <a className="bpp-share-btn reddit" href={shareReddit} target="_blank" rel="noopener noreferrer">
+              <a className="bpp-share-btn reddit" href={shareReddit} target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
                 Reddit
               </a>
             </div>
@@ -715,7 +738,7 @@ export default function BlogPostPage({ slug, onNav }) {
             <div className="bpp-cta">
               <h2 className="brig">Practice with AI Mock Interviews — Free</h2>
               <p>PlacementDo simulates real placement interviews. Get instant feedback on your answers, communication, and technical accuracy.</p>
-              <button className="bpp-cta-btn" onClick={() => navigate("/")}>Start your mock interview →</button>
+              <button type="button" className="bpp-cta-btn" onClick={() => navigate("/")}>Start your mock interview →</button>
             </div>
           )}
         </div>

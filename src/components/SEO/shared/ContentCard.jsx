@@ -98,7 +98,7 @@ export default function ContentCard({ icon, title, description, tags, linkText, 
           </div>
         )}
         {linkText && onClick && (
-          <button className="content-card-link" onClick={onClick}>{linkText} →</button>
+          <button type="button" className="content-card-link" onClick={onClick}>{linkText} →</button>
         )}
       </MotionReveal>
     </>
