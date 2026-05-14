@@ -335,6 +335,7 @@ export default function BlogPage({ onNav }) {
           const data = await r.json();
           const list = Array.isArray(data?.posts) ? normalizePosts(data.posts) : [];
           setPosts(list);
+          setPostsLoading(false);
           setPostsError("");
         } else {
           setAuthError("Invalid token. Please check and try again.");
