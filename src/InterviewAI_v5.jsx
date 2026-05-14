@@ -13,9 +13,11 @@ import {
   LifeBuoy, Send, Bot, Github
 } from "lucide-react";
 
+const DEMO_LOAD_ROOT_MARGIN = "320px 0px";
+const DEFER_RENDER_INTRINSIC_SIZE = "1px 860px";
+
 const G = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { background: #FAFAF8; color: #0F172A; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
@@ -141,6 +143,7 @@ const G = () => (
     @property --angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
     .live-ring { animation: live-ring-pulse 2.5s ease-in-out infinite; }
     @keyframes live-ring-pulse { 0%,100% { opacity:.5; transform:scale(1); } 50% { opacity:1; transform:scale(1.06); } }
+    .defer-render { content-visibility: auto; contain-intrinsic-size: ${DEFER_RENDER_INTRINSIC_SIZE}; }
 
     /* ── New animations ── */
     @keyframes fade-in-up { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
@@ -867,16 +870,17 @@ return (
     <form onSubmit={handleSubmit} style={{ width: "100%", maxWidth: 520 }} noValidate>
       <div className="wl-row" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <div style={{ flex: 1, minWidth: 200, position: "relative" }}>
+          <label htmlFor={`waitlist-email-${size}-${dark ? "dark" : "light"}`} className="sr-only">Email address</label>
           <Mail size={16} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: dark ? "rgba(255,255,255,0.4)" : errMsg ? "var(--red)" : "var(--slate-400)", pointerEvents: "none", zIndex: 1 }} />
-          <input type="email" value={email} onChange={e => { setEmail(e.target.value); setErrMsg(""); }} disabled={loading} placeholder="your@email.com"
+          <input id={`waitlist-email-${size}-${dark ? "dark" : "light"}`} type="email" autoComplete="email" inputMode="email" aria-invalid={Boolean(errMsg)} aria-describedby={errMsg ? `waitlist-error-${size}-${dark ? "dark" : "light"}` : undefined} value={email} onChange={e => { setEmail(e.target.value); setErrMsg(""); }} disabled={loading} placeholder="your@email.com"
             style={{ paddingLeft: 40, fontSize: lg ? 15 : 14, padding: lg ? "14px 14px 14px 40px" : "11px 12px 11px 38px", borderRadius: 13, background: dark ? "rgba(255,255,255,0.09)" : "var(--white)", border: errMsg ? "1.5px solid var(--red)" : dark ? "1.5px solid rgba(255,255,255,0.18)" : "1.5px solid var(--border-strong)", color: dark ? "#fff" : "var(--slate)", transition: "all 0.2s ease" }} />
         </div>
-        <button type="submit" className="btn-primary pulse-ring" disabled={loading} style={{ fontSize: lg ? 15 : 14, padding: lg ? "14px 28px" : "11px 20px", borderRadius: 13, minWidth: 148, justifyContent: "center" }}>
+        <button type="submit" className="btn-primary pulse-ring" disabled={loading} aria-busy={loading} style={{ fontSize: lg ? 15 : 14, padding: lg ? "14px 28px" : "11px 20px", borderRadius: 13, minWidth: 148, justifyContent: "center" }}>
           {loading ? <><span className="spin"><RefreshCw size={15} /></span> Submitting…</> : <><Bell size={15} /> Notify Me</>}
         </button>
       </div>
       {errMsg && (
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8 }}>
+        <div id={`waitlist-error-${size}-${dark ? "dark" : "light"}`} role="status" aria-live="polite" style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8 }}>
           <AlertTriangle size={13} style={{ color: "var(--red)", flexShrink: 0 }} />
           <span style={{ fontSize: 12, color: dark ? "#FCA5A5" : "var(--red)", fontWeight: 500 }}>{errMsg}</span>
         </div>
@@ -1314,20 +1318,38 @@ const Landing = ({ onNav, onCheckout }) => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() =>
     window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
+  const demoSectionElementRef = useRef(null);
+  const [shouldLoadDemoEmbed, setShouldLoadDemoEmbed] = useState(false);
 
   useEffect(() => {
-    // Load the Storylane script dynamically so it executes properly in React
-    const existingScript = document.querySelector('script[data-storylane-sdk="true"]');
-    let script = null;
-    if (!existingScript) {
-      script = document.createElement('script');
-      script.src = "https://js.storylane.io/js/v2/storylane.js";
-      script.async = true;
-      script.dataset.storylaneSdk = "true";
-      document.body.appendChild(script);
-    }
-    return () => { if (script && document.body.contains(script)) document.body.removeChild(script); };
-  }, []);
+    if (shouldLoadDemoEmbed) return;
+    const target = demoSectionElementRef.current;
+    if (!target || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldLoadDemoEmbed(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: DEMO_LOAD_ROOT_MARGIN },
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [shouldLoadDemoEmbed]);
+
+  useEffect(() => {
+    if (!shouldLoadDemoEmbed) return;
+    if (document.querySelector('script[data-storylane-sdk="true"]')) return;
+    const script = document.createElement("script");
+    script.src = "https://js.storylane.io/js/v2/storylane.js";
+    script.async = true;
+    script.dataset.storylaneSdk = "true";
+    document.body.appendChild(script);
+    return () => {
+      if (document.body.contains(script)) document.body.removeChild(script);
+    };
+  }, [shouldLoadDemoEmbed]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -1463,7 +1485,7 @@ const Landing = ({ onNav, onCheckout }) => {
     </section>
 
     {/* TICKER */}
-    <section style={{ padding: "48px 0", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", background: "var(--white)" }}>
+    <section className="defer-render" style={{ padding: "48px 0", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", background: "var(--white)" }}>
       <p style={{ textAlign: "center", fontSize: 11.5, color: "var(--slate-300)", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 26 }}>Building for people interviewing at</p>
       <div className="ticker-wrap">
         <div className="ticker-track">
@@ -1479,7 +1501,7 @@ const Landing = ({ onNav, onCheckout }) => {
     </section>
 
     {/* HOW IT WORKS */}
-    <section className="sec-pad" style={{ padding:"100px clamp(20px,5vw,60px)", maxWidth:1100, margin:"0 auto" }}>
+    <section className="sec-pad defer-render" style={{ padding:"100px clamp(20px,5vw,60px)", maxWidth:1100, margin:"0 auto" }}>
       <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }} style={{ textAlign:"center", marginBottom:56 }}>
         <Tag color="teal">Process</Tag>
         <h2 className="brig" style={{ fontSize: "clamp(26px,4.5vw,50px)", fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.03em", marginTop: 14, lineHeight: 1.1 }}>From zero to hired in four steps</h2>
@@ -1509,7 +1531,7 @@ const Landing = ({ onNav, onCheckout }) => {
     </section>
 
     {/* INTERACTIVE DEMO SECTION */}
-    <section id="demo-section" className="sec-pad" style={{ padding:"100px clamp(20px,5vw,60px)", background: "var(--slate-50)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+    <section ref={demoSectionElementRef} id="demo-section" className="sec-pad defer-render" style={{ padding:"100px clamp(20px,5vw,60px)", background: "var(--slate-50)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} viewport={{ once: true }}>
           <Tag color="teal">Experience</Tag>
@@ -1522,24 +1544,38 @@ const Landing = ({ onNav, onCheckout }) => {
         <motion.div initial={{ opacity: 0, y: 32, scale: 0.98 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} viewport={{ once: true }}
           className="card" style={{ padding: 12, borderRadius: 28, background: "var(--white)", boxShadow: "0 42px 100px rgba(15,23,42,0.12)", overflow: "hidden" }}>
           <div style={{ position: 'relative', width: '100%', height: 'clamp(500px, 70vh, 750px)' }}>
-            <iframe 
-              loading="lazy"
-              src="https://demo.storylane.com/demo/1j3kslnrp6q2?embed=inline"
-              title="PlacementDo Interactive Demo"
-              allow="fullscreen"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                border: 'none',
-                borderRadius: '18px',
-                backgroundColor: 'var(--slate-50)'
-              }}
-            />
+            {shouldLoadDemoEmbed ? (
+              <iframe
+                loading="lazy"
+                src="https://demo.storylane.com/demo/1j3kslnrp6q2?embed=inline"
+                title="PlacementDo Interactive Demo"
+                allow="fullscreen"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  border: 'none',
+                  borderRadius: '18px',
+                  backgroundColor: 'var(--slate-50)'
+                }}
+              />
+            ) : (
+              <div style={{ position: 'absolute', inset: 0, borderRadius: 18, background: "linear-gradient(180deg, var(--white), var(--slate-50))", border: "1px solid var(--border)", display: "grid", placeItems: "center", padding: 24 }}>
+                <div style={{ textAlign: "center", maxWidth: 420 }}>
+                  <Video size={24} style={{ color: "var(--teal)", marginBottom: 12 }} />
+                  <p style={{ marginBottom: 12, color: "var(--slate-600)", lineHeight: 1.6 }}>
+                    Demo will load when this section is in view to keep the page fast.
+                  </p>
+                  <button type="button" className="btn-secondary" onClick={() => setShouldLoadDemoEmbed(true)}>
+                    <Video size={14} /> Load demo now
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           <p style={{ fontSize: 12, color: "var(--slate-500)", marginTop: 12 }}>
             Demo not loading? <a href="https://demo.storylane.com/demo/1j3kslnrp6q2" target="_blank" rel="noopener noreferrer" style={{ color: "var(--teal-dark)", fontWeight: 600 }}>Open it in a new tab</a>.
@@ -1549,7 +1585,7 @@ const Landing = ({ onNav, onCheckout }) => {
     </section>
 
     {/* FEATURES */}
-    <section id="features-section" style={{ padding: "80px clamp(20px,5vw,60px) 100px", background: "var(--white)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+    <section id="features-section" className="defer-render" style={{ padding: "80px clamp(20px,5vw,60px) 100px", background: "var(--white)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} viewport={{ once: true }} style={{ textAlign: "center", marginBottom: 52 }}>
           <Tag color="slate">Why PlacementDo</Tag>
@@ -1636,7 +1672,7 @@ const Landing = ({ onNav, onCheckout }) => {
     </section>
 
     {/* PRICING */}
-    <section id="pricing-section" style={{ padding: "100px clamp(20px,5vw,60px)", maxWidth: 1100, margin: "0 auto" }}>
+    <section id="pricing-section" className="defer-render" style={{ padding: "100px clamp(20px,5vw,60px)", maxWidth: 1100, margin: "0 auto" }}>
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} viewport={{ once: true }} style={{ textAlign: "center", marginBottom: 52 }}>
         <Tag color="teal">Pricing</Tag>
         <h2 className="brig" style={{ fontSize: "clamp(24px,4vw,46px)", fontWeight: 700, letterSpacing: "-0.03em", color: "var(--slate)", marginTop: 14, lineHeight: 1.1 }}>One interview could change everything</h2>
@@ -1689,7 +1725,7 @@ const Landing = ({ onNav, onCheckout }) => {
       ];
       const [open, setOpen] = useState(null);
       return (
-        <section style={{ padding: "80px clamp(20px,5vw,60px) 100px", background: "var(--ivory)", borderTop: "1px solid var(--border)" }}>
+        <section className="defer-render" style={{ padding: "80px clamp(20px,5vw,60px) 100px", background: "var(--ivory)", borderTop: "1px solid var(--border)" }}>
           <div style={{ maxWidth: 780, margin: "0 auto" }}>
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} viewport={{ once: true }} style={{ textAlign: "center", marginBottom: 52 }}>
               <Tag color="slate"><HelpCircle size={10} /> FAQ</Tag>
@@ -1725,7 +1761,7 @@ const Landing = ({ onNav, onCheckout }) => {
     })()}
 
     {/* WAITLIST CTA */}
-    <section id="waitlist-section" style={{ padding: "96px clamp(20px,5vw,60px) 112px", background: "var(--slate)", position: "relative", overflow: "hidden" }}>
+    <section id="waitlist-section" className="defer-render" style={{ padding: "96px clamp(20px,5vw,60px) 112px", background: "var(--slate)", position: "relative", overflow: "hidden" }}>
       {/* Animated background blobs */}
       <div style={{ position:"absolute", top:"20%", left:"10%", width:400, height:400, background:"radial-gradient(circle,rgba(13,148,136,.14) 0%,transparent 70%)", pointerEvents:"none", animation:"float-anim 8s ease-in-out infinite" }}/>
       <div style={{ position:"absolute", bottom:"10%", right:"8%", width:300, height:300, background:"radial-gradient(circle,rgba(124,58,237,.1) 0%,transparent 70%)", pointerEvents:"none", animation:"float-anim 10s ease-in-out infinite reverse" }}/>
