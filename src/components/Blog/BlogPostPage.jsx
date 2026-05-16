@@ -339,11 +339,12 @@ export default function BlogPostPage({ slug, onNav }) {
   const blocks = useMemo(() => (post ? parseContent(post.content) : []), [post]);
 
   useEffect(() => {
-    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
     const canonicalUrl = `${window.location.origin}/blog/${encodeURIComponent(slug)}`;
+    const fallbackCanonicalUrl = `${window.location.origin}/blog`;
     const articleImage = post?.coverImage || post?.featured_image || `${window.location.origin}/opengraph-image.png`;
-    upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
     if (post) {
+      upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
+      upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
       const description = post.excerpt || "Read detailed interview guidance and product updates from the PlacementDo blog.";
       const keywordText = Array.isArray(post.tags) && post.tags.length
         ? `${post.tags.join(", ")}, placement preparation, interview preparation, PlacementDo`
@@ -388,6 +389,22 @@ export default function BlogPostPage({ slug, onNav }) {
           { "@type": "ListItem", "position": 3, "name": post.title, "item": canonicalUrl },
         ],
       });
+    } else if (!loading && notFound) {
+      document.title = "Post not found | PlacementDo";
+      upsertMeta('meta[name="description"]', { name: "description", content: "The blog post you requested could not be found. Browse all PlacementDo articles instead." });
+      upsertMeta('meta[name="keywords"]', { name: "keywords", content: "placementdo blog, placement articles, interview preparation blog" });
+      upsertMeta('meta[name="robots"]', { name: "robots", content: "noindex, follow" });
+      upsertMeta('meta[property="og:type"]', { property: "og:type", content: "website" });
+      upsertMeta('meta[property="og:title"]', { property: "og:title", content: "Post not found | PlacementDo" });
+      upsertMeta('meta[property="og:description"]', { property: "og:description", content: "The blog post you requested could not be found. Browse all PlacementDo articles instead." });
+      upsertMeta('meta[property="og:url"]', { property: "og:url", content: fallbackCanonicalUrl });
+      upsertMeta('meta[property="og:image"]', { property: "og:image", content: `${window.location.origin}/opengraph-image.png` });
+      upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" });
+      upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: "Post not found | PlacementDo" });
+      upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: "The blog post you requested could not be found. Browse all PlacementDo articles instead." });
+      upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: fallbackCanonicalUrl });
+      upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: `${window.location.origin}/twitter-image.png` });
+      upsertLink('link[rel="canonical"]', { rel: "canonical", href: fallbackCanonicalUrl });
     }
     return () => {
       ["blog-article", "blog-breadcrumb"].forEach((id) => {
@@ -395,7 +412,7 @@ export default function BlogPostPage({ slug, onNav }) {
         if (el) el.remove();
       });
     };
-  }, [slug, post]);
+  }, [slug, post, notFound, loading]);
 
   const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/blog/${slug}` : `https://placementdo.app/blog/${slug}`;
   const shareTitle = post ? encodeURIComponent(post.title) : "";

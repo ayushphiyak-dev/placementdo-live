@@ -10,6 +10,7 @@ const CompanyWisePage = lazy(() => import("./components/SEO/CompanyWisePage.jsx"
 const SeoResourcesPage = lazy(() => import("./components/SEO/SeoResourcesPage.jsx"));
 const DemoPage = lazy(() => import("./components/SEO/DemoPage.jsx"));
 const PlacementCompleteGuidePage = lazy(() => import("./components/SEO/PlacementCompleteGuidePage.jsx"));
+const SitemapPage = lazy(() => import("./components/SEO/SitemapPage.jsx"));
 
 const SpeedInsights = lazy(() =>
   import('@vercel/speed-insights/react').then((mod) => ({ default: mod.SpeedInsights })),
@@ -33,6 +34,7 @@ const STANDALONE_ROUTES = [
   "/company-wise-questions/hcl",
   "/seo-resources",
   "/demo",
+  "/sitemap",
 ];
 
 const RouteLoadingFallback = () => (
@@ -210,6 +212,14 @@ function AppRouter() {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <DemoPage onNav={navigate} />
+      </Suspense>
+    );
+  }
+
+  if (normalizedPath === "/sitemap") {
+    return (
+      <Suspense fallback={<RouteLoadingFallback />}>
+        <SitemapPage onNav={navigate} />
       </Suspense>
     );
   }

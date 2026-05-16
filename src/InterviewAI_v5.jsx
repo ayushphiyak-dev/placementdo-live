@@ -5573,6 +5573,7 @@ const TermsPage = () => {
 const DASH_VIEWS = ["dashboard", "reports", "progress", "avatars", "settings", "support"];
 const ROUTE_TO_PATH = {
   landing: "/",
+  notFound: "/404",
   signin: "/signin",
   signup: "/signup",
   features: "/features",
@@ -5606,7 +5607,8 @@ const parseRouteFromPath = (pathname) => {
     const slug = decodeURIComponent(normalized.replace("/blog/", "")).trim();
     if (slug) return { route: "blogPost", slug };
   }
-  return { route: PATH_TO_ROUTE[normalized] || "landing", slug: "" };
+  if (PATH_TO_ROUTE[normalized]) return { route: PATH_TO_ROUTE[normalized], slug: "" };
+  return { route: "notFound", slug: "" };
 };
 
 const WEB_PAGE_SCHEMA_VIEWS = new Set([
@@ -5633,6 +5635,14 @@ const SEO_MAP = {
     type: "website",
     robots: "index, follow",
     breadcrumbName: "Home",
+  },
+  notFound: {
+    title: "Page Not Found | PlacementDo",
+    description:
+      "The page you requested could not be found. Continue to PlacementDo's placement preparation guides, company pages, or AI mock interview platform.",
+    type: "website",
+    robots: "noindex, follow",
+    breadcrumbName: "Page not found",
   },
   signin: {
     title: "Sign In | PlacementDo",
@@ -5876,6 +5886,51 @@ const SECTION_PAGE_CONTENT = {
     ],
   },
 };
+
+const NotFoundPage = ({ onNav }) => (
+  <main style={{ minHeight: "100vh", background: "var(--ivory)" }}>
+    <section style={{ padding: "120px clamp(20px,5vw,60px) 96px" }}>
+      <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
+        <Tag color="slate">404</Tag>
+        <h1 className="brig" style={{ fontSize: "clamp(32px,6vw,56px)", lineHeight: 1.05, letterSpacing: "-0.035em", color: "var(--slate)", margin: "18px 0 14px" }}>
+          This page doesn&apos;t exist
+        </h1>
+        <p style={{ fontSize: 15.5, lineHeight: 1.8, color: "var(--slate-500)", maxWidth: 620, margin: "0 auto 28px" }}>
+          The URL may be outdated or incorrect. Jump back to PlacementDo&apos;s main pages to continue your placement preparation.
+        </p>
+        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 12, marginBottom: 22 }}>
+          <button className="btn-primary" onClick={() => onNav("landing")}>Go home</button>
+          <button className="btn-secondary" onClick={() => onNav("blog")}>Browse blog</button>
+        </div>
+        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 10 }}>
+          {[
+            { label: "Placement Guide", href: "/placement-preparation-complete-guide" },
+            { label: "Aptitude Questions", href: "/aptitude-questions" },
+            { label: "Coding Questions", href: "/coding-interview-questions" },
+            { label: "HTML Sitemap", href: "/sitemap" },
+          ].map(({ label, href }) => (
+            <a
+              key={href}
+              href={href}
+              className="btn-ghost"
+              style={{ fontSize: 13, color: "var(--teal-dark)" }}
+              onClick={(event) => {
+                event.preventDefault();
+                if (href === "/sitemap") {
+                  window.location.href = href;
+                  return;
+                }
+                window.location.href = href;
+              }}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+);
 export default function App() {
   const [view, setView] = useState(() => parseRouteFromPath(window.location.pathname).route);
   const [blogSlug, setBlogSlug] = useState(() => parseRouteFromPath(window.location.pathname).slug);
@@ -6036,12 +6091,12 @@ export default function App() {
           "@type": "WebSite",
           name: "PlacementDo",
           url: origin,
-          potentialAction: {
-            "@type": "SearchAction",
-            target: `${origin}/?q={search_term_string}`,
-            "query-input": "required name=search_term_string",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: `${origin}/blog?q={search_term_string}`,
+              "query-input": "required name=search_term_string",
+            },
           },
-        },
         "website",
       );
     }
@@ -6140,6 +6195,7 @@ export default function App() {
 
   const renderView = () => {
     if (view === "landing") return <Landing onNav={go} onCheckout={openCheckout} />;
+    if (view === "notFound") return <NotFoundPage onNav={go} />;
     if (view === "signin") return <SignIn onNav={go} />;
     if (view === "signup") return <SignUp onNav={go} />;
     if (view === "blog") return <BlogList onNav={go} />;
