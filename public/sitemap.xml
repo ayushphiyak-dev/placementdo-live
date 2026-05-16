@@ -4,7 +4,7 @@
   <!-- Core Pages -->
   <url>
     <loc>https://placementdo.app/</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
   <!-- PILLAR PAGE: Primary target for "placement" keyword -->
   <url>
     <loc>https://placementdo.app/placement-preparation-complete-guide</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.98</priority>
   </url>
@@ -20,57 +20,105 @@
   <!-- SEO Content Pages -->
   <url>
     <loc>https://placementdo.app/placement-preparation</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://placementdo.app/aptitude-questions</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://placementdo.app/coding-interview-questions</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://placementdo.app/features</loc>
+    <lastmod>2026-05-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.76</priority>
+  </url>
+  <url>
+    <loc>https://placementdo.app/pricing</loc>
+    <lastmod>2026-05-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.76</priority>
+  </url>
+  <url>
+    <loc>https://placementdo.app/personas</loc>
+    <lastmod>2026-05-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.74</priority>
+  </url>
+  <url>
+    <loc>https://placementdo.app/how-it-works</loc>
+    <lastmod>2026-05-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://placementdo.app/about</loc>
+    <lastmod>2026-05-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://placementdo.app/careers</loc>
+    <lastmod>2026-05-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://placementdo.app/privacy-policy</loc>
+    <lastmod>2026-05-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.42</priority>
+  </url>
+  <url>
+    <loc>https://placementdo.app/terms-of-service</loc>
+    <lastmod>2026-05-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.42</priority>
   </url>
 
   <!-- Company-Wise Pages -->
   <url>
     <loc>https://placementdo.app/company-wise-questions/tcs</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
     <loc>https://placementdo.app/company-wise-questions/infosys</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
     <loc>https://placementdo.app/company-wise-questions/wipro</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
     <loc>https://placementdo.app/company-wise-questions/accenture</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
     <loc>https://placementdo.app/company-wise-questions/cognizant</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
     <loc>https://placementdo.app/company-wise-questions/hcl</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
@@ -306,15 +354,21 @@
   <!-- Other pages -->
   <url>
     <loc>https://placementdo.app/seo-resources</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>
   <url>
     <loc>https://placementdo.app/demo</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-05-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://placementdo.app/sitemap</loc>
+    <lastmod>2026-05-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.68</priority>
   </url>
 
 </urlset>

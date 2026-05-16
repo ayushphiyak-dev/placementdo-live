@@ -28,6 +28,7 @@ const FOOTER_LINKS = [
   { label: "HCL Questions", href: "/company-wise-questions/hcl" },
   { label: "Blog", href: "/blog" },
   { label: "SEO Resources", href: "/seo-resources" },
+  { label: "HTML Sitemap", href: "/sitemap" },
   { label: "Interactive Demo", href: "/demo" },
 ];
 
@@ -183,7 +184,7 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
     upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: `${window.location.origin}/twitter-image.png` });
     upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: `${window.location.origin}${canonicalPath}` });
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: `${window.location.origin}${canonicalPath}` });
-  }, [title, metaDescription, keywordsDependency, canonicalPath]);
+  }, [title, metaDescription, keywords, keywordsDependency, canonicalPath]);
 
   useEffect(() => {
     let ticking = false;
@@ -335,7 +336,7 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
           <div className="seo-footer-bottom">
             <span className="seo-footer-copy">© 2026 PlacementDo. All rights reserved.</span>
             <div style={{ display: "flex", gap: 16 }}>
-              {[{ label: "Privacy", href: "/privacy-policy" }, { label: "Terms", href: "/terms-of-service" }].map(({ label, href }) => (
+              {[{ label: "Privacy", href: "/privacy-policy" }, { label: "Terms", href: "/terms-of-service" }, { label: "Sitemap", href: "/sitemap" }].map(({ label, href }) => (
                 <button key={label} onClick={() => navigate(href)}
                   style={{ fontSize: 12, color: "rgba(255,255,255,.25)", background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}
                   onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,.6)"}

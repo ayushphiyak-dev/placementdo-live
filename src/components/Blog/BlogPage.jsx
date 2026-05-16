@@ -186,6 +186,10 @@ export default function BlogPage({ onNav }) {
     (path) => (onNav ? onNav(path) : (window.location.href = path)),
     [onNav]
   );
+  const getSearchQueryFromUrl = useCallback(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("q") || "";
+  }, []);
 
   // --- Posts ---
   const [posts, setPosts] = useState(FALLBACK_POSTS);
@@ -219,8 +223,9 @@ export default function BlogPage({ onNav }) {
   }, [fetchPosts]);
 
   // --- State and derived data (must be declared before useEffects that reference them) ---
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(() => getSearchQueryFromUrl());
   const [activeCategory, setActiveCategory] = useState("All");
+  const normalizedSearch = search.trim();
 
   const publishedPosts = useMemo(
     () => [...posts]
@@ -239,7 +244,7 @@ export default function BlogPage({ onNav }) {
   }, [publishedPosts]);
 
   const filteredPosts = useMemo(() => {
-    const q = search.trim().toLowerCase();
+    const q = normalizedSearch.toLowerCase();
     const basePosts = activeCategory === "All"
       ? publishedPosts
       : publishedPosts.filter((p) => (p.category || "").trim() === activeCategory);
@@ -254,30 +259,37 @@ export default function BlogPage({ onNav }) {
 
     if (!q && activeCategory === "All") return bySearch.slice(1);
     return bySearch;
-  }, [publishedPosts, search, activeCategory]);
+  }, [publishedPosts, normalizedSearch, activeCategory]);
 
   // --- SEO meta tags ---
   useEffect(() => {
     const canonicalUrl = `${window.location.origin}/blog`;
-    document.title = "Blog | PlacementDo — Interview Tips & Placement Guides";
-    upsertMeta('meta[name="description"]', { name: "description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
+    const isSearchView = Boolean(normalizedSearch);
+    const title = isSearchView
+      ? `Search results for "${normalizedSearch}" | PlacementDo Blog`
+      : "Blog | PlacementDo — Interview Tips & Placement Guides";
+    const description = isSearchView
+      ? `Search PlacementDo blog posts for "${normalizedSearch}" and discover relevant interview preparation and placement guidance.`
+      : "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes.";
+    document.title = title;
+    upsertMeta('meta[name="description"]', { name: "description", content: description });
     upsertMeta('meta[name="keywords"]', {
       name: "keywords",
       content: "placement blog, placement preparation blog, interview tips for freshers, campus placement guide, PlacementDo blog, aptitude test tips, HR interview questions, resume writing tips",
     });
-    upsertMeta('meta[name="robots"]', { name: "robots", content: "index, follow" });
+    upsertMeta('meta[name="robots"]', { name: "robots", content: isSearchView ? "noindex, follow" : "index, follow" });
     upsertMeta('meta[property="og:type"]', { property: "og:type", content: "website" });
-    upsertMeta('meta[property="og:title"]', { property: "og:title", content: "Blog | PlacementDo" });
-    upsertMeta('meta[property="og:description"]', { property: "og:description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
+    upsertMeta('meta[property="og:title"]', { property: "og:title", content: title });
+    upsertMeta('meta[property="og:description"]', { property: "og:description", content: description });
     upsertMeta('meta[property="og:url"]', { property: "og:url", content: canonicalUrl });
     upsertMeta('meta[property="og:image"]', { property: "og:image", content: `${window.location.origin}/opengraph-image.png` });
     upsertMeta('meta[name="twitter:card"]', { name: "twitter:card", content: "summary_large_image" });
-    upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: "Blog | PlacementDo" });
-    upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: "Read PlacementDo blog posts for interview preparation insights, product updates, and actionable strategies to improve your interview outcomes." });
+    upsertMeta('meta[name="twitter:title"]', { name: "twitter:title", content: title });
+    upsertMeta('meta[name="twitter:description"]', { name: "twitter:description", content: description });
     upsertMeta('meta[name="twitter:url"]', { name: "twitter:url", content: canonicalUrl });
     upsertMeta('meta[name="twitter:image"]', { name: "twitter:image", content: `${window.location.origin}/twitter-image.png` });
     upsertLink('link[rel="canonical"]', { rel: "canonical", href: canonicalUrl });
-  }, []);
+  }, [normalizedSearch]);
 
   // Reset active category if it no longer exists in the available categories
   useEffect(() => {
@@ -288,6 +300,11 @@ export default function BlogPage({ onNav }) {
 
   // JSON-LD structured data for blog listing
   useEffect(() => {
+    if (normalizedSearch) {
+      const el = document.head.querySelector('script[data-ld-id="blog-listing"]');
+      if (el) el.remove();
+      return undefined;
+    }
     const canonicalUrl = `${window.location.origin}/blog`;
     upsertJsonLd("blog-listing", {
       "@context": "https://schema.org",
@@ -312,7 +329,27 @@ export default function BlogPage({ onNav }) {
       const el = document.head.querySelector('script[data-ld-id="blog-listing"]');
       if (el) el.remove();
     };
-  }, [publishedPosts]);
+  }, [publishedPosts, normalizedSearch]);
+
+  useEffect(() => {
+    const nextUrl = new URL(window.location.href);
+    if (normalizedSearch) {
+      nextUrl.searchParams.set("q", normalizedSearch);
+    } else {
+      nextUrl.searchParams.delete("q");
+    }
+    const nextHref = `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`;
+    const currentHref = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (nextHref !== currentHref) {
+      window.history.replaceState({}, "", nextHref);
+    }
+  }, [normalizedSearch]);
+
+  useEffect(() => {
+    const syncSearchFromUrl = () => setSearch(getSearchQueryFromUrl());
+    window.addEventListener("popstate", syncSearchFromUrl);
+    return () => window.removeEventListener("popstate", syncSearchFromUrl);
+  }, [getSearchQueryFromUrl]);
 
   // --- Admin auth ---
   const [adminToken, setAdminToken] = useState(getStoredToken);
@@ -450,9 +487,9 @@ export default function BlogPage({ onNav }) {
 
   // Featured post = most recent published post (only for the default listing view)
   const featuredPost = useMemo(() => {
-    if (activeCategory !== "All" || search.trim()) return null;
+    if (activeCategory !== "All" || normalizedSearch) return null;
     return publishedPosts.length > 0 ? publishedPosts[0] : null;
-  }, [publishedPosts, activeCategory, search]);
+  }, [publishedPosts, activeCategory, normalizedSearch]);
 
   // Posts list shown in admin panel (all statuses)
   const adminPosts = useMemo(
@@ -512,7 +549,7 @@ export default function BlogPage({ onNav }) {
           </div>
 
           {/* Featured post */}
-          {!search.trim() && featuredPost && (
+          {!normalizedSearch && featuredPost && (
             <div style={{ marginBottom: 48 }}>
               <p className="blog-section-label">Featured Post</p>
               <div
@@ -591,7 +628,7 @@ export default function BlogPage({ onNav }) {
           {/* All posts heading + search */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 20 }}>
             <p className="blog-section-label" style={{ margin: 0 }}>
-              {search ? "Search results" : activeCategory === "All" ? "All Posts" : `${activeCategory} Posts`}
+              {normalizedSearch ? "Search results" : activeCategory === "All" ? "All Posts" : `${activeCategory} Posts`}
             </p>
             {/* Search bar */}
             <div className="blog-search-bar" style={{ margin: 0 }}>
@@ -614,7 +651,7 @@ export default function BlogPage({ onNav }) {
           ) : filteredPosts.length === 0 ? (
             <div className="blog-empty">
               <p style={{ fontSize: 16, fontWeight: 500 }}>No posts found.</p>
-              {search && (
+               {normalizedSearch && (
                 <button
                   type="button"
                   className="btn-ghost"
