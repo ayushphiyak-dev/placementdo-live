@@ -24,12 +24,6 @@ export default function AuthCallback({ onNav }) {
       return '';
     };
 
-    const errorText = parseAuthError();
-    if (errorText) {
-      onNav(`/signin?auth_error=${encodeURIComponent(errorText)}`);
-      return;
-    }
-
     const finishOAuth = async () => {
       const searchParams = new URLSearchParams(window.location.search);
       const code = searchParams.get('code');
@@ -42,6 +36,12 @@ export default function AuthCallback({ onNav }) {
     };
 
     const initialize = async () => {
+      const errorText = parseAuthError();
+      if (errorText) {
+        onNav(`/signin?auth_error=${encodeURIComponent(errorText)}`);
+        return;
+      }
+
       await finishOAuth();
       if (!mounted) return;
 

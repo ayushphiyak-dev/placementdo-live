@@ -21,16 +21,15 @@ export default function SignInPage({ onNav }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [error, setError] = useState(getAuthErrorFromSearch);
+  const [error, setError] = useState(() => getAuthErrorFromSearch());
 
   useEffect(() => {
-    const authError = getAuthErrorFromSearch();
-    if (!authError) return;
+    if (!error) return;
     const params = new URLSearchParams(window.location.search);
     params.delete('auth_error');
     const cleaned = params.toString();
     window.history.replaceState({}, '', `${window.location.pathname}${cleaned ? `?${cleaned}` : ''}${window.location.hash}`);
-  }, []);
+  }, [error]);
 
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
