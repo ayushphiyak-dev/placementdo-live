@@ -5946,6 +5946,16 @@ export default function App() {
   const [toast, setToast] = useState(null);
 
   const go = (v, options = {}) => {
+    if (v === "signin" || v === "signup") {
+      const authPath = ROUTE_TO_PATH[v];
+      if (window.location.pathname !== authPath) {
+        window.history.pushState({}, "", authPath);
+      }
+      window.dispatchEvent(new PopStateEvent("popstate", { state: window.history.state }));
+      window.scrollTo({ top: 0, behavior: "instant" });
+      return;
+    }
+
     const nextSlug = typeof options.slug === "string" ? options.slug.trim() : "";
     setView(v);
     setBlogSlug(v === "blogPost" ? nextSlug : "");
