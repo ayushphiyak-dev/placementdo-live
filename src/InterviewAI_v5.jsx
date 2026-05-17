@@ -5955,7 +5955,7 @@ export default function App() {
     const nextPath = v === "blogPost" && nextSlug ? `/blog/${encodeURIComponent(nextSlug)}` : (ROUTE_TO_PATH[v] || "/");
     if (window.location.pathname !== nextPath) {
       window.history.pushState({}, "", nextPath);
-      window.dispatchEvent(new PopStateEvent("popstate"));
+      window.dispatchEvent(new PopStateEvent("popstate", { state: window.history.state }));
     }
     window.scrollTo({ top: 0, behavior: "instant" });
   };
