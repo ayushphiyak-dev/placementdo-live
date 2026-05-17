@@ -11,6 +11,9 @@ export default function AuthCallback({ onNav }) {
   useEffect(() => {
     let mounted = true;
     let navigated = false;
+    const exchangedCodeStorageKey = 'pd_oauth_exchanged_code';
+    const exchangeLockStorageKey = 'pd_oauth_exchange_lock';
+    const exchangeLockTtlMs = 15000;
 
     const navigateToDashboard = () => {
       if (navigated) return;
@@ -31,13 +34,61 @@ export default function AuthCallback({ onNav }) {
     };
 
     const finishOAuth = async () => {
+      const checkSessionAndNavigate = async () => {
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (sessionData?.session) {
+          navigateToDashboard();
+          return true;
+        }
+        return false;
+      };
+      const getLockFromStorage = () => {
+        try {
+          return JSON.parse(window.sessionStorage.getItem(exchangeLockStorageKey) || 'null');
+        } catch {
+          return null;
+        }
+      };
+
       const searchParams = new URLSearchParams(window.location.search);
       const code = searchParams.get('code');
       if (!code) return;
 
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
-      if (error && mounted) {
-        onNav(`/signin?auth_error=${encodeURIComponent(error.message)}`);
+      const previouslyExchangedCode = window.sessionStorage.getItem(exchangedCodeStorageKey);
+      if (previouslyExchangedCode === code) {
+        if (await checkSessionAndNavigate()) return;
+        window.sessionStorage.removeItem(exchangedCodeStorageKey);
+      }
+
+      if (await checkSessionAndNavigate()) return;
+
+      const existingLock = getLockFromStorage();
+      if (
+        existingLock?.code === code
+        && typeof existingLock.ts === 'number'
+        && Date.now() - existingLock.ts < exchangeLockTtlMs
+      ) {
+        await checkSessionAndNavigate();
+        return;
+      }
+
+      const currentLockId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      window.sessionStorage.setItem(exchangeLockStorageKey, JSON.stringify({ code, ts: Date.now(), id: currentLockId }));
+      try {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!error) {
+          window.sessionStorage.setItem(exchangedCodeStorageKey, code);
+        }
+
+        if (error && mounted) {
+          if (await checkSessionAndNavigate()) return;
+          onNav(`/signin?auth_error=${encodeURIComponent(error.message)}`);
+        }
+      } finally {
+        const latestLock = getLockFromStorage();
+        if (latestLock?.id === currentLockId) {
+          window.sessionStorage.removeItem(exchangeLockStorageKey);
+        }
       }
     };
 
