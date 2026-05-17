@@ -9,20 +9,68 @@ import { supabase } from '../../lib/supabaseClient';
  */
 export default function AuthCallback({ onNav }) {
   useEffect(() => {
-    // The Supabase client processes the URL hash automatically on initialise.
-    // We listen for the first SIGNED_IN event and navigate from there.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_IN') {
-        onNav('/dashboard');
+    let mounted = true;
+    let navigated = false;
+
+    const navigateToDashboard = () => {
+      if (navigated) return;
+      navigated = true;
+      onNav('/dashboard');
+    };
+
+    const parseAuthError = () => {
+      const search = new URLSearchParams(window.location.search);
+      if (search.get('error_description')) return search.get('error_description');
+      if (search.get('error')) return search.get('error');
+
+      const hash = window.location.hash.startsWith('#') ? new URLSearchParams(window.location.hash.slice(1)) : null;
+      if (hash?.get('error_description')) return hash.get('error_description');
+      if (hash?.get('error')) return hash.get('error');
+
+      return '';
+    };
+
+    const finishOAuth = async () => {
+      const searchParams = new URLSearchParams(window.location.search);
+      const code = searchParams.get('code');
+      if (!code) return;
+
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      if (error && mounted) {
+        onNav(`/signin?auth_error=${encodeURIComponent(error.message)}`);
+      }
+    };
+
+    const listener = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) return;
+      if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+        navigateToDashboard();
       }
     });
+    const subscription = listener.data.subscription;
 
-    // Fallback: if a session already exists (page reload), redirect immediately.
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) onNav('/dashboard');
-    });
+    const initialize = async () => {
+      const errorText = parseAuthError();
+      if (errorText) {
+        onNav(`/signin?auth_error=${encodeURIComponent(errorText)}`);
+        return;
+      }
 
-    return () => subscription.unsubscribe();
+      await finishOAuth();
+      if (!mounted) return;
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (mounted && session) {
+        navigateToDashboard();
+      }
+    };
+
+    initialize();
+
+    return () => {
+      mounted = false;
+      subscription?.unsubscribe();
+    };
   }, [onNav]);
 
   return (
