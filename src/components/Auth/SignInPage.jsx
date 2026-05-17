@@ -11,17 +11,22 @@ const GoogleIcon = () => (
 );
 
 export default function SignInPage({ onNav }) {
+  const getInitialAuthError = () => {
+    const params = new URLSearchParams(window.location.search);
+    const authError = params.get('auth_error');
+    return authError ? decodeURIComponent(authError) : '';
+  };
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(getInitialAuthError);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const authError = params.get('auth_error');
     if (!authError) return;
-    setError(decodeURIComponent(authError));
     params.delete('auth_error');
     const cleaned = params.toString();
     window.history.replaceState({}, '', `${window.location.pathname}${cleaned ? `?${cleaned}` : ''}${window.location.hash}`);
