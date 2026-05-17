@@ -10,7 +10,13 @@ import { supabase } from '../../lib/supabaseClient';
 export default function AuthCallback({ onNav }) {
   useEffect(() => {
     let mounted = true;
-    let subscription;
+    let navigated = false;
+
+    const navigateToDashboard = () => {
+      if (navigated) return;
+      navigated = true;
+      onNav('/dashboard');
+    };
 
     const parseAuthError = () => {
       const search = new URLSearchParams(window.location.search);
@@ -35,6 +41,14 @@ export default function AuthCallback({ onNav }) {
       }
     };
 
+    const listener = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) return;
+      if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+        navigateToDashboard();
+      }
+    });
+    const subscription = listener.data.subscription;
+
     const initialize = async () => {
       const errorText = parseAuthError();
       if (errorText) {
@@ -45,17 +59,9 @@ export default function AuthCallback({ onNav }) {
       await finishOAuth();
       if (!mounted) return;
 
-      const listener = supabase.auth.onAuthStateChange((event, session) => {
-        if (!session) return;
-        if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-          onNav('/dashboard');
-        }
-      });
-      subscription = listener.data.subscription;
-
       const { data: { session } } = await supabase.auth.getSession();
       if (mounted && session) {
-        onNav('/dashboard');
+        navigateToDashboard();
       }
     };
 

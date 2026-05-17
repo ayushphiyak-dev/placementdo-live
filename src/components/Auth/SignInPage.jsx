@@ -10,7 +10,7 @@ const GoogleIcon = () => (
   </svg>
 );
 
-const getAuthErrorFromSearch = () => {
+const getAuthErrorFromQueryParams = () => {
   const params = new URLSearchParams(window.location.search);
   const authError = params.get('auth_error');
   return authError ? decodeURIComponent(authError) : '';
@@ -21,7 +21,7 @@ export default function SignInPage({ onNav }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [error, setError] = useState(() => getAuthErrorFromSearch());
+  const [error, setError] = useState(() => getAuthErrorFromQueryParams());
 
   useEffect(() => {
     if (!error) return;
