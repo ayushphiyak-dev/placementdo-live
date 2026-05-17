@@ -95,7 +95,7 @@ export default function SignInPage({ onNav }) {
           className="btn-secondary"
           style={{ width: '100%', justifyContent: 'center', marginBottom: 20, borderRadius: 12, padding: '11px 0', fontSize: 14, fontWeight: 600 }}
           onClick={handleGoogleSignIn}
-          disabled={googleLoading || loading}
+          disabled={googleLoading || loading || authUnavailable}
         >
           {googleLoading ? <><span className="spin">◌</span> Sign in with Google</> : <><GoogleIcon /> Continue with Google</>}
         </button>
