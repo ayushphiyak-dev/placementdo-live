@@ -11,6 +11,7 @@ export default function AuthCallback({ onNav }) {
   useEffect(() => {
     let mounted = true;
     let navigated = false;
+    const exchangedCodeStorageKey = 'pd_oauth_exchanged_code';
 
     const navigateToDashboard = () => {
       if (navigated) return;
@@ -35,8 +36,26 @@ export default function AuthCallback({ onNav }) {
       const code = searchParams.get('code');
       if (!code) return;
 
+      const previouslyExchangedCode = window.sessionStorage.getItem(exchangedCodeStorageKey);
+      if (previouslyExchangedCode === code) return;
+
+      const { data: existingSessionData } = await supabase.auth.getSession();
+      if (existingSessionData?.session) {
+        window.sessionStorage.setItem(exchangedCodeStorageKey, code);
+        return;
+      }
+
       const { error } = await supabase.auth.exchangeCodeForSession(code);
+      if (!error) {
+        window.sessionStorage.setItem(exchangedCodeStorageKey, code);
+      }
+
       if (error && mounted) {
+        const { data: latestSessionData } = await supabase.auth.getSession();
+        if (latestSessionData?.session) {
+          window.sessionStorage.setItem(exchangedCodeStorageKey, code);
+          return;
+        }
         onNav(`/signin?auth_error=${encodeURIComponent(error.message)}`);
       }
     };
