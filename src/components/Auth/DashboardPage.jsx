@@ -43,7 +43,7 @@ export default function DashboardPage({ onNav }) {
   const fullName = user?.user_metadata?.full_name || user?.user_metadata?.name;
   const displayEmail = user?.email ?? '';
   const initials = fullName
-    ? fullName.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()
+    ? fullName.split(' ').filter((n) => n).map((n) => n[0]).join('').slice(0, 2).toUpperCase()
     : displayEmail.slice(0, 2).toUpperCase();
 
   return (

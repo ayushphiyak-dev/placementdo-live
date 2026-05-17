@@ -14,17 +14,26 @@ export default function SignUpPage({ onNav }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [confirmError, setConfirmError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  const validateConfirm = (value) => {
+    if (value && password && value !== password) {
+      setConfirmError('Passwords do not match.');
+    } else {
+      setConfirmError('');
+    }
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
     if (password !== confirm) {
-      setError('Passwords do not match.');
+      setConfirmError('Passwords do not match.');
       return;
     }
     setLoading(true);
@@ -71,8 +80,7 @@ export default function SignUpPage({ onNav }) {
           onClick={handleGoogleSignUp}
           disabled={googleLoading || loading}
         >
-          {googleLoading ? <span className="spin">◌</span> : <GoogleIcon />}
-          Sign up with Google
+          {googleLoading ? <><span className="spin">◌</span> Sign up with Google</> : <><GoogleIcon /> Sign up with Google</>}
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
@@ -123,10 +131,14 @@ export default function SignUpPage({ onNav }) {
                 type="password"
                 placeholder="Repeat your password"
                 value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
+                onChange={(e) => { setConfirm(e.target.value); validateConfirm(e.target.value); }}
+                onBlur={(e) => validateConfirm(e.target.value)}
                 required
                 autoComplete="new-password"
               />
+              {confirmError && (
+                <span role="alert" style={{ fontSize: 12, color: 'var(--red)', marginTop: 4, display: 'block' }}>{confirmError}</span>
+              )}
             </div>
 
             {error && (

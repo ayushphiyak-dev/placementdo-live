@@ -61,8 +61,7 @@ export default function SignInPage({ onNav }) {
           onClick={handleGoogleSignIn}
           disabled={googleLoading || loading}
         >
-          {googleLoading ? <span className="spin">◌</span> : <GoogleIcon />}
-          Continue with Google
+          {googleLoading ? <><span className="spin">◌</span> Sign in with Google</> : <><GoogleIcon /> Continue with Google</>}
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
