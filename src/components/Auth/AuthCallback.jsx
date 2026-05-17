@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { authConfigError, supabase } from '../../lib/supabaseClient';
 
 /**
  * AuthCallback — handles the redirect from Supabase after OAuth / magic-link.
@@ -9,6 +9,10 @@ import { supabase } from '../../lib/supabaseClient';
  */
 export default function AuthCallback({ onNav }) {
   useEffect(() => {
+    if (!supabase) {
+      onNav(`/signin?auth_error=${encodeURIComponent(authConfigError)}`);
+      return undefined;
+    }
     let mounted = true;
     let navigated = false;
     const exchangedCodeStorageKey = 'pd_oauth_exchanged_code';

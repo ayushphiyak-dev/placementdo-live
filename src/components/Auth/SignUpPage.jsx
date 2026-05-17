@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { authConfigError, supabase } from '../../lib/supabaseClient';
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -19,6 +19,8 @@ export default function SignUpPage({ onNav }) {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const authUnavailable = !supabase;
+  const visibleError = error || authConfigError;
 
   const validateConfirm = (value) => {
     if (value && password && value !== password) {
@@ -30,6 +32,10 @@ export default function SignUpPage({ onNav }) {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    if (!supabase) {
+      setError(authConfigError);
+      return;
+    }
     setError('');
     setSuccess('');
     if (password !== confirm) {
@@ -51,6 +57,10 @@ export default function SignUpPage({ onNav }) {
   };
 
   const handleGoogleSignUp = async () => {
+    if (!supabase) {
+      setError(authConfigError);
+      return;
+    }
     setError('');
     setGoogleLoading(true);
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
@@ -91,7 +101,7 @@ export default function SignUpPage({ onNav }) {
           className="btn-secondary"
           style={{ width: '100%', justifyContent: 'center', marginBottom: 20, borderRadius: 12, padding: '11px 0', fontSize: 14, fontWeight: 600 }}
           onClick={handleGoogleSignUp}
-          disabled={googleLoading || loading}
+          disabled={googleLoading || loading || authUnavailable}
         >
           {googleLoading ? <><span className="spin">◌</span> Sign up with Google</> : <><GoogleIcon /> Sign up with Google</>}
         </button>
@@ -122,7 +132,7 @@ export default function SignUpPage({ onNav }) {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                disabled={loading || googleLoading}
+                disabled={loading || googleLoading || authUnavailable}
               />
             </div>
             <div>
@@ -136,7 +146,7 @@ export default function SignUpPage({ onNav }) {
                 required
                 minLength={8}
                 autoComplete="new-password"
-                disabled={loading || googleLoading}
+                disabled={loading || googleLoading || authUnavailable}
               />
             </div>
             <div>
@@ -150,20 +160,20 @@ export default function SignUpPage({ onNav }) {
                 onBlur={(e) => validateConfirm(e.target.value)}
                 required
                 autoComplete="new-password"
-                disabled={loading || googleLoading}
+                disabled={loading || googleLoading || authUnavailable}
               />
               {confirmError && (
                 <span role="alert" style={{ fontSize: 12, color: 'var(--red)', marginTop: 4, display: 'block' }}>{confirmError}</span>
               )}
             </div>
 
-            {error && (
+            {visibleError && (
               <div role="alert" style={{ background: 'var(--red-light)', color: 'var(--red)', borderRadius: 10, padding: '10px 14px', fontSize: 13, fontWeight: 500 }}>
-                {error}
+                {visibleError}
               </div>
             )}
 
-            <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading}>
+            <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading || authUnavailable}>
               {loading ? <><span className="spin">◌</span> Creating account…</> : 'Create account'}
             </button>
           </form>

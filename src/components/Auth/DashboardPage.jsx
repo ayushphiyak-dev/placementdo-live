@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { authConfigError, supabase } from '../../lib/supabaseClient';
 
 export default function DashboardPage({ onNav }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return undefined;
+    }
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
         onNav('/signin');
@@ -35,6 +39,18 @@ export default function DashboardPage({ onNav }) {
     return (
       <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: 'var(--ivory)' }}>
         <span className="spin" style={{ fontSize: 24, color: 'var(--teal)' }}>◌</span>
+      </div>
+    );
+  }
+
+  if (!supabase) {
+    return (
+      <div className="dash-main" style={{ background: 'var(--ivory)' }}>
+        <div className="card card-constrain fade-in-up" style={{ padding: '36px 32px', textAlign: 'center' }}>
+          <h1 style={{ fontSize: 24, color: 'var(--slate)', marginBottom: 10 }}>Authentication unavailable</h1>
+          <p style={{ fontSize: 14, color: 'var(--slate-500)', marginBottom: 20 }}>{authConfigError}</p>
+          <button className="btn-primary" onClick={() => onNav('/')}>Back to home</button>
+        </div>
       </div>
     );
   }
