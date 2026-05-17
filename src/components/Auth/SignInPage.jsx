@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { authConfigError, supabase } from '../../lib/supabaseClient';
+import { authConfigError, getAuthRedirectTo, supabase } from '../../lib/supabaseClient';
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -58,12 +58,12 @@ export default function SignInPage({ onNav }) {
     setError('');
     setGoogleLoading(true);
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        queryParams: { prompt: 'select_account' },
-      },
-    });
+        provider: 'google',
+        options: {
+          redirectTo: getAuthRedirectTo(),
+          queryParams: { prompt: 'select_account' },
+        },
+      });
     if (oauthError) {
       setError(oauthError.message);
       setGoogleLoading(false);
