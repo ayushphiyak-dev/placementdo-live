@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 
 const GoogleIcon = () => (
@@ -16,6 +16,16 @@ export default function SignInPage({ onNav }) {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const authError = params.get('auth_error');
+    if (!authError) return;
+    setError(decodeURIComponent(authError));
+    params.delete('auth_error');
+    const cleaned = params.toString();
+    window.history.replaceState({}, '', `${window.location.pathname}${cleaned ? `?${cleaned}` : ''}${window.location.hash}`);
+  }, []);
 
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
@@ -35,7 +45,10 @@ export default function SignInPage({ onNav }) {
     setGoogleLoading(true);
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: { prompt: 'select_account' },
+      },
     });
     if (oauthError) {
       setError(oauthError.message);
@@ -47,6 +60,15 @@ export default function SignInPage({ onNav }) {
   return (
     <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: 'var(--ivory)', padding: '24px' }}>
       <div className="card fade-in-up" style={{ width: '100%', maxWidth: 400, padding: '40px 36px' }}>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 24, background: 'var(--slate-50)', border: '1px solid var(--border)', borderRadius: 12, padding: 4 }}>
+          <button type="button" className="btn-primary" style={{ flex: 1, justifyContent: 'center', padding: '8px 14px', fontSize: 13 }}>
+            Sign in
+          </button>
+          <button type="button" className="btn-ghost" style={{ flex: 1, justifyContent: 'center', padding: '8px 14px', fontSize: 13 }} onClick={() => onNav('/signup')}>
+            Sign up
+          </button>
+        </div>
+
         {/* Logo / wordmark */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <span className="brig" style={{ fontSize: 22, fontWeight: 700, color: 'var(--teal)' }}>PlacementDo</span>
@@ -56,6 +78,7 @@ export default function SignInPage({ onNav }) {
 
         {/* Google OAuth */}
         <button
+          type="button"
           className="btn-secondary"
           style={{ width: '100%', justifyContent: 'center', marginBottom: 20, borderRadius: 12, padding: '11px 0', fontSize: 14, fontWeight: 600 }}
           onClick={handleGoogleSignIn}
@@ -82,6 +105,7 @@ export default function SignInPage({ onNav }) {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
+              disabled={loading || googleLoading}
             />
           </div>
           <div>
@@ -94,6 +118,7 @@ export default function SignInPage({ onNav }) {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
+              disabled={loading || googleLoading}
             />
           </div>
 
@@ -111,6 +136,7 @@ export default function SignInPage({ onNav }) {
         <p style={{ textAlign: 'center', marginTop: 24, fontSize: 13, color: 'var(--slate-500)' }}>
           Don&apos;t have an account?{' '}
           <button
+            type="button"
             className="btn-ghost"
             style={{ padding: '0 2px', fontSize: 13, fontWeight: 600, color: 'var(--teal)', display: 'inline' }}
             onClick={() => onNav('/signup')}

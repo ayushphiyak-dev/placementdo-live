@@ -9,10 +9,41 @@ import { supabase } from '../../lib/supabaseClient';
  */
 export default function AuthCallback({ onNav }) {
   useEffect(() => {
-    // The Supabase client processes the URL hash automatically on initialise.
-    // We listen for the first SIGNED_IN event and navigate from there.
+    let mounted = true;
+
+    const parseAuthError = () => {
+      const search = new URLSearchParams(window.location.search);
+      if (search.get('error_description')) return search.get('error_description');
+      if (search.get('error')) return search.get('error');
+
+      const hash = window.location.hash.startsWith('#') ? new URLSearchParams(window.location.hash.slice(1)) : null;
+      if (hash?.get('error_description')) return hash.get('error_description');
+      if (hash?.get('error')) return hash.get('error');
+
+      return '';
+    };
+
+    const errorText = parseAuthError();
+    if (errorText) {
+      onNav(`/signin?auth_error=${encodeURIComponent(errorText)}`);
+      return () => {};
+    }
+
+    const finishOAuth = async () => {
+      const search = new URLSearchParams(window.location.search);
+      const code = search.get('code');
+      if (!code) return;
+
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      if (error && mounted) {
+        onNav(`/signin?auth_error=${encodeURIComponent(error.message)}`);
+      }
+    };
+
+    finishOAuth();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_IN') {
+      if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
         onNav('/dashboard');
       }
     });
@@ -22,7 +53,10 @@ export default function AuthCallback({ onNav }) {
       if (session) onNav('/dashboard');
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, [onNav]);
 
   return (
