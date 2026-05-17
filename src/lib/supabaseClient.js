@@ -1,10 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 
-const fallbackSupabaseUrl = 'https://lwgdtulhoixkjlzmkfur.supabase.co';
-const fallbackSupabaseKey = 'sb_publishable_Wy5UIRXSHpeIrE3Wq_hcmg_LOGUeWDW';
-const normalizeEnvValue = (value) => (typeof value === 'string' ? value.trim() : '');
-const supabaseUrl = normalizeEnvValue(import.meta.env.VITE_SUPABASE_URL) || fallbackSupabaseUrl;
-const supabaseKey = normalizeEnvValue(import.meta.env.VITE_SUPABASE_ANON_KEY) || fallbackSupabaseKey;
+const normalizeEnvValue = (value) => {
+  if (typeof value !== 'string') return '';
+  return value.trim().replace(/^['"]|['"]$/g, '');
+};
+const supabaseUrl = normalizeEnvValue(import.meta.env.VITE_SUPABASE_URL);
+const supabaseKey = normalizeEnvValue(
+  import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+);
 const authRedirectPath = '/auth/callback';
 
 export const authConfigError = (!supabaseUrl || !supabaseKey)
