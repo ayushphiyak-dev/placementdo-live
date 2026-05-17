@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { authConfigError, supabase } from '../../lib/supabaseClient';
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -21,7 +21,8 @@ export default function SignInPage({ onNav }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [error, setError] = useState(() => getAuthErrorFromQueryParams());
+  const [error, setError] = useState(() => getAuthErrorFromQueryParams() || authConfigError);
+  const authUnavailable = !supabase;
 
   useEffect(() => {
     if (!error) return;
@@ -33,6 +34,10 @@ export default function SignInPage({ onNav }) {
 
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
+    if (!supabase) {
+      setError(authConfigError);
+      return;
+    }
     setError('');
     setLoading(true);
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
@@ -45,6 +50,10 @@ export default function SignInPage({ onNav }) {
   };
 
   const handleGoogleSignIn = async () => {
+    if (!supabase) {
+      setError(authConfigError);
+      return;
+    }
     setError('');
     setGoogleLoading(true);
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
@@ -109,7 +118,7 @@ export default function SignInPage({ onNav }) {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              disabled={loading || googleLoading}
+              disabled={loading || googleLoading || authUnavailable}
             />
           </div>
           <div>
@@ -122,7 +131,7 @@ export default function SignInPage({ onNav }) {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              disabled={loading || googleLoading}
+              disabled={loading || googleLoading || authUnavailable}
             />
           </div>
 
@@ -132,7 +141,7 @@ export default function SignInPage({ onNav }) {
             </div>
           )}
 
-          <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading}>
+          <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading || authUnavailable}>
             {loading ? <><span className="spin">◌</span> Signing in…</> : 'Sign in'}
           </button>
         </form>
