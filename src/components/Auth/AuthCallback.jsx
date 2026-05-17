@@ -10,6 +10,9 @@ import { supabase } from '../../lib/supabaseClient';
 export default function AuthCallback({ onNav }) {
   useEffect(() => {
     let mounted = true;
+    const searchParams = new URLSearchParams(window.location.search);
+    const hasOAuthCode = searchParams.has('code');
+    let oauthExchangeCompleted = !hasOAuthCode;
 
     const parseAuthError = () => {
       const search = new URLSearchParams(window.location.search);
@@ -26,15 +29,15 @@ export default function AuthCallback({ onNav }) {
     const errorText = parseAuthError();
     if (errorText) {
       onNav(`/signin?auth_error=${encodeURIComponent(errorText)}`);
-      return () => {};
+      return;
     }
 
     const finishOAuth = async () => {
-      const search = new URLSearchParams(window.location.search);
-      const code = search.get('code');
+      const code = searchParams.get('code');
       if (!code) return;
 
       const { error } = await supabase.auth.exchangeCodeForSession(code);
+      oauthExchangeCompleted = true;
       if (error && mounted) {
         onNav(`/signin?auth_error=${encodeURIComponent(error.message)}`);
       }
@@ -42,15 +45,16 @@ export default function AuthCallback({ onNav }) {
 
     finishOAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) return;
+      if (event === 'SIGNED_IN' || (event === 'INITIAL_SESSION' && oauthExchangeCompleted)) {
         onNav('/dashboard');
       }
     });
 
     // Fallback: if a session already exists (page reload), redirect immediately.
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) onNav('/dashboard');
+      if (session && oauthExchangeCompleted) onNav('/dashboard');
     });
 
     return () => {
