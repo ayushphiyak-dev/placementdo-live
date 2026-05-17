@@ -5,9 +5,9 @@ const normalizeEnvValue = (value) => {
   return value.trim().replace(/^['"]|['"]$/g, '');
 };
 const supabaseUrl = normalizeEnvValue(import.meta.env.VITE_SUPABASE_URL);
-const supabaseKey = normalizeEnvValue(
-  import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-);
+const supabaseAnonKey = normalizeEnvValue(import.meta.env.VITE_SUPABASE_ANON_KEY);
+const supabasePublishableKey = normalizeEnvValue(import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
+const supabaseKey = supabaseAnonKey || supabasePublishableKey;
 const authRedirectPath = '/auth/callback';
 
 export const authConfigError = (!supabaseUrl || !supabaseKey)
