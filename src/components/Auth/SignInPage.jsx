@@ -21,8 +21,9 @@ export default function SignInPage({ onNav }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [error, setError] = useState(() => getAuthErrorFromQueryParams() || authConfigError);
+  const [error, setError] = useState(() => getAuthErrorFromQueryParams());
   const authUnavailable = !supabase;
+  const visibleError = error || authConfigError;
 
   useEffect(() => {
     if (!error) return;
@@ -135,9 +136,9 @@ export default function SignInPage({ onNav }) {
             />
           </div>
 
-          {error && (
+          {visibleError && (
             <div role="alert" style={{ background: 'var(--red-light)', color: 'var(--red)', borderRadius: 10, padding: '10px 14px', fontSize: 13, fontWeight: 500 }}>
-              {error}
+              {visibleError}
             </div>
           )}
 

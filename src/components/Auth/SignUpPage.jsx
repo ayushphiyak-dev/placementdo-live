@@ -17,9 +17,10 @@ export default function SignUpPage({ onNav }) {
   const [confirmError, setConfirmError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [error, setError] = useState(authConfigError);
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const authUnavailable = !supabase;
+  const visibleError = error || authConfigError;
 
   const validateConfirm = (value) => {
     if (value && password && value !== password) {
@@ -166,9 +167,9 @@ export default function SignUpPage({ onNav }) {
               )}
             </div>
 
-            {error && (
+            {visibleError && (
               <div role="alert" style={{ background: 'var(--red-light)', color: 'var(--red)', borderRadius: 10, padding: '10px 14px', fontSize: 13, fontWeight: 500 }}>
-                {error}
+                {visibleError}
               </div>
             )}
 
