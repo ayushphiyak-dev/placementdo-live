@@ -10,9 +10,7 @@ import { supabase } from '../../lib/supabaseClient';
 export default function AuthCallback({ onNav }) {
   useEffect(() => {
     let mounted = true;
-    const searchParams = new URLSearchParams(window.location.search);
-    const hasOAuthCode = searchParams.has('code');
-    let oauthExchangeCompleted = !hasOAuthCode;
+    let subscription;
 
     const parseAuthError = () => {
       const search = new URLSearchParams(window.location.search);
@@ -33,33 +31,39 @@ export default function AuthCallback({ onNav }) {
     }
 
     const finishOAuth = async () => {
+      const searchParams = new URLSearchParams(window.location.search);
       const code = searchParams.get('code');
       if (!code) return;
 
       const { error } = await supabase.auth.exchangeCodeForSession(code);
-      oauthExchangeCompleted = true;
       if (error && mounted) {
         onNav(`/signin?auth_error=${encodeURIComponent(error.message)}`);
       }
     };
 
-    finishOAuth();
+    const initialize = async () => {
+      await finishOAuth();
+      if (!mounted) return;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) return;
-      if (event === 'SIGNED_IN' || (event === 'INITIAL_SESSION' && oauthExchangeCompleted)) {
+      const listener = supabase.auth.onAuthStateChange((event, session) => {
+        if (!session) return;
+        if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+          onNav('/dashboard');
+        }
+      });
+      subscription = listener.data.subscription;
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (mounted && session) {
         onNav('/dashboard');
       }
-    });
+    };
 
-    // Fallback: if a session already exists (page reload), redirect immediately.
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session && oauthExchangeCompleted) onNav('/dashboard');
-    });
+    initialize();
 
     return () => {
       mounted = false;
-      subscription.unsubscribe();
+      subscription?.unsubscribe();
     };
   }, [onNav]);
 
