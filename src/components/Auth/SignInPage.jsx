@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
-import { authConfigError, getAuthRedirectTo, setLocalAuthUser, supabase } from '../../lib/supabaseClient';
+import {
+  authConfigError,
+  getAuthRedirectTo,
+  isValidLocalAuthEmail,
+  setLocalAuthUser,
+  supabase,
+} from '../../lib/supabaseClient';
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -36,8 +42,16 @@ export default function SignInPage({ onNav }) {
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
     if (!supabase) {
+      if (!isValidLocalAuthEmail(email)) {
+        setError('Enter a valid email address to continue.');
+        return;
+      }
       setError('');
-      setLocalAuthUser({ email });
+      const saved = setLocalAuthUser({ email });
+      if (!saved) {
+        setError('Unable to start local demo session. Please try again.');
+        return;
+      }
       onNav('/dashboard');
       return;
     }
@@ -145,8 +159,8 @@ export default function SignInPage({ onNav }) {
           )}
 
           {!supabase && (
-            <div role="status" style={{ background: 'var(--amber-light)', color: 'var(--amber)', borderRadius: 10, padding: '10px 14px', fontSize: 12.5, fontWeight: 600, lineHeight: 1.5 }}>
-              Supabase is not configured right now. Sign in will continue in local demo mode.
+            <div role="status" style={{ background: 'var(--amber-light)', color: 'var(--amber)', borderRadius: 10, padding: '10px 14px', fontSize: 12.5, fontWeight: 700, lineHeight: 1.5, border: '1px solid rgba(217,119,6,.25)' }}>
+              Demo mode: Supabase is not configured. This sign-in is local-only and not secure for production.
             </div>
           )}
 

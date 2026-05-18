@@ -9,6 +9,8 @@ const supabaseAnonKey = normalizeEnvValue(import.meta.env.VITE_SUPABASE_ANON_KEY
 const supabasePublishableKey = normalizeEnvValue(import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
 const supabaseKey = supabaseAnonKey || supabasePublishableKey;
 const authRedirectPath = '/auth/callback';
+const localAuthStorageKey = 'pd_local_auth_user';
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const authConfigError = (!supabaseUrl || !supabaseKey)
   ? 'Authentication is not configured yet. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable sign in.'
@@ -18,7 +20,10 @@ export const supabase = authConfigError
   ? null
   : createClient(supabaseUrl, supabaseKey);
 
-const localAuthStorageKey = 'pd_local_auth_user';
+export const isValidLocalAuthEmail = (value) => {
+  if (typeof value !== 'string') return false;
+  return emailPattern.test(value.trim());
+};
 
 export const getLocalAuthUser = () => {
   if (typeof window === 'undefined') return null;
@@ -27,7 +32,7 @@ export const getLocalAuthUser = () => {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return null;
-    if (typeof parsed.email !== 'string' || !parsed.email.trim()) return null;
+    if (!isValidLocalAuthEmail(parsed.email)) return null;
     return {
       email: parsed.email.trim(),
       user_metadata: {
@@ -40,14 +45,15 @@ export const getLocalAuthUser = () => {
 };
 
 export const setLocalAuthUser = ({ email, fullName = '' }) => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') return false;
   const normalizedEmail = typeof email === 'string' ? email.trim() : '';
-  if (!normalizedEmail) return;
+  if (!isValidLocalAuthEmail(normalizedEmail)) return false;
   const payload = {
     email: normalizedEmail,
     full_name: typeof fullName === 'string' ? fullName.trim() : '',
   };
   window.localStorage.setItem(localAuthStorageKey, JSON.stringify(payload));
+  return true;
 };
 
 export const clearLocalAuthUser = () => {
