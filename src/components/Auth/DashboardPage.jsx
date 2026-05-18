@@ -7,13 +7,11 @@ import {
 } from '../../lib/supabaseClient';
 
 export default function DashboardPage({ onNav }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(() => (supabase ? null : getLocalAuthUser()));
+  const [loading, setLoading] = useState(() => Boolean(supabase));
 
   useEffect(() => {
     if (!supabase) {
-      setUser(getLocalAuthUser());
-      setLoading(false);
       return undefined;
     }
     supabase.auth.getSession().then(({ data: { session } }) => {
