@@ -160,7 +160,7 @@ export default function SignUpPage({ onNav }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required={Boolean(supabase)}
-                minLength={supabase ? 8 : undefined}
+                {...(supabase ? { minLength: 8 } : {})}
                 autoComplete="new-password"
                 disabled={loading || googleLoading}
               />
