@@ -10,7 +10,6 @@ const supabasePublishableKey = normalizeEnvValue(import.meta.env.VITE_SUPABASE_P
 const supabaseKey = supabaseAnonKey || supabasePublishableKey;
 const authRedirectPath = '/auth/callback';
 const localAuthStorageKey = 'pd_local_auth_user';
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const authConfigError = (!supabaseUrl || !supabaseKey)
   ? 'Authentication is not configured yet. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable sign in.'
@@ -22,7 +21,24 @@ export const supabase = authConfigError
 
 export const isValidLocalAuthEmail = (value) => {
   if (typeof value !== 'string') return false;
-  return emailPattern.test(value.trim());
+  const email = value.trim();
+  if (!email || email.includes('..')) return false;
+
+  const atIndex = email.indexOf('@');
+  if (atIndex <= 0 || atIndex !== email.lastIndexOf('@')) return false;
+
+  const local = email.slice(0, atIndex);
+  const domain = email.slice(atIndex + 1);
+  if (!local || !domain) return false;
+
+  const domainLabels = domain.split('.');
+  if (domainLabels.length < 2) return false;
+  if (domainLabels.some((label) => !label || label.startsWith('-') || label.endsWith('-'))) return false;
+
+  const tld = domainLabels[domainLabels.length - 1];
+  if (!/^[A-Za-z]{2,}$/.test(tld)) return false;
+
+  return /^[A-Za-z0-9._%+-]+$/.test(local) && /^[A-Za-z0-9.-]+$/.test(domain);
 };
 
 export const getLocalAuthUser = () => {
