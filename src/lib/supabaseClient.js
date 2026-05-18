@@ -5,13 +5,13 @@ const normalizeEnvValue = (value) => {
   return value.trim().replace(/^['"]|['"]$/g, '');
 };
 
-const isLikelyJwt = (value) => /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(value);
+const looksLikeJwt = (value) => /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(value);
 
 const validateSupabaseConfig = ({ url, key }) => {
   const issues = [];
 
   if (!url) issues.push('missing VITE_SUPABASE_URL');
-  if (!key) issues.push('missing VITE_SUPABASE_ANON_KEY (or VITE_SUPABASE_PUBLISHABLE_KEY)');
+  if (!key) issues.push('missing VITE_SUPABASE_ANON_KEY (or VITE_SUPABASE_PUBLISHABLE_KEY fallback)');
 
   if (url) {
     try {
@@ -29,8 +29,8 @@ const validateSupabaseConfig = ({ url, key }) => {
     const isSecretKey = key.startsWith('sb_secret_');
     if (isSecretKey) {
       issues.push('do not use sb_secret_* in frontend; use VITE_SUPABASE_ANON_KEY or sb_publishable_*');
-    } else if (!isPublishableKey && !isLikelyJwt(key)) {
-      issues.push('Supabase key format looks invalid (possibly truncated or wrong project key)');
+    } else if (!isPublishableKey && !looksLikeJwt(key)) {
+      issues.push('Supabase key format appears invalid (expected JWT format or sb_publishable_* prefix)');
     }
   }
 
