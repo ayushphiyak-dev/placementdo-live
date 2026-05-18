@@ -133,11 +133,11 @@ export default function SignInPage({ onNav }) {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                disabled={loading || googleLoading}
-              />
-            </div>
+              required
+              autoComplete="email"
+              disabled={loading || googleLoading}
+            />
+          </div>
           <div>
             <label htmlFor="signin-password">Password</label>
             <input
@@ -146,13 +146,13 @@ export default function SignInPage({ onNav }) {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="current-password"
-                disabled={loading || googleLoading}
-              />
-            </div>
+              required
+              autoComplete="current-password"
+              disabled={loading || googleLoading}
+            />
+          </div>
 
-            {visibleError && (
+          {visibleError && (
             <div role="alert" style={{ background: 'var(--red-light)', color: 'var(--red)', borderRadius: 10, padding: '10px 14px', fontSize: 13, fontWeight: 500 }}>
               {visibleError}
             </div>
