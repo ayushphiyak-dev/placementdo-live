@@ -152,21 +152,21 @@ export default function SignUpPage({ onNav }) {
               />
             </div>
             <div>
-              <label htmlFor="signup-password">Password</label>
+              <label htmlFor="signup-password">Password {!supabase ? '(optional in demo mode)' : ''}</label>
               <input
                 id="signup-password"
                 type="password"
                 placeholder="At least 8 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={8}
+                required={Boolean(supabase)}
+                {...(supabase ? { minLength: 8 } : {})}
                 autoComplete="new-password"
                 disabled={loading || googleLoading}
               />
             </div>
             <div>
-              <label htmlFor="signup-confirm">Confirm Password</label>
+              <label htmlFor="signup-confirm">Confirm Password {!supabase ? '(optional in demo mode)' : ''}</label>
               <input
                 id="signup-confirm"
                 type="password"
@@ -174,7 +174,7 @@ export default function SignUpPage({ onNav }) {
                 value={confirm}
                 onChange={(e) => { setConfirm(e.target.value); validateConfirm(e.target.value); }}
                 onBlur={(e) => validateConfirm(e.target.value)}
-                required
+                required={Boolean(supabase)}
                 autoComplete="new-password"
                 disabled={loading || googleLoading}
               />

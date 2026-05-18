@@ -117,7 +117,7 @@ export default function DashboardPage({ onNav }) {
             <div style={{ fontSize: 28, marginBottom: 8 }}>🎯</div>
             <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--slate)', marginBottom: 4 }}>Mock Interviews</div>
             <div style={{ fontSize: 13, color: 'var(--slate-500)', lineHeight: 1.5 }}>Practice AI-powered mock interviews tailored to your target companies.</div>
-            <button className="btn-primary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => onNav('/')}>Start Practice</button>
+            <button className="btn-primary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => onNav('/interview')}>Start Practice</button>
           </div>
           <div className="feature-card">
             <div style={{ fontSize: 28, marginBottom: 8 }}>📚</div>

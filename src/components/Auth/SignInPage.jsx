@@ -139,15 +139,15 @@ export default function SignInPage({ onNav }) {
             />
           </div>
           <div>
-            <label htmlFor="signin-password">Password</label>
+            <label htmlFor="signin-password">Password {!supabase ? '(optional in demo mode)' : ''}</label>
             <input
               id="signin-password"
               type="password"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
+              required={Boolean(supabase)}
+              {...(supabase ? { autoComplete: 'current-password' } : {})}
               disabled={loading || googleLoading}
             />
           </div>
