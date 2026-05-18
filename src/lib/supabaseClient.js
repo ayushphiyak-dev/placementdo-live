@@ -79,7 +79,13 @@ const generateLocalGuestId = () => {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return `guest-${crypto.randomUUID().slice(0, 8)}`;
   }
-  return `guest-${Math.random().toString(36).slice(2, 10)}`;
+  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+    const bytes = new Uint8Array(4);
+    crypto.getRandomValues(bytes);
+    const token = Array.from(bytes).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    return `guest-${token}`;
+  }
+  return `guest-${Date.now().toString(36)}`;
 };
 
 const createLocalDemoEmail = (guestId) => {
@@ -138,7 +144,10 @@ export const setLocalAuthUser = ({
     ? createLocalDemoEmail(resolvedGuestId)
     : providedEmail;
   if (!isValidLocalAuthEmail(normalizedEmail)) return false;
-  const normalizedFullName = typeof fullName === 'string' ? fullName.trim() : '';
+  const guestAlias = resolvedGuestId.replace(/^guest-/, '').slice(-4).toUpperCase();
+  const normalizedFullName = shouldCreateDemoIdentity
+    ? (typeof fullName === 'string' && fullName.trim() ? fullName.trim() : `Guest ${guestAlias || 'USER'}`)
+    : (typeof fullName === 'string' ? fullName.trim() : '');
   const normalizedAvatarUrl = typeof avatarUrl === 'string' ? avatarUrl.trim() : '';
   const payload = {
     email: normalizedEmail,

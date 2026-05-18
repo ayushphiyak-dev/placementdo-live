@@ -89,12 +89,9 @@ export default function SignInPage({ onNav }) {
   };
 
   const handleContinueDemo = () => {
-    const guestSuffix = Math.random().toString(36).slice(2, 6).toUpperCase();
     setError('');
     setDemoLoading(true);
     const saved = setLocalAuthUser({
-      fullName: `Guest ${guestSuffix}`,
-      guestId: `guest-${guestSuffix.toLowerCase()}`,
       isDemo: true,
     });
     setDemoLoading(false);

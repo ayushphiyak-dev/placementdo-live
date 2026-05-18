@@ -74,13 +74,13 @@ export default function DashboardPage({ onNav }) {
   const initials = fullName
     ? fullName.split(' ').filter((n) => n).map((n) => n[0]).join('').slice(0, 2).toUpperCase()
     : displayEmail.slice(0, 2).toUpperCase();
-  const navigateToProtectedRoute = (route, featureName) => {
-    if (demoUser && route === '/interview') {
-      setUpgradeMessage(`${featureName} requires secure account auth. Configure Supabase, then sign in/up with a real account.`);
+  const navigateToInterview = () => {
+    if (demoUser) {
+      setUpgradeMessage('Mock Interviews requires secure account auth. Configure Supabase, then sign in/up with a real account.');
       return;
     }
     setUpgradeMessage('');
-    onNav(route);
+    onNav('/interview');
   };
 
   return (
@@ -147,19 +147,19 @@ export default function DashboardPage({ onNav }) {
             <div style={{ fontSize: 28, marginBottom: 8 }}>🎯</div>
             <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--slate)', marginBottom: 4 }}>Mock Interviews</div>
             <div style={{ fontSize: 13, color: 'var(--slate-500)', lineHeight: 1.5 }}>Practice AI-powered mock interviews tailored to your target companies.</div>
-            <button className="btn-primary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => navigateToProtectedRoute('/interview', 'Mock Interviews')}>Start Practice</button>
+            <button className="btn-primary" style={{ marginTop: 20, fontSize: 13 }} onClick={navigateToInterview}>Start Practice</button>
           </div>
           <div className="feature-card">
             <div style={{ fontSize: 28, marginBottom: 8 }}>📚</div>
             <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--slate)', marginBottom: 4 }}>Study Resources</div>
             <div style={{ fontSize: 13, color: 'var(--slate-500)', lineHeight: 1.5 }}>Explore aptitude, coding, and company-wise question banks.</div>
-            <button className="btn-secondary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => navigateToProtectedRoute('/placement-preparation', 'Study Resources')}>Browse Resources</button>
+            <button className="btn-secondary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => onNav('/placement-preparation')}>Browse Resources</button>
           </div>
           <div className="feature-card">
             <div style={{ fontSize: 28, marginBottom: 8 }}>📝</div>
             <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--slate)', marginBottom: 4 }}>Placement Blog</div>
             <div style={{ fontSize: 13, color: 'var(--slate-500)', lineHeight: 1.5 }}>Read the latest tips, strategies, and success stories.</div>
-            <button className="btn-secondary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => navigateToProtectedRoute('/blog', 'Placement Blog')}>Read Blog</button>
+            <button className="btn-secondary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => onNav('/blog')}>Read Blog</button>
           </div>
         </div>
       </div>
