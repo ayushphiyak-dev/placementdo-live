@@ -147,7 +147,7 @@ export default function SignInPage({ onNav }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required={Boolean(supabase)}
-              autoComplete={supabase ? 'current-password' : 'new-password'}
+              autoComplete={supabase ? 'current-password' : undefined}
               disabled={loading || googleLoading}
             />
           </div>
