@@ -3,12 +3,14 @@ import {
   authConfigError,
   clearLocalAuthUser,
   getLocalAuthUser,
+  isLocalDemoUser,
   supabase,
 } from '../../lib/supabaseClient';
 
 export default function DashboardPage({ onNav }) {
   const [user, setUser] = useState(() => (supabase ? null : getLocalAuthUser()));
   const [loading, setLoading] = useState(() => Boolean(supabase));
+  const [upgradeMessage, setUpgradeMessage] = useState('');
 
   useEffect(() => {
     if (!supabase) {
@@ -67,9 +69,19 @@ export default function DashboardPage({ onNav }) {
   const avatarUrl = user?.user_metadata?.avatar_url;
   const fullName = user?.user_metadata?.full_name || user?.user_metadata?.name;
   const displayEmail = user?.email ?? '';
+  const demoUser = !supabase && isLocalDemoUser(user);
+  const guestId = user?.user_metadata?.guest_id || '';
   const initials = fullName
     ? fullName.split(' ').filter((n) => n).map((n) => n[0]).join('').slice(0, 2).toUpperCase()
     : displayEmail.slice(0, 2).toUpperCase();
+  const navigateToProtectedRoute = (route, featureName) => {
+    if (demoUser && route === '/interview') {
+      setUpgradeMessage(`${featureName} requires secure account auth. Configure Supabase, then sign in/up with a real account.`);
+      return;
+    }
+    setUpgradeMessage('');
+    onNav(route);
+  };
 
   return (
     <div className="dash-main" style={{ background: 'var(--ivory)' }}>
@@ -103,13 +115,31 @@ export default function DashboardPage({ onNav }) {
             {fullName && <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--slate)', marginBottom: 4 }}>{fullName}</div>}
             <div style={{ fontSize: 14, color: 'var(--slate-500)' }}>{displayEmail}</div>
             <span className="badge badge-teal" style={{ marginTop: 10 }}>Active</span>
-            {!supabase && (
+            {demoUser && (
               <div style={{ marginTop: 8, fontSize: 12, color: 'var(--amber)' }}>
-                Local demo session (Supabase not configured)
+                Local demo session {guestId ? `(${guestId})` : ''} (Supabase not configured)
               </div>
             )}
           </div>
         </div>
+
+        {demoUser && (
+          <div className="card fade-in-up" style={{ padding: '18px 20px', marginBottom: 20 }}>
+            <div style={{ fontSize: 13, color: 'var(--slate-500)', lineHeight: 1.5, marginBottom: 12 }}>
+              You are in demo mode. Demo data is local to this browser and some features require a real account.
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+              <button className="btn-secondary" style={{ fontSize: 12.5 }} onClick={() => onNav('/signin')}>Sign in with real account</button>
+              <button className="btn-ghost" style={{ fontSize: 12.5 }} onClick={() => onNav('/signup')}>Create real account</button>
+            </div>
+          </div>
+        )}
+
+        {upgradeMessage && (
+          <div role="alert" className="card" style={{ padding: '14px 16px', marginBottom: 20, background: 'var(--amber-light)', border: '1px solid rgba(217,119,6,.25)', color: 'var(--amber)', fontSize: 13, fontWeight: 600 }}>
+            {upgradeMessage}
+          </div>
+        )}
 
         {/* Quick stats / welcome */}
         <div className="feature-grid fade-in-up-1">
@@ -117,19 +147,19 @@ export default function DashboardPage({ onNav }) {
             <div style={{ fontSize: 28, marginBottom: 8 }}>🎯</div>
             <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--slate)', marginBottom: 4 }}>Mock Interviews</div>
             <div style={{ fontSize: 13, color: 'var(--slate-500)', lineHeight: 1.5 }}>Practice AI-powered mock interviews tailored to your target companies.</div>
-            <button className="btn-primary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => onNav('/interview')}>Start Practice</button>
+            <button className="btn-primary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => navigateToProtectedRoute('/interview', 'Mock Interviews')}>Start Practice</button>
           </div>
           <div className="feature-card">
             <div style={{ fontSize: 28, marginBottom: 8 }}>📚</div>
             <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--slate)', marginBottom: 4 }}>Study Resources</div>
             <div style={{ fontSize: 13, color: 'var(--slate-500)', lineHeight: 1.5 }}>Explore aptitude, coding, and company-wise question banks.</div>
-            <button className="btn-secondary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => onNav('/placement-preparation')}>Browse Resources</button>
+            <button className="btn-secondary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => navigateToProtectedRoute('/placement-preparation', 'Study Resources')}>Browse Resources</button>
           </div>
           <div className="feature-card">
             <div style={{ fontSize: 28, marginBottom: 8 }}>📝</div>
             <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--slate)', marginBottom: 4 }}>Placement Blog</div>
             <div style={{ fontSize: 13, color: 'var(--slate-500)', lineHeight: 1.5 }}>Read the latest tips, strategies, and success stories.</div>
-            <button className="btn-secondary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => onNav('/blog')}>Read Blog</button>
+            <button className="btn-secondary" style={{ marginTop: 20, fontSize: 13 }} onClick={() => navigateToProtectedRoute('/blog', 'Placement Blog')}>Read Blog</button>
           </div>
         </div>
       </div>

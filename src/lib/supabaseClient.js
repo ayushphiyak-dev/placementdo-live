@@ -44,6 +44,8 @@ const supabasePublishableKey = normalizeEnvValue(import.meta.env.VITE_SUPABASE_P
 const supabaseKey = supabaseAnonKey || supabasePublishableKey;
 const authRedirectPath = '/auth/callback';
 const localAuthStorageKey = 'pd_local_auth_user';
+const localDemoDomain = 'demo.local';
+const localDemoEmailSuffix = `@${localDemoDomain}`;
 
 export const authConfigError = validateSupabaseConfig({ url: supabaseUrl, key: supabaseKey });
 
@@ -73,6 +75,27 @@ export const isValidLocalAuthEmail = (value) => {
   return /^[A-Za-z0-9._%+-]+$/.test(local) && /^[A-Za-z0-9.-]+$/.test(domain);
 };
 
+const generateLocalGuestId = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return `guest-${crypto.randomUUID().slice(0, 8)}`;
+  }
+  return `guest-${Math.random().toString(36).slice(2, 10)}`;
+};
+
+const createLocalDemoEmail = (guestId) => {
+  const safeId = typeof guestId === 'string'
+    ? guestId.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 32)
+    : '';
+  const suffix = safeId || generateLocalGuestId().replace(/[^a-z0-9-]/g, '').slice(0, 32);
+  return `${suffix}${localDemoEmailSuffix}`;
+};
+
+export const isLocalDemoUser = (user) => {
+  const metadataDemoFlag = user?.user_metadata?.is_demo === true;
+  const email = typeof user?.email === 'string' ? user.email.trim().toLowerCase() : '';
+  return metadataDemoFlag || email.endsWith(localDemoEmailSuffix);
+};
+
 export const getLocalAuthUser = () => {
   if (typeof window === 'undefined') return null;
   try {
@@ -81,10 +104,17 @@ export const getLocalAuthUser = () => {
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return null;
     if (!isValidLocalAuthEmail(parsed.email)) return null;
+    const fullName = typeof parsed.full_name === 'string' ? parsed.full_name.trim() : '';
+    const avatarUrl = typeof parsed.avatar_url === 'string' ? parsed.avatar_url.trim() : '';
+    const guestId = typeof parsed.guest_id === 'string' ? parsed.guest_id.trim() : '';
+    const isDemo = parsed.is_demo === true || parsed.email.trim().toLowerCase().endsWith(localDemoEmailSuffix);
     return {
       email: parsed.email.trim(),
       user_metadata: {
-        full_name: typeof parsed.full_name === 'string' ? parsed.full_name.trim() : '',
+        full_name: fullName,
+        avatar_url: avatarUrl,
+        guest_id: guestId,
+        is_demo: isDemo,
       },
     };
   } catch {
@@ -92,13 +122,30 @@ export const getLocalAuthUser = () => {
   }
 };
 
-export const setLocalAuthUser = ({ email, fullName = '' }) => {
+export const setLocalAuthUser = ({
+  email,
+  fullName = '',
+  avatarUrl = '',
+  guestId = '',
+  isDemo = false,
+}) => {
   if (typeof window === 'undefined') return false;
-  const normalizedEmail = typeof email === 'string' ? email.trim() : '';
+  const providedEmail = typeof email === 'string' ? email.trim() : '';
+  const shouldCreateDemoIdentity = !providedEmail || isDemo;
+  const normalizedGuestId = typeof guestId === 'string' ? guestId.trim() : '';
+  const resolvedGuestId = shouldCreateDemoIdentity ? (normalizedGuestId || generateLocalGuestId()) : '';
+  const normalizedEmail = shouldCreateDemoIdentity
+    ? createLocalDemoEmail(resolvedGuestId)
+    : providedEmail;
   if (!isValidLocalAuthEmail(normalizedEmail)) return false;
+  const normalizedFullName = typeof fullName === 'string' ? fullName.trim() : '';
+  const normalizedAvatarUrl = typeof avatarUrl === 'string' ? avatarUrl.trim() : '';
   const payload = {
     email: normalizedEmail,
-    full_name: typeof fullName === 'string' ? fullName.trim() : '',
+    full_name: normalizedFullName,
+    avatar_url: normalizedAvatarUrl,
+    guest_id: resolvedGuestId,
+    is_demo: shouldCreateDemoIdentity,
   };
   window.localStorage.setItem(localAuthStorageKey, JSON.stringify(payload));
   return true;
