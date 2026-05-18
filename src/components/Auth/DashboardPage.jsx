@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
-import { authConfigError, supabase } from '../../lib/supabaseClient';
+import {
+  authConfigError,
+  clearLocalAuthUser,
+  getLocalAuthUser,
+  supabase,
+} from '../../lib/supabaseClient';
 
 export default function DashboardPage({ onNav }) {
   const [user, setUser] = useState(null);
@@ -7,6 +12,7 @@ export default function DashboardPage({ onNav }) {
 
   useEffect(() => {
     if (!supabase) {
+      setUser(getLocalAuthUser());
       setLoading(false);
       return undefined;
     }
@@ -31,6 +37,11 @@ export default function DashboardPage({ onNav }) {
   }, [onNav]);
 
   const handleSignOut = async () => {
+    if (!supabase) {
+      clearLocalAuthUser();
+      onNav('/signin');
+      return;
+    }
     await supabase.auth.signOut();
     onNav('/signin');
   };
@@ -43,13 +54,13 @@ export default function DashboardPage({ onNav }) {
     );
   }
 
-  if (!supabase) {
+  if (!supabase && !user) {
     return (
       <div className="dash-main" style={{ background: 'var(--ivory)' }}>
         <div className="card card-constrain fade-in-up" style={{ padding: '36px 32px', textAlign: 'center' }}>
           <h1 style={{ fontSize: 24, color: 'var(--slate)', marginBottom: 10 }}>Authentication unavailable</h1>
           <p style={{ fontSize: 14, color: 'var(--slate-500)', marginBottom: 20 }}>{authConfigError}</p>
-          <button className="btn-primary" onClick={() => onNav('/')}>Back to home</button>
+          <button className="btn-primary" onClick={() => onNav('/signin')}>Go to sign in</button>
         </div>
       </div>
     );
@@ -94,6 +105,11 @@ export default function DashboardPage({ onNav }) {
             {fullName && <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--slate)', marginBottom: 4 }}>{fullName}</div>}
             <div style={{ fontSize: 14, color: 'var(--slate-500)' }}>{displayEmail}</div>
             <span className="badge badge-teal" style={{ marginTop: 10 }}>Active</span>
+            {!supabase && (
+              <div style={{ marginTop: 8, fontSize: 12, color: 'var(--amber)' }}>
+                Local demo session (Supabase not configured)
+              </div>
+            )}
           </div>
         </div>
 

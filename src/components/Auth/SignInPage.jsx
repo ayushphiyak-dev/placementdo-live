@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { authConfigError, getAuthRedirectTo, supabase } from '../../lib/supabaseClient';
+import { authConfigError, getAuthRedirectTo, setLocalAuthUser, supabase } from '../../lib/supabaseClient';
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -23,7 +23,7 @@ export default function SignInPage({ onNav }) {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState(() => getAuthErrorFromQueryParams());
   const authUnavailable = !supabase;
-  const visibleError = error || authConfigError;
+  const visibleError = error || '';
 
   useEffect(() => {
     if (!error) return;
@@ -36,7 +36,9 @@ export default function SignInPage({ onNav }) {
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
     if (!supabase) {
-      setError(authConfigError);
+      setError('');
+      setLocalAuthUser({ email });
+      onNav('/dashboard');
       return;
     }
     setError('');
@@ -117,11 +119,11 @@ export default function SignInPage({ onNav }) {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-              disabled={loading || googleLoading || authUnavailable}
-            />
-          </div>
+                required
+                autoComplete="email"
+                disabled={loading || googleLoading}
+              />
+            </div>
           <div>
             <label htmlFor="signin-password">Password</label>
             <input
@@ -130,19 +132,25 @@ export default function SignInPage({ onNav }) {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-              disabled={loading || googleLoading || authUnavailable}
-            />
-          </div>
+                required
+                autoComplete="current-password"
+                disabled={loading || googleLoading}
+              />
+            </div>
 
-          {visibleError && (
+            {visibleError && (
             <div role="alert" style={{ background: 'var(--red-light)', color: 'var(--red)', borderRadius: 10, padding: '10px 14px', fontSize: 13, fontWeight: 500 }}>
               {visibleError}
             </div>
           )}
 
-          <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading || authUnavailable}>
+          {!supabase && (
+            <div role="status" style={{ background: 'var(--amber-light)', color: 'var(--amber)', borderRadius: 10, padding: '10px 14px', fontSize: 12.5, fontWeight: 600, lineHeight: 1.5 }}>
+              Supabase is not configured right now. Sign in will continue in local demo mode.
+            </div>
+          )}
+
+          <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading}>
             {loading ? <><span className="spin">◌</span> Signing in…</> : 'Sign in'}
           </button>
         </form>
