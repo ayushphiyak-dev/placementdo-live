@@ -144,7 +144,9 @@ export const setLocalAuthUser = ({
     ? createLocalDemoEmail(resolvedGuestId)
     : providedEmail;
   if (!isValidLocalAuthEmail(normalizedEmail)) return false;
-  const guestAlias = resolvedGuestId.replace(/^guest-/, '').slice(-4).toUpperCase();
+  const guestAlias = shouldCreateDemoIdentity
+    ? resolvedGuestId.replace(/^guest-/, '').slice(-4).toUpperCase()
+    : '';
   const normalizedFullName = shouldCreateDemoIdentity
     ? (typeof fullName === 'string' && fullName.trim() ? fullName.trim() : `Guest ${guestAlias || 'USER'}`)
     : (typeof fullName === 'string' ? fullName.trim() : '');

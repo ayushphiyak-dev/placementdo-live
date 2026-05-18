@@ -76,7 +76,7 @@ export default function DashboardPage({ onNav }) {
     : displayEmail.slice(0, 2).toUpperCase();
   const navigateToInterview = () => {
     if (demoUser) {
-      setUpgradeMessage('Mock Interviews requires secure account auth. Configure Supabase, then sign in/up with a real account.');
+      setUpgradeMessage('Mock Interviews requires secure account auth. Configure Supabase, then sign in or sign up with a real account.');
       return;
     }
     setUpgradeMessage('');
