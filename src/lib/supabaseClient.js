@@ -46,6 +46,9 @@ const authRedirectPath = '/auth/callback';
 const localAuthStorageKey = 'pd_local_auth_user';
 const localDemoDomain = 'demo.local';
 const localDemoEmailSuffix = `@${localDemoDomain}`;
+const localDemoIdSanitizer = /[^a-z0-9-]/g;
+const localDemoAliasLength = 4;
+const defaultLocalDemoAlias = 'USER';
 
 export const authConfigError = validateSupabaseConfig({ url: supabaseUrl, key: supabaseKey });
 
@@ -90,9 +93,9 @@ const generateLocalGuestId = () => {
 
 const createLocalDemoEmail = (guestId) => {
   const safeId = typeof guestId === 'string'
-    ? guestId.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 32)
+    ? guestId.toLowerCase().replace(localDemoIdSanitizer, '').slice(0, 32)
     : '';
-  const suffix = safeId || generateLocalGuestId().replace(/[^a-z0-9-]/g, '').slice(0, 32);
+  const suffix = safeId || generateLocalGuestId().replace(localDemoIdSanitizer, '').slice(0, 32);
   return `${suffix}${localDemoEmailSuffix}`;
 };
 
@@ -145,10 +148,10 @@ export const setLocalAuthUser = ({
     : providedEmail;
   if (!isValidLocalAuthEmail(normalizedEmail)) return false;
   const guestAlias = shouldCreateDemoIdentity
-    ? resolvedGuestId.replace(/^guest-/, '').slice(-4).toUpperCase()
+    ? resolvedGuestId.replace(/^guest-/, '').slice(-localDemoAliasLength).toUpperCase()
     : '';
   const normalizedFullName = shouldCreateDemoIdentity
-    ? (typeof fullName === 'string' && fullName.trim() ? fullName.trim() : `Guest ${guestAlias || 'USER'}`)
+    ? (typeof fullName === 'string' && fullName.trim() ? fullName.trim() : `Guest ${guestAlias || defaultLocalDemoAlias}`)
     : (typeof fullName === 'string' ? fullName.trim() : '');
   const normalizedAvatarUrl = typeof avatarUrl === 'string' ? avatarUrl.trim() : '';
   const payload = {
