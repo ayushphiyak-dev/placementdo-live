@@ -4,6 +4,40 @@ const normalizeEnvValue = (value) => {
   if (typeof value !== 'string') return '';
   return value.trim().replace(/^['"]|['"]$/g, '');
 };
+
+const hasJwtStructure = (value) => /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(value);
+
+const validateSupabaseConfig = ({ url, key }) => {
+  const issues = [];
+
+  if (!url) issues.push('missing VITE_SUPABASE_URL');
+  if (!key) issues.push('missing Supabase key (set VITE_SUPABASE_ANON_KEY or VITE_SUPABASE_PUBLISHABLE_KEY)');
+
+  if (url) {
+    try {
+      const parsed = new URL(url);
+      if (!/^https?:$/.test(parsed.protocol)) {
+        issues.push('VITE_SUPABASE_URL must start with http:// or https://');
+      }
+    } catch {
+      issues.push('VITE_SUPABASE_URL is not a valid URL');
+    }
+  }
+
+  if (key) {
+    const isPublishableKey = key.startsWith('sb_publishable_');
+    const isSecretKey = key.startsWith('sb_secret_');
+    if (isSecretKey) {
+      issues.push('do not use sb_secret_* in frontend; use VITE_SUPABASE_ANON_KEY or sb_publishable_*');
+    } else if (!isPublishableKey && !hasJwtStructure(key)) {
+      issues.push('Supabase key format appears invalid (expected JWT format or sb_publishable_<token>)');
+    }
+  }
+
+  if (!issues.length) return '';
+  return `Authentication is not configured correctly: ${issues.join('; ')}.`;
+};
+
 const supabaseUrl = normalizeEnvValue(import.meta.env.VITE_SUPABASE_URL);
 const supabaseAnonKey = normalizeEnvValue(import.meta.env.VITE_SUPABASE_ANON_KEY);
 const supabasePublishableKey = normalizeEnvValue(import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
@@ -11,9 +45,7 @@ const supabaseKey = supabaseAnonKey || supabasePublishableKey;
 const authRedirectPath = '/auth/callback';
 const localAuthStorageKey = 'pd_local_auth_user';
 
-export const authConfigError = (!supabaseUrl || !supabaseKey)
-  ? 'Authentication is not configured yet. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable sign in.'
-  : '';
+export const authConfigError = validateSupabaseConfig({ url: supabaseUrl, key: supabaseKey });
 
 export const supabase = authConfigError
   ? null
