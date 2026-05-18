@@ -88,7 +88,8 @@ const generateLocalGuestId = () => {
     const token = Array.from(bytes).map((byte) => byte.toString(16).padStart(2, '0')).join('');
     return `guest-${token}`;
   }
-  return `guest-${Date.now().toString(36)}`;
+  const timestampHex = Date.now().toString(16).slice(-8).padStart(8, '0');
+  return `guest-${timestampHex}`;
 };
 
 const createLocalDemoEmail = (guestId) => {
@@ -103,6 +104,12 @@ export const isLocalDemoUser = (user) => {
   const metadataDemoFlag = user?.user_metadata?.is_demo === true;
   const email = typeof user?.email === 'string' ? user.email.trim().toLowerCase() : '';
   return metadataDemoFlag || email.endsWith(localDemoEmailSuffix);
+};
+
+const resolveLocalDisplayName = ({ fullName, shouldCreateDemoIdentity, guestAlias }) => {
+  if (!shouldCreateDemoIdentity) return typeof fullName === 'string' ? fullName.trim() : '';
+  if (typeof fullName === 'string' && fullName.trim()) return fullName.trim();
+  return `Guest ${guestAlias || defaultLocalDemoAlias}`;
 };
 
 export const getLocalAuthUser = () => {
@@ -150,9 +157,7 @@ export const setLocalAuthUser = ({
   const guestAlias = shouldCreateDemoIdentity
     ? resolvedGuestId.replace(/^guest-/, '').slice(-localDemoAliasLength).toUpperCase()
     : '';
-  const normalizedFullName = shouldCreateDemoIdentity
-    ? (typeof fullName === 'string' && fullName.trim() ? fullName.trim() : `Guest ${guestAlias || defaultLocalDemoAlias}`)
-    : (typeof fullName === 'string' ? fullName.trim() : '');
+  const normalizedFullName = resolveLocalDisplayName({ fullName, shouldCreateDemoIdentity, guestAlias });
   const normalizedAvatarUrl = typeof avatarUrl === 'string' ? avatarUrl.trim() : '';
   const payload = {
     email: normalizedEmail,
