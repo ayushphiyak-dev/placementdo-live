@@ -27,6 +27,7 @@ export default function SignInPage({ onNav }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
   const [error, setError] = useState(() => getAuthErrorFromQueryParams());
   const authUnavailable = !supabase;
   const visibleError = error || '';
@@ -85,6 +86,20 @@ export default function SignInPage({ onNav }) {
       setGoogleLoading(false);
     }
     // On success the browser redirects — no need to setGoogleLoading(false)
+  };
+
+  const handleContinueDemo = () => {
+    setError('');
+    setDemoLoading(true);
+    const saved = setLocalAuthUser({
+      isDemo: true,
+    });
+    setDemoLoading(false);
+    if (!saved) {
+      setError('Unable to start demo session. Please try again.');
+      return;
+    }
+    onNav('/dashboard');
   };
 
   return (
@@ -159,12 +174,23 @@ export default function SignInPage({ onNav }) {
           )}
 
           {!supabase && (
-            <div role="status" style={{ background: 'var(--amber-light)', color: 'var(--amber)', borderRadius: 10, padding: '10px 14px', fontSize: 12.5, fontWeight: 700, lineHeight: 1.5, border: '1px solid rgba(217,119,6,.25)' }}>
-              Demo mode: Supabase is not configured. This sign-in is local-only and not secure for production.
-            </div>
+            <>
+              <div role="status" style={{ background: 'var(--amber-light)', color: 'var(--amber)', borderRadius: 10, padding: '10px 14px', fontSize: 12.5, fontWeight: 700, lineHeight: 1.5, border: '1px solid rgba(217,119,6,.25)' }}>
+                Demo mode is active. Supabase is not configured, so this session is local-only and not secure for production.
+              </div>
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ width: '100%', justifyContent: 'center' }}
+                onClick={handleContinueDemo}
+                disabled={loading || googleLoading || demoLoading}
+              >
+                {demoLoading ? <><span className="spin">◌</span> Starting demo…</> : 'Continue in Demo (no email)'}
+              </button>
+            </>
           )}
 
-          <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading}>
+          <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading || demoLoading}>
             {loading ? <><span className="spin">◌</span> Signing in…</> : 'Sign in'}
           </button>
         </form>

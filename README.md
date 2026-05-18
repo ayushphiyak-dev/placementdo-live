@@ -26,6 +26,26 @@ npm run build    # production build
 | `KV_REST_API_URL` | Production only | Vercel KV REST URL for persistent blog post + waitlist storage. |
 | `KV_REST_API_TOKEN` | Production only | Vercel KV REST token. |
 | `RESEND_API_KEY` | Optional | API key for email delivery (waitlist notifications). |
+| `VITE_SUPABASE_URL` | Required for secure auth | Supabase project URL (must start with `https://`). |
+| `VITE_SUPABASE_ANON_KEY` | Required for secure auth | Supabase anon key or `sb_publishable_*` key for frontend auth. Never use `sb_secret_*` in frontend. |
+| `VITE_AUTH_REDIRECT_URL` | Optional | OAuth callback URL. If unset, the app uses `<origin>/auth/callback`. |
+
+### Supabase auth setup (for local development)
+
+1. Create `.env.local` in the repository root.
+2. Add your Supabase values:
+
+   ```bash
+   VITE_SUPABASE_URL=https://your-project-id.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-anon-or-publishable-key
+   VITE_AUTH_REDIRECT_URL=http://localhost:5173/auth/callback
+   ```
+
+3. In Supabase dashboard, add redirect URLs for your app domain(s), including:
+   - `http://localhost:5173/auth/callback`
+   - your production callback URL (for deployed environments)
+4. Restart `npm run dev` after editing `.env.local` because Vite only reads env vars on startup.
+5. If auth is configured correctly, the Sign In / Sign Up pages no longer show local demo-mode warnings.
 
 ## Blog management
 

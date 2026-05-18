@@ -23,6 +23,7 @@ export default function SignUpPage({ onNav }) {
   const [confirmError, setConfirmError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const authUnavailable = !supabase;
@@ -92,6 +93,20 @@ export default function SignUpPage({ onNav }) {
     }
   };
 
+  const handleContinueDemo = () => {
+    setError('');
+    setDemoLoading(true);
+    const saved = setLocalAuthUser({
+      isDemo: true,
+    });
+    setDemoLoading(false);
+    if (!saved) {
+      setError('Unable to create demo session. Please try again.');
+      return;
+    }
+    onNav('/dashboard');
+  };
+
   return (
     <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: 'var(--ivory)', padding: '24px' }}>
       <div className="card fade-in-up" style={{ width: '100%', maxWidth: 400, padding: '40px 36px' }}>
@@ -148,7 +163,7 @@ export default function SignUpPage({ onNav }) {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                disabled={loading || googleLoading}
+                disabled={loading || googleLoading || demoLoading}
               />
             </div>
             <div>
@@ -162,7 +177,7 @@ export default function SignUpPage({ onNav }) {
                 required={Boolean(supabase)}
                 {...(supabase ? { minLength: 8 } : {})}
                 autoComplete="new-password"
-                disabled={loading || googleLoading}
+                disabled={loading || googleLoading || demoLoading}
               />
             </div>
             <div>
@@ -176,7 +191,7 @@ export default function SignUpPage({ onNav }) {
                 onBlur={(e) => validateConfirm(e.target.value)}
                 required={Boolean(supabase)}
                 autoComplete="new-password"
-                disabled={loading || googleLoading}
+                disabled={loading || googleLoading || demoLoading}
               />
               {confirmError && (
                 <span role="alert" style={{ fontSize: 12, color: 'var(--red)', marginTop: 4, display: 'block' }}>{confirmError}</span>
@@ -190,12 +205,23 @@ export default function SignUpPage({ onNav }) {
             )}
 
             {!supabase && (
-              <div role="status" style={{ background: 'var(--amber-light)', color: 'var(--amber)', borderRadius: 10, padding: '10px 14px', fontSize: 12.5, fontWeight: 700, lineHeight: 1.5, border: '1px solid rgba(217,119,6,.25)' }}>
-                Demo mode: Supabase is not configured. This local account is temporary and not secure for production.
-              </div>
+              <>
+                <div role="status" style={{ background: 'var(--amber-light)', color: 'var(--amber)', borderRadius: 10, padding: '10px 14px', fontSize: 12.5, fontWeight: 700, lineHeight: 1.5, border: '1px solid rgba(217,119,6,.25)' }}>
+                  Demo mode is active. Supabase is not configured, so this local account is temporary and not secure for production.
+                </div>
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  style={{ width: '100%', justifyContent: 'center' }}
+                  onClick={handleContinueDemo}
+                  disabled={loading || googleLoading || demoLoading}
+                >
+                  {demoLoading ? <><span className="spin">◌</span> Starting demo…</> : 'Continue in Demo (no email)'}
+                </button>
+              </>
             )}
 
-            <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading}>
+            <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading || demoLoading}>
               {loading ? <><span className="spin">◌</span> Creating account…</> : 'Create account'}
             </button>
           </form>
