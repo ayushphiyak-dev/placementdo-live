@@ -5952,7 +5952,7 @@ export default function App() {
         window.history.pushState({}, "", authPath);
       }
       window.dispatchEvent(new PopStateEvent("popstate", { state: window.history.state }));
-      window.scrollTo({ top: 0, behavior: "instant" });
+      window.scrollTo({ top: 0, behavior: "auto" });
       return;
     }
 
@@ -5967,7 +5967,7 @@ export default function App() {
       window.history.pushState({}, "", nextPath);
       window.dispatchEvent(new PopStateEvent("popstate", { state: window.history.state }));
     }
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   };
   const isDash = DASH_VIEWS.includes(view);
 

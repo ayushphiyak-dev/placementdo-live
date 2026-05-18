@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
-import { authConfigError, getAuthRedirectTo, supabase } from '../../lib/supabaseClient';
+import {
+  authConfigError,
+  getAuthRedirectTo,
+  isValidLocalAuthEmail,
+  setLocalAuthUser,
+  supabase,
+} from '../../lib/supabaseClient';
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -23,7 +29,7 @@ export default function SignInPage({ onNav }) {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState(() => getAuthErrorFromQueryParams());
   const authUnavailable = !supabase;
-  const visibleError = error || authConfigError;
+  const visibleError = error || '';
 
   useEffect(() => {
     if (!error) return;
@@ -36,7 +42,17 @@ export default function SignInPage({ onNav }) {
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
     if (!supabase) {
-      setError(authConfigError);
+      if (!isValidLocalAuthEmail(email)) {
+        setError('Enter a valid email address to continue.');
+        return;
+      }
+      setError('');
+      const saved = setLocalAuthUser({ email });
+      if (!saved) {
+        setError('Unable to start local demo session. Please try again.');
+        return;
+      }
+      onNav('/dashboard');
       return;
     }
     setError('');
@@ -119,7 +135,7 @@ export default function SignInPage({ onNav }) {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              disabled={loading || googleLoading || authUnavailable}
+              disabled={loading || googleLoading}
             />
           </div>
           <div>
@@ -132,7 +148,7 @@ export default function SignInPage({ onNav }) {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              disabled={loading || googleLoading || authUnavailable}
+              disabled={loading || googleLoading}
             />
           </div>
 
@@ -142,7 +158,13 @@ export default function SignInPage({ onNav }) {
             </div>
           )}
 
-          <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading || authUnavailable}>
+          {!supabase && (
+            <div role="status" style={{ background: 'var(--amber-light)', color: 'var(--amber)', borderRadius: 10, padding: '10px 14px', fontSize: 12.5, fontWeight: 700, lineHeight: 1.5, border: '1px solid rgba(217,119,6,.25)' }}>
+              Demo mode: Supabase is not configured. This sign-in is local-only and not secure for production.
+            </div>
+          )}
+
+          <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading}>
             {loading ? <><span className="spin">◌</span> Signing in…</> : 'Sign in'}
           </button>
         </form>

@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { authConfigError, getAuthRedirectTo, supabase } from '../../lib/supabaseClient';
+import {
+  authConfigError,
+  getAuthRedirectTo,
+  isValidLocalAuthEmail,
+  setLocalAuthUser,
+  supabase,
+} from '../../lib/supabaseClient';
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -20,7 +26,7 @@ export default function SignUpPage({ onNav }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const authUnavailable = !supabase;
-  const visibleError = error || authConfigError;
+  const visibleError = error || '';
 
   const validateConfirm = (value) => {
     if (value && password && value !== password) {
@@ -32,16 +38,26 @@ export default function SignUpPage({ onNav }) {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    if (!supabase) {
-      setError(authConfigError);
-      return;
-    }
-    setError('');
-    setSuccess('');
     if (password !== confirm) {
       setConfirmError('Passwords do not match.');
       return;
     }
+    if (!supabase) {
+      if (!isValidLocalAuthEmail(email)) {
+        setError('Enter a valid email address to continue.');
+        return;
+      }
+      setError('');
+      const saved = setLocalAuthUser({ email });
+      if (!saved) {
+        setError('Unable to create local demo session. Please try again.');
+        return;
+      }
+      onNav('/dashboard');
+      return;
+    }
+    setError('');
+    setSuccess('');
     setLoading(true);
     const { error: signUpError } = await supabase.auth.signUp({
       email,
@@ -132,7 +148,7 @@ export default function SignUpPage({ onNav }) {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                disabled={loading || googleLoading || authUnavailable}
+                disabled={loading || googleLoading}
               />
             </div>
             <div>
@@ -146,7 +162,7 @@ export default function SignUpPage({ onNav }) {
                 required
                 minLength={8}
                 autoComplete="new-password"
-                disabled={loading || googleLoading || authUnavailable}
+                disabled={loading || googleLoading}
               />
             </div>
             <div>
@@ -160,7 +176,7 @@ export default function SignUpPage({ onNav }) {
                 onBlur={(e) => validateConfirm(e.target.value)}
                 required
                 autoComplete="new-password"
-                disabled={loading || googleLoading || authUnavailable}
+                disabled={loading || googleLoading}
               />
               {confirmError && (
                 <span role="alert" style={{ fontSize: 12, color: 'var(--red)', marginTop: 4, display: 'block' }}>{confirmError}</span>
@@ -173,7 +189,13 @@ export default function SignUpPage({ onNav }) {
               </div>
             )}
 
-            <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading || authUnavailable}>
+            {!supabase && (
+              <div role="status" style={{ background: 'var(--amber-light)', color: 'var(--amber)', borderRadius: 10, padding: '10px 14px', fontSize: 12.5, fontWeight: 700, lineHeight: 1.5, border: '1px solid rgba(217,119,6,.25)' }}>
+                Demo mode: Supabase is not configured. This local account is temporary and not secure for production.
+              </div>
+            )}
+
+            <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: 4 }} disabled={loading || googleLoading}>
               {loading ? <><span className="spin">◌</span> Creating account…</> : 'Create account'}
             </button>
           </form>
