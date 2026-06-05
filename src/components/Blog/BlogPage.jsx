@@ -50,6 +50,7 @@ const normalizePosts = (arr) =>
   }));
 
 const FALLBACK_POSTS = normalizePosts(SEED_POSTS);
+const BLOG_SECTION_COVER_IMAGE = "https://github.com/user-attachments/assets/935c6b8b-806d-495a-943e-4afef2eb0389";
 
 const EMPTY_FORM = {
   title: "", slug: "",
@@ -561,9 +562,9 @@ export default function BlogPage({ onNav }) {
                 aria-label={`Featured post: ${featuredPost.title}`}
               >
                 <div className="blog-featured-img-wrap">
-                  {featuredPost.coverImage ? (
+                  {(featuredPost.coverImage || BLOG_SECTION_COVER_IMAGE) ? (
                     <img
-                      src={featuredPost.coverImage}
+                      src={featuredPost.coverImage || BLOG_SECTION_COVER_IMAGE}
                       alt={`${featuredPost.title} cover image`}
                       className="blog-featured-img"
                       onError={(e) => { e.currentTarget.style.display = "none"; }}
