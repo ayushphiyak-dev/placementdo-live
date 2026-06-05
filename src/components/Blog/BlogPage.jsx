@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import {
-  Calendar, User, ArrowRight, ShieldCheck, BookOpen,
+  Calendar, User, ArrowRight, ShieldCheck,
   AlertCircle, Check, Loader, Trash2, PlusCircle, LogOut,
 } from "lucide-react";
 import SEED_POSTS from "../../data/blogPosts.json";
@@ -50,6 +50,7 @@ const normalizePosts = (arr) =>
   }));
 
 const FALLBACK_POSTS = normalizePosts(SEED_POSTS);
+const BLOG_SECTION_COVER_IMAGE = "https://github.com/user-attachments/assets/935c6b8b-806d-495a-943e-4afef2eb0389";
 
 const EMPTY_FORM = {
   title: "", slug: "",
@@ -561,19 +562,12 @@ export default function BlogPage({ onNav }) {
                 aria-label={`Featured post: ${featuredPost.title}`}
               >
                 <div className="blog-featured-img-wrap">
-                  {featuredPost.coverImage ? (
-                    <img
-                      src={featuredPost.coverImage}
-                      alt={`${featuredPost.title} cover image`}
-                      className="blog-featured-img"
-                      onError={(e) => { e.currentTarget.style.display = "none"; }}
-                    />
-                  ) : (
-                    <div className="blog-featured-img-placeholder">
-                      <BookOpen size={48} />
-                      <span style={{ fontSize: 13, fontWeight: 600 }}>PlacementDo Blog</span>
-                    </div>
-                  )}
+                  <img
+                    src={featuredPost.coverImage || BLOG_SECTION_COVER_IMAGE}
+                    alt={`${featuredPost.title} cover image`}
+                    className="blog-featured-img"
+                    onError={(e) => { e.currentTarget.style.display = "none"; }}
+                  />
                 </div>
                 <div className="blog-featured-body">
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center", marginBottom: 14 }}>
