@@ -1,10 +1,6 @@
 import { lazy, Suspense, useEffect, useState, useCallback } from 'react';
 import GlobalStyles from './GlobalStyles.jsx';
 const InterviewAI = lazy(() => import("./InterviewAI_v5.jsx"));
-const SignInPage = lazy(() => import("./components/Auth/SignInPage.jsx"));
-const SignUpPage = lazy(() => import("./components/Auth/SignUpPage.jsx"));
-const DashboardPage = lazy(() => import("./components/Auth/DashboardPage.jsx"));
-const AuthCallback = lazy(() => import("./components/Auth/AuthCallback.jsx"));
 const BlogPage = lazy(() => import("./components/Blog/BlogPage.jsx"));
 const BlogPostPage = lazy(() => import("./components/Blog/BlogPostPage.jsx"));
 const PlacementPreparationPage = lazy(() => import("./components/SEO/PlacementPreparationPage.jsx"));
@@ -39,10 +35,6 @@ const STANDALONE_ROUTES = [
   "/seo-resources",
   "/demo",
   "/sitemap",
-  "/signin",
-  "/signup",
-  "/dashboard",
-  "/auth/callback",
 ];
 
 const RouteLoadingFallback = () => (
@@ -228,38 +220,6 @@ function AppRouter() {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <SitemapPage onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/signin") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <SignInPage onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/signup") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <SignUpPage onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/dashboard") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <DashboardPage onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/auth/callback") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <AuthCallback onNav={navigate} />
       </Suspense>
     );
   }
