@@ -19,23 +19,23 @@ const Analytics = lazy(() =>
   import('@vercel/analytics/react').then((mod) => ({ default: mod.Analytics })),
 );
 
-// Routes handled by the new standalone pages (not by InterviewAI_v5).
-const STANDALONE_ROUTES = [
-  "/blog",
-  "/placement-preparation",
-  "/placement-preparation-complete-guide",
-  "/aptitude-questions",
-  "/coding-interview-questions",
-  "/company-wise-questions/tcs",
-  "/company-wise-questions/wipro",
-  "/company-wise-questions/infosys",
-  "/company-wise-questions/accenture",
-  "/company-wise-questions/cognizant",
-  "/company-wise-questions/hcl",
-  "/seo-resources",
-  "/demo",
-  "/sitemap",
-];
+const COMPANY_ROUTE_MAP = {
+  "/company-wise-questions/tcs": "tcs",
+  "/company-wise-questions/wipro": "wipro",
+  "/company-wise-questions/infosys": "infosys",
+  "/company-wise-questions/accenture": "accenture",
+  "/company-wise-questions/cognizant": "cognizant",
+  "/company-wise-questions/hcl": "hcl",
+};
+
+const SEO_ROUTE_COMPONENTS = {
+  "/placement-preparation": PlacementPreparationPage,
+  "/aptitude-questions": AptitudePage,
+  "/coding-interview-questions": CodingInterviewPage,
+  "/placement-preparation-complete-guide": PlacementCompleteGuidePage,
+  "/demo": DemoPage,
+  "/sitemap": SitemapPage,
+};
 
 const RouteLoadingFallback = () => (
   <div
@@ -61,6 +61,10 @@ const normalizeRoutePath = (value) => {
   if (singleSlashPath !== "/") return singleSlashPath.replace(/\/+$/, "");
   return singleSlashPath;
 };
+
+const renderWithFallback = (content) => (
+  <Suspense fallback={<RouteLoadingFallback />}>{content}</Suspense>
+);
 
 function AppRouter() {
   const [path, setPath] = useState(() => window.location.pathname);
@@ -89,22 +93,14 @@ function AppRouter() {
 
   // Public blog listing — /blog and /blog/
   if (normalizedPath === "/blog") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <BlogPage onNav={navigate} />
-      </Suspense>
-    );
+    return renderWithFallback(<BlogPage onNav={navigate} />);
   }
 
   // Public blog post — /blog/:slug
   if (normalizedPath.startsWith("/blog/")) {
     const rawSlug = normalizedPath.slice("/blog/".length).trim();
     if (!rawSlug) {
-      return (
-        <Suspense fallback={<RouteLoadingFallback />}>
-          <BlogPage onNav={navigate} />
-        </Suspense>
-      );
+      return renderWithFallback(<BlogPage onNav={navigate} />);
     }
     let slug = rawSlug;
     try {
@@ -112,123 +108,24 @@ function AppRouter() {
     } catch {
       slug = rawSlug;
     }
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <BlogPostPage slug={slug} onNav={navigate} />
-      </Suspense>
-    );
+    return renderWithFallback(<BlogPostPage slug={slug} onNav={navigate} />);
   }
 
-  // SEO content pages
-  if (normalizedPath === "/placement-preparation") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <PlacementPreparationPage onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/aptitude-questions") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <AptitudePage onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/coding-interview-questions") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <CodingInterviewPage onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/company-wise-questions/tcs") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <CompanyWisePage company="tcs" onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/company-wise-questions/wipro") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <CompanyWisePage company="wipro" onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/placement-preparation-complete-guide") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <PlacementCompleteGuidePage onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/company-wise-questions/infosys") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <CompanyWisePage company="infosys" onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/company-wise-questions/accenture") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <CompanyWisePage company="accenture" onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/company-wise-questions/cognizant") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <CompanyWisePage company="cognizant" onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  if (normalizedPath === "/company-wise-questions/hcl") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <CompanyWisePage company="hcl" onNav={navigate} />
-      </Suspense>
-    );
+  const company = COMPANY_ROUTE_MAP[normalizedPath];
+  if (company) {
+    return renderWithFallback(<CompanyWisePage company={company} onNav={navigate} />);
   }
 
   if (normalizedPath === "/seo-resources" || normalizedPath === "/resources") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <SeoResourcesPage onNav={navigate} />
-      </Suspense>
-    );
+    return renderWithFallback(<SeoResourcesPage onNav={navigate} />);
   }
 
-  if (normalizedPath === "/demo") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <DemoPage onNav={navigate} />
-      </Suspense>
-    );
+  const SeoRouteComponent = SEO_ROUTE_COMPONENTS[normalizedPath];
+  if (SeoRouteComponent) {
+    return renderWithFallback(<SeoRouteComponent onNav={navigate} />);
   }
 
-  if (normalizedPath === "/sitemap") {
-    return (
-      <Suspense fallback={<RouteLoadingFallback />}>
-        <SitemapPage onNav={navigate} />
-      </Suspense>
-    );
-  }
-
-  return (
-    <Suspense fallback={<RouteLoadingFallback />}>
-      <InterviewAI />
-    </Suspense>
-  );
+  return renderWithFallback(<InterviewAI />);
 }
 
 export default function App() {
