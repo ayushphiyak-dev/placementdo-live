@@ -819,6 +819,7 @@ const WaitlistThanksModal = ({ email, onClose }) => {
 
 /* ── Waitlist Form + Popup ── */
 const WaitlistForm = ({ size="lg", dark=false }) => {
+  const WAITLIST_CLIENT_TIMEOUT_MS = 4500;
   const [email,          setEmail]          = useState("");
   const [errMsg,         setErrMsg]         = useState("");
   const [submitted,      setSubmitted]      = useState(false);
@@ -838,11 +839,14 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
     setErrMsg("");
     setLoading(true);
     const captured = email.trim();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), WAITLIST_CLIENT_TIMEOUT_MS);
     try {
       const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: captured }),
+        signal: controller.signal,
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -853,9 +857,14 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
       setEmail("");
       setSubmitted(true);
     } catch (err) {
-      console.error("Waitlist submission error:", err);
-      setErrMsg("Network error. Please try again.");
+      if (err?.name === "AbortError") {
+        setErrMsg("Request timed out. Please try again.");
+      } else {
+        console.error("Waitlist submission error:", err);
+        setErrMsg("Network error. Please try again.");
+      }
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };
