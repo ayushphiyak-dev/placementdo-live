@@ -628,7 +628,7 @@ export default function BlogPage({ onNav }) {
                     <User size={11} /> {featuredPost.author}
                   </div>
                 </div>
-              </div>
+              </article>
             </div>
           )}
 
