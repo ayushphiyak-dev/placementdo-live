@@ -115,9 +115,11 @@ const STYLES = `
     display: grid; grid-template-columns: 1fr 1fr; gap: 0;
     background: var(--white); border: 1px solid var(--border); border-radius: 16px;
     overflow: hidden; margin-bottom: 48px;
-    transition: box-shadow 0.18s, transform 0.18s; cursor: pointer;
+    transition: box-shadow 0.18s, transform 0.18s;
   }
   .blog-featured:hover { box-shadow: 0 8px 32px rgba(0,0,0,.09); transform: translateY(-2px); }
+  .blog-featured-link { color: inherit; text-decoration: none; display: block; }
+  .blog-featured-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 6px; }
   .blog-featured-img-wrap {
     position: relative; overflow: hidden; min-height: 280px;
     background: linear-gradient(135deg, var(--teal-light) 0%, rgba(13,148,136,.12) 100%);
@@ -492,6 +494,22 @@ export default function BlogPage({ onNav }) {
     return publishedPosts.length > 0 ? publishedPosts[0] : null;
   }, [publishedPosts, activeCategory, normalizedSearch]);
 
+  useEffect(() => {
+    const featuredImage = featuredPost?.coverImage || BLOG_SECTION_COVER_IMAGE;
+    if (!featuredPost || normalizedSearch || !featuredImage) return undefined;
+    upsertLink('link[data-preload-id="blog-featured-cover"]', {
+      rel: "preload",
+      as: "image",
+      href: featuredImage,
+      fetchpriority: "high",
+      "data-preload-id": "blog-featured-cover",
+    });
+    return () => {
+      const preloadEl = document.head.querySelector('link[data-preload-id="blog-featured-cover"]');
+      if (preloadEl) preloadEl.remove();
+    };
+  }, [featuredPost, normalizedSearch]);
+
   // Posts list shown in admin panel (all statuses)
   const adminPosts = useMemo(
     () => [...posts].sort((a, b) => new Date(b.date) - new Date(a.date)),
@@ -553,21 +571,26 @@ export default function BlogPage({ onNav }) {
           {!normalizedSearch && featuredPost && (
             <div style={{ marginBottom: 48 }}>
               <p className="blog-section-label">Featured Post</p>
-              <div
+              <article
                 className="blog-featured"
-                role="article"
-                onClick={() => navigate(`/blog/${featuredPost.slug}`)}
-                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && navigate(`/blog/${featuredPost.slug}`)}
-                tabIndex={0}
-                aria-label={`Featured post: ${featuredPost.title}`}
               >
                 <div className="blog-featured-img-wrap">
-                  <img
-                    src={featuredPost.coverImage || BLOG_SECTION_COVER_IMAGE}
-                    alt={`${featuredPost.title} cover image`}
-                    className="blog-featured-img"
-                    onError={(e) => { e.currentTarget.style.display = "none"; }}
-                  />
+                  <a
+                    href={`/blog/${featuredPost.slug}`}
+                    className="blog-featured-link"
+                    aria-label={`Read featured post: ${featuredPost.title}`}
+                    onClick={(e) => { e.preventDefault(); navigate(`/blog/${featuredPost.slug}`); }}
+                  >
+                    <img
+                      src={featuredPost.coverImage || BLOG_SECTION_COVER_IMAGE}
+                      alt={`${featuredPost.title} cover image`}
+                      className="blog-featured-img"
+                      loading="eager"
+                      fetchPriority="high"
+                      decoding="async"
+                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                    />
+                  </a>
                 </div>
                 <div className="blog-featured-body">
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center", marginBottom: 14 }}>
@@ -581,7 +604,15 @@ export default function BlogPage({ onNav }) {
                       {estimateReadingMinutes(featuredPost.content)}
                     </span>
                   </div>
-                  <h2 className="brig blog-featured-title">{featuredPost.title}</h2>
+                  <h2 className="brig blog-featured-title">
+                    <a
+                      href={`/blog/${featuredPost.slug}`}
+                      className="blog-featured-link"
+                      onClick={(e) => { e.preventDefault(); navigate(`/blog/${featuredPost.slug}`); }}
+                    >
+                      {featuredPost.title}
+                    </a>
+                  </h2>
                   <p className="blog-featured-excerpt">{featuredPost.excerpt}</p>
                   <div>
                     <a
@@ -597,7 +628,7 @@ export default function BlogPage({ onNav }) {
                     <User size={11} /> {featuredPost.author}
                   </div>
                 </div>
-              </div>
+              </article>
             </div>
           )}
 
@@ -676,6 +707,7 @@ export default function BlogPage({ onNav }) {
                       alt={`${post.title} cover image`}
                       className="blog-card-cover"
                       loading="lazy"
+                      decoding="async"
                       onError={(e) => { e.currentTarget.style.display = "none"; }}
                     />
                   )}

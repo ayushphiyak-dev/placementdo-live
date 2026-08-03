@@ -414,6 +414,23 @@ export default function BlogPostPage({ slug, onNav }) {
     };
   }, [slug, post, notFound, loading]);
 
+  useEffect(() => {
+    if (!post) return undefined;
+    const coverImage = post.coverImage || post.featured_image;
+    if (!coverImage) return undefined;
+    upsertLink('link[data-preload-id="blog-post-cover"]', {
+      rel: "preload",
+      as: "image",
+      href: coverImage,
+      fetchpriority: "high",
+      "data-preload-id": "blog-post-cover",
+    });
+    return () => {
+      const preloadEl = document.head.querySelector('link[data-preload-id="blog-post-cover"]');
+      if (preloadEl) preloadEl.remove();
+    };
+  }, [post]);
+
   const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/blog/${slug}` : `https://placementdo.app/blog/${slug}`;
   const shareTitle = post ? encodeURIComponent(post.title) : "";
   const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
@@ -545,6 +562,9 @@ export default function BlogPostPage({ slug, onNav }) {
                   src={post.coverImage || post.featured_image}
                   alt={post.title}
                   className="bpp-cover"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
                   onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
               )}

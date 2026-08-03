@@ -1,0 +1,32 @@
+# PlacementDo LLM Access Policy
+
+This file is intended for AI crawlers and assistants.
+
+Project: PlacementDo
+Primary URL: https://placementdo.app/
+Purpose: AI-powered placement preparation, mock interviews, and interview-readiness resources.
+
+## Allowed
+- Public marketing pages
+- Public SEO resource pages
+- Public blog listing and published blog posts
+
+## Disallowed
+- Private user dashboards and authenticated routes
+- Admin-only blog operations
+- Internal APIs and any sensitive data
+
+## Canonical discovery
+- Sitemap: https://placementdo.app/sitemap.xml
+- Robots: https://placementdo.app/robots.txt
+
+## Key public routes
+- /
+- /placement-preparation-complete-guide
+- /placement-preparation
+- /aptitude-questions
+- /coding-interview-questions
+- /blog
+
+## Contact
+- support@placementdo.com
