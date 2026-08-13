@@ -10,22 +10,35 @@ export const PrivacyPolicy = () => (
       <div className="card" style={{ padding:32, display:"flex", flexDirection:"column", gap:20 }}>
         <div>
           <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>1. Introduction & Data Collection</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Welcome to PlacementDo. We collect audio, text inputs, and CV documents you provide during mock interviews. This data is exclusively used to generate real-time AI feedback and comprehensive performance reports. We also collect basic account information (name, email) for billing and authentication purposes.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Welcome to PlacementDo. We collect audio, text inputs, and CV documents you provide during mock interviews, as well as waitlist details when you sign up to be notified. This data is exclusively used to generate real-time AI feedback and comprehensive performance reports. We also collect basic account information (name, email) for billing and authentication purposes.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>We do not sell or rent your personal data to third parties.</p>
         </div>
         
         <div>
-          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>2. Third-Party Vendors & Google AdSense</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We use third-party vendors, including Google, which use cookies to serve ads based on a user's prior visits to our website or other websites. Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our sites and/or other sites on the Internet. Users may opt out of personalized advertising by visiting Ads Settings.</p>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>2. Third-party services & Advertising</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We use trusted third-party service providers to support our platform, including cloud hosting providers, analytics tools, and advertising networks.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>We partner with Google AdSense and third-party advertising networks to serve advertisements when you visit PlacementDo. These companies may use cookies, web beacons, and similar tracking technologies to collect non-personally identifiable information during your visits to this and other websites in order to provide targeted advertisements about goods and services of interest to you.</p>
         </div>
         
         <div>
-          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>3. Use of DART Cookies</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Google, as a third-party vendor, uses cookies to serve ads on PlacementDo. Google's use of the DART cookie enables it to serve ads to our users based on their visit to our site and other sites on the Internet. Users may opt out of the use of the DART cookie by visiting the Google Ad and content network privacy policy.</p>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>3. Cookies and tracking</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We use essential cookies for session management, authentication, and security. We also use analytics cookies to understand aggregate product usage patterns.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>Additionally, third-party vendors, including Google, use cookies (such as the DART cookie) to serve ads based on a user's prior visits to PlacementDo or other websites on the Internet:</p>
+          <ul style={{ paddingLeft:20, marginTop:10 }}>
+            <li style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Google's use of advertising cookies enables it and its partners to serve personalized ads to users based on their visits to our site and/or other sites on the Internet.</li>
+            <li style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Users may opt out of personalized advertising at any time by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>Google Ads Settings</a>.</li>
+            <li style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Alternatively, users can opt out of third-party vendor use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>www.aboutads.info</a>.</li>
+          </ul>
         </div>
         
         <div>
-          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>4. Security</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We implement industry-standard encryption (AES-256 for data at rest, TLS 1.3 for data in transit) to protect your sensitive career documents and session transcripts.</p>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>4. Data Retention & Privacy Rights</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We implement a strict 12-month session retention policy. Interview reports, transcripts, and related performance metrics are retained for up to 12 months, after which they are automatically deleted. We comply with applicable data protection laws, including the GDPR and CCPA. Users have the right to access, rectify, or erase their personal data.</p>
+        </div>
+
+        <div>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>5. Security & Age Limits</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We implement industry-standard encryption (AES-256 for data at rest, TLS 1.3 for data in transit). PlacementDo enforces a strict 16+ age limit for users of our platform. If you have any questions, you can reach us at <a href="mailto:support@placementdo.com" style={{ color:"var(--teal)" }}>support@placementdo.com</a>.</p>
         </div>
       </div>
     </div>
