@@ -1,13 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /api/
-Disallow: /blog/admin
-Disallow: /dashboard
-Disallow: /signin
-Disallow: /signup
-
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
 
 Sitemap: https://placementdo.app/sitemap.xml

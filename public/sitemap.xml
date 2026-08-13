@@ -1,380 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <!-- Core Pages -->
   <url>
-    <loc>https://placementdo.app/</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://www.placementdo.app/</loc>
+    <lastmod>2026-08-13</lastmod>
     <priority>1.0</priority>
   </url>
-
-  <!-- PILLAR PAGE: Primary target for "placement" keyword -->
   <url>
-    <loc>https://placementdo.app/placement-preparation-complete-guide</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.98</priority>
-  </url>
-
-  <!-- SEO Content Pages -->
-  <url>
-    <loc>https://placementdo.app/placement-preparation</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
+    <loc>https://www.placementdo.app/features</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://placementdo.app/aptitude-questions</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
+    <loc>https://www.placementdo.app/pricing</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://placementdo.app/coding-interview-questions</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
+    <loc>https://www.placementdo.app/blog</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://placementdo.app/features</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.76</priority>
+    <loc>https://www.placementdo.app/blog/system-design</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://placementdo.app/pricing</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.76</priority>
+    <loc>https://www.placementdo.app/blog/star-method</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://placementdo.app/personas</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.74</priority>
+    <loc>https://www.placementdo.app/blog/behavioral-interviews</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://placementdo.app/how-it-works</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.78</priority>
+    <loc>https://www.placementdo.app/blog/resume-tips</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://placementdo.app/about</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.72</priority>
+    <loc>https://www.placementdo.app/faq</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://placementdo.app/careers</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.65</priority>
+    <loc>https://www.placementdo.app/about</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://placementdo.app/privacy-policy</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.42</priority>
+    <loc>https://www.placementdo.app/contact</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://placementdo.app/terms-of-service</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.42</priority>
-  </url>
-
-  <!-- Company-Wise Pages -->
-  <url>
-    <loc>https://placementdo.app/company-wise-questions/tcs</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <loc>https://www.placementdo.app/privacy-policy</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://placementdo.app/company-wise-questions/infosys</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <loc>https://www.placementdo.app/terms-of-service</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.5</priority>
   </url>
-  <url>
-    <loc>https://placementdo.app/company-wise-questions/wipro</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/company-wise-questions/accenture</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/company-wise-questions/cognizant</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/company-wise-questions/hcl</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
-  </url>
-
-  <!-- Blog Listing -->
-  <url>
-    <loc>https://placementdo.app/blog</loc>
-    <lastmod>2026-04-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <!-- Blog Posts: Placement keyword cluster -->
-  <url>
-    <loc>https://placementdo.app/blog/placement-preparation-for-freshers</loc>
-    <lastmod>2026-04-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/what-is-placement</loc>
-    <lastmod>2026-04-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/placement-roadmap-engineering-students</loc>
-    <lastmod>2026-04-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/common-placement-interview-mistakes</loc>
-    <lastmod>2026-04-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.82</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/campus-placement-preparation-guide</loc>
-    <lastmod>2026-04-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/on-campus-vs-off-campus-placement</loc>
-    <lastmod>2026-04-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/mass-recruitment-placement-guide</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
-  <!-- Blog Posts: AI Mock Interview cluster -->
-  <url>
-    <loc>https://placementdo.app/blog/ai-mock-interview-benefits</loc>
-    <lastmod>2026-04-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/mock-interview-preparation-tips</loc>
-    <lastmod>2026-03-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.82</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/getting-started-with-placementdo</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/placementdo-review-for-freshers</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.86</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/placementdo-vs-manual-interview-preparation</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.84</priority>
-  </url>
-
-  <!-- Blog Posts: HR Interview cluster -->
-  <url>
-    <loc>https://placementdo.app/blog/hr-interview-questions-for-freshers</loc>
-    <lastmod>2026-04-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/top-hr-interview-questions-and-answers</loc>
-    <lastmod>2026-04-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.83</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/hr-interview-questions-freshers-placement</loc>
-    <lastmod>2026-04-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/top-5-behavioural-interview-mistakes</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
-  <!-- Blog Posts: Company-specific cluster -->
-  <url>
-    <loc>https://placementdo.app/blog/accenture-placement-preparation</loc>
-    <lastmod>2026-04-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/cognizant-placement-guide</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/tcs-nqt-interview-preparation</loc>
-    <lastmod>2026-03-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/infosys-interview-preparation</loc>
-    <lastmod>2026-03-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.83</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/wipro-elite-nthrive-interview-guide</loc>
-    <lastmod>2026-03-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.82</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/amazon-placement-preparation</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.82</priority>
-  </url>
-
-  <!-- Blog Posts: Aptitude cluster -->
-  <url>
-    <loc>https://placementdo.app/blog/aptitude-shortcuts-for-placement</loc>
-    <lastmod>2026-04-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.83</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/aptitude-test-preparation-guide</loc>
-    <lastmod>2026-03-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.83</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/aptitude-tricks-campus-placement</loc>
-    <lastmod>2026-04-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
-  <!-- Blog Posts: Resume cluster -->
-  <url>
-    <loc>https://placementdo.app/blog/resume-building-tips-freshers</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.82</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/how-to-write-a-resume-for-freshers</loc>
-    <lastmod>2026-04-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.82</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/placement-resume-building-guide</loc>
-    <lastmod>2026-04-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
-  <!-- Blog Posts: Coding / Technical cluster -->
-  <url>
-    <loc>https://placementdo.app/blog/data-structures-interview-questions</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.83</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/technical-interview-tips-for-software-engineers</loc>
-    <lastmod>2026-03-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.82</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/best-programming-language-for-placement</loc>
-    <lastmod>2026-04-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/high-salary-placement-preparation</loc>
-    <lastmod>2026-04-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
-  <!-- Blog Posts: Career / General cluster -->
-  <url>
-    <loc>https://placementdo.app/blog/career-guidance-for-engineering-graduates</loc>
-    <lastmod>2026-03-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/blog/non-it-placement-preparation</loc>
-    <lastmod>2026-04-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
-  <!-- Other pages -->
-  <url>
-    <loc>https://placementdo.app/seo-resources</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.70</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/demo</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.65</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/sitemap</loc>
-    <lastmod>2026-05-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.68</priority>
-  </url>
-  <url>
-    <loc>https://placementdo.app/llms.txt</loc>
-    <lastmod>2026-08-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.30</priority>
-  </url>
-
 </urlset>
