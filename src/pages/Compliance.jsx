@@ -16,19 +16,13 @@ export const PrivacyPolicy = () => (
         
         <div>
           <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>2. Third-party services & Advertising</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We use trusted third-party service providers to support our platform, including cloud hosting providers, analytics tools, and advertising networks.</p>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>We partner with Google AdSense and third-party advertising networks to serve advertisements when you visit PlacementDo. These companies may use cookies, web beacons, and similar tracking technologies to collect non-personally identifiable information during your visits to this and other websites in order to provide targeted advertisements about goods and services of interest to you.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We use trusted third-party services to operate the platform, including cloud hosting providers, analytics tools, email delivery services, and third-party advertising partners (including Google AdSense).</p>
         </div>
         
         <div>
           <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>3. Cookies and tracking</h2>
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We use essential cookies for session management, authentication, and security. We also use analytics cookies to understand aggregate product usage patterns.</p>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>Additionally, third-party vendors, including Google, use cookies (such as the DART cookie) to serve ads based on a user's prior visits to PlacementDo or other websites on the Internet:</p>
-          <ul style={{ paddingLeft:20, marginTop:10 }}>
-            <li style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Google's use of advertising cookies enables it and its partners to serve personalized ads to users based on their visits to our site and/or other sites on the Internet.</li>
-            <li style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Users may opt out of personalized advertising at any time by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>Google Ads Settings</a>.</li>
-            <li style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Alternatively, users can opt out of third-party vendor use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>www.aboutads.info</a>.</li>
-          </ul>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>Additionally, third-party vendors, including Google, use cookies (such as the DART cookie) to serve ads based on a user's prior visits to PlacementDo or other websites on the internet. Users may opt out of personalized advertising at any time by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>Google Ads Settings</a> or <a href="https://www.aboutads.info" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>www.aboutads.info</a>.</p>
         </div>
         
         <div>
