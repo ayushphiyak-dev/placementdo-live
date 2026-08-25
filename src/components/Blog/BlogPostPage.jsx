@@ -474,20 +474,22 @@ export default function BlogPostPage({ slug, onNav }) {
           gap: 16,
         }}
       >
-        <a href="/" className="blog-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
-          <div className="blog-logo-mark"><img src="/apple-touch-icon.png" alt="PlacementDo logo" loading="eager" /></div>
-          <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
-            Placement<span style={{ color: "var(--teal)" }}>Do</span>
-          </span>
-        </a>
-        <a
-          href="/blog"
-          className="btn-ghost"
-          style={{ fontSize: 13 }}
-          onClick={(e) => { e.preventDefault(); navigate("/blog"); }}
-        >
-          ← Blog
-        </a>
+        <nav aria-label="Main navigation" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", gap: 16 }}>
+          <a href="/" className="blog-logo" onClick={(e) => { e.preventDefault(); navigate("/"); }}>
+            <div className="blog-logo-mark"><img src="/apple-touch-icon.png" alt="PlacementDo logo" loading="eager" /></div>
+            <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "var(--slate)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
+              Placement<span style={{ color: "var(--teal)" }}>Do</span>
+            </span>
+          </a>
+          <a
+            href="/blog"
+            className="btn-ghost"
+            style={{ fontSize: 13 }}
+            onClick={(e) => { e.preventDefault(); navigate("/blog"); }}
+          >
+            ← Blog
+          </a>
+        </nav>
       </header>
 
       <main className="bpp-page">
