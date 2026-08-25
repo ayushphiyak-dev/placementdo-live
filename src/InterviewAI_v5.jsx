@@ -1413,9 +1413,9 @@ const Landing = ({ onNav, onCheckout }) => (
           </p>
           <div style={{ display:"flex", gap:8, marginTop:20 }}>
             {[
-              { icon:<MessageSquare size={15}/>, label:"Twitter/X", url:"#" },
-              { icon:<Hash size={15}/>,          label:"LinkedIn", url:"#"  },
-              { icon:<Bookmark size={15}/>,       label:"GitHub", url:"#"   },
+              { icon:<MessageSquare size={15}/>, label:"Twitter/X", url:"https://x.com/Placementdo" },
+              { icon:<Hash size={15}/>,          label:"LinkedIn", url:"https://www.linkedin.com/company/placementdo" },
+              { icon:<Bookmark size={15}/>,      label:"Medium", url:"https://medium.com/@ayushphiyak739" },
             ].map(({ icon, label, url }) => (
               <a key={label} href={url} className="footer-social wiggle" title={label} style={{ color:"rgba(255,255,255,.4)" }}>{icon}</a>
             ))}
