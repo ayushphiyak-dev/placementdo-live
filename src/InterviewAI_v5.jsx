@@ -1069,7 +1069,7 @@ const Landing = ({ onNav, onCheckout }) => (
       </motion.div>
       <motion.h1 initial={{ opacity:0,y:32 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.65,delay:0.1 }} className="brig"
         style={{ fontSize:"clamp(36px,6vw,82px)", fontWeight:800, lineHeight:1.06, letterSpacing:"-0.03em", color:"var(--slate)", marginTop:22, marginBottom:20, maxWidth:900, wordBreak:"break-word" }}>
-        Practice the Interview.{" "}<span className="text-shimmer">Land the Offer.</span>
+        PlacementDo — AI Mock Interview Platform for Campus Placement Preparation
       </motion.h1>
       <motion.p initial={{ opacity:0,y:20 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.55,delay:0.22 }}
         style={{ fontSize:"clamp(15px,2vw,19px)", color:"var(--slate-500)", maxWidth:600, lineHeight:1.72, marginBottom:36 }}>
@@ -1347,6 +1347,79 @@ const Landing = ({ onNav, onCheckout }) => (
         </section>
       );
     })()}
+
+    {/* ABOUT / PLATFORM OVERVIEW — 600+ word SEO content section */}
+    <section style={{ padding:"96px clamp(20px,5vw,60px)", background:"var(--white)", borderTop:"1px solid var(--border)" }}>
+      <div style={{ maxWidth:900, margin:"0 auto" }}>
+        <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }}>
+          <h2 className="brig" style={{ fontSize:"clamp(26px,4vw,42px)", fontWeight:800, letterSpacing:"-0.03em", color:"var(--slate)", marginBottom:24, lineHeight:1.1 }}>
+            About PlacementDo — Complete Campus Placement Preparation Platform
+          </h2>
+        </motion.div>
+
+        <div style={{ display:"flex", flexDirection:"column", gap:28, fontSize:15.5, color:"var(--slate-600)", lineHeight:1.85 }}>
+          <section>
+            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>What Is PlacementDo?</h3>
+            <p>
+              PlacementDo is an AI-powered placement preparation platform built specifically for engineering graduates, MBA students, and freshers preparing for campus recruitment drives across India. Every year, over three million engineering graduates compete for placement opportunities at companies like TCS, Infosys, Wipro, Accenture, Cognizant, Google, Amazon, and Microsoft. The candidates who secure offers at top companies are rarely the most naturally gifted — they are the most thoroughly prepared. PlacementDo exists to give every candidate access to the same caliber of interview preparation that was previously available only to those who could afford expensive coaching or had personal industry connections.
+            </p>
+            <p>
+              Our platform uses state-of-the-art Large Language Models combined with real-time voice synthesis to create a mock interview experience that is virtually indistinguishable from the real thing. Unlike static question banks or pre-recorded video tutorials, PlacementDo conducts a live, interactive interview session where the AI responds to your actual verbal answers, asks follow-up questions based on what you say, and applies deliberate pressure to test your composure under stress.
+            </p>
+          </section>
+
+          <section>
+            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>How Campus Placement Preparation Works</h3>
+            <p>
+              The campus placement process in India follows a structured multi-stage funnel that varies slightly by company but consistently includes four key rounds: an online aptitude and reasoning test, a technical or coding interview, one or two panels of technical interviews, and a final HR interview. Most companies filter out forty to seventy percent of applicants in the aptitude round alone, making early and consistent preparation essential. Students who begin their placement preparation at least three months before the recruitment season starts are significantly more likely to receive offers from their target companies.
+            </p>
+            <p>
+              PlacementDo covers every stage of this funnel. Our aptitude practice module includes timed mock tests covering quantitative aptitude, logical reasoning, and verbal ability — the three sections that appear in virtually every campus placement test. For technical rounds, the platform offers coding interview practice with AI interviewers who evaluate your problem-solving approach, code quality, time complexity analysis, and communication skills in real time. For HR and behavioral rounds, PlacementDo scores every answer against the STAR framework (Situation, Task, Action, Result) and provides immediate feedback on structure, specificity, and delivery.
+            </p>
+          </section>
+
+          <section>
+            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Key Features for Placement Preparation</h3>
+            <p>
+              CV-contextual questioning is the core differentiator of PlacementDo. When you upload your resume, the AI parses your educational background, project experience, technical skills, and career trajectory to generate interview questions that are directly relevant to your profile. If you list a machine learning project on your resume, the AI will ask you about your model selection process, training data, evaluation metrics, and deployment challenges — exactly like a real hiring manager would.
+            </p>
+            <p>
+              The platform offers six distinct AI interviewer personas, each designed to test a different dimension of your interview performance. The Friendly Peer catches oversharing and rambling. The Empath exposes gaps in emotional intelligence and self-awareness. The Stress-Tester replicates the intensity of a FAANG-level interview with rapid-fire questions and intentional interruptions. The Stoic Veteran tests your ability to maintain composure under deliberate silence. The Devil's Advocate challenges every claim you make to test logical precision. The Silent Analyst probes for inconsistencies between your resume claims and your verbal answers. Practicing with all six personas ensures you are prepared for any interviewer temperament on the actual day.
+            </p>
+            <p>
+              After every session, PlacementDo generates a comprehensive performance report scored across ten critical dimensions: technical depth, communication clarity, STAR method adherence, response structure, filler word frequency, speaking pace, confidence level, answer specificity, time management, and overall impression. Each dimension receives a numerical score along with actionable improvement suggestions, giving you a clear roadmap for what to work on before your next practice session or actual interview.
+            </p>
+          </section>
+
+          <section>
+            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Company-Specific Interview Preparation</h3>
+            <p>
+              Every company evaluates candidates differently. TCS focuses on foundational communication skills and basic coding ability through its NQT (National Qualifier Test). Infosys values clean code and algorithmic thinking through InfyTQ and Hackwithinfy. Wipro's Elite NTHrive programme tests written communication alongside technical aptitude. Accenture's assessment emphasizes cognitive ability and problem-solving speed. PlacementDo calibrates its interview sessions to match the specific evaluation criteria of each target company, ensuring your practice sessions are directly relevant to the company you are preparing for.
+            </p>
+            <p>
+              For product companies like Google, Amazon, and Microsoft, PlacementDo adjusts the difficulty and focus of technical rounds to match the higher bar these companies set. System design questions, advanced data structure problems, and leadership principle alignment become the primary focus when you configure your session for a product company role.
+            </p>
+          </section>
+
+          <section>
+            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Why AI Mock Interviews Outperform Traditional Preparation</h3>
+            <p>
+              Research on deliberate practice consistently shows that performance improves fastest when you practice under realistic conditions, receive immediate specific feedback, and iterate on your weaknesses. Traditional preparation methods — reading question banks, watching YouTube videos, or asking a friend to conduct a mock interview — fail on all three counts. A friend will be too polite to push back on weak answers. A question bank provides no feedback on delivery. A YouTube video cannot adapt to your specific responses.
+            </p>
+            <p>
+              PlacementDo solves all three problems simultaneously. The AI creates realistic interview pressure through interruptions, follow-up questions, and silence. It provides immediate, quantitative feedback across ten measurable dimensions. And it adapts its questioning in real time based on your answers, creating a unique interview experience every session. Candidates who complete at least five practice sessions on PlacementDo consistently report measurable improvement in their confidence, answer structure, and communication clarity — the three qualities that most strongly predict placement success.
+            </p>
+          </section>
+
+          <section>
+            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Getting Started with PlacementDo</h3>
+            <p>
+              Getting started takes less than five minutes. Create a free account, upload your resume in PDF format, select your target company and role, choose an interviewer persona, and begin your first mock interview session. The AI will greet you, ask an opening question tailored to your background, and conduct the interview exactly as a real interviewer would. After the session, review your scored report, identify your weakest two or three dimensions, and focus your next practice session on improving those specific areas. Repeat this cycle consistently in the weeks before placement season and you will walk into every interview with genuine confidence, not false bravely.
+            </p>
+          </section>
+        </div>
+      </div>
+    </section>
 
     {/* WAITLIST CTA */}
     <section id="waitlist-section" style={{ padding:"96px clamp(20px,5vw,60px) 112px", background:"var(--slate)", position:"relative", overflow:"hidden" }}>

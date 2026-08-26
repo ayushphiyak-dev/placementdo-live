@@ -11,6 +11,10 @@ const SeoResourcesPage = lazy(() => import("./components/SEO/SeoResourcesPage.js
 const DemoPage = lazy(() => import("./components/SEO/DemoPage.jsx"));
 const PlacementCompleteGuidePage = lazy(() => import("./components/SEO/PlacementCompleteGuidePage.jsx"));
 const SitemapPage = lazy(() => import("./components/SEO/SitemapPage.jsx"));
+const PrivacyPolicyPage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.PrivacyPolicy })));
+const TermsOfServicePage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.TermsOfService })));
+const AboutPage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.About })));
+const ContactPage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.Contact })));
 
 const SpeedInsights = lazy(() =>
   import('@vercel/speed-insights/react').then((mod) => ({ default: mod.SpeedInsights })),
@@ -90,6 +94,20 @@ function AppRouter() {
     window.addEventListener("popstate", handlePop);
     return () => window.removeEventListener("popstate", handlePop);
   }, []);
+
+  // Compliance & legal pages
+  if (normalizedPath === "/privacy-policy") {
+    return renderWithFallback(<PrivacyPolicyPage />);
+  }
+  if (normalizedPath === "/terms-of-service") {
+    return renderWithFallback(<TermsOfServicePage />);
+  }
+  if (normalizedPath === "/about") {
+    return renderWithFallback(<AboutPage />);
+  }
+  if (normalizedPath === "/contact") {
+    return renderWithFallback(<ContactPage />);
+  }
 
   // Public blog listing — /blog and /blog/
   if (normalizedPath === "/blog") {
