@@ -126,8 +126,8 @@ export default function PlacementCompleteGuidePage({ onNav }) {
       "headline": "Placement Preparation Guide 2026 – Complete Roadmap to Crack Interviews",
       "description": "The most comprehensive guide to campus placement preparation in India — covering the placement process, 6-month roadmap, company-specific tips, and AI mock interview strategies for freshers.",
       "author": { "@type": "Organization", "name": "PlacementDo" },
-      "publisher": { "@type": "Organization", "name": "PlacementDo", "url": "https://placementdo.app" },
-      "url": "https://placementdo.app/placement-preparation-complete-guide",
+      "publisher": { "@type": "Organization", "name": "PlacementDo", "url": "https://www.placementdo.app" },
+      "url": "https://www.placementdo.app/placement-preparation-complete-guide",
       "datePublished": "2026-04-25",
       "dateModified": "2026-04-25",
     });
