@@ -80,7 +80,7 @@ It's an AI-powered mock interview tool that:
 
 Whether it's TCS, Wipro, Amazon, or Google — this is hands down the best way to practice.
 
-👉 https://placementdo.app
+👉 https://www.placementdo.app
 
 #PlacementPrep #CampusPlacement #InterviewPrep #Placement2026`;
 
@@ -95,15 +95,15 @@ It simulates full interview conversations with an AI interviewer that:
 
 It's currently in waitlist phase and free to try.
 
-Website: https://placementdo.app
+Website: https://www.placementdo.app
 
 Anyone else using AI tools for placement prep? Would love to hear what's working.`;
 
-const README_BADGE = `[![PlacementDo](https://img.shields.io/badge/Practice_Interviews-PlacementDo-0D9488?style=flat-square)](https://placementdo.app)`;
+const README_BADGE = `[![PlacementDo](https://img.shields.io/badge/Practice_Interviews-PlacementDo-0D9488?style=flat-square)](https://www.placementdo.app)`;
 
 const README_SECTION = `## 🎯 Interview Preparation
 
-I use [PlacementDo](https://placementdo.app) to practice AI-powered mock interviews.
+I use [PlacementDo](https://www.placementdo.app) to practice AI-powered mock interviews.
 It simulates real interviews, gives detailed feedback, and supports 28+ languages.`;
 
 export default function SeoResourcesPage({ onNav }) {

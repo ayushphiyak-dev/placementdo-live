@@ -370,7 +370,7 @@ export default function BlogPostPage({ slug, onNav }) {
         "headline": post.title,
         "description": description,
         "author": { "@type": "Organization", "name": "PlacementDo" },
-        "publisher": { "@type": "Organization", "name": "PlacementDo", "url": "https://placementdo.app" },
+        "publisher": { "@type": "Organization", "name": "PlacementDo", "url": "https://www.placementdo.app" },
         "url": canonicalUrl,
         "image": articleImage,
         "datePublished": post.publishedAt || post.date || "",
@@ -431,7 +431,7 @@ export default function BlogPostPage({ slug, onNav }) {
     };
   }, [post]);
 
-  const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/blog/${slug}` : `https://placementdo.app/blog/${slug}`;
+  const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/blog/${slug}` : `https://www.placementdo.app/blog/${slug}`;
   const shareTitle = post ? encodeURIComponent(post.title) : "";
   const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
   const shareTwitter = `https://twitter.com/intent/tweet?text=${shareTitle}&url=${encodeURIComponent(shareUrl)}&via=Placementdo`;

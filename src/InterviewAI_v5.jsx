@@ -3163,7 +3163,7 @@ const Report = ({ onNav }) => {
                 <div>
                   <label style={{ marginBottom:8 }}>Report Link</label>
                   <div className="share-link-box">
-                    <span style={{ flex:1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>https://placementdo.app/reports/a7f2c9...</span>
+                    <span style={{ flex:1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>https://www.placementdo.app/reports/a7f2c9...</span>
                     <button onClick={handleCopyLink} className="btn-primary" style={{ fontSize:12, padding:"6px 14px", borderRadius:8, flexShrink:0 }}>
                       {linkCopied ? <><Check size={13}/> Copied!</> : "Copy"}
                     </button>
