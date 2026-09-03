@@ -97,16 +97,16 @@ function AppRouter() {
 
   // Compliance & legal pages
   if (normalizedPath === "/privacy-policy") {
-    return renderWithFallback(<PrivacyPolicyPage />);
+    return renderWithFallback(<PrivacyPolicyPage onNav={navigate} />);
   }
   if (normalizedPath === "/terms-of-service") {
-    return renderWithFallback(<TermsOfServicePage />);
+    return renderWithFallback(<TermsOfServicePage onNav={navigate} />);
   }
   if (normalizedPath === "/about") {
-    return renderWithFallback(<AboutPage />);
+    return renderWithFallback(<AboutPage onNav={navigate} />);
   }
   if (normalizedPath === "/contact") {
-    return renderWithFallback(<ContactPage />);
+    return renderWithFallback(<ContactPage onNav={navigate} />);
   }
 
   // Public blog listing — /blog and /blog/
