@@ -1,10 +1,77 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export const PrivacyPolicy = () => (
-  <motion.div initial={{ opacity:0,y:18 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.35 }} style={{ minHeight:"100vh", paddingTop:100, paddingBottom:80, background:"var(--slate-50)" }}>
-    <div style={{ maxWidth:800, margin:"0 auto", padding:"0 20px" }}>
-      <h1 className="brig" style={{ fontSize:"clamp(28px,4vw,36px)", fontWeight:700, color:"var(--slate)", marginBottom:20 }}>Privacy Policy</h1>
+const COMPLIANCE_NAV_LINKS = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Placement Guide', href: '/placement-preparation-complete-guide' },
+  { label: 'Resources', href: '/seo-resources' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const ComplianceLayout = ({ title, children, onNav }) => {
+  const navigate = (href) => {
+    if (typeof onNav === 'function') {
+      onNav(href);
+      return;
+    }
+    window.location.href = href;
+  };
+
+  return (
+    <motion.div initial={{ opacity:0,y:18 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.35 }} style={{ minHeight:"100vh", background:"var(--slate-50)" }}>
+      <a
+        href="#compliance-main-content"
+        style={{
+          position: 'fixed',
+          top: -48,
+          left: 12,
+          zIndex: 170,
+          padding: '10px 14px',
+          borderRadius: 10,
+          background: 'var(--slate)',
+          color: '#fff',
+          textDecoration: 'none',
+          fontSize: 13,
+          fontWeight: 600,
+        }}
+        onFocus={(event) => { event.currentTarget.style.top = '12px'; }}
+        onBlur={(event) => { event.currentTarget.style.top = '-48px'; }}
+      >
+        Skip to main content
+      </a>
+      <header>
+        <nav aria-label="Primary" style={{ position: 'sticky', top: 0, zIndex: 120, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '14px clamp(20px,5vw,44px)', background: 'rgba(250,250,248,.96)', borderBottom: '1px solid var(--border)', backdropFilter: 'blur(10px)' }}>
+          <a href="/" style={{ textDecoration: 'none', color: 'var(--slate)', fontWeight: 700, fontSize: 18 }} onClick={(event) => { event.preventDefault(); navigate('/'); }}>
+            Placement<span style={{ color: 'var(--teal)' }}>Do</span>
+          </a>
+          <ul style={{ display: 'flex', alignItems: 'center', gap: 4, listStyle: 'none', margin: 0, padding: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+            {COMPLIANCE_NAV_LINKS.map(({ label, href }) => (
+              <li key={href}>
+                <a
+                  href={href}
+                  style={{ fontSize: 14, fontWeight: 500, color: 'var(--slate-600)', padding: '6px 10px', borderRadius: 8, textDecoration: 'none', display: 'inline-block' }}
+                  onClick={(event) => { event.preventDefault(); navigate(href); }}
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
+      <main id="compliance-main-content" style={{ paddingTop: 28, paddingBottom: 80 }}>
+        <div style={{ maxWidth:800, margin:"0 auto", padding:"0 20px" }}>
+          <h1 className="brig" style={{ fontSize:"clamp(28px,4vw,36px)", fontWeight:700, color:"var(--slate)", marginBottom:20 }}>{title}</h1>
+          {children}
+        </div>
+      </main>
+    </motion.div>
+  );
+};
+
+export const PrivacyPolicy = ({ onNav }) => (
+  <ComplianceLayout title="Privacy Policy" onNav={onNav}>
       <p style={{ fontSize:14, color:"var(--slate-500)", marginBottom:30 }}>Last Updated: August 2026</p>
       
       <div className="card" style={{ padding:32, display:"flex", flexDirection:"column", gap:20 }}>
@@ -35,14 +102,11 @@ export const PrivacyPolicy = () => (
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We implement industry-standard encryption (AES-256 for data at rest, TLS 1.3 for data in transit). PlacementDo enforces a strict 16+ age limit for users of our platform. If you have any questions, you can reach us at <a href="mailto:support@placementdo.com" style={{ color:"var(--teal)" }}>support@placementdo.com</a>.</p>
         </div>
       </div>
-    </div>
-  </motion.div>
+  </ComplianceLayout>
 );
 
-export const TermsOfService = () => (
-  <motion.div initial={{ opacity:0,y:18 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.35 }} style={{ minHeight:"100vh", paddingTop:100, paddingBottom:80, background:"var(--slate-50)" }}>
-    <div style={{ maxWidth:800, margin:"0 auto", padding:"0 20px" }}>
-      <h1 className="brig" style={{ fontSize:"clamp(28px,4vw,36px)", fontWeight:700, color:"var(--slate)", marginBottom:20 }}>Terms of Service</h1>
+export const TermsOfService = ({ onNav }) => (
+  <ComplianceLayout title="Terms of Service" onNav={onNav}>
       <p style={{ fontSize:14, color:"var(--slate-500)", marginBottom:30 }}>Last Updated: August 2026</p>
       
       <div className="card" style={{ padding:32, display:"flex", flexDirection:"column", gap:20 }}>
@@ -61,15 +125,11 @@ export const TermsOfService = () => (
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Free accounts are supported by advertising from networks such as Google AdSense. By using the free tier, you agree to the display of these advertisements. Premium tiers (Pro, Elite) remove third-party display ads.</p>
         </div>
       </div>
-    </div>
-  </motion.div>
+  </ComplianceLayout>
 );
 
-export const About = () => (
-  <motion.div initial={{ opacity:0,y:18 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.35 }} style={{ minHeight:"100vh", paddingTop:100, paddingBottom:80, background:"var(--slate-50)" }}>
-    <div style={{ maxWidth:800, margin:"0 auto", padding:"0 20px" }}>
-      <h1 className="brig" style={{ fontSize:"clamp(28px,4vw,36px)", fontWeight:700, color:"var(--slate)", marginBottom:20 }}>About PlacementDo</h1>
-      
+export const About = ({ onNav }) => (
+  <ComplianceLayout title="About PlacementDo" onNav={onNav}>
       <div className="card" style={{ padding:32, display:"flex", flexDirection:"column", gap:20 }}>
         <h2 className="brig" style={{ fontSize:24, fontWeight:700, color:"var(--teal-dark)", marginBottom:10 }}>Democratizing Interview Prep</h2>
         <p style={{ fontSize:16, color:"var(--slate-600)", lineHeight:1.8 }}>
@@ -79,15 +139,13 @@ export const About = () => (
           By leveraging state-of-the-art Large Language Models and real-time voice synthesis, we've created a platform that simulates the exact pressure, pacing, and rigor of top-tier tech interviews (like FAANG). Our AI personas—ranging from the empathetic listener to the brutal stress-tester—ensure that you are ready for any dynamic on the big day.
         </p>
       </div>
-    </div>
-  </motion.div>
+  </ComplianceLayout>
 );
 
-export const Contact = () => (
-  <motion.div initial={{ opacity:0,y:18 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.35 }} style={{ minHeight:"100vh", paddingTop:100, paddingBottom:80, background:"var(--slate-50)" }}>
-    <div style={{ maxWidth:600, margin:"0 auto", padding:"0 20px" }}>
-      <h1 className="brig" style={{ fontSize:"clamp(28px,4vw,36px)", fontWeight:700, color:"var(--slate)", marginBottom:20 }}>Contact Us</h1>
+export const Contact = ({ onNav }) => (
+  <ComplianceLayout title="Contact Us" onNav={onNav}>
+    <div style={{ maxWidth:600 }}>
       <p style={{ fontSize:15, color:"var(--slate-500)", marginBottom:30 }}>Have a question, partnership inquiry, or need support? We'd love to hear from you. Email us directly at <a href="mailto:support@placementdo.app" style={{ color:"var(--teal)", textDecoration:"underline" }}>support@placementdo.app</a>.</p>
     </div>
-  </motion.div>
+  </ComplianceLayout>
 );
