@@ -79,7 +79,7 @@ const SUPPORT_PAGES = [
   { label: "Careers", href: "/careers", description: "Open roles and team information." },
   { label: "Privacy Policy", href: "/privacy-policy", description: "Privacy, data usage, and data protection details." },
   { label: "Terms of Service", href: "/terms-of-service", description: "Legal terms for using PlacementDo." },
-  { label: "SEO Resources", href: "/seo-resources", description: "Community support and share resources for PlacementDo." },
+  { label: "Free Resources", href: "/seo-resources", description: "Student-facing checklists, templates, and structured placement prep resources." },
   { label: "Interactive Demo", href: "/demo", description: "Embedded product walkthrough and quick demo." },
 ];
 
