@@ -76,30 +76,61 @@ export const PrivacyPolicy = ({ onNav }) => (
       
       <div className="card" style={{ padding:32, display:"flex", flexDirection:"column", gap:20 }}>
         <div>
-          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>1. Introduction & Data Collection</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Welcome to PlacementDo. We collect audio, text inputs, and CV documents you provide during mock interviews, as well as waitlist details when you sign up to be notified. This data is exclusively used to generate real-time AI feedback and comprehensive performance reports. We also collect basic account information (name, email) for billing and authentication purposes.</p>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>We do not sell or rent your personal data to third parties.</p>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>1. Introduction</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Welcome to PlacementDo ("we", "our", "us"). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, and share information when you use our website, join our waitlist, or access our AI-powered mock interview platform.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>By using PlacementDo, you acknowledge that your information is handled as described in this policy. If you do not agree with this policy, please discontinue use of the service.</p>
         </div>
         
         <div>
-          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>2. Third-party services & Advertising</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We use trusted third-party services to operate the platform, including cloud hosting providers, analytics tools, email delivery services, and third-party advertising partners (including Google AdSense).</p>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>2. Information We Collect</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We collect account details such as your name and email address when you create an account or join the waitlist. During interview sessions, we may process audio responses, text transcripts, uploaded resumes/CVs, and session preferences so we can generate personalized interview questions and feedback reports.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>We also collect technical and usage information like browser type, device characteristics, pages visited, feature interactions, approximate timestamps, and diagnostic logs. This helps us maintain service reliability, monitor performance, and improve product quality over time.</p>
         </div>
         
         <div>
-          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>3. Cookies and tracking</h2>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>3. How We Use Information</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We use collected information to provide and operate the PlacementDo platform, personalize interview simulations, generate AI-powered scoring and feedback, and deliver support communications. Account and billing information may be used for authentication, transaction processing, and subscription management.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>We may also use aggregated or de-identified data to analyze product trends, improve model prompting quality, optimize user experience, and protect the platform from abuse. We do not sell or rent personal data to third parties.</p>
+        </div>
+
+        <div>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>4. Third-Party Services and Advertising</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We work with trusted third-party providers for hosting, analytics, customer support, payments, email delivery, and advertising. Free-tier experiences may display ads through advertising partners including Google AdSense. These providers may process limited data on our behalf under contractual and legal safeguards.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>Third-party providers operate under their own privacy policies. We encourage you to review those policies, particularly for ad personalization controls and cookie preferences.</p>
+        </div>
+
+        <div>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>5. Cookies and Tracking Technologies</h2>
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We use essential cookies for session management, authentication, and security. We also use analytics cookies to understand aggregate product usage patterns.</p>
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>Additionally, third-party vendors, including Google, use cookies (such as the DART cookie) to serve ads based on a user's prior visits to PlacementDo or other websites on the internet. Users may opt out of personalized advertising at any time by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>Google Ads Settings</a> or <a href="https://www.aboutads.info" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>www.aboutads.info</a>.</p>
         </div>
         
         <div>
-          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>4. Data Retention & Privacy Rights</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We implement a strict 12-month session retention policy. Interview reports, transcripts, and related performance metrics are retained for up to 12 months, after which they are automatically deleted. We comply with applicable data protection laws, including the GDPR and CCPA. Users have the right to access, rectify, or erase their personal data.</p>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>6. Data Retention</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We retain personal information only as long as necessary for the purposes described in this policy, to satisfy legal obligations, and to resolve disputes. Interview reports, transcripts, and related performance records are retained for up to 12 months unless a longer period is legally required.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>You may request deletion of your account data by contacting our support team. We process verified deletion requests within a reasonable timeline, subject to compliance, security, and recordkeeping requirements.</p>
         </div>
 
         <div>
-          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>5. Security & Age Limits</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We implement industry-standard encryption (AES-256 for data at rest, TLS 1.3 for data in transit). PlacementDo enforces a strict 16+ age limit for users of our platform. If you have any questions, you can reach us at <a href="mailto:support@placementdo.com" style={{ color:"var(--teal)" }}>support@placementdo.com</a>.</p>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>7. Your Privacy Rights</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Depending on your region, you may have rights to access, correct, delete, or restrict processing of your personal data. You may also have the right to object to certain uses of data, request portability, and withdraw consent where processing is consent-based.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>To exercise these rights, contact us using the details below. We may need to verify your identity before processing requests to protect your account and prevent unauthorized access.</p>
+        </div>
+
+        <div>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>8. Data Security</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We apply industry-standard safeguards including encryption in transit, access controls, monitoring, and secure infrastructure practices to protect personal data. While no system can guarantee absolute security, we continuously review our controls to reduce risk and improve resilience.</p>
+        </div>
+
+        <div>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>9. Children&apos;s Privacy</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>PlacementDo is intended for users aged 16 and above. We do not knowingly collect personal information from children below this age threshold. If you believe a child has provided personal data, contact us so we can review and remove the information where appropriate.</p>
+        </div>
+
+        <div>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>10. Policy Updates and Contact</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We may update this policy periodically to reflect product changes, legal requirements, or operational updates. Any material updates will be posted on this page with a revised "Last Updated" date.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>If you have any questions about this Privacy Policy or your data, contact us at <a href="mailto:support@placementdo.com" style={{ color:"var(--teal)" }}>support@placementdo.com</a>.</p>
         </div>
       </div>
   </ComplianceLayout>
