@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState, useCallback } from 'react';
 import GlobalStyles from './GlobalStyles.jsx';
+import CookieConsent from './components/Privacy/CookieConsent.jsx';
 const InterviewAI = lazy(() => import("./InterviewAI_v5.jsx"));
 const BlogPage = lazy(() => import("./components/Blog/BlogPage.jsx"));
 const BlogPostPage = lazy(() => import("./components/Blog/BlogPostPage.jsx"));
@@ -148,17 +149,31 @@ function AppRouter() {
 
 export default function App() {
   const [enableTelemetry, setEnableTelemetry] = useState(false);
+  const [optionalConsent, setOptionalConsent] = useState(() => {
+    try { return window.localStorage.getItem('placementdo:cookie-consent') === 'accepted'; } catch { return false; }
+  });
 
   useEffect(() => {
     const id = window.setTimeout(() => setEnableTelemetry(true), 1200);
     return () => window.clearTimeout(id);
   }, []);
 
+  useEffect(() => {
+    const handleConsent = (event) => setOptionalConsent(event.detail === 'accepted');
+    window.addEventListener('placementdo:cookie-consent-change', handleConsent);
+    return () => window.removeEventListener('placementdo:cookie-consent-change', handleConsent);
+  }, []);
+
   return (
     <>
       <GlobalStyles />
       <AppRouter />
-      {enableTelemetry && (
+      <CookieConsent onPrivacy={() => {
+        window.history.pushState({}, "", "/privacy-policy");
+        window.dispatchEvent(new PopStateEvent("popstate"));
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }} />
+      {enableTelemetry && optionalConsent && (
         <Suspense fallback={<RouteLoadingFallback />}>
           <SpeedInsights />
           <Analytics />
@@ -167,3 +182,4 @@ export default function App() {
     </>
   );
 }
+
