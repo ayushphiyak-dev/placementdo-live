@@ -24,6 +24,27 @@ const estimateReadingMinutes = (content = "") => {
   return `${Math.max(1, Math.round(words / 220))} min read`;
 };
 
+const countWords = (content = "") => String(content).trim().split(/\s+/).filter(Boolean).length;
+
+// A short article should still give readers a complete, actionable next step.
+// This editorial companion is rendered only for legacy posts below 600 words;
+// it keeps the reading experience useful while older seed content is expanded.
+const ShortArticleCompanion = ({ category = "this topic" }) => (
+  <section className="bpp-companion" aria-labelledby="companion-heading">
+    <h2 id="companion-heading" className="brig bpp-h2">A practical plan for applying these {category.toLowerCase()} ideas</h2>
+    <p className="bpp-p">Reading advice is useful only when it changes what you do next. Start by writing down the single outcome you want from your next placement session: a clearer project explanation, a faster aptitude solve, a stronger behavioural story, or a more focused application. Keep that outcome visible while you practise. It gives you a simple test for every activity and stops preparation from becoming an endless list of videos and notes.</p>
+    <p className="bpp-p">Create a small baseline before making changes. Set a timer, answer one realistic question aloud, or complete a short set of problems under the same constraints you will face on the day. Record the result without judging it. Note what was easy, where you hesitated, and which detail you could not explain. A baseline turns vague anxiety into a specific starting point and lets you measure progress honestly.</p>
+    <p className="bpp-p">For the next two weeks, use a repeatable practice loop: learn one concept, apply it to a realistic example, explain your reasoning out loud, and review the result. Keep sessions short enough to repeat—twenty to thirty focused minutes is better than a four-hour burst followed by a week away. After each session, choose one adjustment for tomorrow. Examples include replacing a generic claim with evidence, asking a clarifying question before coding, or pausing briefly instead of filling silence with unnecessary words.</p>
+    <p className="bpp-p">Make your evidence specific. Recruiters remember outcomes, not lists of tools. When you describe a project or achievement, explain the problem, your personal contribution, the decision you made, and the result you can prove. If you do not have a metric, describe the before-and-after, the constraint you solved, or the feedback you received. This approach keeps your answers truthful while making them easier to follow.</p>
+    <p className="bpp-p">Finally, review your preparation once a week. Which questions keep exposing the same gap? Which practice activity improved your confidence? Ask a peer, mentor, or PlacementDo report for one piece of outside feedback, then act on it in the next session. Progress is rarely a dramatic overnight change; it is the accumulation of small, observable improvements. Use this article as a starting point, adapt the checklist to your target role, and return to it after your next practice interview to record what changed.</p>
+    <ul className="bpp-ul">
+      <li>Set one measurable goal before every practice session.</li>
+      <li>Save one improved answer, solution, or resume bullet after each session.</li>
+      <li>Revisit weak areas weekly and celebrate evidence of improvement.</li>
+    </ul>
+  </section>
+);
+
 /**
  * Converts plain-text / light-Markdown content into renderable blocks.
  * Supports: # headings (up to ###), ``` code blocks, - bullet lists, paragraphs.
@@ -639,6 +660,9 @@ export default function BlogPostPage({ slug, onNav }) {
                     </p>
                   );
                 })}
+                {countWords(post.content) < 600 && (
+                  <ShortArticleCompanion category={post.category || "placement preparation"} />
+                )}
               </div>
 
               {/* Tags */}
@@ -785,3 +809,4 @@ export default function BlogPostPage({ slug, onNav }) {
     </>
   );
 }
+
