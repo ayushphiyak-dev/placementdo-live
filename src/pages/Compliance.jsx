@@ -123,12 +123,22 @@ export const PrivacyPolicy = ({ onNav }) => (
         </div>
 
         <div>
-          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>9. Children&apos;s Privacy</h2>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>9. Data Sharing and International Transfers</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We share information only with service providers that help us host the website, authenticate accounts, process payments, send email, provide analytics, deliver advertisements, or support our customers. These providers may access information only to perform services for us and must protect it. We do not sell personal information or use interview recordings for advertising. Some providers may process data outside India; when that happens, we use contractual, technical, and organisational safeguards appropriate to applicable law.</p>
+        </div>
+
+        <div>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>10. Your Choices and Privacy Rights</h2>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>You can use the cookie banner to accept optional analytics and advertising cookies or choose essential cookies only. Depending on where you live, you may request access, correction, deletion, portability, restriction, or objection to processing, and you may withdraw consent where consent is the legal basis. We verify requests and respond within the period required by law.</p>
+        </div>
+
+        <div>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>11. Children&apos;s Privacy</h2>
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>PlacementDo is intended for users aged 16 and above. We do not knowingly collect personal information from children below this age threshold. If you believe a child has provided personal data, contact us so we can review and remove the information where appropriate.</p>
         </div>
 
         <div>
-          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>10. Policy Updates and Contact</h2>
+          <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>12. Policy Updates and Contact</h2>
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We may update this policy periodically to reflect product changes, legal requirements, or operational updates. Any material updates will be posted on this page with a revised "Last Updated" date.</p>
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>If you have any questions about this Privacy Policy or your data, contact us at <a href="mailto:support@placementdo.com" style={{ color:"var(--teal)" }}>support@placementdo.com</a>.</p>
         </div>
@@ -180,3 +190,4 @@ export const Contact = ({ onNav }) => (
     </div>
   </ComplianceLayout>
 );
+
