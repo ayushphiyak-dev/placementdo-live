@@ -34,6 +34,16 @@
   ],
   "redirects": [
     {
+      "source": "/terms-of-service.html",
+      "destination": "/terms-of-service",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy.html",
+      "destination": "/privacy-policy",
+      "permanent": true
+    },
+    {
       "source": "https://placementdo.app/(.*)",
       "destination": "https://www.placementdo.app/$1",
       "permanent": true
@@ -58,4 +68,3 @@
     }
   ]
 }
-
