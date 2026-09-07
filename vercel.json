@@ -42,7 +42,15 @@
   "rewrites": [
     {
       "source": "/privacy-policy",
-      "destination": "/privacy-policy.html"
+      "destination": "/privacy-policy/index.html"
+    },
+    {
+      "source": "/terms-of-service",
+      "destination": "/terms-of-service/index.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog/index.html"
     },
     {
       "source": "/(.*)",
