@@ -43,21 +43,37 @@ const SEO_ROUTE_COMPONENTS = {
 };
 
 const RouteLoadingFallback = () => (
-  <div
-    role="status"
-    aria-live="polite"
-    style={{
-      minHeight: "48vh",
-      display: "grid",
-      placeItems: "center",
-      padding: "32px 20px",
-      color: "var(--slate-500)",
-      fontSize: 14,
-      background: "var(--ivory)",
-    }}
-  >
-    Loading…
-  </div>
+  <main aria-busy="true" style={{ maxWidth: 960, margin: "0 auto", padding: "56px 24px 80px", color: "#334155", fontFamily: "system-ui, sans-serif", lineHeight: 1.75 }}>
+    <article>
+      <h1 style={{ color: "#0F172A", fontSize: "clamp(32px, 5vw, 58px)", lineHeight: 1.1, letterSpacing: "-0.03em", margin: "0 0 20px" }}>PlacementDo — AI Mock Interview Platform for Campus Placement Preparation</h1>
+      <p>PlacementDo is a focused practice platform for students and early-career professionals preparing for aptitude tests, technical interviews, behavioural rounds, and campus recruitment. The site combines practical study guides with realistic mock interview practice so you can turn knowledge into clear, confident answers.</p>
+      <p>Good preparation is more than memorising a list of expected questions. A strong candidate understands the role, can explain their own work, checks assumptions aloud, and stays composed when a follow-up question changes direction. PlacementDo helps you rehearse those behaviours before the real interview, then gives you a repeatable way to review what worked and what needs attention.</p>
+      <h2 style={{ color: "#0F172A", fontSize: 26, lineHeight: 1.2, margin: "42px 0 12px" }}>How to prepare for a complete placement process</h2>
+      <h3 style={{ color: "#0F172A", fontSize: 19, margin: "24px 0 8px" }}>Start with the screening round</h3>
+      <p>Most campus drives begin with quantitative aptitude, logical reasoning, verbal ability, or a coding assessment. Make a short diagnostic set and record the topics that cost you time. Practise with a timer, learn the common patterns, and review incorrect answers the same day. Speed improves when you understand why a method works, not when you rush through random questions.</p>
+      <h3 style={{ color: "#0F172A", fontSize: 19, margin: "24px 0 8px" }}>Build technical depth with evidence</h3>
+      <p>Technical interviewers usually explore the projects and skills on your resume. Choose two projects and prepare a simple story for each: the problem, your specific contribution, the design decision you made, the trade-off you accepted, and the result. Be ready to sketch the architecture, explain how you tested it, and describe what you would improve with another week. Honest limits are more credible than exaggerated claims.</p>
+      <h3 style={{ color: "#0F172A", fontSize: 19, margin: "24px 0 8px" }}>Practise behavioural answers</h3>
+      <p>For HR and behavioural questions, use the STAR structure—Situation, Task, Action, Result—without sounding scripted. Prepare stories about teamwork, conflict, failure, leadership, and learning quickly. Keep the context brief, spend most of the answer on your actions, and finish with a measurable outcome or lesson. Record yourself so you can hear rambling, filler words, and places where your example needs a clearer result.</p>
+      <h2 style={{ color: "#0F172A", fontSize: 26, lineHeight: 1.2, margin: "42px 0 12px" }}>What makes deliberate practice useful</h2>
+      <p>A mock interview is most useful when it is connected to the information you provide. Select a target role and company, add only the CV context needed for relevant questions, and practise with different interviewer styles. Follow-up questions should respond to your answer rather than simply reading the next item in a list. That gives you a safer place to experience pressure, ask clarifying questions, think aloud, and recover when you do not immediately know the answer.</p>
+      <p>After a session, review the feedback as a plan rather than a verdict. Pick one improvement target for the next attempt—answer structure, technical precision, pace, or confidence—and repeat the question after you have revised it. A weekly record of scores and notes makes progress visible and helps you focus limited preparation time on the gaps that matter for your target role.</p>
+      <p>PlacementDo is intended to complement fundamentals, not replace them. Use the guides and question banks to learn concepts, practise coding and aptitude separately, and research the companies you are applying to. Then use a mock interview to test whether you can explain that knowledge in a conversation. This combination develops both competence and communication, which are evaluated together in real hiring processes.</p>
+      <p>A simple weekly schedule keeps this work manageable. Spend two sessions learning or revising concepts, one session solving timed aptitude or coding questions, and one session completing a full mock interview. Reserve a few minutes after each session to write what you will change next time. As interview dates approach, shift more time toward company-specific research and realistic simulations, while keeping one light revision day for rest and confidence. Consistency matters more than a perfect timetable: a routine you can repeat for several weeks will produce stronger recall and calmer delivery than last-minute cramming.</p>
+      <p>When a page finishes loading, you can continue to the interactive experience or choose a written guide. Until then, this overview remains available so visitors and search engines can understand what PlacementDo offers without waiting for a client-side bundle. The full site adds navigation, account controls, consent choices, and personalised practice after the route has loaded.</p>
+      <h2 style={{ color: "#0F172A", fontSize: 26, lineHeight: 1.2, margin: "42px 0 12px" }}>Continue your preparation</h2>
+      <p>Use these free resources to build a structured plan, and return to the blog as your target companies and interview dates become clearer. Verify company-specific details against current employer instructions.</p>
+      <nav aria-label="Helpful resources" style={{ display: "flex", flexWrap: "wrap", gap: 14, marginTop: 30, paddingTop: 20, borderTop: "1px solid #E2E8F0" }}>
+        <a href="/blog" style={{ color: "#0F766E", fontWeight: 600 }}>Interview preparation blog</a>
+        <a href="/placement-preparation-complete-guide" style={{ color: "#0F766E", fontWeight: 600 }}>Placement preparation guide</a>
+        <a href="/aptitude-questions" style={{ color: "#0F766E", fontWeight: 600 }}>Aptitude questions</a>
+        <a href="/coding-interview-questions" style={{ color: "#0F766E", fontWeight: 600 }}>Coding interview questions</a>
+        <a href="/privacy-policy" style={{ color: "#0F766E", fontWeight: 600 }}>Privacy Policy</a>
+        <a href="/terms-of-service" style={{ color: "#0F766E", fontWeight: 600 }}>Terms of Service</a>
+        <a href="/contact" style={{ color: "#0F766E", fontWeight: 600 }}>Contact</a>
+      </nav>
+    </article>
+  </main>
 );
 
 const normalizeRoutePath = (value) => {
