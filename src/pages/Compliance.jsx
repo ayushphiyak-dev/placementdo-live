@@ -189,10 +189,10 @@ export const About = ({ onNav }) => (
       <div className="card" style={{ padding:32, display:"flex", flexDirection:"column", gap:20 }}>
         <h2 className="brig" style={{ fontSize:24, fontWeight:700, color:"var(--teal-dark)", marginBottom:10 }}>Democratizing Interview Prep</h2>
         <p style={{ fontSize:16, color:"var(--slate-600)", lineHeight:1.8 }}>
-          PlacementDo was founded with a single mission: to level the playing field in technical and behavioral interviewing. For too long, candidates who couldn't afford expensive coaching or didn't have industry connections were at a severe disadvantage. We believe everyone deserves access to elite-level interview preparation.
+          PlacementDo is being developed to make technical and behavioral interview practice easier to access. The product focuses on guided rehearsal, role-aware prompts, and feedback that helps candidates decide what to practise next. It is an educational tool, not a recruiting agency or a substitute for human coaching.
         </p>
         <p style={{ fontSize:16, color:"var(--slate-600)", lineHeight:1.8 }}>
-          By leveraging state-of-the-art Large Language Models and real-time voice synthesis, we've created a platform that simulates the exact pressure, pacing, and rigor of top-tier tech interviews (like FAANG). Our AI personas—ranging from the empathetic listener to the brutal stress-tester—ensure that you are ready for any dynamic on the big day.
+          The product combines language and voice models to create interactive practice sessions. Personas can vary the tone and follow-up style, but no simulation can reproduce every employer's process or ensure readiness for a particular interview. Pair practice with the current job description, official employer guidance, and human feedback.
         </p>
       </div>
   </ComplianceLayout>
