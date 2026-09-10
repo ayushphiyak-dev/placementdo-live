@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /signin
+Disallow: /signup
+Disallow: /interview
+Disallow: /report
+Disallow: /dashboard
+Disallow: /reports
+Disallow: /progress
+Disallow: /avatars
+Disallow: /settings
+Disallow: /support
 
-Sitemap: https://www.placementdo.app/sitemap.xml
+Sitemap: https://placementdo.app/sitemap.xml
+
