@@ -179,7 +179,11 @@ function AppRouter() {
 export default function App() {
   const [enableTelemetry, setEnableTelemetry] = useState(false);
   const [optionalConsent, setOptionalConsent] = useState(() => {
-    try { return window.localStorage.getItem('placementdo:cookie-consent') === 'accepted'; } catch { return false; }
+    try {
+      const value = window.localStorage.getItem('placementdo:cookie-consent');
+      if (value === 'accepted') return true;
+      return Boolean(JSON.parse(value || '{}')?.analytics);
+    } catch { return false; }
   });
 
   useEffect(() => {
@@ -188,7 +192,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const handleConsent = (event) => setOptionalConsent(event.detail === 'accepted');
+    const handleConsent = (event) => setOptionalConsent(event.detail?.analytics === true);
     window.addEventListener('placementdo:cookie-consent-change', handleConsent);
     return () => window.removeEventListener('placementdo:cookie-consent-change', handleConsent);
   }, []);
