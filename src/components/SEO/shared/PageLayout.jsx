@@ -313,7 +313,7 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
                 <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>Placement<span style={{ color: "var(--teal-mid)" }}>Do</span></span>
               </div>
               <p className="seo-footer-brand-desc">
-                PlacementDo is India's AI-powered placement preparation platform — helping freshers crack campus placement at TCS, Infosys, Wipro, Accenture, and top tech companies. Practice smarter. Land faster.
+                PlacementDo is an AI-powered placement preparation platform with interview practice, study guides, and structured feedback for early-career candidates.
               </p>
             </div>
             <div>
@@ -336,11 +336,11 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
           <div className="seo-footer-bottom">
             <span className="seo-footer-copy">© 2026 PlacementDo. All rights reserved.</span>
             <div style={{ display: "flex", gap: 16 }}>
-              {[{ label: "Privacy", href: "/privacy-policy" }, { label: "Terms", href: "/terms-of-service" }, { label: "Sitemap", href: "/sitemap" }].map(({ label, href }) => (
-                <button key={label} onClick={() => navigate(href)}
-                  style={{ fontSize: 12, color: "rgba(255,255,255,.25)", background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}
+              {[{ label: "Privacy", href: "/privacy-policy" }, { label: "Terms", href: "/terms-of-service" }, { label: "Disclaimer", href: "/disclaimer" }, { label: "Sitemap", href: "/sitemap" }].map(({ label, href }) => (
+                <a key={label} href={href} onClick={(e) => { e.preventDefault(); navigate(href); }}
+                  style={{ fontSize: 12, color: "rgba(255,255,255,.45)", cursor: "pointer", fontFamily: "'DM Sans',sans-serif", textDecoration: "none" }}
                   onMouseEnter={e => e.currentTarget.style.color = "rgba(255,255,255,.6)"}
-                  onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,.25)"}>{label}</button>
+                  onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,.45)"}>{label}</a>
               ))}
             </div>
           </div>
@@ -349,3 +349,4 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
     </>
   );
 }
+
