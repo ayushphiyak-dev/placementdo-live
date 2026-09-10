@@ -91,7 +91,7 @@ const STEPS = [
   {
     icon: "💡",
     title: "3. Practice Aptitude Daily",
-    description: "Quantitative aptitude, logical reasoning, and verbal ability form 40–60% of most campus placement online tests. 30 minutes daily for 2 months makes a huge difference.",
+    description: "Quantitative aptitude, logical reasoning, and verbal ability are common parts of campus placement online tests. A short, consistent daily routine helps you identify gaps and improve timing.",
     tags: ["Quant", "Logical", "Verbal"],
   },
   {
@@ -237,7 +237,7 @@ export default function PlacementPreparationPage({ onNav }) {
             <p>
               Campus placements in India typically follow a structured multi-round format. Most companies begin with an online assessment
               test that evaluates your aptitude, coding ability, and sometimes English communication skills. Clearing this is the
-              first gate — often 40–70% of candidates are eliminated here.
+              first gate, and it can be highly selective depending on the employer and test cohort.
             </p>
             <h3>Online Assessment Round</h3>
             <p>
