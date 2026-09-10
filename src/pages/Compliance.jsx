@@ -66,6 +66,21 @@ const ComplianceLayout = ({ title, children, onNav }) => {
           {children}
         </div>
       </main>
+      <footer style={{ borderTop:'1px solid var(--border)', padding:'24px 20px', textAlign:'center', color:'var(--slate-500)', fontSize:13 }}>
+        <p style={{ margin:'0 0 10px' }}>© 2026 PlacementDo. Educational preparation resources; no job outcome is guaranteed.</p>
+        <nav aria-label="Legal navigation" style={{ display:'flex', justifyContent:'center', gap:16, flexWrap:'wrap' }}>
+          {[
+            ['Home', '/'],
+            ['About', '/about'],
+            ['Contact', '/contact'],
+            ['Privacy Policy', '/privacy-policy'],
+            ['Terms of Service', '/terms-of-service'],
+            ['Disclaimer', '/disclaimer'],
+          ].map(([label, href]) => (
+            <a key={href} href={href} onClick={(event) => { event.preventDefault(); navigate(href); }} style={{ color:'var(--teal)', fontWeight:600 }}>{label}</a>
+          ))}
+        </nav>
+      </footer>
     </motion.div>
   );
 };
@@ -140,7 +155,7 @@ export const PrivacyPolicy = ({ onNav }) => (
         <div>
           <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>12. Policy Updates and Contact</h2>
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We may update this policy periodically to reflect product changes, legal requirements, or operational updates. Any material updates will be posted on this page with a revised "Last Updated" date.</p>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>If you have any questions about this Privacy Policy or your data, contact us at <a href="mailto:support@placementdo.com" style={{ color:"var(--teal)" }}>support@placementdo.com</a>.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>If you have any questions about this Privacy Policy or your data, contact us at <a href="mailto:support@placementdo.app" style={{ color:"var(--teal)" }}>support@placementdo.app</a>.</p>
         </div>
       </div>
   </ComplianceLayout>
@@ -190,4 +205,24 @@ export const Contact = ({ onNav }) => (
     </div>
   </ComplianceLayout>
 );
+
+export const Disclaimer = ({ onNav }) => (
+  <ComplianceLayout title="PlacementDo Disclaimer" onNav={onNav}>
+    <div className="card" style={{ padding:32, display:"flex", flexDirection:"column", gap:20 }}>
+      <section>
+        <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Educational information only</h2>
+        <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>PlacementDo provides interview and placement-preparation resources. Guides, examples, mock questions, and AI-generated feedback are for practice and general information; they are not legal, financial, medical, recruitment, or career advice.</p>
+      </section>
+      <section>
+        <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>No hiring guarantee</h2>
+        <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Using PlacementDo does not guarantee an interview, selection, salary, promotion, or other career result. AI feedback may be incomplete or incorrect and is not an employer assessment.</p>
+      </section>
+      <section>
+        <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Verify current information</h2>
+        <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Company processes, eligibility rules, assessment formats, and dates can change. Confirm time-sensitive information against the employer's current job description and official instructions. Contact <a href="mailto:support@placementdo.app" style={{ color:"var(--teal)" }}>support@placementdo.app</a> if you find a specific, verifiable correction.</p>
+      </section>
+    </div>
+  </ComplianceLayout>
+);
+
 
