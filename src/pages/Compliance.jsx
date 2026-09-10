@@ -117,7 +117,7 @@ export const PrivacyPolicy = ({ onNav }) => (
         <div>
           <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>5. Cookies and Tracking Technologies</h2>
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We use essential cookies for session management, authentication, and security. We also use analytics cookies to understand aggregate product usage patterns.</p>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>Additionally, third-party vendors, including Google, use cookies (such as the DART cookie) to serve ads based on a user's prior visits to PlacementDo or other websites on the internet. Users may opt out of personalized advertising at any time by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>Google Ads Settings</a> or <a href="https://www.aboutads.info" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>www.aboutads.info</a>.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>If advertising is enabled for your account and region, third-party vendors including Google may use cookies (such as the DART cookie) to serve ads based on a user's prior visits to PlacementDo or other websites. Optional advertising scripts remain disabled until you choose them in the consent controls. You can opt out of personalised advertising at any time through <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>Google Ads Settings</a> or <a href="https://www.aboutads.info" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>www.aboutads.info</a>.</p>
         </div>
         
         <div>
@@ -178,7 +178,7 @@ export const TermsOfService = ({ onNav }) => (
         
         <div>
           <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>3. Subscriptions and Advertising</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Free accounts are supported by advertising from networks such as Google AdSense. By using the free tier, you agree to the display of these advertisements. Premium tiers (Pro, Elite) remove third-party display ads.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Free accounts may be supported by advertising from networks such as Google AdSense when advertising is enabled for the relevant account and region. Optional advertising scripts require your consent where applicable. Premium tiers may offer an ad-free experience as described at the time of purchase.</p>
         </div>
       </div>
   </ComplianceLayout>
