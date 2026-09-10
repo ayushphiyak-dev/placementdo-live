@@ -285,7 +285,7 @@ export default function PlacementPreparationPage({ onNav }) {
 
         <CTABlock
           heading="Practice with AI-Powered Mock Interviews"
-          subtext="Get real-time feedback on your answers, communication, and problem-solving approach. Used by 2,400+ students preparing for campus placements."
+              subtext="Get structured feedback on your answers, communication, and problem-solving approach while you prepare for campus placements."
           buttonLabel="Start practicing free"
           onNav={onNav}
           buttonHref="/dashboard"
@@ -294,3 +294,4 @@ export default function PlacementPreparationPage({ onNav }) {
     </PageLayout>
   );
 }
+
