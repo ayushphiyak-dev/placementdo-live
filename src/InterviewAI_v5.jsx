@@ -1073,7 +1073,7 @@ const Landing = ({ onNav, onCheckout }) => (
       </motion.h1>
       <motion.p initial={{ opacity:0,y:20 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.55,delay:0.22 }}
         style={{ fontSize:"clamp(15px,2vw,19px)", color:"var(--slate-500)", maxWidth:600, lineHeight:1.72, marginBottom:36 }}>
-        A hyper-realistic AI interviewer that knows your CV, the company, and the exact role. Multi-language support. Detailed scoring. Ruthlessly honest feedback.{" "}
+        An AI practice interviewer that can use your CV context and target role. Explore available languages, structured scoring, and candid feedback during rehearsal.{" "}
         <strong style={{ color:"var(--slate-700)" }}>Launching soon.</strong>
       </motion.p>
       <motion.div initial={{ opacity:0,y:16 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.5,delay:0.35 }}
@@ -1141,9 +1141,9 @@ const Landing = ({ onNav, onCheckout }) => (
     <section className="sec-pad" style={{ padding:"100px clamp(20px,5vw,60px)", maxWidth:1100, margin:"0 auto" }}>
       <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }} style={{ textAlign:"center", marginBottom:56 }}>
         <Tag color="teal">Process</Tag>
-        <h2 className="brig" style={{ fontSize:"clamp(26px,4.5vw,50px)", fontWeight:700, color:"var(--slate)", letterSpacing:"-0.03em", marginTop:14, lineHeight:1.1 }}>From zero to hired in four steps</h2>
+        <h2 className="brig" style={{ fontSize:"clamp(26px,4.5vw,50px)", fontWeight:700, color:"var(--slate)", letterSpacing:"-0.03em", marginTop:14, lineHeight:1.1 }}>From preparation to confident interviews in four steps</h2>
         <p style={{ fontSize:16, color:"var(--slate-500)", maxWidth:700, margin:"16px auto 0", lineHeight:1.7 }}>
-          Preparing for behavioral and technical interviews shouldn't mean reciting answers to yourself in a mirror. Our end-to-end platform replicates the exact conditions of a tier-one tech interview, giving you actionable, scored feedback before you ever sit in front of a real hiring manager.
+          Preparing for behavioral and technical interviews shouldn't mean reciting answers to yourself in a mirror. Our practice workflow combines role-aware prompts with structured feedback so you can rehearse communication before meeting a hiring team.
         </p>
       </motion.div>
       <div className="step-grid">
@@ -1151,7 +1151,7 @@ const Landing = ({ onNav, onCheckout }) => (
           { icon:<Upload size={22}/>, step:"01", title:"Upload your CV & Target Role", desc:"Upload your PDF resume. Our natural language processing engine parses your exact career trajectory, project experience, and claimed technical skills to generate hyper-relevant interview questions specifically targeted at your background and the requirements of your target job description.", color:"var(--teal)" },
           { icon:<Building2 size={22}/>, step:"02", title:"Configure Company & Interview Style", desc:"Choose the company, role, seniority level, and interview focus that match your preparation goals. You can also select from six AI personas to practise different interviewer temperaments, from the Friendly Peer to the Stress-Tester.", color:"#0369A1" },
           { icon:<Video size={22}/>, step:"03", title:"Experience a Live AI Interview", desc:"Enter a live, face-to-face practice session with your AI interviewer. The AI can respond to your answers, ask follow-up questions, and introduce realistic pressure so you can rehearse communication before the real interview.", color:"#7C3AED" },
-          { icon:<Award size={22}/>, step:"04", title:"Review Your Analytics & Get Hired", desc:"Immediately after the session concludes, receive a comprehensive, scored report. The AI breaks down your performance across 10 dimensions including STAR method adherence, technical depth, communication clarity, and filler word frequency. We provide a concrete, step-by-step path to improve your weakest areas before your actual interview.", color:"var(--amber)" },
+          { icon:<Award size={22}/>, step:"04", title:"Review Your Feedback & Plan Next Practice", desc:"Immediately after the session concludes, receive a structured report. The AI highlights dimensions such as STAR method adherence, technical depth, communication clarity, and filler word frequency, then suggests practical next steps for your next practice session.", color:"var(--amber)" },
         ].map(({ icon, step, title, desc, color }, i) => (
           <motion.div key={step} initial={{ opacity:0,y:28 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.45,delay:i*0.09 }} viewport={{ once:true }}
             className="card card-lift" style={{ padding:"28px 24px" }}>
@@ -1177,15 +1177,15 @@ const Landing = ({ onNav, onCheckout }) => (
           <Tag color="slate">Why PlacementDo</Tag>
           <h2 className="brig" style={{ fontSize:"clamp(24px,4vw,46px)", fontWeight:700, letterSpacing:"-0.03em", color:"var(--slate)", marginTop:14, lineHeight:1.1 }}>The unfair advantage in a competitive market</h2>
           <p style={{ fontSize:16, color:"var(--slate-500)", maxWidth:700, margin:"14px auto 0", lineHeight:1.65 }}>
-            PlacementDo is built on the exact same generative AI infrastructure currently used to train Fortune 500 hiring managers and recruiters. We have reverse-engineered the rubrics used by FAANG companies to give you an unparalleled preparation experience.
+            PlacementDo is an independent practice product. It uses language and voice models to create role-aware prompts and structured feedback; it is not affiliated with, endorsed by, or trained for any particular employer.
           </p>
         </motion.div>
         <div className="feature-grid stagger">
           {[
-            { icon:<Brain size={20}/>,    title:"CV-contextual questions",      desc:"Our AI doesn't ask generic questions. It reads your uploaded resume and generates hyper-specific inquiries about your exact projects, past employers, technical claims, and career gaps — exactly like a real hiring manager would.", color:"var(--teal)"  },
-            { icon:<Globe size={20}/>,    title:"28 languages + code-switching", desc:"Practice in English, Mandarin, Hindi, French, Arabic, Spanish, and 22 more languages. Our engine natively supports mid-interview code-switching, perfectly mimicking the reality of multinational corporate interviews.", color:"#0369A1"     },
-            { icon:<Zap size={20}/>,      title:"Real-time filler detection",    desc:"Get flagged instantly on filler words ('um', 'like', 'you know'), speaking pace, and over-qualification as they happen. Fix these subconscious bad habits in our simulator before they cost you the job offer.", color:"var(--amber)" },
-            { icon:<Shield size={20}/>,   title:"Company interview DNA",         desc:"Every company evaluates differently. Whether it's Google's Googleyness, McKinsey's rigid case frameworks, or Amazon's 16 Leadership Principles — your mock session is precisely calibrated to the specific DNA of your target employer.", color:"#7C3AED"     },
+            { icon:<Brain size={20}/>,    title:"CV-contextual questions",      desc:"Our AI can use the resume details you choose to share to generate questions about your projects, technical skills, and career history. The prompts are practice aids and may not match an employer's interview.", color:"var(--teal)"  },
+            { icon:<Globe size={20}/>,    title:"Multi-language practice", desc:"Practice in the languages currently available in your account. Availability and quality can vary by model and language; check the in-product selector before a session.", color:"#0369A1"     },
+            { icon:<Zap size={20}/>,      title:"Real-time filler detection",    desc:"Get flagged on filler words ('um', 'like', 'you know'), speaking pace, and over-qualification as the session runs. Use the observations to choose a communication habit to practise next.", color:"var(--amber)" },
+            { icon:<Shield size={20}/>,   title:"Role-aware interview practice",         desc:"Configure a target role and focus area to receive prompts that reflect common interview themes. Employer processes change, so pair practice with the current job description and official guidance.", color:"#7C3AED"     },
             { icon:<BarChart2 size={20}/>,title:"10-metric score breakdown",     desc:"Move beyond subjective feedback. Receive a quantitative score across 10 critical dimensions including technical depth, adherence to the STAR method, communication clarity, empathy, and culture-fit alignment.", color:"#BE185D"     },
             { icon:<RefreshCw size={20}/>,title:"Report rechecks and appeals",   desc:"Disagree with your post-interview analysis? Request a recheck from a different AI perspective. We will re-evaluate your transcript using a secondary model to ensure absolute fairness, up to your subscription plan limits.", color:"var(--green)" },
           ].map(({ icon, title, desc, color }, i) => (
@@ -1361,10 +1361,10 @@ const Landing = ({ onNav, onCheckout }) => (
           <section>
             <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>What Is PlacementDo?</h3>
             <p>
-              PlacementDo is an AI-powered placement preparation platform built specifically for engineering graduates, MBA students, and freshers preparing for campus recruitment drives across India. Every year, over three million engineering graduates compete for placement opportunities at companies like TCS, Infosys, Wipro, Accenture, Cognizant, Google, Amazon, and Microsoft. The candidates who secure offers at top companies are rarely the most naturally gifted — they are the most thoroughly prepared. PlacementDo exists to give every candidate access to the same caliber of interview preparation that was previously available only to those who could afford expensive coaching or had personal industry connections.
+              PlacementDo is an AI-powered placement preparation platform for engineering graduates, MBA students, and freshers preparing for campus recruitment drives across India. Hiring formats and competition vary by college, role, employer, and year. PlacementDo provides a convenient place to rehearse answers, practise coding and aptitude topics, and review structured feedback without presenting itself as an employer or coaching guarantee.
             </p>
             <p>
-              Our platform uses state-of-the-art Large Language Models combined with real-time voice synthesis to create a mock interview experience that is virtually indistinguishable from the real thing. Unlike static question banks or pre-recorded video tutorials, PlacementDo conducts a live, interactive interview session where the AI responds to your actual verbal answers, asks follow-up questions based on what you say, and applies deliberate pressure to test your composure under stress.
+              Our platform combines language and voice models to create an interactive mock interview. Unlike a static question bank, a session can respond to the answer you provide, ask follow-up questions, and vary the pace of practice. It remains a simulation: model output can be incomplete, and an employer's process may be different.
             </p>
           </section>
 
@@ -1374,14 +1374,14 @@ const Landing = ({ onNav, onCheckout }) => (
             The campus placement process in India often follows a multi-stage funnel that varies by company and role: an online aptitude or reasoning test, a technical or coding assessment, one or more interviews, and a final HR conversation. Because the format changes, early preparation helps you diagnose gaps and adapt your plan. Check each employer's current assessment notice rather than relying on a generic pattern.
             </p>
             <p>
-              PlacementDo covers every stage of this funnel. Our aptitude practice module includes timed mock tests covering quantitative aptitude, logical reasoning, and verbal ability — the three sections that appear in virtually every campus placement test. For technical rounds, the platform offers coding interview practice with AI interviewers who evaluate your problem-solving approach, code quality, time complexity analysis, and communication skills in real time. For HR and behavioral rounds, PlacementDo scores every answer against the STAR framework (Situation, Task, Action, Result) and provides immediate feedback on structure, specificity, and delivery.
+              PlacementDo offers practice activities for common parts of this funnel. Aptitude exercises can cover quantitative aptitude, logical reasoning, and verbal ability. Coding sessions can prompt you to explain your approach, code quality, and complexity. Behavioral practice can use the STAR framework (Situation, Task, Action, Result) to organise feedback on structure, specificity, and delivery. Features and scoring depend on the selected session and account plan.
             </p>
           </section>
 
           <section>
             <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Key Features for Placement Preparation</h3>
             <p>
-              CV-contextual questioning is the core differentiator of PlacementDo. When you upload your resume, the AI parses your educational background, project experience, technical skills, and career trajectory to generate interview questions that are directly relevant to your profile. If you list a machine learning project on your resume, the AI will ask you about your model selection process, training data, evaluation metrics, and deployment challenges — exactly like a real hiring manager would.
+              CV-contextual questioning is one part of PlacementDo. When you upload a resume, the AI can use the educational background, project experience, technical skills, and career details you share to generate relevant practice questions. If you list a machine learning project, for example, a session may ask about model selection, training data, evaluation metrics, or deployment challenges. Review prompts for accuracy and remove confidential information before uploading.
             </p>
             <p>
               The platform offers six AI interviewer personas, each designed to exercise a different dimension of interview performance. The Friendly Peer can surface oversharing and rambling. The Empath focuses on self-awareness. The Stress-Tester introduces rapid follow-ups, while the Stoic Veteran uses pauses to test composure. The Devil's Advocate asks for precise reasoning, and the Silent Analyst probes consistency between your resume and your answers. Trying more than one style can broaden your practice, but no simulation can predict an employer's exact interview.
@@ -1414,7 +1414,7 @@ const Landing = ({ onNav, onCheckout }) => (
           <section>
             <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Getting Started with PlacementDo</h3>
             <p>
-              Getting started takes less than five minutes. Create a free account, upload your resume in PDF format, select your target company and role, choose an interviewer persona, and begin your first mock interview session. The AI will greet you, ask an opening question tailored to your background, and conduct the interview exactly as a real interviewer would. After the session, review your scored report, identify your weakest two or three dimensions, and focus your next practice session on improving those specific areas. Repeat this cycle consistently in the weeks before placement season and you will walk into every interview with genuine confidence, not false bravely.
+              To get started, create an account, upload a resume in PDF format if you want contextual prompts, select a target role, choose an interviewer persona, and begin a practice session. The AI can ask an opening question and follow-ups based on the context provided. After the session, review the report, choose one or two dimensions to work on, and repeat the exercise at a sustainable pace. Combine the tool with current employer guidance, human feedback, and your own judgement.
             </p>
           </section>
         </div>
@@ -1439,7 +1439,7 @@ const Landing = ({ onNav, onCheckout }) => (
           </motion.div>
           <Tag color="teal"><Sparkles size={11}/> Be First. Get Early Access.</Tag>
           <h2 className="brig" style={{ fontSize:"clamp(26px,5vw,54px)", fontWeight:800, letterSpacing:"-0.035em", color:"#fff", marginTop:20, marginBottom:14, lineHeight:1.05 }}>
-            Your dream offer is<br/>one practice away
+            Build interview confidence<br/>one practice at a time
           </h2>
           <p style={{ fontSize:"clamp(14px,2vw,16px)", color:"rgba(255,255,255,.55)", marginBottom:38, lineHeight:1.68 }}>
             Join the early-access waitlist for launch updates and preparation resources.
