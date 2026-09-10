@@ -1,5 +1,5 @@
 {
-  "cleanUrls": true,
+  "cleanUrls": false,
   "trailingSlash": false,
   "headers": [
     {
@@ -44,8 +44,14 @@
       "permanent": true
     },
     {
-      "source": "https://placementdo.app/(.*)",
-      "destination": "https://www.placementdo.app/$1",
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.placementdo.app"
+        }
+      ],
+      "destination": "https://placementdo.app/:path*",
       "permanent": true
     }
   ],
