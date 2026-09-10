@@ -63,20 +63,20 @@ const TOC = [
   { label: "The 4 Stages of the Placement Process", anchor: "stages" },
   { label: "Preparation Roadmap (6 Months)", anchor: "roadmap" },
   { label: "Company-Wise Preparation", anchor: "companies" },
-  { label: "AI Mock Interviews — The Unfair Advantage", anchor: "ai-mock" },
+  { label: "AI Mock Interviews — Structured Practice", anchor: "ai-mock" },
   { label: "Tips for Freshers", anchor: "tips" },
   { label: "FAQ", anchor: "faq" },
 ];
 
 const STATS = [
-  { num: "3M+", label: "Engineering graduates enter the job market annually in India" },
-  { num: "85%", label: "Placement rate at IITs" },
-  { num: "50K+", label: "Freshers hired by top IT companies each year" },
-  { num: "4–6", label: "Months of prep needed for consistent placement success" },
+  { num: "4", label: "common placement stages explained" },
+  { num: "6", label: "months in the practical preparation roadmap" },
+  { num: "10", label: "feedback dimensions available in a report" },
+  { num: "1", label: "repeatable practice-and-review loop" },
 ];
 
 const STAGES = [
-  { num: 1, title: "Online Aptitude Test", desc: "The first elimination round. Covers quantitative aptitude, logical reasoning, verbal ability, and programming MCQs. Eliminates 40–70% of applicants." },
+  { num: 1, title: "Online Aptitude Test", desc: "The first screening round for many drives. It may cover quantitative aptitude, logical reasoning, verbal ability, and programming MCQs; the exact format and selection rate vary by employer and cohort." },
   { num: 2, title: "Coding / Technical Written Round", desc: "For software roles: 1–3 DSA problems. Service companies set easy-medium problems; product companies expect medium-hard." },
   { num: 3, title: "Technical Interview", desc: "One or two rounds with engineers. Tests depth of CS knowledge, problem-solving, project understanding, and coding ability live." },
   { num: 4, title: "HR Interview", desc: "Assesses communication, culture fit, and attitude. Questions cover background, goals, behavioural scenarios, and salary expectations." },
@@ -102,9 +102,9 @@ const COMPANIES = [
 const FAQS = [
   { q: "What does placement mean in India?", a: "Placement refers to campus recruitment where companies hire students directly from colleges before graduation. It typically involves an online test, technical interviews, and an HR round, culminating in a job offer." },
   { q: "When should I start placement preparation?", a: "Start 4–6 months before your college's placement season. Most campus placements happen between August and February, so begin preparation by May–June of your final year." },
-  { q: "What is the average placement package for freshers in 2026?", a: "IT service companies (TCS, Infosys, Wipro) offer 3–6 LPA. Mid-tier product companies offer 8–15 LPA. Top product companies and FAANG-level firms offer 20–40+ LPA for exceptional candidates." },
+  { q: "What is the average placement package for freshers in 2026?", a: "There is no single reliable average: compensation varies by employer, role, location, eligibility, and hiring cycle. Use the current offer or job notice from the employer you are researching instead of relying on a headline range." },
   { q: "Is one month enough for placement preparation?", a: "One month is enough for significant improvement but not ideal. Prioritise: aptitude (biggest filter), top 75 DSA problems, resume polish, and HR question preparation." },
-  { q: "How many mock interviews should I do before placement?", a: "Aim for 15–20 full mock interviews across technical and HR formats over 4–6 weeks. Use PlacementDo's AI mock interview for unlimited sessions with detailed feedback." },
+  { q: "How many mock interviews should I do before placement?", a: "Choose a sustainable number that gives you comparable attempts to review. Mix technical and HR formats, keep a short improvement log, and use only the sessions available on your current account plan." },
   { q: "What CGPA is required for top placement companies?", a: "Most service companies require 6.0–7.0 CGPA minimum. Product companies often require 7.5+. Some companies have no CGPA cutoff but compensate with harder technical rounds." },
 ];
 
@@ -126,8 +126,8 @@ export default function PlacementCompleteGuidePage({ onNav }) {
       "headline": "Placement Preparation Guide 2026 – Complete Roadmap to Crack Interviews",
       "description": "The most comprehensive guide to campus placement preparation in India — covering the placement process, 6-month roadmap, company-specific tips, and AI mock interview strategies for freshers.",
       "author": { "@type": "Organization", "name": "PlacementDo" },
-      "publisher": { "@type": "Organization", "name": "PlacementDo", "url": "https://www.placementdo.app" },
-      "url": "https://www.placementdo.app/placement-preparation-complete-guide",
+      "publisher": { "@type": "Organization", "name": "PlacementDo", "url": "https://placementdo.app" },
+      "url": "https://placementdo.app/placement-preparation-complete-guide",
       "datePublished": "2026-04-25",
       "dateModified": "2026-04-25",
     });
@@ -143,16 +143,16 @@ export default function PlacementCompleteGuidePage({ onNav }) {
   return (
     <PageLayout
       title="Placement Preparation Guide 2026 – Complete Roadmap to Crack Interviews | PlacementDo"
-      metaDescription="The most complete placement preparation guide for freshers in 2026. Covers placement process, 6-month roadmap, company-wise tips, AI mock interviews, and FAQs."
+      metaDescription="A practical placement preparation guide for freshers in 2026. Covers the placement process, a six-month roadmap, company-wise tips, AI mock interviews, and FAQs."
       keywords={["what is placement", "placement preparation roadmap", "campus placements 2026", "fresher interview guide", "placementdo complete guide"]}
       onNav={onNav}
     >
       <style>{STYLES}</style>
 
         <PageHero
-          tag="The Definitive Guide · Placement 2026"
-          heading="Placement Preparation: Complete Roadmap to Crack Any Interview"
-          subheading="Everything you need to go from zero to placed — the placement process, preparation roadmap, company-specific strategies, and the AI tools that give you an unfair advantage."
+          tag="Practical Guide · Placement 2026"
+          heading="Placement Preparation: A Practical Roadmap for Interviews"
+          subheading="A clear overview of the placement process, preparation roadmap, company-specific research, and practice tools you can combine with official employer guidance."
           ctaButtons={[
           { label: "Start AI Mock Interview", onClick: () => onNav("/dashboard") },
           { label: "Placement Prep Tips", onClick: () => onNav("/placement-preparation") },
@@ -179,10 +179,10 @@ export default function PlacementCompleteGuidePage({ onNav }) {
               <strong>Placement</strong> — in the context of Indian higher education — refers to the process where companies recruit students directly from college campuses before or immediately after graduation. When a student "gets placed," they receive a formal job offer letter, typically before their final exams.
             </p>
             <p>
-              Placement is not just a hiring process. For millions of Indian students, it represents the first significant career milestone — a transition from academic life to professional life, often with immediate financial independence. Every year, over 3 million engineering graduates compete for placement, and the difference between those who succeed and those who do not comes down almost entirely to preparation quality.
+              Placement is not just a hiring process. For many Indian students, it represents a transition from academic life to professional life. Competition and preparation needs vary by college, discipline, employer, and year, so use current campus information and the role's official requirements when planning.
             </p>
             <p>
-              Understanding placement deeply — how it works, what companies look for, and how to systematically prepare — is the first step toward landing your offer letter.
+              Understanding placement deeply — how it works, what companies look for, and how to systematically prepare — is a useful first step toward making informed applications.
             </p>
           </div>
 
@@ -248,7 +248,7 @@ export default function PlacementCompleteGuidePage({ onNav }) {
           <SectionHeading
             label="6-Month Plan"
             heading="Placement Preparation Roadmap"
-            description="The 6-month structured plan followed by students who consistently land placed at top companies."
+            description="A practical six-month plan for building fundamentals, practising communication, and adapting to the requirements of your target roles."
           />
           <div className="pcg-timeline">
             {TIMELINE.map((item) => (
@@ -266,7 +266,7 @@ export default function PlacementCompleteGuidePage({ onNav }) {
             <h3>What to Focus on Each Stage</h3>
             <h4>Aptitude Preparation (Critical — Do Not Skip)</h4>
             <p>
-              The online aptitude test is the first and biggest filter in campus placement. 40–70% of candidates are eliminated here. Topics to master: percentages, ratios, time-speed-distance, time and work, data interpretation, logical reasoning (puzzles, arrangements, syllogisms), and verbal ability (reading comprehension, grammar).
+              The online aptitude test is an important screening step in many campus drives and can be highly selective. The exact format and selection rate depend on the employer and cohort. Topics to master include percentages, ratios, time-speed-distance, time and work, data interpretation, logical reasoning (puzzles, arrangements, syllogisms), and verbal ability (reading comprehension, grammar).
             </p>
             <p>
               Practice 30–40 timed questions daily. Take at least 6–8 full mock tests before the actual placement season begins. For shortcuts and tricks that save time in aptitude tests, read our guide on aptitude shortcuts for placement.
@@ -274,7 +274,7 @@ export default function PlacementCompleteGuidePage({ onNav }) {
 
             <h4>DSA and Coding Preparation</h4>
             <p>
-              For software engineering roles, you need proficiency in data structures and algorithms. Start with arrays, strings, and hashmaps — they appear in 60% of coding questions. Progress to linked lists, trees, graphs, and then dynamic programming.
+              For software engineering roles, you need proficiency in data structures and algorithms. Start with arrays, strings, and hashmaps because they recur frequently in entry-level practice sets. Progress to linked lists, trees, graphs, and then dynamic programming.
             </p>
             <p>
               Service companies (TCS, Wipro, Infosys) require easy-to-medium problems. Product companies (Amazon, Microsoft, Flipkart) expect medium-to-hard problems solved efficiently with optimal complexity.
@@ -282,7 +282,7 @@ export default function PlacementCompleteGuidePage({ onNav }) {
 
             <h4>HR Interview Preparation</h4>
             <p>
-              Practice out loud — not in your head. Run at least 15–20 HR mock interview sessions. Prepare STAR-structured answers for all behavioural questions. Research each company specifically before their interview day.
+              Practice out loud — not in your head. Run several HR mock interview sessions and review one improvement at a time. Prepare STAR-structured answers for common behavioural questions, then research each company specifically before interview day.
             </p>
           </div>
         </section>
@@ -319,7 +319,7 @@ export default function PlacementCompleteGuidePage({ onNav }) {
         {/* AI Mock */}
         <section className="pcg-section" id="ai-mock">
           <div className="pcg-prose">
-            <h2>AI Mock Interviews: The Unfair Advantage in Placement Preparation</h2>
+            <h2>AI Mock Interviews: Structured Practice for Placement Preparation</h2>
             <p>
               The single most impactful change you can make to your placement preparation is switching from passive reading to active spoken practice. Most freshers study placement topics mentally but never practise speaking answers out loud. The placement interview is a live, spoken performance — entirely different from silent studying.
             </p>
@@ -352,7 +352,7 @@ export default function PlacementCompleteGuidePage({ onNav }) {
             <p>The students who get placed first in any season started preparing when their classmates were still watching YouTube. A 4–6 month head start removes the anxiety of cramming and builds genuine confidence.</p>
 
             <h3>2. Apply to Every Company That Visits</h3>
-            <p>Your dream company should not be your only company. Apply broadly — most freshers who end up placed at excellent companies did not get their first-choice offer. Volume of attempts matters enormously.</p>
+            <p>Your dream company should not be your only company. Apply thoughtfully across roles whose requirements you can meet, and treat each process as a chance to learn. The number of applications matters less than fit, preparation quality, and the employer's current eligibility rules.</p>
 
             <h3>3. Debrief After Every Interview</h3>
             <p>Immediately after each placement interview, write down every question you were asked, how you answered, and what you would improve. This makes each interview a learning event, not just a pass/fail outcome.</p>
@@ -398,7 +398,7 @@ export default function PlacementCompleteGuidePage({ onNav }) {
 
         <CTABlock
           heading="Practice Placement Interviews with AI — Free"
-          subtext="PlacementDo simulates real placement interviews with instant feedback. Used by 2,400+ students preparing for campus placements at TCS, Infosys, Wipro, and more."
+          subtext="PlacementDo simulates placement interviews with structured feedback so you can rehearse answers for the roles and employers you are researching."
           buttonLabel="Start your first mock interview"
           onNav={onNav}
           buttonHref="/"
@@ -407,3 +407,4 @@ export default function PlacementCompleteGuidePage({ onNav }) {
     </PageLayout>
   );
 }
+

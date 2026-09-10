@@ -16,6 +16,7 @@ const PrivacyPolicyPage = lazy(() => import("./pages/Compliance.jsx").then(m => 
 const TermsOfServicePage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.TermsOfService })));
 const AboutPage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.About })));
 const ContactPage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.Contact })));
+const DisclaimerPage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.Disclaimer })));
 
 const SpeedInsights = lazy(() =>
   import('@vercel/speed-insights/react').then((mod) => ({ default: mod.SpeedInsights })),
@@ -43,8 +44,15 @@ const SEO_ROUTE_COMPONENTS = {
 };
 
 const RouteLoadingFallback = () => (
-  <main aria-busy="true" style={{ maxWidth: 960, margin: "0 auto", padding: "56px 24px 80px", color: "#334155", fontFamily: "system-ui, sans-serif", lineHeight: 1.75 }}>
-    <article>
+  <div aria-busy="true" style={{ minHeight: "100vh", color: "#334155", fontFamily: "system-ui, sans-serif", lineHeight: 1.75 }}>
+    <header style={{ borderBottom: "1px solid #E2E8F0", background: "#FFFFFF", padding: "16px 24px" }}>
+      <nav aria-label="Primary navigation" style={{ maxWidth: 960, margin: "0 auto", display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
+        <a href="/" style={{ color: "#0F172A", fontWeight: 800, textDecoration: "none" }}>Placement<span style={{ color: "#0D9488" }}>Do</span></a>
+        <span style={{ display: "flex", gap: 14, flexWrap: "wrap" }}><a href="/blog" style={{ color: "#0F766E", fontWeight: 600 }}>Blog</a><a href="/placement-preparation-complete-guide" style={{ color: "#0F766E", fontWeight: 600 }}>Placement guide</a><a href="/about" style={{ color: "#0F766E", fontWeight: 600 }}>About</a><a href="/contact" style={{ color: "#0F766E", fontWeight: 600 }}>Contact</a></span>
+      </nav>
+    </header>
+    <main style={{ maxWidth: 960, margin: "0 auto", padding: "56px 24px 80px" }}>
+      <article>
       <h1 style={{ color: "#0F172A", fontSize: "clamp(32px, 5vw, 58px)", lineHeight: 1.1, letterSpacing: "-0.03em", margin: "0 0 20px" }}>PlacementDo — AI Mock Interview Platform for Campus Placement Preparation</h1>
       <p>PlacementDo is a focused practice platform for students and early-career professionals preparing for aptitude tests, technical interviews, behavioural rounds, and campus recruitment. The site combines practical study guides with realistic mock interview practice so you can turn knowledge into clear, confident answers.</p>
       <p>Good preparation is more than memorising a list of expected questions. A strong candidate understands the role, can explain their own work, checks assumptions aloud, and stays composed when a follow-up question changes direction. PlacementDo helps you rehearse those behaviours before the real interview, then gives you a repeatable way to review what worked and what needs attention.</p>
@@ -72,8 +80,10 @@ const RouteLoadingFallback = () => (
         <a href="/terms-of-service" style={{ color: "#0F766E", fontWeight: 600 }}>Terms of Service</a>
         <a href="/contact" style={{ color: "#0F766E", fontWeight: 600 }}>Contact</a>
       </nav>
-    </article>
-  </main>
+      </article>
+    </main>
+    <footer style={{ borderTop: "1px solid #E2E8F0", padding: "24px", textAlign: "center", fontSize: 13, color: "#64748B" }}><p>© 2026 PlacementDo. Educational preparation resources; no job outcome is guaranteed.</p><p><a href="/privacy-policy" style={{ color: "#0F766E", fontWeight: 600, margin: "0 8px" }}>Privacy Policy</a><a href="/terms-of-service" style={{ color: "#0F766E", fontWeight: 600, margin: "0 8px" }}>Terms of Service</a><a href="/contact" style={{ color: "#0F766E", fontWeight: 600, margin: "0 8px" }}>Contact</a></p></footer>
+  </div>
 );
 
 const normalizeRoutePath = (value) => {
@@ -125,6 +135,9 @@ function AppRouter() {
   if (normalizedPath === "/contact") {
     return renderWithFallback(<ContactPage onNav={navigate} />);
   }
+  if (normalizedPath === "/disclaimer") {
+    return renderWithFallback(<DisclaimerPage onNav={navigate} />);
+  }
 
   // Public blog listing — /blog and /blog/
   if (normalizedPath === "/blog") {
@@ -166,7 +179,11 @@ function AppRouter() {
 export default function App() {
   const [enableTelemetry, setEnableTelemetry] = useState(false);
   const [optionalConsent, setOptionalConsent] = useState(() => {
-    try { return window.localStorage.getItem('placementdo:cookie-consent') === 'accepted'; } catch { return false; }
+    try {
+      const value = window.localStorage.getItem('placementdo:cookie-consent');
+      if (value === 'accepted') return true;
+      return Boolean(JSON.parse(value || '{}')?.analytics);
+    } catch { return false; }
   });
 
   useEffect(() => {
@@ -175,7 +192,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const handleConsent = (event) => setOptionalConsent(event.detail === 'accepted');
+    const handleConsent = (event) => setOptionalConsent(event.detail?.analytics === true);
     window.addEventListener('placementdo:cookie-consent-change', handleConsent);
     return () => window.removeEventListener('placementdo:cookie-consent-change', handleConsent);
   }, []);
@@ -198,4 +215,5 @@ export default function App() {
     </>
   );
 }
+
 

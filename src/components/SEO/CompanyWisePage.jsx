@@ -77,8 +77,8 @@ const TCS_DATA = {
     {
       icon: "🎯",
       title: "Passing Criteria",
-      description: "No official cutoff is published, but a score above 55–60% in each section is generally safe. There is negative marking in some sections — attempt carefully.",
-      tags: ["Sectional Cutoff", "Negative Marking"],
+      description: "No official cutoff is published in this guide. Check the current assessment notice for sectional requirements and negative-marking rules, then attempt carefully.",
+      tags: ["Check Current Notice", "Assessment Rules"],
     },
     {
       icon: "💼",
@@ -476,3 +476,4 @@ export default function CompanyWisePage({ company, onNav }) {
     </PageLayout>
   );
 }
+

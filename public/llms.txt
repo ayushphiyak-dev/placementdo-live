@@ -29,4 +29,5 @@ Purpose: AI-powered placement preparation, mock interviews, and interview-readin
 - /blog
 
 ## Contact
-- support@placementdo.com
+- support@placementdo.app
+

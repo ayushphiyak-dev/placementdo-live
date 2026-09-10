@@ -121,7 +121,7 @@ export default function DemoPage({ onNav }) {
               maxWidth: '800px', 
               margin: '0 auto' 
             }}>
-              Transform your <strong>placement preparation</strong> with our state-of-the-art <strong>AI mock interview</strong> platform. Get realistic <strong>interview practice</strong> tailored to your profile, complete with <strong>real-time feedback</strong> to help you land your dream job.
+              Use guided <strong>placement preparation</strong> with an <strong>AI mock interview</strong> workflow. Practise answers tailored to the context you provide and review structured feedback to decide what to work on next.
             </p>
           </section>
 
@@ -260,3 +260,4 @@ export default function DemoPage({ onNav }) {
     </PageLayout>
   );
 }
+

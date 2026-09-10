@@ -1073,7 +1073,7 @@ const Landing = ({ onNav, onCheckout }) => (
       </motion.h1>
       <motion.p initial={{ opacity:0,y:20 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.55,delay:0.22 }}
         style={{ fontSize:"clamp(15px,2vw,19px)", color:"var(--slate-500)", maxWidth:600, lineHeight:1.72, marginBottom:36 }}>
-        A hyper-realistic AI interviewer that knows your CV, the company, and the exact role. Multi-language support. Detailed scoring. Ruthlessly honest feedback.{" "}
+        An AI practice interviewer that can use your CV context and target role. Explore available languages, structured scoring, and candid feedback during rehearsal.{" "}
         <strong style={{ color:"var(--slate-700)" }}>Launching soon.</strong>
       </motion.p>
       <motion.div initial={{ opacity:0,y:16 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.5,delay:0.35 }}
@@ -1082,7 +1082,7 @@ const Landing = ({ onNav, onCheckout }) => (
         <p style={{ fontSize:12, color:"var(--slate-400)", fontWeight:500 }}>No spam. No credit card. Just early access.</p>
       </motion.div>
       <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.65 }} className="stats-row" style={{ marginTop:52 }}>
-        {[{ n:"2,400+",l:"Waitlist signups" },{ n:"140+",l:"Target companies" },{ n:"28",l:"Languages planned" },{ n:"2026",l:"Launch year" }].map(({ n,l }) => (
+        {[{ n:"Early access",l:"Waitlist" },{ n:"Role-focused",l:"Preparation" },{ n:"Multiple",l:"Languages planned" },{ n:"2026",l:"Target launch" }].map(({ n,l }) => (
           <div key={l} style={{ textAlign:"center" }}>
             <div className="brig" style={{ fontSize:"clamp(18px,2.5vw,26px)", fontWeight:700, color:"var(--slate)", letterSpacing:"-0.02em" }}>{n}</div>
             <div style={{ fontSize:12, color:"var(--slate-500)", marginTop:2 }}>{l}</div>
@@ -1141,17 +1141,17 @@ const Landing = ({ onNav, onCheckout }) => (
     <section className="sec-pad" style={{ padding:"100px clamp(20px,5vw,60px)", maxWidth:1100, margin:"0 auto" }}>
       <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }} style={{ textAlign:"center", marginBottom:56 }}>
         <Tag color="teal">Process</Tag>
-        <h2 className="brig" style={{ fontSize:"clamp(26px,4.5vw,50px)", fontWeight:700, color:"var(--slate)", letterSpacing:"-0.03em", marginTop:14, lineHeight:1.1 }}>From zero to hired in four steps</h2>
+        <h2 className="brig" style={{ fontSize:"clamp(26px,4.5vw,50px)", fontWeight:700, color:"var(--slate)", letterSpacing:"-0.03em", marginTop:14, lineHeight:1.1 }}>From preparation to confident interviews in four steps</h2>
         <p style={{ fontSize:16, color:"var(--slate-500)", maxWidth:700, margin:"16px auto 0", lineHeight:1.7 }}>
-          Preparing for behavioral and technical interviews shouldn't mean reciting answers to yourself in a mirror. Our end-to-end platform replicates the exact conditions of a tier-one tech interview, giving you actionable, scored feedback before you ever sit in front of a real hiring manager.
+          Preparing for behavioral and technical interviews shouldn't mean reciting answers to yourself in a mirror. Our practice workflow combines role-aware prompts with structured feedback so you can rehearse communication before meeting a hiring team.
         </p>
       </motion.div>
       <div className="step-grid">
         {[
           { icon:<Upload size={22}/>, step:"01", title:"Upload your CV & Target Role", desc:"Upload your PDF resume. Our natural language processing engine parses your exact career trajectory, project experience, and claimed technical skills to generate hyper-relevant interview questions specifically targeted at your background and the requirements of your target job description.", color:"var(--teal)" },
-          { icon:<Building2 size={22}/>, step:"02", title:"Configure Company & Interview Style", desc:"Target any of 140+ top technology companies. Set the exact title, seniority level (L3 through L7), and interview focus area (Behavioral, System Design, or Case Study). You can also select from six different AI personas to simulate different interviewer temperaments, from the Friendly Peer to the relentless Stress-Tester.", color:"#0369A1" },
-          { icon:<Video size={22}/>, step:"03", title:"Experience a Live AI Interview", desc:"Enter a live, face-to-face video session with your AI interviewer. The AI responds in real-time, processes your verbal answers instantly, asks unscripted follow-up questions based on your responses, and intentionally applies pressure. There are no second chances or rewinds — it feels exactly like the real thing.", color:"#7C3AED" },
-          { icon:<Award size={22}/>, step:"04", title:"Review Your Analytics & Get Hired", desc:"Immediately after the session concludes, receive a comprehensive, scored report. The AI breaks down your performance across 10 dimensions including STAR method adherence, technical depth, communication clarity, and filler word frequency. We provide a concrete, step-by-step path to improve your weakest areas before your actual interview.", color:"var(--amber)" },
+          { icon:<Building2 size={22}/>, step:"02", title:"Configure Company & Interview Style", desc:"Choose the company, role, seniority level, and interview focus that match your preparation goals. You can also select from six AI personas to practise different interviewer temperaments, from the Friendly Peer to the Stress-Tester.", color:"#0369A1" },
+          { icon:<Video size={22}/>, step:"03", title:"Experience a Live AI Interview", desc:"Enter a live, face-to-face practice session with your AI interviewer. The AI can respond to your answers, ask follow-up questions, and introduce realistic pressure so you can rehearse communication before the real interview.", color:"#7C3AED" },
+          { icon:<Award size={22}/>, step:"04", title:"Review Your Feedback & Plan Next Practice", desc:"Immediately after the session concludes, receive a structured report. The AI highlights dimensions such as STAR method adherence, technical depth, communication clarity, and filler word frequency, then suggests practical next steps for your next practice session.", color:"var(--amber)" },
         ].map(({ icon, step, title, desc, color }, i) => (
           <motion.div key={step} initial={{ opacity:0,y:28 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.45,delay:i*0.09 }} viewport={{ once:true }}
             className="card card-lift" style={{ padding:"28px 24px" }}>
@@ -1177,15 +1177,15 @@ const Landing = ({ onNav, onCheckout }) => (
           <Tag color="slate">Why PlacementDo</Tag>
           <h2 className="brig" style={{ fontSize:"clamp(24px,4vw,46px)", fontWeight:700, letterSpacing:"-0.03em", color:"var(--slate)", marginTop:14, lineHeight:1.1 }}>The unfair advantage in a competitive market</h2>
           <p style={{ fontSize:16, color:"var(--slate-500)", maxWidth:700, margin:"14px auto 0", lineHeight:1.65 }}>
-            PlacementDo is built on the exact same generative AI infrastructure currently used to train Fortune 500 hiring managers and recruiters. We have reverse-engineered the rubrics used by FAANG companies to give you an unparalleled preparation experience.
+            PlacementDo is an independent practice product. It uses language and voice models to create role-aware prompts and structured feedback; it is not affiliated with, endorsed by, or trained for any particular employer.
           </p>
         </motion.div>
         <div className="feature-grid stagger">
           {[
-            { icon:<Brain size={20}/>,    title:"CV-contextual questions",      desc:"Our AI doesn't ask generic questions. It reads your uploaded resume and generates hyper-specific inquiries about your exact projects, past employers, technical claims, and career gaps — exactly like a real hiring manager would.", color:"var(--teal)"  },
-            { icon:<Globe size={20}/>,    title:"28 languages + code-switching", desc:"Practice in English, Mandarin, Hindi, French, Arabic, Spanish, and 22 more languages. Our engine natively supports mid-interview code-switching, perfectly mimicking the reality of multinational corporate interviews.", color:"#0369A1"     },
-            { icon:<Zap size={20}/>,      title:"Real-time filler detection",    desc:"Get flagged instantly on filler words ('um', 'like', 'you know'), speaking pace, and over-qualification as they happen. Fix these subconscious bad habits in our simulator before they cost you the job offer.", color:"var(--amber)" },
-            { icon:<Shield size={20}/>,   title:"Company interview DNA",         desc:"Every company evaluates differently. Whether it's Google's Googleyness, McKinsey's rigid case frameworks, or Amazon's 16 Leadership Principles — your mock session is precisely calibrated to the specific DNA of your target employer.", color:"#7C3AED"     },
+            { icon:<Brain size={20}/>,    title:"CV-contextual questions",      desc:"Our AI can use the resume details you choose to share to generate questions about your projects, technical skills, and career history. The prompts are practice aids and may not match an employer's interview.", color:"var(--teal)"  },
+            { icon:<Globe size={20}/>,    title:"Multi-language practice", desc:"Practice in the languages currently available in your account. Availability and quality can vary by model and language; check the in-product selector before a session.", color:"#0369A1"     },
+            { icon:<Zap size={20}/>,      title:"Real-time filler detection",    desc:"Get flagged on filler words ('um', 'like', 'you know'), speaking pace, and over-qualification as the session runs. Use the observations to choose a communication habit to practise next.", color:"var(--amber)" },
+            { icon:<Shield size={20}/>,   title:"Role-aware interview practice",         desc:"Configure a target role and focus area to receive prompts that reflect common interview themes. Employer processes change, so pair practice with the current job description and official guidance.", color:"#7C3AED"     },
             { icon:<BarChart2 size={20}/>,title:"10-metric score breakdown",     desc:"Move beyond subjective feedback. Receive a quantitative score across 10 critical dimensions including technical depth, adherence to the STAR method, communication clarity, empathy, and culture-fit alignment.", color:"#BE185D"     },
             { icon:<RefreshCw size={20}/>,title:"Report rechecks and appeals",   desc:"Disagree with your post-interview analysis? Request a recheck from a different AI perspective. We will re-evaluate your transcript using a secondary model to ensure absolute fairness, up to your subscription plan limits.", color:"var(--green)" },
           ].map(({ icon, title, desc, color }, i) => (
@@ -1306,7 +1306,7 @@ const Landing = ({ onNav, onCheckout }) => (
     {(() => {
       const FAQS = [
         { q:"How is PlacementDo different from practising with a friend?", a:"Friends are too nice. They know you, they skip hard follow-ups, and they can't give you a scored breakdown. PlacementDo's AI has no social contract — it will interrupt you, push back on every weak answer, and give you the honest scores that friends won't." },
-        { q:"Can the AI really replicate genuine interview pressure?", a:"Our Stress-Tester persona uses intentional interruptions, back-to-back rapid-fire questions, and deliberate silence after your answers. Beta users consistently rate it harder than their real interviews — which is exactly the point." },
+        { q:"Can the AI replicate a real interview?", a:"The Stress-Tester persona can introduce interruptions, rapid follow-ups, and pauses to make practice more demanding. A simulation is still a practice tool, so use it alongside employer research and feedback from people who know your target role." },
         { q:"What's the difference between the 6 interviewer personas?", a:"Each persona tests a different dimension: The Friendly Peer catches oversharing, The Empath exposes emotional intelligence gaps, The Stress-Tester replicates FAANG-style pressure, The Stoic Veteran tests composure under silence, The Devil's Advocate forces logical precision, and The Silent Analyst forensically probes inconsistencies." },
         { q:"Does PlacementDo work for non-technical roles?", a:"Yes. You can set any role — PM, consultant, analyst, investment banker, or engineer. The focus selector lets you choose Behavioral / STAR Method, Case Study, or Balanced sessions. The AI adapts its questioning style and scoring criteria accordingly." },
         { q:"When does PlacementDo launch and how much will it cost?", a:"We're targeting 2026. Waitlist members get 30% off all plans at launch. Plans start at $1 for a single session (Starter) and go up to $89.99 for 100 sessions with all personas unlocked (Elite). No subscriptions, no auto-renewals." },
@@ -1361,30 +1361,30 @@ const Landing = ({ onNav, onCheckout }) => (
           <section>
             <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>What Is PlacementDo?</h3>
             <p>
-              PlacementDo is an AI-powered placement preparation platform built specifically for engineering graduates, MBA students, and freshers preparing for campus recruitment drives across India. Every year, over three million engineering graduates compete for placement opportunities at companies like TCS, Infosys, Wipro, Accenture, Cognizant, Google, Amazon, and Microsoft. The candidates who secure offers at top companies are rarely the most naturally gifted — they are the most thoroughly prepared. PlacementDo exists to give every candidate access to the same caliber of interview preparation that was previously available only to those who could afford expensive coaching or had personal industry connections.
+              PlacementDo is an AI-powered placement preparation platform for engineering graduates, MBA students, and freshers preparing for campus recruitment drives across India. Hiring formats and competition vary by college, role, employer, and year. PlacementDo provides a convenient place to rehearse answers, practise coding and aptitude topics, and review structured feedback without presenting itself as an employer or coaching guarantee.
             </p>
             <p>
-              Our platform uses state-of-the-art Large Language Models combined with real-time voice synthesis to create a mock interview experience that is virtually indistinguishable from the real thing. Unlike static question banks or pre-recorded video tutorials, PlacementDo conducts a live, interactive interview session where the AI responds to your actual verbal answers, asks follow-up questions based on what you say, and applies deliberate pressure to test your composure under stress.
+              Our platform combines language and voice models to create an interactive mock interview. Unlike a static question bank, a session can respond to the answer you provide, ask follow-up questions, and vary the pace of practice. It remains a simulation: model output can be incomplete, and an employer's process may be different.
             </p>
           </section>
 
           <section>
             <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>How Campus Placement Preparation Works</h3>
             <p>
-              The campus placement process in India follows a structured multi-stage funnel that varies slightly by company but consistently includes four key rounds: an online aptitude and reasoning test, a technical or coding interview, one or two panels of technical interviews, and a final HR interview. Most companies filter out forty to seventy percent of applicants in the aptitude round alone, making early and consistent preparation essential. Students who begin their placement preparation at least three months before the recruitment season starts are significantly more likely to receive offers from their target companies.
+            The campus placement process in India often follows a multi-stage funnel that varies by company and role: an online aptitude or reasoning test, a technical or coding assessment, one or more interviews, and a final HR conversation. Because the format changes, early preparation helps you diagnose gaps and adapt your plan. Check each employer's current assessment notice rather than relying on a generic pattern.
             </p>
             <p>
-              PlacementDo covers every stage of this funnel. Our aptitude practice module includes timed mock tests covering quantitative aptitude, logical reasoning, and verbal ability — the three sections that appear in virtually every campus placement test. For technical rounds, the platform offers coding interview practice with AI interviewers who evaluate your problem-solving approach, code quality, time complexity analysis, and communication skills in real time. For HR and behavioral rounds, PlacementDo scores every answer against the STAR framework (Situation, Task, Action, Result) and provides immediate feedback on structure, specificity, and delivery.
+              PlacementDo offers practice activities for common parts of this funnel. Aptitude exercises can cover quantitative aptitude, logical reasoning, and verbal ability. Coding sessions can prompt you to explain your approach, code quality, and complexity. Behavioral practice can use the STAR framework (Situation, Task, Action, Result) to organise feedback on structure, specificity, and delivery. Features and scoring depend on the selected session and account plan.
             </p>
           </section>
 
           <section>
             <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Key Features for Placement Preparation</h3>
             <p>
-              CV-contextual questioning is the core differentiator of PlacementDo. When you upload your resume, the AI parses your educational background, project experience, technical skills, and career trajectory to generate interview questions that are directly relevant to your profile. If you list a machine learning project on your resume, the AI will ask you about your model selection process, training data, evaluation metrics, and deployment challenges — exactly like a real hiring manager would.
+              CV-contextual questioning is one part of PlacementDo. When you upload a resume, the AI can use the educational background, project experience, technical skills, and career details you share to generate relevant practice questions. If you list a machine learning project, for example, a session may ask about model selection, training data, evaluation metrics, or deployment challenges. Review prompts for accuracy and remove confidential information before uploading.
             </p>
             <p>
-              The platform offers six distinct AI interviewer personas, each designed to test a different dimension of your interview performance. The Friendly Peer catches oversharing and rambling. The Empath exposes gaps in emotional intelligence and self-awareness. The Stress-Tester replicates the intensity of a FAANG-level interview with rapid-fire questions and intentional interruptions. The Stoic Veteran tests your ability to maintain composure under deliberate silence. The Devil's Advocate challenges every claim you make to test logical precision. The Silent Analyst probes for inconsistencies between your resume claims and your verbal answers. Practicing with all six personas ensures you are prepared for any interviewer temperament on the actual day.
+              The platform offers six AI interviewer personas, each designed to exercise a different dimension of interview performance. The Friendly Peer can surface oversharing and rambling. The Empath focuses on self-awareness. The Stress-Tester introduces rapid follow-ups, while the Stoic Veteran uses pauses to test composure. The Devil's Advocate asks for precise reasoning, and the Silent Analyst probes consistency between your resume and your answers. Trying more than one style can broaden your practice, but no simulation can predict an employer's exact interview.
             </p>
             <p>
               After every session, PlacementDo generates a comprehensive performance report scored across ten critical dimensions: technical depth, communication clarity, STAR method adherence, response structure, filler word frequency, speaking pace, confidence level, answer specificity, time management, and overall impression. Each dimension receives a numerical score along with actionable improvement suggestions, giving you a clear roadmap for what to work on before your next practice session or actual interview.
@@ -1404,17 +1404,17 @@ const Landing = ({ onNav, onCheckout }) => (
           <section>
             <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Why AI Mock Interviews Outperform Traditional Preparation</h3>
             <p>
-              Research on deliberate practice consistently shows that performance improves fastest when you practice under realistic conditions, receive immediate specific feedback, and iterate on your weaknesses. Traditional preparation methods — reading question banks, watching YouTube videos, or asking a friend to conduct a mock interview — fail on all three counts. A friend will be too polite to push back on weak answers. A question bank provides no feedback on delivery. A YouTube video cannot adapt to your specific responses.
+              Deliberate practice is most useful when you work under realistic conditions, receive specific feedback, and revisit a known weakness. Question banks, videos, mentors, and mock interviews each serve different purposes; combine them instead of treating one tool as a complete replacement for the others.
             </p>
             <p>
-              PlacementDo solves all three problems simultaneously. The AI creates realistic interview pressure through interruptions, follow-up questions, and silence. It provides immediate, quantitative feedback across ten measurable dimensions. And it adapts its questioning in real time based on your answers, creating a unique interview experience every session. Candidates who complete at least five practice sessions on PlacementDo consistently report measurable improvement in their confidence, answer structure, and communication clarity — the three qualities that most strongly predict placement success.
+              PlacementDo is designed to add repeatable practice: it can introduce follow-up questions, provide structured feedback, and adapt prompts to the context you share. Use the report as a starting point for your next exercise, then compare your own answers over time. It is a coaching aid, not a measurement of hiring potential or a guarantee of improvement.
             </p>
           </section>
 
           <section>
             <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Getting Started with PlacementDo</h3>
             <p>
-              Getting started takes less than five minutes. Create a free account, upload your resume in PDF format, select your target company and role, choose an interviewer persona, and begin your first mock interview session. The AI will greet you, ask an opening question tailored to your background, and conduct the interview exactly as a real interviewer would. After the session, review your scored report, identify your weakest two or three dimensions, and focus your next practice session on improving those specific areas. Repeat this cycle consistently in the weeks before placement season and you will walk into every interview with genuine confidence, not false bravely.
+              To get started, create an account, upload a resume in PDF format if you want contextual prompts, select a target role, choose an interviewer persona, and begin a practice session. The AI can ask an opening question and follow-ups based on the context provided. After the session, review the report, choose one or two dimensions to work on, and repeat the exercise at a sustainable pace. Combine the tool with current employer guidance, human feedback, and your own judgement.
             </p>
           </section>
         </div>
@@ -1439,10 +1439,10 @@ const Landing = ({ onNav, onCheckout }) => (
           </motion.div>
           <Tag color="teal"><Sparkles size={11}/> Be First. Get Early Access.</Tag>
           <h2 className="brig" style={{ fontSize:"clamp(26px,5vw,54px)", fontWeight:800, letterSpacing:"-0.035em", color:"#fff", marginTop:20, marginBottom:14, lineHeight:1.05 }}>
-            Your dream offer is<br/>one practice away
+            Build interview confidence<br/>one practice at a time
           </h2>
           <p style={{ fontSize:"clamp(14px,2vw,16px)", color:"rgba(255,255,255,.55)", marginBottom:38, lineHeight:1.68 }}>
-            Join 2,400+ candidates already on the waitlist. Early members get <strong style={{ color:"rgba(255,255,255,.88)" }}>30% off</strong> at launch.
+            Join the early-access waitlist for launch updates and preparation resources.
           </p>
         </div>
 
@@ -1531,6 +1531,9 @@ const Landing = ({ onNav, onCheckout }) => (
           <a href="/terms-of-service" onClick={(e) => { e.preventDefault(); onNav("terms-of-service"); }} style={{ fontSize:12, color:"rgba(255,255,255,.25)", background:"none", border:"none", cursor:"pointer", transition:"color 0.15s", fontFamily:"'DM Sans',sans-serif", textDecoration:"none" }}
             onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,.6)"}
             onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.25)"}>Terms</a>
+          <a href="/disclaimer" onClick={(e) => { e.preventDefault(); onNav("disclaimer"); }} style={{ fontSize:12, color:"rgba(255,255,255,.25)", background:"none", border:"none", cursor:"pointer", transition:"color 0.15s", fontFamily:"'DM Sans',sans-serif", textDecoration:"none" }}
+            onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,.6)"}
+            onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.25)"}>Disclaimer</a>
         </div>
       </div>
     </footer>
@@ -3163,7 +3166,7 @@ const Report = ({ onNav }) => {
                 <div>
                   <label style={{ marginBottom:8 }}>Report Link</label>
                   <div className="share-link-box">
-                    <span style={{ flex:1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>https://www.placementdo.app/reports/a7f2c9...</span>
+                    <span style={{ flex:1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>https://placementdo.app/reports/a7f2c9...</span>
                     <button onClick={handleCopyLink} className="btn-primary" style={{ fontSize:12, padding:"6px 14px", borderRadius:8, flexShrink:0 }}>
                       {linkCopied ? <><Check size={13}/> Copied!</> : "Copy"}
                     </button>
@@ -3313,8 +3316,8 @@ const BlogShell = ({ children, onNav }) => (
 const FAQPage = ({ onNav }) => {
   const FAQS2 = [
     { q:"How is PlacementDo different from practising with a friend?", a:"Friends are too nice. They skip hard follow-ups and cannot give you a scored breakdown. PlacementDo's AI interrupts you mid-sentence, pushes back on every weak answer, and scores you across 10 dimensions that friends simply will not evaluate." },
-    { q:"Can the AI really replicate genuine interview pressure?", a:"Yes. Our Stress-Tester persona uses intentional interruptions, rapid-fire follow-up questions, and deliberate silence after your answers. Beta users consistently rate it harder than their real interviews, which is exactly the point. You need to experience maximum pressure in a safe environment before the real thing." },
-    { q:"What are the 6 interviewer personas?", a:"The Friendly Peer (catches oversharing), The Empath (exposes emotional intelligence gaps), The Stress-Tester (FAANG-level pressure), The Stoic Veteran (tests composure under silence), The Devil's Advocate (forces logical precision), and The Silent Analyst (probes answer inconsistencies). Using all six guarantees full-spectrum preparation." },
+    { q:"Can the AI replicate a real interview?", a:"The Stress-Tester persona can introduce interruptions, rapid follow-ups, and pauses to make practice more demanding. A simulation is still a practice tool, so use it alongside employer research and feedback from people who know your target role." },
+    { q:"What are the 6 interviewer personas?", a:"The Friendly Peer, Empath, Stress-Tester, Stoic Veteran, Devil's Advocate, and Silent Analyst each emphasise a different practice dimension. Trying several styles can broaden rehearsal, but no set of personas guarantees readiness for every interviewer." },
     { q:"Does PlacementDo work for non-technical roles?", a:"Yes. Configure any role such as Product Manager, Consultant, Investment Banker, or Software Engineer. Choose Behavioral / STAR Method, Case Study, or Balanced sessions. The AI adapts its questioning style and scoring criteria to your target role and company." },
     { q:"How many languages does PlacementDo support?", a:"At launch, we plan to support 28 languages including English, Mandarin, Hindi, French, Arabic, German, Spanish, and Japanese, with mid-session code-switching support for multinational interviews." },
     { q:"What is the STAR method and does PlacementDo score it?", a:"STAR stands for Situation, Task, Action, Result, which is the industry-standard framework for behavioral interview answers. PlacementDo scores every behavioral response against the STAR rubric in real time, flagging missing components, vague actions, and unquantified results as you speak." },
@@ -3617,12 +3620,12 @@ const NotFound = ({ onNav }) => (
 };
 
 /* ── Root App ── */
-const BASE_URL = "https://www.placementdo.app";
+const BASE_URL = "https://placementdo.app";
 const PUBLIC_ROUTES = ["landing","about","contact","privacy-policy","terms-of-service","faq","blog","blog-system-design","blog-star-method","blog-behavioral","blog-resume","features","pricing"];
 const DASH_VIEWS = ["dashboard","reports","progress","avatars","settings","support"];
 
 const SEO_META = {
-  "landing":             { title:"PlacementDo — AI Mock Interview Coach for FAANG & Top Tech Jobs", desc:"Practice real technical and behavioral interviews with AI-powered mock sessions. Get honest, scored feedback on STAR method, system design, and more. Join 2,400+ candidates on the waitlist." },
+  "landing":             { title:"PlacementDo — AI Mock Interview Coach for Campus Placements", desc:"Practice technical and behavioural interviews with AI-powered mock sessions. Get structured feedback on STAR answers, system design, and more." },
   "signin":              { title:"Sign In — PlacementDo AI Interview Platform", desc:"Sign in to your PlacementDo account to access your AI interview dashboard, reports, and progress tracker." },
   "interview":           { title:"Live AI Interview Session — PlacementDo", desc:"You are in a live AI mock interview. Focus and answer concisely. Your performance is being analyzed in real-time." },
   "report":              { title:"Your Interview Report & Score — PlacementDo", desc:"Review your detailed AI-generated interview report. See your scores across 10 dimensions: technical depth, STAR clarity, communication, and more." },
@@ -3717,7 +3720,7 @@ export default function App() {
         "@type": "FAQPage",
         "mainEntity": [
           { "@type":"Question", "name":"How is PlacementDo different from practicing with a friend?", "acceptedAnswer":{ "@type":"Answer", "text":"Friends are too nice. PlacementDo's AI has no social contract — it interrupts, follows up on every weak answer, and scores you honestly across 10 dimensions that friends won't evaluate." } },
-          { "@type":"Question", "name":"Can the AI really replicate genuine interview pressure?", "acceptedAnswer":{ "@type":"Answer", "text":"Yes. The Stress-Tester persona uses intentional interruptions, rapid-fire questions, and deliberate silence. Beta users consistently rate it harder than their real interviews." } },
+          { "@type":"Question", "name":"Can the AI replicate a real interview?", "acceptedAnswer":{ "@type":"Answer", "text":"The Stress-Tester persona can introduce interruptions, rapid follow-ups, and pauses to make practice more demanding. A simulation is still a practice tool, so use it alongside employer research and feedback from people who know your target role." } },
           { "@type":"Question", "name":"Does PlacementDo work for non-technical roles?", "acceptedAnswer":{ "@type":"Answer", "text":"Yes. You can configure any role — Product Manager, Consultant, Investment Banker, or Engineer. Choose Behavioral/STAR, Case Study, or Balanced sessions. The AI adapts its questioning style and scoring criteria accordingly." } },
           { "@type":"Question", "name":"How many languages does PlacementDo support?", "acceptedAnswer":{ "@type":"Answer", "text":"PlacementDo plans to support 28 languages at launch, including English, Mandarin, Hindi, French, Arabic, German, Japanese, and more, with code-switching support mid-interview." } },
           { "@type":"Question", "name":"When does PlacementDo launch?", "acceptedAnswer":{ "@type":"Answer", "text":"We are targeting a 2026 launch. Waitlist members receive 30% off all plans. Plans start at $1 for a single session (Starter) and go up to $89.99 for 100 sessions with all personas (Elite)." } },
@@ -3793,3 +3796,4 @@ export default function App() {
     </>
   );
 }
+

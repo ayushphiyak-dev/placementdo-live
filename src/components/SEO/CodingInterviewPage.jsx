@@ -60,7 +60,7 @@ const TOPICS = [
   {
     icon: "📦",
     title: "Arrays & Strings",
-    description: "Two pointers, sliding window, prefix sums, sorting, binary search. Most commonly tested — every interview has at least one array problem.",
+    description: "Two pointers, sliding window, prefix sums, sorting, and binary search are useful array patterns to practise. The questions used by each employer vary, so prioritise the role's current guidance.",
     tags: ["Two Pointers", "Sliding Window", "Binary Search"],
   },
   {
@@ -297,3 +297,4 @@ export default function CodingInterviewPage({ onNav }) {
     </PageLayout>
   );
 }
+

@@ -66,6 +66,21 @@ const ComplianceLayout = ({ title, children, onNav }) => {
           {children}
         </div>
       </main>
+      <footer style={{ borderTop:'1px solid var(--border)', padding:'24px 20px', textAlign:'center', color:'var(--slate-500)', fontSize:13 }}>
+        <p style={{ margin:'0 0 10px' }}>© 2026 PlacementDo. Educational preparation resources; no job outcome is guaranteed.</p>
+        <nav aria-label="Legal navigation" style={{ display:'flex', justifyContent:'center', gap:16, flexWrap:'wrap' }}>
+          {[
+            ['Home', '/'],
+            ['About', '/about'],
+            ['Contact', '/contact'],
+            ['Privacy Policy', '/privacy-policy'],
+            ['Terms of Service', '/terms-of-service'],
+            ['Disclaimer', '/disclaimer'],
+          ].map(([label, href]) => (
+            <a key={href} href={href} onClick={(event) => { event.preventDefault(); navigate(href); }} style={{ color:'var(--teal)', fontWeight:600 }}>{label}</a>
+          ))}
+        </nav>
+      </footer>
     </motion.div>
   );
 };
@@ -102,7 +117,7 @@ export const PrivacyPolicy = ({ onNav }) => (
         <div>
           <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>5. Cookies and Tracking Technologies</h2>
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We use essential cookies for session management, authentication, and security. We also use analytics cookies to understand aggregate product usage patterns.</p>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>Additionally, third-party vendors, including Google, use cookies (such as the DART cookie) to serve ads based on a user's prior visits to PlacementDo or other websites on the internet. Users may opt out of personalized advertising at any time by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>Google Ads Settings</a> or <a href="https://www.aboutads.info" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>www.aboutads.info</a>.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>If advertising is enabled for your account and region, third-party vendors including Google may use cookies (such as the DART cookie) to serve ads based on a user's prior visits to PlacementDo or other websites. Optional advertising scripts remain disabled until you choose them in the consent controls. You can opt out of personalised advertising at any time through <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>Google Ads Settings</a> or <a href="https://www.aboutads.info" target="_blank" rel="noopener" style={{ color:"var(--teal)" }}>www.aboutads.info</a>.</p>
         </div>
         
         <div>
@@ -140,7 +155,7 @@ export const PrivacyPolicy = ({ onNav }) => (
         <div>
           <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>12. Policy Updates and Contact</h2>
           <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>We may update this policy periodically to reflect product changes, legal requirements, or operational updates. Any material updates will be posted on this page with a revised "Last Updated" date.</p>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>If you have any questions about this Privacy Policy or your data, contact us at <a href="mailto:support@placementdo.com" style={{ color:"var(--teal)" }}>support@placementdo.com</a>.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7, marginTop:12 }}>If you have any questions about this Privacy Policy or your data, contact us at <a href="mailto:support@placementdo.app" style={{ color:"var(--teal)" }}>support@placementdo.app</a>.</p>
         </div>
       </div>
   </ComplianceLayout>
@@ -163,7 +178,7 @@ export const TermsOfService = ({ onNav }) => (
         
         <div>
           <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>3. Subscriptions and Advertising</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Free accounts are supported by advertising from networks such as Google AdSense. By using the free tier, you agree to the display of these advertisements. Premium tiers (Pro, Elite) remove third-party display ads.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Free accounts may be supported by advertising from networks such as Google AdSense when advertising is enabled for the relevant account and region. Optional advertising scripts require your consent where applicable. Premium tiers may offer an ad-free experience as described at the time of purchase.</p>
         </div>
       </div>
   </ComplianceLayout>
@@ -174,10 +189,10 @@ export const About = ({ onNav }) => (
       <div className="card" style={{ padding:32, display:"flex", flexDirection:"column", gap:20 }}>
         <h2 className="brig" style={{ fontSize:24, fontWeight:700, color:"var(--teal-dark)", marginBottom:10 }}>Democratizing Interview Prep</h2>
         <p style={{ fontSize:16, color:"var(--slate-600)", lineHeight:1.8 }}>
-          PlacementDo was founded with a single mission: to level the playing field in technical and behavioral interviewing. For too long, candidates who couldn't afford expensive coaching or didn't have industry connections were at a severe disadvantage. We believe everyone deserves access to elite-level interview preparation.
+          PlacementDo is being developed to make technical and behavioral interview practice easier to access. The product focuses on guided rehearsal, role-aware prompts, and feedback that helps candidates decide what to practise next. It is an educational tool, not a recruiting agency or a substitute for human coaching.
         </p>
         <p style={{ fontSize:16, color:"var(--slate-600)", lineHeight:1.8 }}>
-          By leveraging state-of-the-art Large Language Models and real-time voice synthesis, we've created a platform that simulates the exact pressure, pacing, and rigor of top-tier tech interviews (like FAANG). Our AI personas—ranging from the empathetic listener to the brutal stress-tester—ensure that you are ready for any dynamic on the big day.
+          The product combines language and voice models to create interactive practice sessions. Personas can vary the tone and follow-up style, but no simulation can reproduce every employer's process or ensure readiness for a particular interview. Pair practice with the current job description, official employer guidance, and human feedback.
         </p>
       </div>
   </ComplianceLayout>
@@ -190,4 +205,24 @@ export const Contact = ({ onNav }) => (
     </div>
   </ComplianceLayout>
 );
+
+export const Disclaimer = ({ onNav }) => (
+  <ComplianceLayout title="PlacementDo Disclaimer" onNav={onNav}>
+    <div className="card" style={{ padding:32, display:"flex", flexDirection:"column", gap:20 }}>
+      <section>
+        <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Educational information only</h2>
+        <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>PlacementDo provides interview and placement-preparation resources. Guides, examples, mock questions, and AI-generated feedback are for practice and general information; they are not legal, financial, medical, recruitment, or career advice.</p>
+      </section>
+      <section>
+        <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>No hiring guarantee</h2>
+        <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Using PlacementDo does not guarantee an interview, selection, salary, promotion, or other career result. AI feedback may be incomplete or incorrect and is not an employer assessment.</p>
+      </section>
+      <section>
+        <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Verify current information</h2>
+        <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>Company processes, eligibility rules, assessment formats, and dates can change. Confirm time-sensitive information against the employer's current job description and official instructions. Contact <a href="mailto:support@placementdo.app" style={{ color:"var(--teal)" }}>support@placementdo.app</a> if you find a specific, verifiable correction.</p>
+      </section>
+    </div>
+  </ComplianceLayout>
+);
+
 
