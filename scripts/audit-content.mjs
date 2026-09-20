@@ -7,7 +7,7 @@ const posts = JSON.parse(read("src/data/blogPosts.json"));
 const sitemap = read("public/sitemap.xml");
 const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 const errors = [];
-const advisories = [];
+const MIN_EDITORIAL_WORDS = 600;
 
 const wordCount = (value) => value.trim().split(/\s+/).filter(Boolean).length;
 const normalizeParagraph = (value) => value
@@ -26,8 +26,9 @@ for (const post of posts) {
   slugs.add(post.slug);
   titles.add(post.title);
   const words = wordCount(post.content || "");
-  if (words < 500) errors.push(`${post.slug} has only ${words} words; add useful substance before indexing it.`);
-  if (words < 600) advisories.push(`${post.slug} has ${words} words (600 is an editorial target, not a Google requirement).`);
+  if (words < MIN_EDITORIAL_WORDS) {
+    errors.push(`${post.slug} has only ${words} words; every published article must contain at least ${MIN_EDITORIAL_WORDS} words of useful, original guidance.`);
+  }
   for (const paragraph of (post.content || "").split(/\n\s*\n/)) {
     const normalized = normalizeParagraph(paragraph);
     if (normalized.length < 160) continue;
@@ -73,7 +74,6 @@ if (!vercel.headers?.some((rule) => /features\|pricing/.test(rule.source || ""))
 }
 
 console.log(`Audited ${posts.length} blog posts and ${urls.length} sitemap URLs.`);
-if (advisories.length) console.log(`Editorial advisories (${advisories.length}):\n- ${advisories.join("\n- ")}`);
 if (errors.length) {
   console.error(`Content audit failed (${errors.length}):\n- ${errors.join("\n- ")}`);
   process.exitCode = 1;
