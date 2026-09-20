@@ -43,6 +43,10 @@
       "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
     },
     {
+      "source": "/(features|pricing|faq|personas|how-it-works|careers)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
@@ -84,6 +88,11 @@
       "permanent": true
     },
     {
+      "source": "/resources",
+      "destination": "/seo-resources",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "www.placementdo.app" }],
       "destination": "https://placementdo.app/:path*",
@@ -114,6 +123,10 @@
     {
       "source": "/disclaimer",
       "destination": "/disclaimer/index.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/blog/:slug/index.html"
     },
     {
       "source": "/(.*)",
