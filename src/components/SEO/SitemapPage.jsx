@@ -71,14 +71,11 @@ const COMPANY_PAGES = [
 ];
 
 const SUPPORT_PAGES = [
-  { label: "Features", href: "/features", description: "Overview of PlacementDo interview simulation and reporting capabilities." },
-  { label: "Pricing", href: "/pricing", description: "Plan comparison and interview credit details." },
-  { label: "Personas", href: "/personas", description: "Different interviewer styles and practice scenarios." },
-  { label: "How It Works", href: "/how-it-works", description: "Step-by-step product workflow and interview setup explanation." },
   { label: "About", href: "/about", description: "Mission, company context, and why PlacementDo exists." },
-  { label: "Careers", href: "/careers", description: "Open roles and team information." },
   { label: "Privacy Policy", href: "/privacy-policy", description: "Privacy, data usage, and data protection details." },
   { label: "Terms of Service", href: "/terms-of-service", description: "Legal terms for using PlacementDo." },
+  { label: "Disclaimer", href: "/disclaimer", description: "How to interpret educational and AI-generated guidance." },
+  { label: "Contact", href: "/contact", description: "Contact PlacementDo about content, privacy, or accessibility." },
   { label: "Free Resources", href: "/seo-resources", description: "Student-facing checklists, templates, and structured placement prep resources." },
   { label: "Interactive Demo", href: "/demo", description: "Embedded product walkthrough and quick demo." },
 ];
@@ -183,3 +180,4 @@ export default function SitemapPage({ onNav }) {
     </PageLayout>
   );
 }
+

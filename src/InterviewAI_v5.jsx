@@ -1175,7 +1175,7 @@ const Landing = ({ onNav, onCheckout }) => (
       <div style={{ maxWidth:1100, margin:"0 auto" }}>
         <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }} style={{ textAlign:"center", marginBottom:52 }}>
           <Tag color="slate">Why PlacementDo</Tag>
-          <h2 className="brig" style={{ fontSize:"clamp(24px,4vw,46px)", fontWeight:700, letterSpacing:"-0.03em", color:"var(--slate)", marginTop:14, lineHeight:1.1 }}>The unfair advantage in a competitive market</h2>
+          <h2 className="brig" style={{ fontSize:"clamp(24px,4vw,46px)", fontWeight:700, letterSpacing:"-0.03em", color:"var(--slate)", marginTop:14, lineHeight:1.1 }}>Practice that turns feedback into a next step</h2>
           <p style={{ fontSize:16, color:"var(--slate-500)", maxWidth:700, margin:"14px auto 0", lineHeight:1.65 }}>
             PlacementDo is an independent practice product. It uses language and voice models to create role-aware prompts and structured feedback; it is not affiliated with, endorsed by, or trained for any particular employer.
           </p>
@@ -1186,7 +1186,7 @@ const Landing = ({ onNav, onCheckout }) => (
             { icon:<Globe size={20}/>,    title:"Multi-language practice", desc:"Practice in the languages currently available in your account. Availability and quality can vary by model and language; check the in-product selector before a session.", color:"#0369A1"     },
             { icon:<Zap size={20}/>,      title:"Real-time filler detection",    desc:"Get flagged on filler words ('um', 'like', 'you know'), speaking pace, and over-qualification as the session runs. Use the observations to choose a communication habit to practise next.", color:"var(--amber)" },
             { icon:<Shield size={20}/>,   title:"Role-aware interview practice",         desc:"Configure a target role and focus area to receive prompts that reflect common interview themes. Employer processes change, so pair practice with the current job description and official guidance.", color:"#7C3AED"     },
-            { icon:<BarChart2 size={20}/>,title:"10-metric score breakdown",     desc:"Move beyond subjective feedback. Receive a quantitative score across 10 critical dimensions including technical depth, adherence to the STAR method, communication clarity, empathy, and culture-fit alignment.", color:"#BE185D"     },
+            { icon:<BarChart2 size={20}/>,title:"Structured score breakdown",     desc:"Review feedback across communication, technical depth, answer structure, and other practice dimensions so you can choose one concrete improvement for the next attempt.", color:"#BE185D"     },
             { icon:<RefreshCw size={20}/>,title:"Report rechecks and appeals",   desc:"Disagree with your post-interview analysis? Request a recheck from a different AI perspective. We will re-evaluate your transcript using a secondary model to ensure absolute fairness, up to your subscription plan limits.", color:"var(--green)" },
           ].map(({ icon, title, desc, color }, i) => (
             <motion.div key={title} initial={{ opacity:0,y:22 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.42,delay:i*0.07 }} viewport={{ once:true }} className="feature-card">
@@ -1221,10 +1221,10 @@ const Landing = ({ onNav, onCheckout }) => (
                 Survive Any Interviewer Personality
               </h3>
               <p style={{ fontSize:14, color:"rgba(255,255,255,.6)", lineHeight:1.72, marginBottom:20 }}>
-                Most interview tools only test what you know. PlacementDo trains how you <em style={{ color:"rgba(255,255,255,.85)" }}>react</em>. Our 6 AI personas simulate the full psychological spectrum — from the dangerously charming Friendly Peer to the silence-wielding Stoic Veteran.
+                Most interview tools only test what you know. PlacementDo also lets you practise how you <em style={{ color:"rgba(255,255,255,.85)" }}>react</em>. Try several interviewer styles, from a supportive peer to a quiet, detail-focused reviewer, and compare the habits you want to improve.
               </p>
               <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-                {[["6 Distinct Personalities","rgba(13,148,136,.9)"],["Psychological Pressure Training","rgba(124,58,237,.9)"],["Adaptive Difficulty","rgba(217,119,6,.9)"]].map(([label,color]) => (
+                {[["Several Interviewer Styles","rgba(13,148,136,.9)"],["Pressure Practice","rgba(124,58,237,.9)"],["Adaptive Difficulty","rgba(217,119,6,.9)"]].map(([label,color]) => (
                   <div key={label} style={{ display:"flex", alignItems:"center", gap:6, background:"rgba(255,255,255,.07)", border:"1px solid rgba(255,255,255,.12)", borderRadius:20, padding:"5px 13px", transition:"all 0.2s" }}
                     onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.13)"; }}
                     onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.07)"; }}>
@@ -1482,7 +1482,7 @@ const Landing = ({ onNav, onCheckout }) => (
         <div>
           <a href="/" aria-label="PlacementDo home" style={{ textDecoration:"none", display:"inline-block" }} onClick={e => { e.preventDefault(); onNav("landing"); }}><Logo light/></a>
           <p style={{ fontSize:13.5, color:"rgba(255,255,255,.4)", lineHeight:1.7, marginTop:14, maxWidth:280 }}>
-            A hyper-realistic AI interview simulator that knows your CV, the company, and the exact role. Practice smarter. Land faster.
+            AI-assisted interview practice for students and early-career candidates. Rehearse answers, review feedback, and keep improving.
           </p>
           <div style={{ display:"flex", gap:8, marginTop:20 }}>
             {[
@@ -3319,7 +3319,7 @@ const FAQPage = ({ onNav }) => {
     { q:"Can the AI replicate a real interview?", a:"The Stress-Tester persona can introduce interruptions, rapid follow-ups, and pauses to make practice more demanding. A simulation is still a practice tool, so use it alongside employer research and feedback from people who know your target role." },
     { q:"What are the 6 interviewer personas?", a:"The Friendly Peer, Empath, Stress-Tester, Stoic Veteran, Devil's Advocate, and Silent Analyst each emphasise a different practice dimension. Trying several styles can broaden rehearsal, but no set of personas guarantees readiness for every interviewer." },
     { q:"Does PlacementDo work for non-technical roles?", a:"Yes. Configure any role such as Product Manager, Consultant, Investment Banker, or Software Engineer. Choose Behavioral / STAR Method, Case Study, or Balanced sessions. The AI adapts its questioning style and scoring criteria to your target role and company." },
-    { q:"How many languages does PlacementDo support?", a:"At launch, we plan to support 28 languages including English, Mandarin, Hindi, French, Arabic, German, Spanish, and Japanese, with mid-session code-switching support for multinational interviews." },
+    { q:"Which languages does PlacementDo support?", a:"Language availability depends on the current model and account settings. Check the in-product selector before a session and use the language that lets you explain your experience most clearly." },
     { q:"What is the STAR method and does PlacementDo score it?", a:"STAR stands for Situation, Task, Action, Result, which is the industry-standard framework for behavioral interview answers. PlacementDo scores every behavioral response against the STAR rubric in real time, flagging missing components, vague actions, and unquantified results as you speak." },
     { q:"When does PlacementDo launch and how much will it cost?", a:"We target a 2026 launch. Waitlist members get 30% off. Plans start at $1 for a single session, $29.99 for 10 sessions, and $89.99 for 100 sessions with all personas unlocked. No subscriptions, no auto-renewals." },
     { q:"How does PlacementDo use my CV or resume?", a:"Upload your CV before a session and the AI generates hyper-specific questions about your exact projects, technologies, and career trajectory. Your CV is stored securely and used only to personalize your sessions." },
@@ -3722,8 +3722,6 @@ export default function App() {
           { "@type":"Question", "name":"How is PlacementDo different from practicing with a friend?", "acceptedAnswer":{ "@type":"Answer", "text":"Friends are too nice. PlacementDo's AI has no social contract — it interrupts, follows up on every weak answer, and scores you honestly across 10 dimensions that friends won't evaluate." } },
           { "@type":"Question", "name":"Can the AI replicate a real interview?", "acceptedAnswer":{ "@type":"Answer", "text":"The Stress-Tester persona can introduce interruptions, rapid follow-ups, and pauses to make practice more demanding. A simulation is still a practice tool, so use it alongside employer research and feedback from people who know your target role." } },
           { "@type":"Question", "name":"Does PlacementDo work for non-technical roles?", "acceptedAnswer":{ "@type":"Answer", "text":"Yes. You can configure any role — Product Manager, Consultant, Investment Banker, or Engineer. Choose Behavioral/STAR, Case Study, or Balanced sessions. The AI adapts its questioning style and scoring criteria accordingly." } },
-          { "@type":"Question", "name":"How many languages does PlacementDo support?", "acceptedAnswer":{ "@type":"Answer", "text":"PlacementDo plans to support 28 languages at launch, including English, Mandarin, Hindi, French, Arabic, German, Japanese, and more, with code-switching support mid-interview." } },
-          { "@type":"Question", "name":"When does PlacementDo launch?", "acceptedAnswer":{ "@type":"Answer", "text":"We are targeting a 2026 launch. Waitlist members receive 30% off all plans. Plans start at $1 for a single session (Starter) and go up to $89.99 for 100 sessions with all personas (Elite)." } },
         ]
       });
     } else if (ldScript) {
