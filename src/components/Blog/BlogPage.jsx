@@ -208,7 +208,8 @@ export default function BlogPage({ onNav }) {
       if (!r.ok) throw new Error("Failed to fetch blog posts.");
       const data = await r.json();
       const list = Array.isArray(data?.posts) ? normalizePosts(data.posts) : [];
-      setPosts(list);
+      // Public deployments should never render an empty blog while the API is warming up.
+      setPosts(token || list.length > 0 ? list : FALLBACK_POSTS);
     } catch {
       setPostsError(
         token
