@@ -5,6 +5,7 @@ const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 const posts = JSON.parse(read("src/data/blogPosts.json"));
 const sitemap = read("public/sitemap.xml");
+const blogIndex = read("public/blog/index.html");
 const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 const errors = [];
 const MIN_EDITORIAL_WORDS = 600;
@@ -52,6 +53,11 @@ const expectedRoutes = new Set([
   "/company-wise-questions/cognizant", "/company-wise-questions/hcl",
   ...posts.map((post) => `/blog/${post.slug}`),
 ]);
+const blogIndexSlugs = [...blogIndex.matchAll(/href="\/blog\/([^"]+)"/g)].map((match) => match[1]);
+for (const slug of blogIndexSlugs) {
+  if (!slugs.has(slug)) errors.push(`Blog index links to missing post slug: ${slug}`);
+}
+
 const sitemapPaths = urls.map((url) => new URL(url).pathname.replace(/\/$/, "") || "/");
 if (new Set(urls).size !== urls.length) errors.push("Sitemap contains duplicate URLs.");
 for (const route of sitemapPaths) {
