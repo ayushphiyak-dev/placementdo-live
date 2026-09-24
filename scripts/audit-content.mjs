@@ -71,7 +71,14 @@ const index = read("index.html");
 if ((index.match(/<h1\b/gi) || []).length !== 1) errors.push("index.html must contain exactly one crawl-visible H1.");
 if (!/rel="canonical"/.test(index)) errors.push("index.html is missing its canonical link.");
 if (!/href="\/privacy-policy"/.test(index)) errors.push("index.html must link to the Privacy Policy.");
+const packageJson = JSON.parse(read("package.json"));
+if (!packageJson.scripts?.build?.includes("generate-blog-pages")) {
+  errors.push("The production build must generate static HTML for every blog article.");
+}
 const vercel = JSON.parse(read("vercel.json"));
+if (!vercel.rewrites?.some((rule) => rule.source === "/blog/:slug" && rule.destination === "/blog/:slug/index.html")) {
+  errors.push("Every blog slug must resolve to its generated static article page.");
+}
 if (!vercel.redirects?.some((rule) => rule.source === "/resources" && rule.destination === "/seo-resources")) {
   errors.push("/resources must permanently redirect to the canonical /seo-resources route.");
 }

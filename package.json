@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/generate-blog-pages.mjs",
     "lint": "eslint .",
     "audit:content": "node scripts/audit-content.mjs",
     "preview": "vite preview"
@@ -31,4 +31,3 @@
     "vite": "^8.0.10"
   }
 }
-
