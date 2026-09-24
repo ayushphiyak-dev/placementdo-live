@@ -19,15 +19,16 @@
     html{scroll-behavior:smooth}
     body{margin:0;background:var(--paper);color:#334155;font:16px/1.7 "DM Sans",system-ui,sans-serif}
     a{color:inherit}
-    .site-header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
-    .nav-shell{max-width:1180px;margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-    .brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:21px;font-weight:800;text-decoration:none;letter-spacing:-.04em}
-    .brand-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#16b3a5;color:#fff;font-size:20px;line-height:1}
-    .brand-mark::before{content:"↯";transform:translateY(-1px)}
-    .nav-links{display:flex;align-items:center;justify-content:flex-end;gap:22px;flex-wrap:wrap}
-    .nav-links a{color:#52627a;font-size:14px;font-weight:600;text-decoration:none}
-    .nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--teal-dark)}
-    .nav-cta{border:1px solid #b8c7d8;border-radius:10px;padding:9px 15px!important;color:var(--ink)!important}
+    .site-header{background:rgba(250,250,248,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;height:64px;display:flex;align-items:center;padding:0 clamp(20px,5vw,60px)}
+    .nav-shell{max-width:1200px;width:100%;margin:0 auto;padding:0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:inline-flex;align-items:center;gap:9px;color:var(--ink);font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:19px;font-weight:700;text-decoration:none;letter-spacing:-.02em;white-space:nowrap}
+    .brand-mark{width:34px;height:34px;border-radius:10px;overflow:hidden;border:1px solid var(--line);display:block;flex-shrink:0}
+    .brand-mark img{width:100%;height:100%;object-fit:cover;display:block}
+    .nav-links{display:flex;align-items:center;justify-content:flex-end;gap:4px;flex-wrap:wrap}
+    .nav-link{color:#64748b;font-size:14px;font-weight:500;padding:6px 13px;border-radius:8px;text-decoration:none;white-space:nowrap}
+    .nav-link:hover,.nav-link[aria-current="page"]{color:var(--ink);background:#f1f5f9}
+    .nav-link[aria-current="page"]{color:var(--teal-dark);background:#ccfbf1;border:1px solid rgba(13,148,136,.2)}
+    .nav-cta{padding:8px 16px;border-radius:999px;background:var(--teal);color:#fff!important;border:none;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap}
     .hero{background:var(--navy);color:#fff}
     .hero-inner{max-width:1180px;margin:0 auto;padding:78px 28px 82px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.6fr);align-items:end;gap:56px}
     .eyebrow{display:inline-flex;align-items:center;gap:8px;color:#8de2d8;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
@@ -74,7 +75,8 @@
     .footer-links{display:flex;gap:16px;flex-wrap:wrap}
     .footer-links a{color:var(--teal-dark);font-weight:600;text-decoration:none}
     @media (max-width:860px){.hero-inner,.intro-grid{grid-template-columns:1fr;gap:30px}.hero-inner{padding-top:58px}.post-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media (max-width:600px){.nav-shell{padding:14px 18px;align-items:flex-start}.nav-links{gap:12px}.nav-links a:nth-child(2){display:none}.hero-inner,.content-shell{padding-left:18px;padding-right:18px}.hero h1{font-size:46px}.hero-copy{font-size:16px}.post-grid{grid-template-columns:1fr}.search-box{align-items:stretch;flex-wrap:wrap}.search-box label{min-width:100%;padding-left:5px}#search-count{min-width:0;text-align:left;padding:0 5px}.search-box button{flex:1}}
+    @media (max-width:900px){.nav-links{display:none}}
+    @media (max-width:600px){.site-header{padding:0 18px}.hero-inner,.content-shell{padding-left:18px;padding-right:18px}.hero h1{font-size:46px}.hero-copy{font-size:16px}.post-grid{grid-template-columns:1fr}.search-box{align-items:stretch;flex-wrap:wrap}.search-box label{min-width:100%;padding-left:5px}#search-count{min-width:0;text-align:left;padding:0 5px}.search-box button{flex:1}}
   </style>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Blog","name":"PlacementDo Blog","url":"https://placementdo.app/blog","description":"Original interview preparation and campus placement guides from PlacementDo."}
@@ -83,13 +85,16 @@
 <body>
   <header class="site-header">
     <nav class="nav-shell" aria-label="Primary navigation">
-      <a class="brand" href="/" aria-label="PlacementDo home"><span class="brand-mark" aria-hidden="true"></span><span>Placement<span style="color:#0d9488">Do</span></span></a>
+      <a class="brand" href="/" aria-label="PlacementDo home"><span class="brand-mark"><img src="/apple-touch-icon.png" alt="PlacementDo logo" loading="eager"></span><span>Placement<span style="color:#0d9488">Do</span></span></a>
       <div class="nav-links">
-        <a href="/" aria-label="Home">← Home</a>
-        <a href="/blog" aria-current="page">Blog</a>
-        <a href="/placement-preparation-complete-guide">Placement Prep</a>
-        <a class="nav-cta" href="/about">About us</a>
+        <a class="nav-link" href="/blog" aria-current="page">Blog</a>
+        <a class="nav-link" href="/placement-preparation-complete-guide">Placement Guide</a>
+        <a class="nav-link" href="/aptitude-questions">Aptitude</a>
+        <a class="nav-link" href="/coding-interview-questions">Coding</a>
+        <a class="nav-link" href="/seo-resources">Resources</a>
+        <a class="nav-link" href="/demo">Demo</a>
       </div>
+      <a class="nav-cta" href="/dashboard">Get started →</a>
     </nav>
   </header>
 

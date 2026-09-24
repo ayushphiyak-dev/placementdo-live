@@ -103,6 +103,12 @@ function AppRouter() {
 
   const navigate = useCallback((url) => {
     const nextUrl = new URL(url, window.location.origin);
+    // Blog pages are served as crawlable static documents. Use a full navigation
+    // so internal clicks cannot switch to the separate lazy React blog renderer.
+    if (nextUrl.pathname === "/blog" || nextUrl.pathname.startsWith("/blog/")) {
+      window.location.assign(`${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`);
+      return;
+    }
     window.history.pushState({}, "", `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`);
     setPath(nextUrl.pathname);
 
