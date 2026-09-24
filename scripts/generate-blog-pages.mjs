@@ -168,7 +168,9 @@ const style = [
 const buildPage = (post) => {
   const date = articleDate(post);
   const canonical = SITE_URL + "/blog/" + encodeURIComponent(post.slug);
-  const bodySource = String(post.content || "").replace(/^#\s+[^\n]+\n*/, "");
+  const bodySource = String(post.content || "")
+    .replace(/^#\s+[^\n]+\n*/, "")
+    .replace(/\n#\s+[-\w]+(?:\s+#[\w-]+)*\s*$/i, "");
   const body = renderMarkdown(bodySource);
   const related = relatedPosts(post).map((item) => [
     '<a class="related-card" href="/blog/' + encodeURIComponent(item.slug) + '">',
