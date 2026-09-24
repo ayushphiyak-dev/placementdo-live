@@ -6,8 +6,14 @@ const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 const posts = JSON.parse(read("src/data/blogPosts.json"));
 const sitemap = read("public/sitemap.xml");
 const blogIndex = read("public/blog/index.html");
+const staticArticleGenerator = read("scripts/generate-blog-pages.mjs");
 const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 const errors = [];
+if (!blogIndex.includes('src="/apple-touch-icon.png"')) errors.push("Blog index must use the canonical apple-touch-icon asset.");
+if (blogIndex.includes('content:"↯"') || blogIndex.includes("content:'↯'")) errors.push("Blog index must not render a Unicode substitute logo.");
+if (!blogIndex.includes('href="/dashboard"')) errors.push("Blog index header must include the canonical Get started route.");
+if (!staticArticleGenerator.includes('/apple-touch-icon.png')) errors.push("Generated blog articles must use the canonical apple-touch-icon asset.");
+if (staticArticleGenerator.includes("content:'↯'") || staticArticleGenerator.includes('content:"↯"')) errors.push("Generated blog articles must not render a Unicode substitute logo.");
 const MIN_EDITORIAL_WORDS = 600;
 
 const wordCount = (value) => value.trim().split(/\s+/).filter(Boolean).length;
