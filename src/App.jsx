@@ -5,11 +5,12 @@ const retryableLazy = (loader, chunkName) => lazy(async () => {
   try {
     return await loader();
   } catch (error) {
-    let retried = false;
+    const retryUrl = new URL(window.location.href);
+    let retried = retryUrl.searchParams.has("_pd_chunk_retry");
     try {
-      retried = window.sessionStorage.getItem(`placementdo:chunk-retry:${chunkName}`) === "1";
+      retried = retried || window.sessionStorage.getItem(`placementdo:chunk-retry:${chunkName}`) === "1";
     } catch {
-      // Continue to the visible error boundary if storage is unavailable.
+      // The retry query parameter still prevents an infinite loop when storage is unavailable.
     }
     if (!retried) {
       try {
@@ -17,7 +18,6 @@ const retryableLazy = (loader, chunkName) => lazy(async () => {
       } catch {
         // A retry is still useful even when storage is blocked.
       }
-      const retryUrl = new URL(window.location.href);
       retryUrl.searchParams.set("_pd_chunk_retry", Date.now().toString());
       window.location.replace(retryUrl.toString());
       return new Promise(() => {});
