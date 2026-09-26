@@ -1,29 +1,77 @@
-import { lazy, Suspense, useEffect, useState, useCallback } from 'react';
+import { Component, lazy, Suspense, useEffect, useState, useCallback } from 'react';
 import GlobalStyles from './GlobalStyles.jsx';
 import CookieConsent from './components/Privacy/CookieConsent.jsx';
-const InterviewAI = lazy(() => import("./InterviewAI_v5.jsx"));
-const BlogPage = lazy(() => import("./components/Blog/BlogPage.jsx"));
-const BlogPostPage = lazy(() => import("./components/Blog/BlogPostPage.jsx"));
-const PlacementPreparationPage = lazy(() => import("./components/SEO/PlacementPreparationPage.jsx"));
-const AptitudePage = lazy(() => import("./components/SEO/AptitudePage.jsx"));
-const CodingInterviewPage = lazy(() => import("./components/SEO/CodingInterviewPage.jsx"));
-const CompanyWisePage = lazy(() => import("./components/SEO/CompanyWisePage.jsx"));
-const SeoResourcesPage = lazy(() => import("./components/SEO/SeoResourcesPage.jsx"));
-const DemoPage = lazy(() => import("./components/SEO/DemoPage.jsx"));
-const PlacementCompleteGuidePage = lazy(() => import("./components/SEO/PlacementCompleteGuidePage.jsx"));
-const SitemapPage = lazy(() => import("./components/SEO/SitemapPage.jsx"));
-const PrivacyPolicyPage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.PrivacyPolicy })));
-const TermsOfServicePage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.TermsOfService })));
-const AboutPage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.About })));
-const ContactPage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.Contact })));
-const DisclaimerPage = lazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.Disclaimer })));
+const retryableLazy = (loader, chunkName) => lazy(async () => {
+  try {
+    return await loader();
+  } catch (error) {
+    let retried = false;
+    try {
+      retried = window.sessionStorage.getItem(`placementdo:chunk-retry:${chunkName}`) === "1";
+    } catch {
+      // Continue to the visible error boundary if storage is unavailable.
+    }
+    if (!retried) {
+      try {
+        window.sessionStorage.setItem(`placementdo:chunk-retry:${chunkName}`, "1");
+      } catch {
+        // A retry is still useful even when storage is blocked.
+      }
+      const retryUrl = new URL(window.location.href);
+      retryUrl.searchParams.set("_pd_chunk_retry", Date.now().toString());
+      window.location.replace(retryUrl.toString());
+      return new Promise(() => {});
+    }
+    throw error;
+  }
+});
 
-const SpeedInsights = lazy(() =>
+class RouteErrorBoundary extends Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (!this.state.hasError) return this.props.children;
+    return (
+      <main role="alert" style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: "32px", background: "#FAFAF8", color: "#0F172A", fontFamily: "system-ui, sans-serif", textAlign: "center" }}>
+        <section style={{ maxWidth: 520 }}>
+          <p style={{ margin: "0 0 10px", color: "#0F766E", fontWeight: 700 }}>PlacementDo</p>
+          <h1 style={{ margin: "0 0 14px", fontSize: "clamp(28px, 5vw, 48px)", lineHeight: 1.1 }}>This page needs one more try</h1>
+          <p style={{ margin: "0 0 22px", color: "#475569", lineHeight: 1.6 }}>A network or deployment update interrupted the page bundle. Reload once to continue.</p>
+          <button type="button" onClick={() => window.location.reload()} style={{ border: 0, borderRadius: 999, padding: "11px 18px", background: "#0D9488", color: "#fff", fontWeight: 700, cursor: "pointer" }}>Reload page</button>
+          <a href="/" style={{ display: "inline-block", marginLeft: 14, color: "#0F766E", fontWeight: 700 }}>Return home</a>
+        </section>
+      </main>
+    );
+  }
+}
+
+const InterviewAI = retryableLazy(() => import("./InterviewAI_v5.jsx"), "InterviewAI");
+const BlogPage = retryableLazy(() => import("./components/Blog/BlogPage.jsx"), "BlogPage");
+const BlogPostPage = retryableLazy(() => import("./components/Blog/BlogPostPage.jsx"), "BlogPostPage");
+const PlacementPreparationPage = retryableLazy(() => import("./components/SEO/PlacementPreparationPage.jsx"), "PlacementPreparationPage");
+const AptitudePage = retryableLazy(() => import("./components/SEO/AptitudePage.jsx"), "AptitudePage");
+const CodingInterviewPage = retryableLazy(() => import("./components/SEO/CodingInterviewPage.jsx"), "CodingInterviewPage");
+const CompanyWisePage = retryableLazy(() => import("./components/SEO/CompanyWisePage.jsx"), "CompanyWisePage");
+const SeoResourcesPage = retryableLazy(() => import("./components/SEO/SeoResourcesPage.jsx"), "SeoResourcesPage");
+const DemoPage = retryableLazy(() => import("./components/SEO/DemoPage.jsx"), "DemoPage");
+const PlacementCompleteGuidePage = retryableLazy(() => import("./components/SEO/PlacementCompleteGuidePage.jsx"), "PlacementCompleteGuidePage");
+const SitemapPage = retryableLazy(() => import("./components/SEO/SitemapPage.jsx"), "SitemapPage");
+const PrivacyPolicyPage = retryableLazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.PrivacyPolicy })), "PrivacyPolicyPage");
+const TermsOfServicePage = retryableLazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.TermsOfService })), "TermsOfServicePage");
+const AboutPage = retryableLazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.About })), "AboutPage");
+const ContactPage = retryableLazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.Contact })), "ContactPage");
+const DisclaimerPage = retryableLazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.Disclaimer })), "DisclaimerPage");
+
+const SpeedInsights = retryableLazy(() =>
   import('@vercel/speed-insights/react').then((mod) => ({ default: mod.SpeedInsights })),
-);
-const Analytics = lazy(() =>
+, "SpeedInsights");
+const Analytics = retryableLazy(() =>
   import('@vercel/analytics/react').then((mod) => ({ default: mod.Analytics })),
-);
+, "Analytics");
 
 const COMPANY_ROUTE_MAP = {
   "/company-wise-questions/tcs": "tcs",
@@ -193,6 +241,23 @@ export default function App() {
   });
 
   useEffect(() => {
+    // Remove the one-time cache-busting query after a successful retry.
+    try {
+      const retryUrl = new URL(window.location.href);
+      if (retryUrl.searchParams.has("_pd_chunk_retry")) {
+        retryUrl.searchParams.delete("_pd_chunk_retry");
+        window.history.replaceState({}, "", retryUrl.toString());
+        for (let index = window.sessionStorage.length - 1; index >= 0; index -= 1) {
+          const key = window.sessionStorage.key(index);
+          if (key?.startsWith("placementdo:chunk-retry:")) window.sessionStorage.removeItem(key);
+        }
+      }
+    } catch {
+      // URL or storage APIs may be unavailable in restricted browsers.
+    }
+  }, []);
+
+  useEffect(() => {
     const id = window.setTimeout(() => setEnableTelemetry(true), 1200);
     return () => window.clearTimeout(id);
   }, []);
@@ -206,8 +271,9 @@ export default function App() {
   return (
     <>
       <GlobalStyles />
-      <AppRouter />
-      <CookieConsent onPrivacy={() => {
+      <RouteErrorBoundary>
+        <AppRouter />
+        <CookieConsent onPrivacy={() => {
         window.history.pushState({}, "", "/privacy-policy");
         window.dispatchEvent(new PopStateEvent("popstate"));
         window.scrollTo({ top: 0, behavior: "auto" });
@@ -218,6 +284,7 @@ export default function App() {
           <Analytics />
         </Suspense>
       )}
+      </RouteErrorBoundary>
     </>
   );
 }
