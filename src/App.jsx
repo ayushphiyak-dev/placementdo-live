@@ -66,12 +66,14 @@ const AboutPage = retryableLazy(() => import("./pages/Compliance.jsx").then(m =>
 const ContactPage = retryableLazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.Contact })), "ContactPage");
 const DisclaimerPage = retryableLazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.Disclaimer })), "DisclaimerPage");
 
-const SpeedInsights = retryableLazy(() =>
-  import('@vercel/speed-insights/react').then((mod) => ({ default: mod.SpeedInsights })),
-, "SpeedInsights");
-const Analytics = retryableLazy(() =>
-  import('@vercel/analytics/react').then((mod) => ({ default: mod.Analytics })),
-, "Analytics");
+const SpeedInsights = retryableLazy(
+  () => import('@vercel/speed-insights/react').then((mod) => ({ default: mod.SpeedInsights })),
+  "SpeedInsights",
+);
+const Analytics = retryableLazy(
+  () => import('@vercel/analytics/react').then((mod) => ({ default: mod.Analytics })),
+  "Analytics",
+);
 
 const COMPANY_ROUTE_MAP = {
   "/company-wise-questions/tcs": "tcs",
