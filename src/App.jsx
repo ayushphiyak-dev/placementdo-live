@@ -136,6 +136,15 @@ const RouteLoadingFallback = () => (
   </div>
 );
 
+const trackPageView = (path) => {
+  if (typeof window.gtag !== "function") return;
+  window.gtag("event", "page_view", {
+    page_path: path,
+    page_title: document.title,
+    page_location: window.location.origin + path,
+  });
+};
+
 const normalizeRoutePath = (value) => {
   if (!value) return "/";
   const singleSlashPath = value.replace(/\/{2,}/g, "/");
@@ -161,6 +170,7 @@ function AppRouter() {
     }
     window.history.pushState({}, "", `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`);
     setPath(nextUrl.pathname);
+    trackPageView(`${nextUrl.pathname}${nextUrl.search}`);
 
     if (nextUrl.hash) {
       const targetId = decodeURIComponent(nextUrl.hash.slice(1));
@@ -173,7 +183,10 @@ function AppRouter() {
   }, []);
 
   useEffect(() => {
-    const handlePop = () => setPath(window.location.pathname);
+    const handlePop = () => {
+      setPath(window.location.pathname);
+      trackPageView(window.location.pathname + window.location.search);
+    };
     window.addEventListener("popstate", handlePop);
     return () => window.removeEventListener("popstate", handlePop);
   }, []);
