@@ -19,6 +19,7 @@ if (staticArticleGenerator.includes("content:'↯'") || staticArticleGenerator.i
 if (!appEntry.includes("retryableLazy")) errors.push("The React entry must retry stale lazy chunks before showing an error state.");
 if (!appEntry.includes("_pd_chunk_retry")) errors.push("The React entry must use a one-time cache-busting retry for stale chunks.");
 if (!appEntry.includes("RouteErrorBoundary")) errors.push("The React entry must render a visible recovery state instead of a blank screen on route errors.");
+if (!appEntry.includes("trackPageView")) errors.push("The React entry must send page_view events when client-side routes change.");
 if (!staticAnalytics.includes("G-MHPLFG59KQ")) errors.push("The shared static analytics loader must use the configured GA4 measurement ID.");
 for (const staticPage of ["public/blog/index.html", "public/privacy-policy/index.html", "public/terms-of-service/index.html", "public/about/index.html", "public/contact/index.html", "public/disclaimer/index.html"]) {
   if (!read(staticPage).includes('src="/analytics.js"')) errors.push(`${staticPage} must load the shared consent-aware analytics script.`);
