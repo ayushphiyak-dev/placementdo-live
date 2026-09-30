@@ -215,6 +215,7 @@ const buildPage = (post) => {
     '<link rel="icon" type="image/png" sizes="192x192" href="/icon-192x192.png">',
     '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
     '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">',
+    '<script src="/analytics.js" defer></script>',
     '<meta property="og:type" content="article"><meta property="og:site_name" content="PlacementDo">',
     '<meta property="og:title" content="' + escapeHtml(post.title) + ' | PlacementDo"><meta property="og:description" content="' + escapeHtml(post.excerpt || "") + '"><meta property="og:url" content="' + canonical + '">',
     '<script type="application/ld+json">' + jsonLd + "</script><script type=\"application/ld+json\">" + breadcrumbLd + "</script>",
