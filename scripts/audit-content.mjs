@@ -8,6 +8,7 @@ const sitemap = read("public/sitemap.xml");
 const blogIndex = read("public/blog/index.html");
 const staticArticleGenerator = read("scripts/generate-blog-pages.mjs");
 const appEntry = read("src/App.jsx");
+const staticAnalytics = read("public/analytics.js");
 const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 const errors = [];
 if (!blogIndex.includes('src="/apple-touch-icon.png"')) errors.push("Blog index must use the canonical apple-touch-icon asset.");
@@ -18,6 +19,11 @@ if (staticArticleGenerator.includes("content:'↯'") || staticArticleGenerator.i
 if (!appEntry.includes("retryableLazy")) errors.push("The React entry must retry stale lazy chunks before showing an error state.");
 if (!appEntry.includes("_pd_chunk_retry")) errors.push("The React entry must use a one-time cache-busting retry for stale chunks.");
 if (!appEntry.includes("RouteErrorBoundary")) errors.push("The React entry must render a visible recovery state instead of a blank screen on route errors.");
+if (!staticAnalytics.includes("G-MHPLFG59KQ")) errors.push("The shared static analytics loader must use the configured GA4 measurement ID.");
+for (const staticPage of ["public/blog/index.html", "public/privacy-policy/index.html", "public/terms-of-service/index.html", "public/about/index.html", "public/contact/index.html", "public/disclaimer/index.html"]) {
+  if (!read(staticPage).includes('src="/analytics.js"')) errors.push(`${staticPage} must load the shared consent-aware analytics script.`);
+}
+if (!staticArticleGenerator.includes('/analytics.js')) errors.push("Generated blog articles must load the shared consent-aware analytics script.");
 const MIN_EDITORIAL_WORDS = 600;
 
 const wordCount = (value) => value.trim().split(/\s+/).filter(Boolean).length;
