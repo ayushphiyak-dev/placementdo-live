@@ -245,4 +245,22 @@ for (const post of posts) {
   await fs.mkdir(folder, { recursive: true });
   await fs.writeFile(path.join(folder, "index.html"), buildPage(post), "utf8");
 }
-console.log("Generated " + posts.length + " crawlable static blog article pages.");
+
+const template = await fs.readFile(path.join(process.cwd(), "public", "blog", "index.html"), "utf8");
+const gridPattern = /(<div class="post-grid" id="post-grid">)[\s\S]*?(<div class="empty-state" id="empty-state")/;
+if (!gridPattern.test(template)) throw new Error("Blog listing template is missing its grid boundary");
+const cards = posts.map(post =>
+  '<a class="post-card" data-search="' + escapeHtml([post.title, post.category, ...(post.tags || [])].join(" ").toLowerCase()) +
+  '" href="/blog/' + encodeURIComponent(post.slug) + '"><span><span class="post-meta">' +
+  escapeHtml(post.category) + '</span><h3>' + escapeHtml(post.title) + '</h3><p>' +
+  escapeHtml(post.excerpt) + '</p></span><span class="post-link">Read guide</span></a>'
+).join("\n");
+const listing = template.replace(gridPattern, (_, start, end) => start + "\n" + cards + "\n</div>\n" + end)
+  .replace(/<strong>\d+ guides<\/strong>/, "<strong>" + posts.length + " guides</strong>")
+  .replace(/>\d+ guides shown</, ">" + posts.length + " guides shown<");
+if ((listing.match(/class="post-card"/g) || []).length !== posts.length) {
+  throw new Error("Published articles and blog listing have different counts");
+}
+await fs.writeFile(path.join(outputRoot, "index.html"), listing, "utf8");
+console.log("Generated " + posts.length + " crawlable static blog article pages and matching listing.");
+
