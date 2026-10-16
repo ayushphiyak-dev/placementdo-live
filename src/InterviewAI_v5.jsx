@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { PrivacyPolicy, TermsOfService, About, Contact } from "./pages/Compliance.jsx";
 import { BlogSystemDesign, BlogSTAR, BlogBehavioral, BlogResume } from "./pages/BlogArticles.jsx";
 import { SiteFooter, NotFound } from "./components/Public/PublicPages.jsx";
 import { publicDocumentFor } from "./utils/publicNavigation.js";
+import { supportAnswer } from "./utils/supportAnswers.js";
 import {
   Upload, Building2, Video, Mic, MicOff, VideoOff, PhoneOff,
   Check, Zap, BarChart2, Brain, RefreshCw, Shield, Award,
@@ -542,7 +544,7 @@ const WaitlistThanksModal = ({ email, onClose }) => {
     return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  return (
+  return createPortal(
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -620,7 +622,7 @@ const WaitlistThanksModal = ({ email, onClose }) => {
         Got it
       </button>
     </motion.div>
-  </motion.div>
+  </motion.div>, document.body
   );
 };
 
@@ -635,8 +637,9 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
   const validate = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
   const lg = size === "lg";
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
+    if (loading) return;
     if (!email.trim() || !validate(email)) {
       setErrMsg("⚠️ Please enter a valid email address.");
       return;
@@ -644,7 +647,23 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
     setErrMsg("");
     setLoading(true);
     const captured = email.trim();
-    setTimeout(() => { setLoading(false); setSubmittedEmail(captured); setEmail(""); setSubmitted(true); }, 800);
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: captured }),
+        signal: AbortSignal.timeout(10000),
+      });
+      const result = await response.json();
+      if (!response.ok || result.success !== true) throw new Error("Submission failed");
+      setSubmittedEmail(captured);
+      setEmail("");
+      setSubmitted(true);
+    } catch {
+      setErrMsg("We couldn't save your email. Please try again shortly.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClose = () => { setSubmitted(false); setSubmittedEmail(""); };
@@ -658,7 +677,7 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
         <div className="wl-row" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <div style={{ flex: 1, minWidth: 200, position: "relative" }}>
             <Mail size={16} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: dark ? "rgba(255,255,255,0.4)" : errMsg ? "var(--red)" : "var(--slate-400)", pointerEvents: "none", zIndex: 1 }} />
-            <input type="email" value={email} onChange={e => { setEmail(e.target.value); setErrMsg(""); }} disabled={loading} placeholder="your@email.com"
+            <input type="email" aria-label="Email address for the waitlist" maxLength={254} value={email} onChange={e => { setEmail(e.target.value); setErrMsg(""); }} disabled={loading} placeholder="your@email.com"
               style={{ paddingLeft: 40, fontSize: lg ? 15 : 14, padding: lg ? "14px 14px 14px 40px" : "11px 12px 11px 38px", borderRadius: 13, background: dark ? "rgba(255,255,255,0.09)" : "var(--white)", border: errMsg ? "1.5px solid var(--red)" : dark ? "1.5px solid rgba(255,255,255,0.18)" : "1.5px solid var(--border-strong)", color: dark ? "#fff" : "var(--slate)", transition: "all 0.2s ease" }} />
           </div>
           <button type="submit" className="btn-primary pulse-ring" disabled={loading} style={{ fontSize: lg ? 15 : 14, padding: lg ? "14px 28px" : "11px 20px", borderRadius: 13, minWidth: 148, justifyContent: "center" }}>
@@ -668,7 +687,7 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
         {errMsg && (
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8 }}>
             <AlertTriangle size={13} style={{ color: "var(--red)", flexShrink: 0 }} />
-            <span style={{ fontSize: 12, color: dark ? "#FCA5A5" : "var(--red)", fontWeight: 500 }}>{errMsg}</span>
+            <span role="alert" style={{ fontSize: 12, color: dark ? "#FCA5A5" : "var(--red)", fontWeight: 500 }}>{errMsg}</span>
           </div>
         )}
       </form>
@@ -678,228 +697,33 @@ const WaitlistForm = ({ size="lg", dark=false }) => {
 
 /* ── Checkout Modal ── */
 const CheckoutModal = ({ plan, onClose }) => {
-  const [step, setStep]       = useState("redirect");
-  const [cardNum, setCardNum] = useState("");
-  const [expiry, setExpiry]   = useState("");
-  const [cvc, setCvc]         = useState("");
-  const [email, setEmail]     = useState("");
-  const [errors, setErrors]   = useState({});
-  const [paying, setPaying]   = useState(false);
-  const [paid, setPaid]       = useState(false);
-  const cardInputRef = useRef(null);
-
-  useEffect(() => { const t = setTimeout(() => setStep("form"), 1800); return () => clearTimeout(t); }, []);
-
-  const PX = { Starter: "$1.00", Pro: "$39.99", Elite: "$89.99" };
-  const PLAN_DETAILS = {
-    Starter: { sessions:"1 Interview",    features:["1 Full Report","Any language","Any company","Standard scoring"] },
-    Pro:     { sessions:"40 Interviews",  features:["40 Full Reports","AI Assistance Mode","10 Report rechecks","3 Interviewer Personas"] },
-    Elite:   { sessions:"100 Interviews", features:["100 Full Reports","AI Assistance Mode","30 Report rechecks","All 6 Personas","Priority support"] },
-  };
-  const pd = PLAN_DETAILS[plan] || PLAN_DETAILS.Pro;
-
-  const getCardBrand = num => {
-    const n = num.replace(/\s/g,"");
-    if (/^4/.test(n)) return "visa";
-    if (/^5[1-5]/.test(n)) return "mc";
-    return null;
-  };
-  const brand = getCardBrand(cardNum);
-
-  const formatCard   = v => v.replace(/\D/g,"").slice(0,16).replace(/(.{4})/g,"$1 ").trim();
-  const formatExpiry = v => { const d=v.replace(/\D/g,"").slice(0,4); return d.length>=3?d.slice(0,2)+" / "+d.slice(2):d; };
-
-  const validate = () => {
-    const e = {};
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Valid email required";
-    if (cardNum.replace(/\s/g,"").length < 16) e.card = "Enter full 16-digit card number";
-    if (expiry.replace(/\D/g,"").length < 4)   e.expiry = "Enter MM / YY";
-    if (cvc.replace(/\D/g,"").length < 3)      e.cvc = "3-digit CVC required";
-    return e;
-  };
-
-  const handlePay = () => {
-    const e = validate();
-    if (Object.keys(e).length) { setErrors(e); return; }
-    setPaying(true);
-    setTimeout(() => { setPaying(false); setPaid(true); setTimeout(onClose, 2400); }, 1600);
-  };
-
-  return (
-    <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
-      style={{ position:"fixed", inset:0, background:"rgba(15,23,42,0.65)", backdropFilter:"blur(10px)", zIndex:999, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}
-      onClick={e => e.target===e.currentTarget && onClose()}>
-      <motion.div initial={{ opacity:0, scale:0.92, y:28 }} animate={{ opacity:1, scale:1, y:0 }} exit={{ opacity:0, scale:0.92, y:20 }} transition={{ duration:0.35, ease:[0.16,1,0.3,1] }}
-        style={{ background:"var(--white)", borderRadius:24, maxWidth:520, width:"100%", boxShadow:"0 40px 100px rgba(15,23,42,.3)", position:"relative", maxHeight:"92vh", overflowY:"auto" }}>
-
-        {/* Close button */}
-        <button onClick={onClose} style={{ position:"absolute", top:16, right:16, width:32, height:32, borderRadius:"50%", border:"1px solid var(--border)", background:"var(--slate-50)", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", color:"var(--slate-500)", zIndex:10, transition:"all 0.2s" }}
-          onMouseEnter={e=>{ e.currentTarget.style.background="var(--slate-100)"; e.currentTarget.style.transform="scale(1.1)"; }}
-          onMouseLeave={e=>{ e.currentTarget.style.background="var(--slate-50)"; e.currentTarget.style.transform=""; }}>
-          <X size={14}/>
-        </button>
-
-        <AnimatePresence mode="wait">
-
-          {/* ── Redirect step ── */}
-          {step==="redirect" && (
-            <motion.div key="r" initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0, y:-10 }}
-              style={{ textAlign:"center", padding:"56px 40px 48px" }}>
-              <div style={{ width:72, height:72, borderRadius:20, background:"var(--teal-light)", border:"1px solid rgba(13,148,136,.25)", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 24px" }}>
-                <span className="spin"><RefreshCw size={32} style={{ color:"var(--teal)" }}/></span>
-              </div>
-              <h2 className="brig" style={{ fontSize:22, fontWeight:700, color:"var(--slate)", letterSpacing:"-0.02em", marginBottom:10 }}>Preparing secure checkout…</h2>
-              <p style={{ fontSize:14, color:"var(--slate-500)", lineHeight:1.65, marginBottom:24 }}>
-                Setting up checkout for the <strong style={{ color:"var(--slate)" }}>{plan} Plan</strong>.<br/>Protected with 256-bit SSL encryption.
-              </p>
-              <div style={{ display:"flex", justifyContent:"center", gap:8 }}>
-                {[0,.2,.4].map((d,i)=><div key={i} style={{ width:8, height:8, borderRadius:"50%", background:"var(--teal)", animation:`dot-pulse 1.4s ease-in-out ${d}s infinite` }}/>)}
-              </div>
-            </motion.div>
-          )}
-
-          {/* ── Payment form ── */}
-          {step==="form" && !paid && (
-            <motion.div key="f" initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.32 }}>
-              {/* Header */}
-              <div style={{ padding:"24px 28px 20px", borderBottom:"1px solid var(--border)", display:"flex", alignItems:"center", gap:14 }}>
-                <div style={{ width:44, height:44, borderRadius:12, background:"var(--teal-light)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                  <CreditCard size={20} style={{ color:"var(--teal)" }}/>
-                </div>
-                <div style={{ flex:1 }}>
-                  <div className="brig" style={{ fontSize:17, fontWeight:700, color:"var(--slate)" }}>Secure Checkout</div>
-                  <div style={{ fontSize:12, color:"var(--slate-400)", marginTop:2 }}>🔒 Powered by Stripe · 256-bit SSL</div>
-                </div>
-                <div style={{ textAlign:"right" }}>
-                  <div className="brig" style={{ fontSize:26, fontWeight:800, color:"var(--slate)", letterSpacing:"-0.03em" }}>{PX[plan]}</div>
-                  <div style={{ fontSize:11, color:"var(--slate-400)", marginTop:1 }}>One-time · No auto-renew</div>
-                </div>
-              </div>
-
-              <div style={{ padding:"22px 28px 28px", display:"flex", flexDirection:"column", gap:16 }}>
-                {/* Plan summary */}
-                <div style={{ background:"linear-gradient(135deg,var(--teal-light),rgba(204,251,241,.3))", border:"1.5px solid rgba(13,148,136,.25)", borderRadius:14, padding:"14px 18px" }}>
-                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
-                    <div>
-                      <div className="brig" style={{ fontSize:14, fontWeight:700, color:"var(--slate)" }}>PlacementDo {plan}</div>
-                      <div style={{ fontSize:12, color:"var(--teal-dark)", fontWeight:600, marginTop:1 }}>{pd.sessions}</div>
-                    </div>
-                    <div className="brig" style={{ fontSize:20, fontWeight:800, color:"var(--teal-dark)" }}>{PX[plan]}</div>
-                  </div>
-                  <div style={{ display:"flex", gap:7, flexWrap:"wrap" }}>
-                    {pd.features.map(f=>(
-                      <div key={f} style={{ display:"flex", alignItems:"center", gap:4, fontSize:11, color:"var(--teal-dark)", background:"rgba(255,255,255,.65)", padding:"2px 8px", borderRadius:20, fontWeight:500 }}>
-                        <Check size={9} strokeWidth={3} style={{ color:"var(--teal)" }}/> {f}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label>Email Address</label>
-                  <input type="email" value={email} onChange={e=>{ setEmail(e.target.value); setErrors(v=>({...v,email:""})); }} placeholder="you@example.com"
-                    style={{ border:errors.email?"1.5px solid var(--red)":undefined }}/>
-                  {errors.email && <div style={{ fontSize:11.5, color:"var(--red)", marginTop:5, display:"flex", alignItems:"center", gap:4 }}><AlertTriangle size={11}/> {errors.email}</div>}
-                </div>
-
-                {/* Card number */}
-                <div>
-                  <label>Card Number</label>
-                  <div style={{ position:"relative" }}>
-                    <input
-                      ref={cardInputRef}
-                      value={cardNum}
-                      onChange={e => {
-                        const raw = e.target.value.replace(/\D/g,"").slice(0,16);
-                        const formatted = raw.replace(/(.{4})/g,"$1 ").trim();
-                        const cursorPos = e.target.selectionStart;
-                        const prevLen = e.target.value.length;
-                        setCardNum(formatted);
-                        setErrors(v=>({...v,card:""}));
-                        // Restore cursor after React re-render
-                        requestAnimationFrame(() => {
-                          if (cardInputRef.current) {
-                            const newLen = formatted.length;
-                            const diff = newLen - prevLen;
-                            cardInputRef.current.selectionStart = cardInputRef.current.selectionEnd = Math.max(0, cursorPos + diff);
-                          }
-                        });
-                      }}
-                      placeholder="1234 5678 9012 3456"
-                      style={{ paddingRight:72, fontFamily:"'JetBrains Mono',monospace", letterSpacing:"0.06em", border:errors.card?"1.5px solid var(--red)":undefined }}/>
-                    {/* Card brand icons */}
-                    <div style={{ position:"absolute", right:10, top:"50%", transform:"translateY(-50%)", display:"flex", gap:5, alignItems:"center" }}>
-                      <div style={{ width:34, height:22, borderRadius:5, background:brand==="visa"?"#1A1F71":"var(--slate-100)", display:"flex", alignItems:"center", justifyContent:"center", transition:"all 0.2s", opacity:brand&&brand!=="visa"?0.3:1 }}>
-                        <span style={{ fontSize:8, fontWeight:900, color:brand==="visa"?"#fff":"var(--slate-400)", letterSpacing:"0.04em" }}>VISA</span>
-                      </div>
-                      <div style={{ width:34, height:22, borderRadius:5, display:"flex", alignItems:"center", justifyContent:"center", gap:0, transition:"all 0.2s", opacity:brand&&brand!=="mc"?0.3:1 }}>
-                        <div style={{ width:14, height:14, borderRadius:"50%", background:brand==="mc"?"#EB001B":"var(--slate-300)" }}/>
-                        <div style={{ width:14, height:14, borderRadius:"50%", background:brand==="mc"?"#F79E1B":"var(--slate-200)", marginLeft:-6 }}/>
-                      </div>
-                    </div>
-                  </div>
-                  {errors.card && <div style={{ fontSize:11.5, color:"var(--red)", marginTop:5, display:"flex", alignItems:"center", gap:4 }}><AlertTriangle size={11}/> {errors.card}</div>}
-                </div>
-
-                {/* Expiry + CVC */}
-                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
-                  <div>
-                    <label>Expiry</label>
-                    <input
-                      value={expiry}
-                      onChange={e => {
-                        const raw = e.target.value.replace(/\D/g,"").slice(0,4);
-                        const formatted = raw.length >= 3 ? raw.slice(0,2) + " / " + raw.slice(2) : raw;
-                        setExpiry(formatted);
-                        setErrors(v=>({...v,expiry:""}));
-                      }}
-                      placeholder="MM / YY"
-                      style={{ border:errors.expiry?"1.5px solid var(--red)":undefined }}/>
-                    {errors.expiry && <div style={{ fontSize:11.5, color:"var(--red)", marginTop:5, display:"flex", alignItems:"center", gap:4 }}><AlertTriangle size={11}/> {errors.expiry}</div>}
-                  </div>
-                  <div>
-                    <label>CVC / CVV</label>
-                    <input value={cvc} onChange={e=>{ setCvc(e.target.value.replace(/\D/g,"").slice(0,4)); setErrors(v=>({...v,cvc:""})); }} placeholder="•••" type="password"
-                      style={{ border:errors.cvc?"1.5px solid var(--red)":undefined }}/>
-                    {errors.cvc && <div style={{ fontSize:11.5, color:"var(--red)", marginTop:5, display:"flex", alignItems:"center", gap:4 }}><AlertTriangle size={11}/> {errors.cvc}</div>}
-                  </div>
-                </div>
-
-                {/* Pay button */}
-                <button className="btn-primary" onClick={handlePay} disabled={paying}
-                  style={{ width:"100%", justifyContent:"center", fontSize:15, padding:"15px", borderRadius:13, marginTop:4 }}>
-                  {paying ? <><span className="spin"><RefreshCw size={16}/></span> Processing…</> : <><Check size={16}/> Pay {PX[plan]} · Complete Purchase</>}
-                </button>
-
-                {/* Trust bar */}
-                <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:18, flexWrap:"wrap" }}>
-                  {[{ icon:"🔒", text:"SSL Encrypted" }, { icon:"⚡", text:"Powered by Stripe" }, { icon:"🧪", text:"Prototype — no charge" }].map(({ icon, text })=>(
-                    <div key={text} style={{ display:"flex", alignItems:"center", gap:5, fontSize:11.5, color:"var(--slate-400)" }}><span>{icon}</span> {text}</div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* ── Success state ── */}
-          {paid && (
-            <motion.div key="success" initial={{ opacity:0, scale:0.92 }} animate={{ opacity:1, scale:1 }} transition={{ duration:0.4, ease:[0.16,1,0.3,1] }}
-              style={{ textAlign:"center", padding:"56px 40px 48px" }}>
-              <motion.div initial={{ scale:0 }} animate={{ scale:1 }} transition={{ type:"spring", stiffness:280, damping:18, delay:0.1 }}
-                style={{ width:72, height:72, borderRadius:"50%", background:"var(--green-light)", border:"2px solid var(--green)", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 24px", boxShadow:"0 8px 24px rgba(22,163,74,.25)" }}>
-                <Check size={32} style={{ color:"var(--green)" }} strokeWidth={2.5}/>
-              </motion.div>
-              <h2 className="brig" style={{ fontSize:24, fontWeight:700, color:"var(--slate)", letterSpacing:"-0.02em", marginBottom:10 }}>Payment Successful! 🎉</h2>
-              <p style={{ fontSize:14.5, color:"var(--slate-500)", lineHeight:1.65 }}>
-                Your <strong style={{ color:"var(--slate)" }}>{plan} Plan</strong> is active.<br/>Check your email for your receipt.
-              </p>
-            </motion.div>
-          )}
-
-        </AnimatePresence>
-      </motion.div>
-    </motion.div>
+  const dialogRef = useRef(null);
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    const previousOverflow = document.body.style.overflow;
+    dialog.showModal();
+    document.body.style.overflow = "hidden";
+    return () => {
+      dialog.close();
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
+  return createPortal(
+    <dialog ref={dialogRef} aria-labelledby="checkout-title" onCancel={onClose}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+      style={{ margin:"auto", padding:0, border:"1px solid #CBD5E1", borderRadius:24, width:"min(520px, calc(100vw - 32px))", maxHeight:"90vh", background:"#FFFFFF", color:"#0F172A", boxShadow:"0 24px 80px #0F172A55" }}>
+      <style>{`dialog::backdrop { background:rgba(15,23,42,.72); }`}</style>
+      <section style={{ padding:32 }}>
+        <Logo />
+        <h2 id="checkout-title" style={{ margin:"24px 0 12px", fontSize:28 }}>Payments aren't available yet</h2>
+        <p style={{ lineHeight:1.7, color:"#475569" }}>The {plan} plan cannot be purchased right now. No payment has been taken and no plan has been activated.</p>
+        <p style={{ lineHeight:1.7, color:"#475569", margin:"12px 0 24px" }}>You can continue exploring the demo or contact us with questions about availability.</p>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:12 }}>
+          <button autoFocus className="btn-primary" onClick={onClose}>Continue exploring</button>
+          <a className="btn-secondary" href="/contact">Contact us</a>
+        </div>
+      </section>
+    </dialog>, document.body
   );
 };
 
@@ -918,7 +742,7 @@ const Toast = ({ message, onDismiss }) => (
 );
 
 /* ── Navbar ── */
-const NAV_LINK_STYLE = { background:"none", border:"none", cursor:"pointer", fontFamily:"'DM Sans',sans-serif", textDecoration:"none", display:"block" };
+const NAV_LINK_STYLE = { cursor:"pointer", fontFamily:"'DM Sans',sans-serif", textDecoration:"none" };
 const NavA = ({ href, className, style, onClick, children }) => (
   <a href={href} className={className} style={{ ...NAV_LINK_STYLE, ...style }}
     onClick={e => {
@@ -2560,22 +2384,25 @@ const InterviewRoom = ({ onNav, persona }) => {
   const [codeLang, setCodeLang] = useState("JavaScript");
   const [codeCopied, setCodeCopied] = useState(false);
   const [roomLoading, setRoomLoading] = useState(true);
+  const handleRoomReady = useCallback(() => setRoomLoading(false), []);
 
   const captionsRef = useRef(null);
   const activePersona = persona || PERSONAS[2]; // default to Stress-Tester
 
   useEffect(() => {
+    if (roomLoading) return;
     const t = setInterval(() => setElapsed(e => e+1), 1000);
     document.body.style.overflow = "hidden";
     // Keyboard shortcuts: Space=mute, →=next, Esc=end
     const onKey = e => {
+      if (e.target?.closest?.("input, textarea, select, [contenteditable='true']")) return;
       if (e.code === "Space")      { e.preventDefault(); setMuted(m=>!m); }
       if (e.code === "ArrowRight") { setQIdx(q => Math.min(q+1, QUESTIONS.length-1)); }
       if (e.code === "Escape")     { setEnding(true); }
     };
     window.addEventListener("keydown", onKey);
     return () => { clearInterval(t); document.body.style.overflow = ""; window.removeEventListener("keydown", onKey); };
-  }, []);
+  }, [roomLoading]);
 
   // Auto-scroll captions to bottom when question changes
   useEffect(() => {
@@ -2599,11 +2426,12 @@ const InterviewRoom = ({ onNav, persona }) => {
   ];
 
   if (roomLoading) {
-    return <InterviewLoading persona={activePersona} onReady={() => setRoomLoading(false)} />;
+    return <InterviewLoading persona={activePersona} onReady={handleRoomReady} />;
   }
 
   return (
     <div className="int-room">
+      <div role="note" style={{ padding:"8px 16px", background:"#134E4A", color:"#FFFFFF", fontSize:12, lineHeight:1.5, flexShrink:0 }}>Demo walkthrough: sample questions, transcript, and scores. Microphone and camera controls do not record or transmit media.</div>
 
       {/* ── TOP BAR ─────────────────────────────────────────────────── */}
       <div className="int-topbar" style={{ background:"rgba(15,23,42,.98)", borderBottom:"1px solid rgba(255,255,255,.08)", display:"flex", alignItems:"center", padding:"0 20px", gap:16, flexShrink:0, zIndex:10, backdropFilter:"blur(12px)" }}>
@@ -3150,32 +2978,22 @@ const SupportView = () => {
   const [fbCategory, setFbCategory] = useState("Bug Report");
   const [fbText, setFbText]         = useState("");
   const [fbSent, setFbSent]         = useState(false);
-  const [fbLoading, setFbLoading]   = useState(false);
+  const fbLoading = false;
 
   const handleFbSubmit = e => {
     e.preventDefault();
     if (!fbText.trim()) return;
-    setFbLoading(true);
-    setTimeout(() => { setFbLoading(false); setFbSent(true); setFbText(""); }, 1500);
+    window.location.href = `mailto:support@placementdo.app?subject=${encodeURIComponent(fbCategory)}&body=${encodeURIComponent(fbText)}`;
+    setFbSent(true);
   };
 
   /* ── Chat state ── */
-  const WELCOME = { role:"ai", text:"Hi! I'm your PlacementDo assistant. Ask me anything about the platform or interview prep. 🚀" };
+  const WELCOME = { role:"ai", text:"Welcome to quick help. I can show local answers about the demo, plans, privacy, and interview preparation. This is not a live AI or a support agent." };
   const [messages, setMessages] = useState([WELCOME]);
   const [chatInput, setChatInput] = useState("");
   const [isTyping, setIsTyping]   = useState(false);
   const chatEndRef = useRef(null);
 
-  const AI_RESPONSES = [
-    "For behavioral interviews, use the STAR method — Situation, Task, Action, Result. Make every answer end with a measurable outcome.",
-    "Once your CV is uploaded, PlacementDo tailors every question to your actual experience and the target role.",
-    "Start with The Friendly Peer to build rhythm, then level up to The Stress-Tester for FAANG-style pressure.",
-    "Your scores cover 6 dimensions: Communication, Technical Depth, Confidence, Culture Fit, STAR Method, and Problem Solving.",
-    "To boost technical depth, practice articulating trade-offs — e.g. consistency vs. availability, latency vs. throughput.",
-    "PlacementDo supports 28+ languages. Set your preferred language in Interview Configuration before starting.",
-    "'Recheck AI Analysis' re-audits your full session transcript, surfacing insights the first pass may have missed.",
-    "Keep answers between 90 seconds and 3 minutes. Pause, check in — 'Would you like me to go deeper?' shows self-awareness.",
-  ];
 
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior:"smooth" }); }, [messages, isTyping]);
 
@@ -3186,7 +3004,7 @@ const SupportView = () => {
     setChatInput("");
     setIsTyping(true);
     setTimeout(() => {
-      const reply = AI_RESPONSES[Math.floor(Math.random() * AI_RESPONSES.length)];
+      const reply = supportAnswer(text);
       setMessages(m => [...m, { role:"ai", text: reply }]);
       setIsTyping(false);
     }, 1200 + Math.random() * 700);
@@ -3264,7 +3082,7 @@ const SupportView = () => {
           <h1 className="brig" style={{ fontSize:"clamp(20px,3vw,28px)", fontWeight:700, color:"var(--slate)", letterSpacing:"-0.03em", margin:0 }}>Help & Support</h1>
         </div>
         <p style={{ fontSize:14, color:"var(--slate-500)", maxWidth:560, lineHeight:1.6 }}>
-          Got a bug or an idea? Drop us a note. Or chat live with our AI assistant for instant answers on the platform and interview prep.
+          Got a bug or an idea? Prepare an email to our support team, or browse local quick-help answers below.
         </p>
       </div>
 
@@ -3296,11 +3114,11 @@ const SupportView = () => {
                   <Check size={28} style={{ color:"var(--green)" }}/>
                 </motion.div>
                 <div>
-                  <div className="brig" style={{ fontSize:17, fontWeight:700, color:"var(--slate)", marginBottom:6 }}>Feedback received!</div>
-                  <p style={{ fontSize:13.5, color:"var(--slate-500)", lineHeight:1.65 }}>Our team reviews every submission.<br/>We'll reach out if we need more context.</p>
+                  <div className="brig" style={{ fontSize:17, fontWeight:700, color:"var(--slate)", marginBottom:6 }}>Finish sending in your email app</div>
+                  <p style={{ fontSize:13.5, color:"var(--slate-500)", lineHeight:1.65 }}>Nothing has been submitted by this page. If your email app didn't open, copy your message and email support@placementdo.app. Your draft is preserved.</p>
                 </div>
                 <button className="btn-secondary" style={{ fontSize:13, marginTop:4 }} onClick={()=>setFbSent(false)}>
-                  <Send size={13}/> Send another
+                  <Send size={13}/> Return to draft
                 </button>
               </motion.div>
             ) : (
@@ -3342,7 +3160,7 @@ const SupportView = () => {
                 <button type="submit" className="btn-primary" disabled={fbLoading || !fbText.trim()} style={{ fontSize:14, justifyContent:"center", padding:"12px" }}>
                   {fbLoading
                     ? <><span className="spin"><RefreshCw size={14}/></span> Sending…</>
-                    : <><Send size={14}/> Submit Feedback</>}
+                    : <><Send size={14}/> Open email draft</>}
                 </button>
               </motion.form>
             )}
@@ -3361,10 +3179,10 @@ const SupportView = () => {
               <div style={{ position:"absolute", bottom:1, right:1, width:10, height:10, borderRadius:"50%", background:"var(--green)", border:"2px solid var(--white)", animation:"dot-pulse 2.4s ease-in-out infinite" }}/>
             </div>
             <div style={{ flex:1, minWidth:0 }}>
-              <div className="brig" style={{ fontSize:14, fontWeight:700, color:"var(--slate)" }}>Live AI Assistant</div>
-              <div style={{ fontSize:11.5, color:"var(--slate-500)", marginTop:1 }}>Replies in seconds · Platform & interview prep</div>
+              <div className="brig" style={{ fontSize:14, fontWeight:700, color:"var(--slate)" }}>Quick help</div>
+              <div style={{ fontSize:11.5, color:"var(--slate-500)", marginTop:1 }}>Local answers · No account access</div>
             </div>
-            <Tag color="green" size="xs">Online</Tag>
+            <Tag color="slate" size="xs">Help guide</Tag>
           </div>
 
           {/* Messages scroll area */}
@@ -3615,6 +3433,7 @@ export default function App() {
                              <SettingsView onUpgrade={openCheckout}/>;
       return (
         <DashboardShell activeTab={view} onNav={go} onUpgrade={openCheckout}>
+          <p role="note" style={{ padding:"12px 16px", marginBottom:20, border:"1px solid #99F6E4", borderRadius:12, background:"#F0FDFA", color:"#115E59", lineHeight:1.6 }}>Demo workspace — the profile, credits, sessions, and reports below are sample data, not a signed-in account. Live interviewing and purchases are not connected.</p>
           {inner}
         </DashboardShell>
       );
@@ -3627,7 +3446,7 @@ export default function App() {
       <G/>
       {view !== "interview" && <Navbar view={view} onNav={go}/>}
       <AnimatePresence mode="wait">
-        <motion.div key={view} initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }} transition={{ duration:0.22 }}>
+        <motion.div key={view} initial={false} animate={{ opacity:1 }}>
           {renderView()}
         </motion.div>
       </AnimatePresence>
