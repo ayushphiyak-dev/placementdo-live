@@ -1,10 +1,13 @@
 import { Component, lazy, Suspense, useEffect, useState, useCallback } from 'react';
 import GlobalStyles from './GlobalStyles.jsx';
 import CookieConsent from './components/Privacy/CookieConsent.jsx';
+import { FAQPage } from './components/Public/PublicPages.jsx';
 const retryableLazy = (loader, chunkName) => lazy(async () => {
   try {
     return await loader();
   } catch (error) {
+    // Only failed asset imports merit a cache-busting retry, not application bugs.
+    if (!/Failed to fetch dynamically imported module|Loading chunk|Importing a module script failed/i.test(String(error?.message))) throw error;
     const retryUrl = new URL(window.location.href);
     let retried = retryUrl.searchParams.has("_pd_chunk_retry");
     try {
@@ -33,6 +36,10 @@ class RouteErrorBoundary extends Component {
     return { hasError: true };
   }
 
+  componentDidCatch(error, info) {
+    console.error("PlacementDo route failed", error, info.componentStack);
+  }
+
   render() {
     if (!this.state.hasError) return this.props.children;
     return (
@@ -40,7 +47,7 @@ class RouteErrorBoundary extends Component {
         <section style={{ maxWidth: 520 }}>
           <p style={{ margin: "0 0 10px", color: "#0F766E", fontWeight: 700 }}>PlacementDo</p>
           <h1 style={{ margin: "0 0 14px", fontSize: "clamp(28px, 5vw, 48px)", lineHeight: 1.1 }}>This page needs one more try</h1>
-          <p style={{ margin: "0 0 22px", color: "#475569", lineHeight: 1.6 }}>A network or deployment update interrupted the page bundle. Reload once to continue.</p>
+          <p style={{ margin: "0 0 22px", color: "#475569", lineHeight: 1.6 }}>We couldn't display this page. Try reloading, or return home to continue.</p>
           <button type="button" onClick={() => window.location.reload()} style={{ border: 0, borderRadius: 999, padding: "11px 18px", background: "#0D9488", color: "#fff", fontWeight: 700, cursor: "pointer" }}>Reload page</button>
           <a href="/" style={{ display: "inline-block", marginLeft: 14, color: "#0F766E", fontWeight: 700 }}>Return home</a>
         </section>
@@ -66,11 +73,17 @@ const AboutPage = retryableLazy(() => import("./pages/Compliance.jsx").then(m =>
 const ContactPage = retryableLazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.Contact })), "ContactPage");
 const DisclaimerPage = retryableLazy(() => import("./pages/Compliance.jsx").then(m => ({ default: m.Disclaimer })), "DisclaimerPage");
 
-const SpeedInsights = retryableLazy(
+class OptionalTelemetryBoundary extends Component {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  render() { return this.state.failed ? null : this.props.children; }
+}
+
+const SpeedInsights = lazy(
   () => import('@vercel/speed-insights/react').then((mod) => ({ default: mod.SpeedInsights })),
   "SpeedInsights",
 );
-const Analytics = retryableLazy(
+const Analytics = lazy(
   () => import('@vercel/analytics/react').then((mod) => ({ default: mod.Analytics })),
   "Analytics",
 );
@@ -192,6 +205,7 @@ function AppRouter() {
   }, []);
 
   // Compliance & legal pages
+  if (normalizedPath === "/faq") return <FAQPage />;
   if (normalizedPath === "/privacy-policy") {
     return renderWithFallback(<PrivacyPolicyPage onNav={navigate} />);
   }
@@ -255,22 +269,7 @@ export default function App() {
     } catch { return false; }
   });
 
-  useEffect(() => {
-    // Remove the one-time cache-busting query after a successful retry.
-    try {
-      const retryUrl = new URL(window.location.href);
-      if (retryUrl.searchParams.has("_pd_chunk_retry")) {
-        retryUrl.searchParams.delete("_pd_chunk_retry");
-        window.history.replaceState({}, "", retryUrl.toString());
-        for (let index = window.sessionStorage.length - 1; index >= 0; index -= 1) {
-          const key = window.sessionStorage.key(index);
-          if (key?.startsWith("placementdo:chunk-retry:")) window.sessionStorage.removeItem(key);
-        }
-      }
-    } catch {
-      // URL or storage APIs may be unavailable in restricted browsers.
-    }
-  }, []);
+  // Retain the retry marker for this document: mount is not proof that a lazy route loaded.
 
   useEffect(() => {
     const id = window.setTimeout(() => setEnableTelemetry(true), 1200);
@@ -293,13 +292,13 @@ export default function App() {
         window.dispatchEvent(new PopStateEvent("popstate"));
         window.scrollTo({ top: 0, behavior: "auto" });
       }} />
+      </RouteErrorBoundary>
       {enableTelemetry && optionalConsent && (
-        <Suspense fallback={<RouteLoadingFallback />}>
+        <OptionalTelemetryBoundary><Suspense fallback={null}>
           <SpeedInsights />
           <Analytics />
-        </Suspense>
+        </Suspense></OptionalTelemetryBoundary>
       )}
-      </RouteErrorBoundary>
     </>
   );
 }

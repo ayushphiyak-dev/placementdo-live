@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PrivacyPolicy, TermsOfService, About, Contact } from "./pages/Compliance.jsx";
 import { BlogSystemDesign, BlogSTAR, BlogBehavioral, BlogResume } from "./pages/BlogArticles.jsx";
+import { SiteFooter, NotFound } from "./components/Public/PublicPages.jsx";
+import { publicDocumentFor } from "./utils/publicNavigation.js";
 import {
   Upload, Building2, Video, Mic, MicOff, VideoOff, PhoneOff,
   Check, Zap, BarChart2, Brain, RefreshCw, Shield, Award,
@@ -919,7 +921,10 @@ const Toast = ({ message, onDismiss }) => (
 const NAV_LINK_STYLE = { background:"none", border:"none", cursor:"pointer", fontFamily:"'DM Sans',sans-serif", textDecoration:"none", display:"block" };
 const NavA = ({ href, className, style, onClick, children }) => (
   <a href={href} className={className} style={{ ...NAV_LINK_STYLE, ...style }}
-    onClick={e => { e.preventDefault(); onClick && onClick(); }}>
+    onClick={e => {
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault(); onClick && onClick();
+    }}>
     {children}
   </a>
 );
@@ -1476,67 +1481,7 @@ const Landing = ({ onNav, onCheckout }) => (
     </section>
 
     {/* FOOTER */}
-    <footer style={{ background:"var(--slate)", borderTop:"1px solid rgba(255,255,255,.06)" }}>
-      <div className="footer-grid">
-        {/* Brand column */}
-        <div>
-          <a href="/" aria-label="PlacementDo home" style={{ textDecoration:"none", display:"inline-block" }} onClick={e => { e.preventDefault(); onNav("landing"); }}><Logo light/></a>
-          <p style={{ fontSize:13.5, color:"rgba(255,255,255,.4)", lineHeight:1.7, marginTop:14, maxWidth:280 }}>
-            AI-assisted interview practice for students and early-career candidates. Rehearse answers, review feedback, and keep improving.
-          </p>
-          <div style={{ display:"flex", gap:8, marginTop:20 }}>
-            {[
-              { icon:<MessageSquare size={15}/>, label:"Twitter/X", url:"https://x.com/Placementdo" },
-              { icon:<Hash size={15}/>,          label:"LinkedIn", url:"https://www.linkedin.com/company/placementdo" },
-              { icon:<Bookmark size={15}/>,      label:"Medium", url:"https://medium.com/@ayushphiyak739" },
-            ].map(({ icon, label, url }) => (
-              <a key={label} href={url} className="footer-social wiggle" title={label} style={{ color:"rgba(255,255,255,.4)" }}>{icon}</a>
-            ))}
-          </div>
-        </div>
-
-        {/* Product links */}
-        <div>
-          <div className="brig" style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,.35)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:16 }}>Product</div>
-          <a href="/#features-section" className="footer-link" onClick={(e) => { e.preventDefault(); scrollTo("features-section"); }}>Features</a>
-          <a href="/#pricing-section" className="footer-link" onClick={(e) => { e.preventDefault(); scrollTo("pricing-section"); }}>Pricing</a>
-          <a href="/blog" className="footer-link" onClick={(e) => { e.preventDefault(); onNav("blog"); }}>Blog</a>
-          <a href="/faq" className="footer-link" onClick={(e) => { e.preventDefault(); onNav("faq"); }}>FAQ</a>
-        </div>
-
-        {/* Company */}
-        <div>
-          <div className="brig" style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,.35)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:16 }}>Company</div>
-          <a href="/about" className="footer-link" onClick={(e) => { e.preventDefault(); onNav("about"); }}>About</a>
-          <a href="/contact" className="footer-link" onClick={(e) => { e.preventDefault(); onNav("contact"); }}>Contact</a>
-          <a href="/privacy-policy" className="footer-link" onClick={(e) => { e.preventDefault(); onNav("privacy-policy"); }}>Privacy Policy</a>
-          <a href="/terms-of-service" className="footer-link" onClick={(e) => { e.preventDefault(); onNav("terms-of-service"); }}>Terms of Service</a>
-        </div>
-
-        {/* Join waitlist */}
-        <div>
-          <div className="brig" style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,.35)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:16 }}>Get Early Access</div>
-          <p style={{ fontSize:13, color:"rgba(255,255,255,.4)", lineHeight:1.65, marginBottom:14 }}>Join the waitlist and get 30% off at launch in 2026.</p>
-          <WaitlistForm size="sm" dark={true}/>
-        </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div style={{ borderTop:"1px solid rgba(255,255,255,.07)", padding:"16px clamp(20px,5vw,60px)", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:10, maxWidth:1200, margin:"0 auto" }}>
-        <span style={{ fontSize:12, color:"rgba(255,255,255,.25)" }}>© 2026 PlacementDo. All rights reserved.</span>
-        <div style={{ display:"flex", gap:16 }}>
-          <a href="/privacy-policy" onClick={(e) => { e.preventDefault(); onNav("privacy-policy"); }} style={{ fontSize:12, color:"rgba(255,255,255,.25)", background:"none", border:"none", cursor:"pointer", transition:"color 0.15s", fontFamily:"'DM Sans',sans-serif", textDecoration:"none" }}
-            onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,.6)"}
-            onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.25)"}>Privacy</a>
-          <a href="/terms-of-service" onClick={(e) => { e.preventDefault(); onNav("terms-of-service"); }} style={{ fontSize:12, color:"rgba(255,255,255,.25)", background:"none", border:"none", cursor:"pointer", transition:"color 0.15s", fontFamily:"'DM Sans',sans-serif", textDecoration:"none" }}
-            onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,.6)"}
-            onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.25)"}>Terms</a>
-          <a href="/disclaimer" onClick={(e) => { e.preventDefault(); onNav("disclaimer"); }} style={{ fontSize:12, color:"rgba(255,255,255,.25)", background:"none", border:"none", cursor:"pointer", transition:"color 0.15s", fontFamily:"'DM Sans',sans-serif", textDecoration:"none" }}
-            onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,.6)"}
-            onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.25)"}>Disclaimer</a>
-        </div>
-      </div>
-    </footer>
+    <SiteFooter />
   </div>
 );
 
@@ -3298,110 +3243,8 @@ const SupportView = () => {
           background: var(--slate-50); border: 1px solid var(--border);
           border-radius: 12px; cursor: pointer;
           transition: all 0.2s ease;
-/* ── Compliance & SEO Pages ── */
-
-/* --- Shared blog shell --- */
-const BlogShell = ({ children, onNav }) => (
-  <motion.div initial={{ opacity:0,y:18 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.35 }} style={{ minHeight:"100vh", paddingTop:88, paddingBottom:80, background:"var(--slate-50)" }}>
-    <div style={{ maxWidth:800, margin:"0 auto", padding:"0 20px" }}>
-      <button onClick={()=>onNav("blog")} style={{ display:"inline-flex", alignItems:"center", gap:6, background:"none", border:"none", cursor:"pointer", fontSize:13, color:"var(--slate-500)", fontFamily:"'DM Sans',sans-serif", marginBottom:24, padding:0 }}>
-        Back to Blog
-      </button>
-      {children}
-    </div>
-  </motion.div>
-);
-
-/* --- FAQ Page --- */
-const FAQPage = ({ onNav }) => {
-  const FAQS2 = [
-    { q:"How is PlacementDo different from practising with a friend?", a:"Friends are too nice. They skip hard follow-ups and cannot give you a scored breakdown. PlacementDo's AI interrupts you mid-sentence, pushes back on every weak answer, and scores you across 10 dimensions that friends simply will not evaluate." },
-    { q:"Can the AI replicate a real interview?", a:"The Stress-Tester persona can introduce interruptions, rapid follow-ups, and pauses to make practice more demanding. A simulation is still a practice tool, so use it alongside employer research and feedback from people who know your target role." },
-    { q:"What are the 6 interviewer personas?", a:"The Friendly Peer, Empath, Stress-Tester, Stoic Veteran, Devil's Advocate, and Silent Analyst each emphasise a different practice dimension. Trying several styles can broaden rehearsal, but no set of personas guarantees readiness for every interviewer." },
-    { q:"Does PlacementDo work for non-technical roles?", a:"Yes. Configure any role such as Product Manager, Consultant, Investment Banker, or Software Engineer. Choose Behavioral / STAR Method, Case Study, or Balanced sessions. The AI adapts its questioning style and scoring criteria to your target role and company." },
-    { q:"Which languages does PlacementDo support?", a:"Language availability depends on the current model and account settings. Check the in-product selector before a session and use the language that lets you explain your experience most clearly." },
-    { q:"What is the STAR method and does PlacementDo score it?", a:"STAR stands for Situation, Task, Action, Result, which is the industry-standard framework for behavioral interview answers. PlacementDo scores every behavioral response against the STAR rubric in real time, flagging missing components, vague actions, and unquantified results as you speak." },
-    { q:"When does PlacementDo launch and how much will it cost?", a:"We target a 2026 launch. Waitlist members get 30% off. Plans start at $1 for a single session, $29.99 for 10 sessions, and $89.99 for 100 sessions with all personas unlocked. No subscriptions, no auto-renewals." },
-    { q:"How does PlacementDo use my CV or resume?", a:"Upload your CV before a session and the AI generates hyper-specific questions about your exact projects, technologies, and career trajectory. Your CV is stored securely and used only to personalize your sessions." },
-  ];
-  const [open, setOpen] = useState(null);
-  return (
-    <motion.div initial={{ opacity:0,y:18 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.35 }} style={{ minHeight:"100vh", paddingTop:100, paddingBottom:80, background:"var(--slate-50)" }}>
-      <div style={{ maxWidth:780, margin:"0 auto", padding:"0 20px" }}>
-        <div style={{ textAlign:"center", marginBottom:52 }}>
-          <h1 className="brig" style={{ fontSize:"clamp(28px,4vw,42px)", fontWeight:800, color:"var(--slate)", letterSpacing:"-0.03em", lineHeight:1.1 }}>Frequently Asked Questions</h1>
-          <p style={{ fontSize:16, color:"var(--slate-500)", marginTop:14, maxWidth:500, margin:"14px auto 0", lineHeight:1.65 }}>Everything you need to know about PlacementDo, AI mock interviews, personas, pricing, and how it all works.</p>
-        </div>
-        <div className="card" style={{ overflow:"hidden" }}>
-          {FAQS2.map(({ q, a }, i) => (
-            <div key={i} className="faq-item">
-              <button className="faq-btn" onClick={()=>setOpen(o=>o===i?null:i)} style={{ padding:"20px 24px" }} aria-expanded={open===i}>
-                <span className="brig" style={{ fontSize:15.5, fontWeight:700, color:"var(--slate)", letterSpacing:"-0.01em", lineHeight:1.3 }}>{q}</span>
-                <span className="faq-chevron" style={{ transform:open===i?"rotate(180deg)":"rotate(0deg)" }}><ChevronDown size={18}/></span>
-              </button>
-              <AnimatePresence initial={false}>
-                {open === i && (
-                  <motion.div key="ans" initial={{ height:0,opacity:0 }} animate={{ height:"auto",opacity:1 }} exit={{ height:0,opacity:0 }} transition={{ duration:0.28 }}>
-                    <p style={{ fontSize:14.5, color:"var(--slate-600)", lineHeight:1.75, padding:"0 24px 22px", borderTop:"1px solid var(--border)" }}>{a}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
-        </div>
-        <p style={{ textAlign:"center", marginTop:32, fontSize:14, color:"var(--slate-400)" }}>
-          Still have questions? <a href="/contact" onClick={e=>{e.preventDefault();onNav("contact");}} style={{ color:"var(--teal)", fontWeight:600, textDecoration:"underline" }}>Contact our team</a>.
-        </p>
-      </div>
-    </motion.div>
-  );
-};
-
-/* --- Blog Hub --- */
-const BLOG_POSTS = [
-  { id:"blog-system-design", title:"How to Ace System Design Interviews in 2026", summary:"A complete guide to system design interviews at top tech companies covering scalability, database selection, caching strategies, CAP theorem, and how to communicate your architecture clearly under pressure.", tag:"System Design", readTime:"12 min", date:"Aug 2026", emoji:"🏗️" },
-  { id:"blog-star-method",   title:"Mastering the STAR Method for Behavioral Interviews", summary:"How to structure winning behavioral answers using the Situation, Task, Action, Result framework. Includes full worked examples for leadership, conflict, failure, and ambiguity questions.", tag:"Behavioral", readTime:"10 min", date:"Aug 2026", emoji:"⭐" },
-  { id:"blog-behavioral",    title:"The Complete Guide to Behavioral Interviews at Top Tech Companies", summary:"Core behavioral competencies that Google, Amazon, Meta, and Microsoft actually evaluate and how to prepare for each one with targeted, structured practice.", tag:"FAANG Prep", readTime:"14 min", date:"Aug 2026", emoji:"🎯" },
-  { id:"blog-resume",        title:"Resume Tips for Software Engineers: How to Get Past the ATS", summary:"Actionable resume writing strategies for SWE roles: ATS keyword optimization, impact quantification, project framing, and what FAANG recruiters actually look for on your resume.", tag:"Resume", readTime:"9 min", date:"Aug 2026", emoji:"📄" },
-];
-
-const BlogHub = ({ onNav }) => (
-  <motion.div initial={{ opacity:0,y:18 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.35 }} style={{ minHeight:"100vh", paddingTop:100, paddingBottom:80, background:"var(--slate-50)" }}>
-    <div style={{ maxWidth:900, margin:"0 auto", padding:"0 20px" }}>
-      <div style={{ textAlign:"center", marginBottom:52 }}>
-        <h1 className="brig" style={{ fontSize:"clamp(28px,4vw,48px)", fontWeight:800, color:"var(--slate)", letterSpacing:"-0.03em", lineHeight:1.1 }}>Interview Prep Blog</h1>
-        <p style={{ fontSize:16, color:"var(--slate-500)", marginTop:14, maxWidth:560, margin:"14px auto 0", lineHeight:1.65 }}>Expert guides on acing technical and behavioral interviews at the world's most competitive tech companies.</p>
-      </div>
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(380px,1fr))", gap:24 }}>
-        {BLOG_POSTS.map(({ id, title, summary, tag, readTime, date, emoji }) => (
-          <motion.article key={id} initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} viewport={{ once:true }} transition={{ duration:0.4 }}
-            className="card card-lift" style={{ padding:28, cursor:"pointer", display:"flex", flexDirection:"column", gap:12 }}
-            onClick={()=>onNav(id)}>
-            <div style={{ fontSize:36 }}>{emoji}</div>
-            <Tag color="teal" size="xs">{tag}</Tag>
-            <h2 className="brig" style={{ fontSize:18, fontWeight:700, color:"var(--slate)", letterSpacing:"-0.015em", lineHeight:1.3 }}>{title}</h2>
-            <p style={{ fontSize:13.5, color:"var(--slate-500)", lineHeight:1.7, flex:1 }}>{summary}</p>
-            <div style={{ display:"flex", justifyContent:"space-between", fontSize:12, color:"var(--slate-400)" }}>
-              <span>{date}</span><span>{readTime} read</span>
-            </div>
-          </motion.article>
-        ))}
-      </div>
-    </div>
-  </motion.div>
-);
-
-/* --- Blog Article: System Design --- */
-const NotFound = ({ onNav }) => (
-  <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", background:"var(--slate-50)", padding:20, textAlign:"center" }}>
-    <div style={{ fontSize:64, marginBottom:16 }}>🗺️</div>
-    <h1 className="brig" style={{ fontSize:32, fontWeight:800, color:"var(--slate)", marginBottom:12 }}>404 - Page Not Found</h1>
-    <p style={{ fontSize:16, color:"var(--slate-500)", marginBottom:30, maxWidth:400 }}>The page you are looking for doesn't exist, has been moved, or is temporarily unavailable.</p>
-    <button className="btn-primary" onClick={() => onNav("landing")} style={{ fontSize:15, padding:"12px 24px" }}>
-      Return Home
-    </button>
-  </motion.div>
-);
+        }
+        .sp-qcard:hover {
 
           background: var(--white);
           border-color: var(--teal);
@@ -3730,6 +3573,11 @@ export default function App() {
   }, [view]);
 
   const go = v => {
+    const documentPath = publicDocumentFor(v);
+    if (documentPath) {
+      window.location.assign(documentPath);
+      return;
+    }
     setView(v);
     const pathEntry = Object.entries(PATH_MAP).find(([,val]) => val === v);
     const urlPath = pathEntry ? (pathEntry[0] === "" ? "/" : `/${pathEntry[0]}`) : `/${v}`;
@@ -3752,8 +3600,6 @@ export default function App() {
     if (view==="terms-of-service") return <TermsOfService />;
     if (view==="about")            return <About />;
     if (view==="contact")          return <Contact />;
-    if (view==="faq")              return <FAQPage onNav={go}/>;
-    if (view==="blog")             return <BlogHub onNav={go}/>;
     if (view==="blog-system-design") return <BlogSystemDesign onNav={go}/>;
     if (view==="blog-star-method")   return <BlogSTAR onNav={go}/>;
     if (view==="blog-behavioral")    return <BlogBehavioral onNav={go}/>;

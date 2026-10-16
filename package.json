@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/generate-blog-pages.mjs",
+    "build": "node scripts/check-jsx-bindings.mjs && node scripts/test-public-navigation.mjs && vite build && node scripts/generate-blog-pages.mjs",
     "lint": "eslint .",
     "audit:content": "node scripts/audit-content.mjs",
     "preview": "vite preview"
