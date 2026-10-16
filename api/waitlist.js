@@ -96,6 +96,12 @@ export default async function handler(req, res) {
       res.status(503).json({ error: "Waitlist service is unavailable. Please try again in a few moments." });
       return;
     }
+    // A login/error HTML page can return HTTP 200. Only acknowledge a saved
+    // address when the upstream endpoint explicitly confirms the operation.
+    const confirmation = await r.json();
+    if (confirmation.success !== true && confirmation.status !== "success" && confirmation.result !== "success") {
+      throw new Error("Waitlist storage did not confirm success");
+    }
     res.status(200).json({ success: true });
   } catch {
     res.status(503).json({ error: "Waitlist service is unavailable. Please try again in a few moments." });
