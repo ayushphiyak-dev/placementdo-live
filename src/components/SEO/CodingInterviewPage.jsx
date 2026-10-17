@@ -286,12 +286,12 @@ export default function CodingInterviewPage({ onNav }) {
           </div>
         </section>
 
-        <CTABlock
-          heading="Practice Coding Problems with AI Feedback"
-          subtext="Get instant feedback on your solutions, explanation quality, and communication. Practice real interview scenarios with PlacementDo."
-          buttonLabel="Start coding practice"
+<CTABlock
+          heading="Put one idea into practice"
+          subtext="Use the free guides and self-review exercises without an account. The interactive workspace is a sample demo, not a live AI interview service."
+          buttonLabel="Explore preparation guides"
           onNav={onNav}
-          buttonHref="/dashboard"
+          buttonHref="/blog"
         />
       </div>
     </PageLayout>

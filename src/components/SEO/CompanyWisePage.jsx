@@ -465,12 +465,12 @@ export default function CompanyWisePage({ company, onNav }) {
         </section>
 
 
-        <CTABlock
-          heading={`Practice ${company.toUpperCase()} Interview with AI`}
-          subtext={`Simulate real ${company.toUpperCase()} technical and HR interviews. Get instant feedback on your answers and communication skills.`}
-          buttonLabel="Start mock interview"
+<CTABlock
+          heading="Put one idea into practice"
+          subtext="Use the free guides and self-review exercises without an account. The interactive workspace is a sample demo, not a live AI interview service."
+          buttonLabel="Explore preparation guides"
           onNav={onNav}
-          buttonHref="/dashboard"
+          buttonHref="/blog"
         />
       </div>
     </PageLayout>

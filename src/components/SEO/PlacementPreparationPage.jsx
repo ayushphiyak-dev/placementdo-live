@@ -283,12 +283,12 @@ export default function PlacementPreparationPage({ onNav }) {
           </div>
         </section>
 
-        <CTABlock
-          heading="Practice with AI-Powered Mock Interviews"
-              subtext="Get structured feedback on your answers, communication, and problem-solving approach while you prepare for campus placements."
-          buttonLabel="Start practicing free"
+<CTABlock
+          heading="Put one idea into practice"
+          subtext="Use the free guides and self-review exercises without an account. The interactive workspace is a sample demo, not a live AI interview service."
+          buttonLabel="Explore preparation guides"
           onNav={onNav}
-          buttonHref="/dashboard"
+          buttonHref="/blog"
         />
       </div>
     </PageLayout>

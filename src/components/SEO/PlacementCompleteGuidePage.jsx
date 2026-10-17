@@ -396,12 +396,12 @@ export default function PlacementCompleteGuidePage({ onNav }) {
           </div>
         </section>
 
-        <CTABlock
-          heading="Practice Placement Interviews with AI — Free"
-          subtext="PlacementDo simulates placement interviews with structured feedback so you can rehearse answers for the roles and employers you are researching."
-          buttonLabel="Start your first mock interview"
+<CTABlock
+          heading="Put one idea into practice"
+          subtext="Use the free guides and self-review exercises without an account. The interactive workspace is a sample demo, not a live AI interview service."
+          buttonLabel="Explore preparation guides"
           onNav={onNav}
-          buttonHref="/"
+          buttonHref="/blog"
         />
       </div>
     </PageLayout>

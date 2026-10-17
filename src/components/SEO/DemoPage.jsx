@@ -1,31 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PageLayout from './shared/PageLayout.jsx';
 
 export default function DemoPage({ onNav }) {
-  useEffect(() => {
-    // Load the Storylane script dynamically so it executes properly in React
-    const existingScript = document.querySelector('script[data-storylane-sdk="true"]');
-    let script = null;
-    if (!existingScript) {
-      script = document.createElement('script');
-      script.src = "https://js.storylane.io/js/v2/storylane.js";
-      script.async = true;
-      script.dataset.storylaneSdk = "true";
-      document.body.appendChild(script);
-    }
-
-    return () => {
-      // Cleanup only if this page created the script
-      if (script && document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
-  }, []);
 
   return (
     <PageLayout
-      title="PlacementDo Demo | AI Mock Interview Platform"
-      metaDescription="Try PlacementDo interactive demo. Practice AI mock interviews with real-time feedback and improve your placement preparation."
+      title="PlacementDo Product Walkthrough | Demo"
+      metaDescription="Explore a product walkthrough with sample data. Live interviews, personal scoring, and purchases are not connected."
       keywords={["placementdo demo", "AI mock interview demo", "placement interview simulator", "campus placement prep demo"]}
       onNav={onNav}
     >
@@ -53,7 +34,7 @@ export default function DemoPage({ onNav }) {
             marginBottom: '36px', 
             lineHeight: 1.6 
           }}>
-            Experience our AI-powered mock interview platform with real-time feedback.
+            This is a recorded product walkthrough with sample data, not a live interview. It does not analyse your answers or activate an account.
           </p>
           <button 
             onClick={() => onNav('/dashboard')}
@@ -64,7 +45,7 @@ export default function DemoPage({ onNav }) {
               fontSize: '16px',
             }}
           >
-            Start Mock Interview
+            Explore sample workspace
           </button>
         </section>
 
@@ -121,7 +102,7 @@ export default function DemoPage({ onNav }) {
               maxWidth: '800px', 
               margin: '0 auto' 
             }}>
-              Use guided <strong>placement preparation</strong> with an <strong>AI mock interview</strong> workflow. Practise answers tailored to the context you provide and review structured feedback to decide what to work on next.
+              The tour illustrates a proposed workflow. For exercises you can use now, read the free guides below. Sample feedback in this tour is not a personal assessment.
             </p>
           </section>
 
@@ -141,7 +122,7 @@ export default function DemoPage({ onNav }) {
               textAlign: 'center',
               letterSpacing: '-0.02em'
             }}>
-              Why Practice With Us?
+              What the walkthrough illustrates
             </h2>
             <ul style={{ 
               listStyle: 'none', 
@@ -153,10 +134,10 @@ export default function DemoPage({ onNav }) {
               maxWidth: '800px'
             }}>
               {[
-                "AI-powered interview simulation",
-                "Resume-based questions",
-                "Instant feedback and scoring",
-                "Company-specific preparation"
+                "Sample interview screen",
+                "Example configuration options",
+                "Illustrative report layout — not your score",
+                "Proposed role-selection interface"
               ].map((feature, i) => (
                 <li key={i} style={{ 
                   display: 'flex', 
@@ -250,7 +231,7 @@ export default function DemoPage({ onNav }) {
                   boxShadow: '0 8px 24px rgba(13, 148, 136, 0.25)'
                 }}
               >
-                Start Practicing Now
+                Explore the demo
               </button>
             </div>
           </section>

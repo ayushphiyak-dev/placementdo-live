@@ -227,12 +227,12 @@ export default function SeoResourcesPage({ onNav }) {
           </div>
         </section>
 
-        <CTABlock
-          heading="Want to practice these frameworks in live mocks?"
-          subtext="Use PlacementDo to simulate realistic interviews and get structured feedback on clarity, depth, and confidence."
-          buttonLabel="Start AI Mock Interview"
+<CTABlock
+          heading="Put one idea into practice"
+          subtext="Use the free guides and self-review exercises without an account. The interactive workspace is a sample demo, not a live AI interview service."
+          buttonLabel="Explore preparation guides"
           onNav={onNav}
-          buttonHref="/"
+          buttonHref="/blog"
         />
       </div>
     </PageLayout>
