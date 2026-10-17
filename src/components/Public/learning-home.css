@@ -1,0 +1,12 @@
+.pd-learning-home{max-width:1180px;margin:auto;padding:56px 28px 80px;color:#0f172a;font-family:'DM Sans',sans-serif;line-height:1.75}
+.pd-learning-home section{padding:36px 0;border-bottom:1px solid #dce4e8;scroll-margin-top:90px}
+.pd-learning-home .pd-learning-hero{padding:28px 0 64px}
+.pd-learning-home h1{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(36px,5vw,68px);line-height:1.07;letter-spacing:-.035em;max-width:900px;margin:18px 0 24px}
+.pd-learning-home h2{font-size:clamp(24px,3vw,34px);line-height:1.2;margin:0 0 22px}
+.pd-learning-home h3{font-size:21px;line-height:1.35;margin:24px 0 12px}
+.pd-learning-home p{max-width:780px;margin:0 0 18px;color:#475569}
+.pd-learning-home a{color:#0f766e;font-weight:600}.pd-learning-home .btn-primary{color:white}.pd-learning-home nav{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pd-learning-eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;color:#0f766e!important}
+.pd-learning-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}.pd-learning-grid article{border-top:3px solid #0d9488}
+.pd-learning-exercise{max-width:800px}.pd-learning-home li{margin:14px 0}.pd-learning-home ul,.pd-learning-home ol{padding-left:24px}.pd-learning-home blockquote{border-left:3px solid #0d9488;padding:14px 22px;margin:18px 0;background:#f0fdfa;color:#115e59}
+@media(max-width:760px){.pd-learning-home{padding:30px 20px 56px}.pd-learning-grid{grid-template-columns:1fr;gap:14px}}

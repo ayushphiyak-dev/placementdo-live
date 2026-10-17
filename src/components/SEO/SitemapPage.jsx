@@ -169,12 +169,12 @@ export default function SitemapPage({ onNav }) {
           </div>
         </section>
 
-        <CTABlock
-          heading="Ready to practice instead of just browse?"
-          subtext="Jump into PlacementDo and start an AI mock interview tailored to your role, company, and placement goals."
-          buttonLabel="Start AI Mock Interview"
-          buttonHref="/dashboard"
+<CTABlock
+          heading="Put one idea into practice"
+          subtext="Use the free guides and self-review exercises without an account. The interactive workspace is a sample demo, not a live AI interview service."
+          buttonLabel="Explore preparation guides"
           onNav={onNav}
+          buttonHref="/blog"
         />
       </div>
     </PageLayout>

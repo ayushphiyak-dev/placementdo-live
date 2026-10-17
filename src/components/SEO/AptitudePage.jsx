@@ -235,12 +235,12 @@ export default function AptitudePage({ onNav }) {
           </div>
         </section>
 
-        <CTABlock
-          heading="Practice Aptitude + Mock Interviews Together"
-          subtext="PlacementDo combines aptitude prep with AI-powered mock interviews for a complete placement preparation experience."
-          buttonLabel="Try PlacementDo free"
+<CTABlock
+          heading="Put one idea into practice"
+          subtext="Use the free guides and self-review exercises without an account. The interactive workspace is a sample demo, not a live AI interview service."
+          buttonLabel="Explore preparation guides"
           onNav={onNav}
-          buttonHref="/dashboard"
+          buttonHref="/blog"
         />
       </div>
     </PageLayout>

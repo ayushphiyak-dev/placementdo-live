@@ -313,7 +313,7 @@ export default function PageLayout({ title, metaDescription, keywords = [], chil
                 <span className="brig" style={{ fontSize: 19, fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>Placement<span style={{ color: "var(--teal-mid)" }}>Do</span></span>
               </div>
               <p className="seo-footer-brand-desc">
-                PlacementDo is an AI-powered placement preparation platform with interview practice, study guides, and structured feedback for early-career candidates.
+                PlacementDo publishes free preparation guides and self-review exercises. The interactive workspace is a demonstration with sample data, not a live AI interview service.
               </p>
             </div>
             <div>

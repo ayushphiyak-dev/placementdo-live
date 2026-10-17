@@ -6,6 +6,8 @@ import { BlogSystemDesign, BlogSTAR, BlogBehavioral, BlogResume } from "./pages/
 import { SiteFooter, NotFound } from "./components/Public/PublicPages.jsx";
 import { publicDocumentFor } from "./utils/publicNavigation.js";
 import { supportAnswer } from "./utils/supportAnswers.js";
+import { homeContent, homeTitle, homeDescription } from "./data/publicHome.js";
+import "./components/Public/learning-home.css";
 import {
   Upload, Building2, Video, Mic, MicOff, VideoOff, PhoneOff,
   Check, Zap, BarChart2, Brain, RefreshCw, Shield, Award,
@@ -769,16 +771,16 @@ const Navbar = ({ view, onNav }) => {
         <a href="/" aria-label="PlacementDo home" style={{ textDecoration:"none" }} onClick={e=>{ e.preventDefault(); onNav("landing"); }}><Logo /></a>
         <div className="nav-links-desk" style={{ display:"flex", gap:4, alignItems:"center" }} role="menubar">
           {isLanding && (<>
-            <NavA href="/#features-section" className="nav-link" onClick={()=>scrollTo("features-section")}>Features</NavA>
-            <NavA href="/#pricing-section" className="nav-link" onClick={()=>scrollTo("pricing-section")}>Pricing</NavA>
+            <NavA href="/#features-section" className="nav-link" onClick={()=>scrollTo("features-section")}>Guides</NavA>
+            <NavA href="/#pricing-section" className="nav-link" onClick={()=>scrollTo("pricing-section")}>Availability</NavA>
             <NavA href="/blog" className="nav-link" onClick={()=>onNav("blog")}>Blog</NavA>
             <NavA href="/faq" className="nav-link" onClick={()=>onNav("faq")}>FAQ</NavA>
             <NavA href="/about" className="nav-link" onClick={()=>onNav("about")}>About</NavA>
             <div style={{ width:1, height:20, background:"var(--border)", margin:"0 6px" }} role="separator"/>
           </>)}
           {!isLanding && <NavA href="/" className="btn-ghost" onClick={()=>onNav("landing")}>← Home</NavA>}
-          <NavA href="/signin" className="btn-secondary" style={{ fontSize:13, display:"flex", alignItems:"center", gap:6, padding:"8px 14px", borderRadius:10 }} onClick={()=>onNav("signin")}><LogIn size={14}/> Sign in</NavA>
-          <NavA href="/dashboard" className="btn-primary" style={{ fontSize:13, display:"flex", alignItems:"center", gap:6, padding:"8px 14px", borderRadius:10 }} onClick={()=>onNav("dashboard")}>Get started <ArrowUpRight size={14}/></NavA>
+          <NavA href="/contact" className="btn-secondary" style={{ fontSize:13, padding:"8px 14px", borderRadius:10 }}>Contact</NavA>
+          <NavA href="/dashboard" className="btn-primary" style={{ fontSize:13, display:"flex", alignItems:"center", gap:6, padding:"8px 14px", borderRadius:10 }} onClick={()=>onNav("dashboard")}>Explore demo <ArrowUpRight size={14}/></NavA>
         </div>
         <button className="hamburger btn-ghost" aria-label="Open menu" aria-expanded={mob} style={{ display:"none", padding:8 }} onClick={()=>setMob(o=>!o)}>
           {mob ? <X size={22}/> : <Menu size={22}/>}
@@ -789,16 +791,16 @@ const Navbar = ({ view, onNav }) => {
           <motion.div role="menu" initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:-10 }} transition={{ duration:0.22 }}
             style={{ position:"fixed", top:64, left:0, right:0, zIndex:99, background:"rgba(250,250,248,0.98)", backdropFilter:"blur(18px)", borderBottom:"1px solid var(--border)", padding:"16px 20px 24px", display:"flex", flexDirection:"column", gap:8 }}>
             {isLanding && (<>
-              <NavA href="/#features-section" className="nav-link" style={{ textAlign:"left" }} onClick={()=>scrollTo("features-section")}>Features</NavA>
-              <NavA href="/#pricing-section" className="nav-link" style={{ textAlign:"left" }} onClick={()=>scrollTo("pricing-section")}>Pricing</NavA>
+              <NavA href="/#features-section" className="nav-link" style={{ textAlign:"left" }} onClick={()=>scrollTo("features-section")}>Guides</NavA>
+              <NavA href="/#pricing-section" className="nav-link" style={{ textAlign:"left" }} onClick={()=>scrollTo("pricing-section")}>Availability</NavA>
               <NavA href="/blog" className="nav-link" style={{ textAlign:"left" }} onClick={()=>{ onNav("blog"); setMob(false); }}>Blog</NavA>
               <NavA href="/faq" className="nav-link" style={{ textAlign:"left" }} onClick={()=>{ onNav("faq"); setMob(false); }}>FAQ</NavA>
               <NavA href="/about" className="nav-link" style={{ textAlign:"left" }} onClick={()=>{ onNav("about"); setMob(false); }}>About</NavA>
               <div style={{ height:1, background:"var(--border)", margin:"4px 0" }}/>
             </>)}
             {!isLanding && <NavA href="/" className="nav-link" style={{ textAlign:"left" }} onClick={()=>onNav("landing")}>← Home</NavA>}
-            <NavA href="/signin" className="btn-secondary" style={{ justifyContent:"center", display:"flex", padding:"10px", borderRadius:10 }} onClick={()=>{ onNav("signin"); setMob(false); }}><LogIn size={14}/> Sign in</NavA>
-            <NavA href="/dashboard" className="btn-primary" style={{ justifyContent:"center", display:"flex", padding:"10px", borderRadius:10 }} onClick={()=>{ onNav("dashboard"); setMob(false); }}>Get started <ArrowUpRight size={14}/></NavA>
+            <NavA href="/contact" className="btn-secondary" style={{ justifyContent:"center", display:"flex", padding:"10px", borderRadius:10 }}>Contact</NavA>
+            <NavA href="/dashboard" className="btn-primary" style={{ justifyContent:"center", display:"flex", padding:"10px", borderRadius:10 }} onClick={()=>{ onNav("dashboard"); setMob(false); }}>Explore demo <ArrowUpRight size={14}/></NavA>
           </motion.div>
         )}
       </AnimatePresence>
@@ -888,425 +890,16 @@ const DashboardShell = ({ activeTab, onNav, onUpgrade, children }) => {
 };
 
 /* ── Landing ── */
-const Landing = ({ onNav, onCheckout }) => (
-  <div style={{ background:"var(--ivory)" }}>
-    {/* HERO */}
-    <section className="hero-pad" style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"100px clamp(20px,5vw,60px) 80px", textAlign:"center", position:"relative", overflow:"hidden" }}>
-      <div style={{ position:"absolute", top:"30%", left:"50%", transform:"translate(-50%,-50%)", width:900, height:600, background:"radial-gradient(ellipse,rgba(13,148,136,.08) 0%,transparent 70%)", pointerEvents:"none" }}/>
-      <motion.div initial={{ opacity:0,y:24 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.5 }}>
-        <Tag color="teal"><Sparkles size={11}/> Coming Soon · Join the Waitlist</Tag>
-      </motion.div>
-      <motion.h1 initial={{ opacity:0,y:32 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.65,delay:0.1 }} className="brig"
-        style={{ fontSize:"clamp(36px,6vw,82px)", fontWeight:800, lineHeight:1.06, letterSpacing:"-0.03em", color:"var(--slate)", marginTop:22, marginBottom:20, maxWidth:900, wordBreak:"break-word" }}>
-        PlacementDo — AI Mock Interview Platform for Campus Placement Preparation
-      </motion.h1>
-      <motion.p initial={{ opacity:0,y:20 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.55,delay:0.22 }}
-        style={{ fontSize:"clamp(15px,2vw,19px)", color:"var(--slate-500)", maxWidth:600, lineHeight:1.72, marginBottom:36 }}>
-        An AI practice interviewer that can use your CV context and target role. Explore available languages, structured scoring, and candid feedback during rehearsal.{" "}
-        <strong style={{ color:"var(--slate-700)" }}>Launching soon.</strong>
-      </motion.p>
-      <motion.div initial={{ opacity:0,y:16 }} animate={{ opacity:1,y:0 }} transition={{ duration:0.5,delay:0.35 }}
-        style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:10, width:"100%", maxWidth:520 }}>
-        <WaitlistForm size="lg"/>
-        <p style={{ fontSize:12, color:"var(--slate-400)", fontWeight:500 }}>No spam. No credit card. Just early access.</p>
-      </motion.div>
-      <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.65 }} className="stats-row" style={{ marginTop:52 }}>
-        {[{ n:"Early access",l:"Waitlist" },{ n:"Role-focused",l:"Preparation" },{ n:"Multiple",l:"Languages planned" },{ n:"2026",l:"Target launch" }].map(({ n,l }) => (
-          <div key={l} style={{ textAlign:"center" }}>
-            <div className="brig" style={{ fontSize:"clamp(18px,2.5vw,26px)", fontWeight:700, color:"var(--slate)", letterSpacing:"-0.02em" }}>{n}</div>
-            <div style={{ fontSize:12, color:"var(--slate-500)", marginTop:2 }}>{l}</div>
-          </div>
-        ))}
-      </motion.div>
-      <motion.div initial={{ opacity:0,y:48,scale:0.95 }} animate={{ opacity:1,y:0,scale:1 }} transition={{ duration:0.8,delay:0.52 }}
-        className="float hero-preview" style={{ marginTop:68, maxWidth:780, width:"100%" }}>
-        <div className="card" style={{ borderRadius:22, overflow:"hidden", boxShadow:"var(--shadow-xl)" }}>
-          <div style={{ padding:"12px 20px", background:"var(--slate-50)", borderBottom:"1px solid var(--border)", display:"flex", alignItems:"center", gap:8 }}>
-            {["#FF5F57","#FEBC2E","#28C840"].map(c=><div key={c} style={{ width:11, height:11, borderRadius:"50%", background:c }}/>)}
-            <span style={{ marginLeft:8, fontSize:12, color:"var(--slate-300)", fontWeight:500 }}>placementdo.app · Live · Google · SWE L5</span>
-            <div style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:5 }}>
-              <div className="dot-live" style={{ width:7, height:7, borderRadius:"50%", background:"#DC2626" }}/>
-              <span style={{ fontSize:11, fontWeight:600, color:"#DC2626" }}>LIVE</span>
-            </div>
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:"2fr 1fr", background:"var(--white)" }}>
-            <div style={{ padding:"26px 28px 22px", borderRight:"1px solid var(--border)" }}>
-              <Tag color="slate" size="xs">The Stress-Tester · Active</Tag>
-              <p style={{ marginTop:14, fontSize:14.5, color:"var(--slate)", lineHeight:1.72, fontStyle:"italic" }}>
-                "Given the scale you mentioned — 10M rps — walk me through the consistency vs. availability trade-offs in your caching layer."
-              </p>
-              <div style={{ marginTop:18, display:"flex", gap:10, alignItems:"center" }}>
-                <div style={{ display:"flex", gap:3 }}>
-                  {[1,2,3,4,5,6,7].map(i=><div key={i} className="wave-bar" style={{ width:3, height:20, background:"var(--teal)", borderRadius:2, animationDelay:`${i*0.11}s` }}/>)}
-                </div>
-                <span style={{ fontSize:12, color:"var(--teal)", fontWeight:600 }}>You're speaking…</span>
-              </div>
-            </div>
-            <div className="hero-mock-side tilt-in" style={{ background:"var(--slate-50)", display:"flex", alignItems:"center", justifyContent:"center", minHeight:150 }}>
-              <div style={{ textAlign:"center" }}><div style={{ fontSize:48 }}>👩‍💻</div><div style={{ fontSize:11, color:"var(--slate-300)", marginTop:5 }}>Your camera</div></div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
+const Landing = () => (
+  <>
+    <div dangerouslySetInnerHTML={{ __html: homeContent }} />
+    <section id="waitlist-section" style={{ maxWidth:780, margin:"0 auto", padding:"40px 24px" }}>
+      <h2 style={{ marginBottom:16 }}>Optional launch updates</h2>
+      <p style={{ marginBottom:20 }}>Leave your email if you want updates about future availability. Joining does not activate an account or guarantee a launch date.</p>
+      <WaitlistForm />
     </section>
-
-    {/* TICKER */}
-    <section style={{ padding:"48px 0", borderTop:"1px solid var(--border)", borderBottom:"1px solid var(--border)", background:"var(--white)" }}>
-      <p style={{ textAlign:"center", fontSize:11.5, color:"var(--slate-300)", fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:26 }}>Building for people interviewing at</p>
-      <div className="ticker-wrap">
-        <div className="ticker-track">
-          {[...COMPANIES,...COMPANIES].map((c,i) => (
-            <div key={i} style={{ display:"flex", alignItems:"center", gap:10, whiteSpace:"nowrap", opacity:0.6, transition:"opacity 0.2s" }}
-              onMouseEnter={e=>e.currentTarget.style.opacity="1"} onMouseLeave={e=>e.currentTarget.style.opacity="0.6"}>
-              <div style={{ width:34, height:34, borderRadius:9, background:c.bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, fontWeight:700, color:c.fg, fontFamily:"'Bricolage Grotesque',sans-serif" }}>{c.abbr}</div>
-              <span className="brig" style={{ fontSize:15, fontWeight:600, color:"var(--slate-700)" }}>{c.name}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    {/* HOW IT WORKS */}
-    <section className="sec-pad" style={{ padding:"100px clamp(20px,5vw,60px)", maxWidth:1100, margin:"0 auto" }}>
-      <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }} style={{ textAlign:"center", marginBottom:56 }}>
-        <Tag color="teal">Process</Tag>
-        <h2 className="brig" style={{ fontSize:"clamp(26px,4.5vw,50px)", fontWeight:700, color:"var(--slate)", letterSpacing:"-0.03em", marginTop:14, lineHeight:1.1 }}>From preparation to confident interviews in four steps</h2>
-        <p style={{ fontSize:16, color:"var(--slate-500)", maxWidth:700, margin:"16px auto 0", lineHeight:1.7 }}>
-          Preparing for behavioral and technical interviews shouldn't mean reciting answers to yourself in a mirror. Our practice workflow combines role-aware prompts with structured feedback so you can rehearse communication before meeting a hiring team.
-        </p>
-      </motion.div>
-      <div className="step-grid">
-        {[
-          { icon:<Upload size={22}/>, step:"01", title:"Upload your CV & Target Role", desc:"Upload your PDF resume. Our natural language processing engine parses your exact career trajectory, project experience, and claimed technical skills to generate hyper-relevant interview questions specifically targeted at your background and the requirements of your target job description.", color:"var(--teal)" },
-          { icon:<Building2 size={22}/>, step:"02", title:"Configure Company & Interview Style", desc:"Choose the company, role, seniority level, and interview focus that match your preparation goals. You can also select from six AI personas to practise different interviewer temperaments, from the Friendly Peer to the Stress-Tester.", color:"#0369A1" },
-          { icon:<Video size={22}/>, step:"03", title:"Experience a Live AI Interview", desc:"Enter a live, face-to-face practice session with your AI interviewer. The AI can respond to your answers, ask follow-up questions, and introduce realistic pressure so you can rehearse communication before the real interview.", color:"#7C3AED" },
-          { icon:<Award size={22}/>, step:"04", title:"Review Your Feedback & Plan Next Practice", desc:"Immediately after the session concludes, receive a structured report. The AI highlights dimensions such as STAR method adherence, technical depth, communication clarity, and filler word frequency, then suggests practical next steps for your next practice session.", color:"var(--amber)" },
-        ].map(({ icon, step, title, desc, color }, i) => (
-          <motion.div key={step} initial={{ opacity:0,y:28 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.45,delay:i*0.09 }} viewport={{ once:true }}
-            className="card card-lift" style={{ padding:"28px 24px" }}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:18 }}>
-              <div style={{ width:46, height:46, borderRadius:13, background:`${color}14`, display:"flex", alignItems:"center", justifyContent:"center", color, transition:"transform 0.22s, background 0.22s" }}
-                onMouseEnter={e=>{ e.currentTarget.style.transform="scale(1.1)"; e.currentTarget.style.background=`${color}22`; }}
-                onMouseLeave={e=>{ e.currentTarget.style.transform=""; e.currentTarget.style.background=`${color}14`; }}>
-                {icon}
-              </div>
-              <span className="brig" style={{ fontSize:13, fontWeight:700, color:"var(--slate-200)" }}>{step}</span>
-            </div>
-            <h3 className="brig" style={{ fontSize:17, fontWeight:700, color:"var(--slate)", marginBottom:8, letterSpacing:"-0.01em" }}>{title}</h3>
-            <p style={{ fontSize:13.5, color:"var(--slate-500)", lineHeight:1.68 }}>{desc}</p>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-
-    {/* FEATURES */}
-    <section id="features-section" style={{ padding:"80px clamp(20px,5vw,60px) 100px", background:"var(--white)", borderTop:"1px solid var(--border)", borderBottom:"1px solid var(--border)" }}>
-      <div style={{ maxWidth:1100, margin:"0 auto" }}>
-        <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }} style={{ textAlign:"center", marginBottom:52 }}>
-          <Tag color="slate">Why PlacementDo</Tag>
-          <h2 className="brig" style={{ fontSize:"clamp(24px,4vw,46px)", fontWeight:700, letterSpacing:"-0.03em", color:"var(--slate)", marginTop:14, lineHeight:1.1 }}>Practice that turns feedback into a next step</h2>
-          <p style={{ fontSize:16, color:"var(--slate-500)", maxWidth:700, margin:"14px auto 0", lineHeight:1.65 }}>
-            PlacementDo is an independent practice product. It uses language and voice models to create role-aware prompts and structured feedback; it is not affiliated with, endorsed by, or trained for any particular employer.
-          </p>
-        </motion.div>
-        <div className="feature-grid stagger">
-          {[
-            { icon:<Brain size={20}/>,    title:"CV-contextual questions",      desc:"Our AI can use the resume details you choose to share to generate questions about your projects, technical skills, and career history. The prompts are practice aids and may not match an employer's interview.", color:"var(--teal)"  },
-            { icon:<Globe size={20}/>,    title:"Multi-language practice", desc:"Practice in the languages currently available in your account. Availability and quality can vary by model and language; check the in-product selector before a session.", color:"#0369A1"     },
-            { icon:<Zap size={20}/>,      title:"Real-time filler detection",    desc:"Get flagged on filler words ('um', 'like', 'you know'), speaking pace, and over-qualification as the session runs. Use the observations to choose a communication habit to practise next.", color:"var(--amber)" },
-            { icon:<Shield size={20}/>,   title:"Role-aware interview practice",         desc:"Configure a target role and focus area to receive prompts that reflect common interview themes. Employer processes change, so pair practice with the current job description and official guidance.", color:"#7C3AED"     },
-            { icon:<BarChart2 size={20}/>,title:"Structured score breakdown",     desc:"Review feedback across communication, technical depth, answer structure, and other practice dimensions so you can choose one concrete improvement for the next attempt.", color:"#BE185D"     },
-            { icon:<RefreshCw size={20}/>,title:"Report rechecks and appeals",   desc:"Disagree with your post-interview analysis? Request a recheck from a different AI perspective. We will re-evaluate your transcript using a secondary model to ensure absolute fairness, up to your subscription plan limits.", color:"var(--green)" },
-          ].map(({ icon, title, desc, color }, i) => (
-            <motion.div key={title} initial={{ opacity:0,y:22 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.42,delay:i*0.07 }} viewport={{ once:true }} className="feature-card">
-              <div className="fc-icon" style={{ background:`${color}12`, borderColor:`${color}20`, color }}
-                onMouseEnter={e=>{ e.currentTarget.style.background=`${color}22`; }}
-                onMouseLeave={e=>{ e.currentTarget.style.background=`${color}12`; }}>
-                {icon}
-              </div>
-              <h3 style={{ fontSize: 17, fontWeight: 700, color: "var(--slate)" }}>{title}</h3>
-              <p style={{ fontSize: 14.5, color: "var(--slate-600)", lineHeight: 1.65 }}>{desc}</p>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* HERO FEATURE — Personality Simulations */}
-        <motion.div initial={{ opacity:0,y:24 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.6, delay:0.1 }} viewport={{ once:true }}
-          style={{ marginTop:20, borderRadius:20, overflow:"hidden", background:"var(--slate)", border:"1px solid rgba(255,255,255,0.06)", boxShadow:"var(--shadow-xl)", position:"relative" }}>
-          <div style={{ position:"absolute", top:"-30%", right:"-5%", width:500, height:400, background:"radial-gradient(ellipse,rgba(13,148,136,.18) 0%,transparent 65%)", pointerEvents:"none" }}/>
-          <div style={{ position:"absolute", bottom:"-20%", left:"5%", width:350, height:300, background:"radial-gradient(ellipse,rgba(124,58,237,.12) 0%,transparent 65%)", pointerEvents:"none" }}/>
-          <div className="pf-outer">
-            {/* Left copy */}
-            <div style={{ minWidth:0 }}>
-              <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
-                <div style={{ width:48, height:48, borderRadius:14, background:"rgba(13,148,136,.2)", border:"1px solid rgba(13,148,136,.35)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, transition:"transform 0.3s" }}
-                  onMouseEnter={e=>e.currentTarget.style.transform="scale(1.1) rotate(-5deg)"}
-                  onMouseLeave={e=>e.currentTarget.style.transform=""}>
-                  <span style={{ fontSize:22 }}>🎭</span>
-                </div>
-                <Tag color="teal">Unique to PlacementDo</Tag>
-              </div>
-              <h3 className="brig" style={{ fontSize:"clamp(20px,2.5vw,26px)", fontWeight:700, color:"#fff", letterSpacing:"-0.025em", lineHeight:1.2, marginBottom:14 }}>
-                Survive Any Interviewer Personality
-              </h3>
-              <p style={{ fontSize:14, color:"rgba(255,255,255,.6)", lineHeight:1.72, marginBottom:20 }}>
-                Most interview tools only test what you know. PlacementDo also lets you practise how you <em style={{ color:"rgba(255,255,255,.85)" }}>react</em>. Try several interviewer styles, from a supportive peer to a quiet, detail-focused reviewer, and compare the habits you want to improve.
-              </p>
-              <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-                {[["Several Interviewer Styles","rgba(13,148,136,.9)"],["Pressure Practice","rgba(124,58,237,.9)"],["Adaptive Difficulty","rgba(217,119,6,.9)"]].map(([label,color]) => (
-                  <div key={label} style={{ display:"flex", alignItems:"center", gap:6, background:"rgba(255,255,255,.07)", border:"1px solid rgba(255,255,255,.12)", borderRadius:20, padding:"5px 13px", transition:"all 0.2s" }}
-                    onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,.13)"; }}
-                    onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,.07)"; }}>
-                    <div style={{ width:6, height:6, borderRadius:"50%", background:color, flexShrink:0 }}/>
-                    <span style={{ fontSize:12, color:"rgba(255,255,255,.75)", fontWeight:500 }}>{label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Right — mini persona stack */}
-            <div className="pf-right">
-              {[
-                { emoji:"⚡", title:"The Stress-Tester",   diff:"Brutal",        diffColor:"#FCA5A5", bg:"rgba(220,38,38,.18)",  bd:"rgba(220,38,38,.35)"  },
-                { emoji:"😄", title:"The Friendly Peer",   diff:"Deceptive",     diffColor:"#FCD34D", bg:"rgba(217,119,6,.18)",  bd:"rgba(217,119,6,.35)"  },
-                { emoji:"🌸", title:"The Empath",          diff:"Medium",        diffColor:"#7DD3FC", bg:"rgba(3,105,161,.18)",  bd:"rgba(3,105,161,.35)"  },
-                { emoji:"🗿", title:"The Stoic Veteran",   diff:"Psychological", diffColor:"#CBD5E1", bg:"rgba(71,85,105,.18)",  bd:"rgba(71,85,105,.35)"  },
-                { emoji:"🎭", title:"The Devil's Advocate",diff:"Hard",          diffColor:"#C4B5FD", bg:"rgba(124,58,237,.18)", bd:"rgba(124,58,237,.35)" },
-              ].map(({ emoji, title, diff, diffColor, bg, bd }) => (
-                <div key={title} style={{ display:"flex", alignItems:"center", gap:10, background:bg, border:`1px solid ${bd}`, borderRadius:11, padding:"10px 13px", transition:"transform 0.2s" }}
-                  onMouseEnter={e=>e.currentTarget.style.transform="translateX(-3px)"}
-                  onMouseLeave={e=>e.currentTarget.style.transform=""}>
-                  <span style={{ fontSize:18, flexShrink:0 }}>{emoji}</span>
-                  <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ fontSize:12, fontWeight:600, color:"rgba(255,255,255,.88)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{title}</div>
-                    <div style={{ fontSize:10.5, color:diffColor, fontWeight:700, marginTop:1 }}>{diff}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-
-    {/* PRICING */}
-    <section id="pricing-section" style={{ padding:"100px clamp(20px,5vw,60px)", maxWidth:1100, margin:"0 auto" }}>
-      <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }} style={{ textAlign:"center", marginBottom:52 }}>
-        <Tag color="teal">Pricing</Tag>
-        <h2 className="brig" style={{ fontSize:"clamp(24px,4vw,46px)", fontWeight:700, letterSpacing:"-0.03em", color:"var(--slate)", marginTop:14, lineHeight:1.1 }}>One interview could change everything</h2>
-        <p style={{ fontSize:15, color:"var(--slate-500)", marginTop:10 }}>No subscriptions. No auto-renewals. Join the waitlist for early-bird pricing.</p>
-      </motion.div>
-      <div className="pricing-grid stagger">
-        {PLANS.map(({ name, price, old, hi, tagline, features }, i) => (
-          <motion.div key={name} initial={{ opacity:0,y:28 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.5,delay:i*0.1 }} viewport={{ once:true }}
-            className={`pricing-card ${hi?"hi":""}`}
-            style={{ background:hi?"var(--slate)":"var(--white)", border:hi?"1px solid var(--slate)":"1px solid var(--border)", boxShadow:hi?"var(--shadow-xl)":"var(--shadow-sm)" }}>
-            {hi && <div style={{ position:"absolute", top:-14, left:"50%", transform:"translateX(-50%)", background:"var(--teal)", color:"#fff", fontSize:11, fontWeight:700, padding:"4px 18px", borderRadius:20, whiteSpace:"nowrap", letterSpacing:"0.06em", boxShadow:"var(--shadow-teal)" }}>MOST POPULAR</div>}
-            <div style={{ fontSize:12, fontWeight:700, color:hi?"rgba(255,255,255,.4)":"var(--slate-300)", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:5 }}>{name}</div>
-            <div style={{ fontSize:12.5, color:hi?"rgba(255,255,255,.55)":"var(--slate-500)", marginBottom:18 }}>{tagline}</div>
-            <div style={{ display:"flex", alignItems:"baseline", gap:8, marginBottom:26 }}>
-              <span className="brig" style={{ fontSize:"clamp(34px,4vw,48px)", fontWeight:800, color:hi?"#fff":"var(--slate)", letterSpacing:"-0.04em" }}>{price}</span>
-              {old && <span style={{ fontSize:17, color:hi?"rgba(255,255,255,.3)":"var(--slate-300)", textDecoration:"line-through" }}>{old}</span>}
-            </div>
-            <div style={{ height:1, background:hi?"rgba(255,255,255,.1)":"var(--border)", marginBottom:22 }}/>
-            <div style={{ marginBottom:26 }}>
-              {features.map(f => (
-                <div key={f} style={{ display:"flex", gap:10, alignItems:"flex-start", marginBottom:11 }}>
-                  <div style={{ width:17, height:17, borderRadius:"50%", background:hi?"rgba(255,255,255,.12)":"var(--teal-light)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, marginTop:2 }}>
-                    <Check size={9} style={{ color:hi?"#fff":"var(--teal)" }} strokeWidth={3}/>
-                  </div>
-                  <span style={{ fontSize:13.5, color:hi?"rgba(255,255,255,.78)":"var(--slate-700)", lineHeight:1.5 }}>{f}</span>
-                </div>
-              ))}
-            </div>
-            <button onClick={()=>onCheckout(name)}
-              style={{ width:"100%", padding:"13px", borderRadius:12, border:"none", background:hi?"var(--teal)":"var(--slate-100)", color:hi?"#fff":"var(--slate)", fontFamily:"'DM Sans',sans-serif", fontWeight:600, fontSize:14, cursor:"pointer", transition:"all 0.22s", display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}
-              onMouseEnter={e=>{ e.currentTarget.style.background=hi?"var(--teal-dark)":"var(--slate-200)"; e.currentTarget.style.transform="translateY(-1px)"; e.currentTarget.style.boxShadow=hi?"var(--shadow-teal)":"var(--shadow-sm)"; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background=hi?"var(--teal)":"var(--slate-100)"; e.currentTarget.style.transform=""; e.currentTarget.style.boxShadow=""; }}
-              onMouseDown={e=>e.currentTarget.style.transform="scale(0.97)"}
-              onMouseUp={e=>e.currentTarget.style.transform="translateY(-1px)"}>
-              <CreditCard size={15}/> Get {name} Plan
-            </button>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-
-    {/* FAQ */}
-    {(() => {
-      const FAQS = [
-        { q:"How is PlacementDo different from practising with a friend?", a:"Friends are too nice. They know you, they skip hard follow-ups, and they can't give you a scored breakdown. PlacementDo's AI has no social contract — it will interrupt you, push back on every weak answer, and give you the honest scores that friends won't." },
-        { q:"Can the AI replicate a real interview?", a:"The Stress-Tester persona can introduce interruptions, rapid follow-ups, and pauses to make practice more demanding. A simulation is still a practice tool, so use it alongside employer research and feedback from people who know your target role." },
-        { q:"What's the difference between the 6 interviewer personas?", a:"Each persona tests a different dimension: The Friendly Peer catches oversharing, The Empath exposes emotional intelligence gaps, The Stress-Tester replicates FAANG-style pressure, The Stoic Veteran tests composure under silence, The Devil's Advocate forces logical precision, and The Silent Analyst forensically probes inconsistencies." },
-        { q:"Does PlacementDo work for non-technical roles?", a:"Yes. You can set any role — PM, consultant, analyst, investment banker, or engineer. The focus selector lets you choose Behavioral / STAR Method, Case Study, or Balanced sessions. The AI adapts its questioning style and scoring criteria accordingly." },
-        { q:"When does PlacementDo launch and how much will it cost?", a:"We're targeting 2026. Waitlist members get 30% off all plans at launch. Plans start at $1 for a single session (Starter) and go up to $89.99 for 100 sessions with all personas unlocked (Elite). No subscriptions, no auto-renewals." },
-      ];
-      const [open, setOpen] = useState(null);
-      return (
-        <section style={{ padding:"80px clamp(20px,5vw,60px) 100px", background:"var(--ivory)", borderTop:"1px solid var(--border)" }}>
-          <div style={{ maxWidth:780, margin:"0 auto" }}>
-            <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }} style={{ textAlign:"center", marginBottom:52 }}>
-              <Tag color="slate"><HelpCircle size={10}/> FAQ</Tag>
-              <h2 className="brig" style={{ fontSize:"clamp(24px,4vw,46px)", fontWeight:700, letterSpacing:"-0.03em", color:"var(--slate)", marginTop:14, lineHeight:1.1 }}>Common questions</h2>
-            </motion.div>
-            <div className="card" style={{ overflow:"hidden" }}>
-              {FAQS.map(({ q, a }, i) => (
-                <div key={i} className="faq-item">
-                  <button className="faq-btn" onClick={()=>setOpen(o=>o===i?null:i)} style={{ padding:"20px 24px" }}>
-                    <span className="brig" style={{ fontSize:15.5, fontWeight:700, color:"var(--slate)", letterSpacing:"-0.01em", lineHeight:1.3 }}>{q}</span>
-                    <span className="faq-chevron" style={{ transform:open===i?"rotate(180deg)":"rotate(0deg)" }}>
-                      <ChevronDown size={18}/>
-                    </span>
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {open === i && (
-                      <motion.div
-                        key="ans"
-                        initial={{ height:0, opacity:0 }}
-                        animate={{ height:"auto", opacity:1 }}
-                        exit={{ height:0, opacity:0 }}
-                        transition={{ duration:0.28, ease:[0.25,0.1,0.25,1] }}>
-                        <p style={{ fontSize:14.5, color:"var(--slate-600)", lineHeight:1.75, padding:"0 24px 22px", borderTop:"1px solid var(--border)" }}>{a}</p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      );
-    })()}
-
-    {/* ABOUT / PLATFORM OVERVIEW — 600+ word SEO content section */}
-    <section style={{ padding:"96px clamp(20px,5vw,60px)", background:"var(--white)", borderTop:"1px solid var(--border)" }}>
-      <div style={{ maxWidth:900, margin:"0 auto" }}>
-        <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.55 }} viewport={{ once:true }}>
-          <h2 className="brig" style={{ fontSize:"clamp(26px,4vw,42px)", fontWeight:800, letterSpacing:"-0.03em", color:"var(--slate)", marginBottom:24, lineHeight:1.1 }}>
-            About PlacementDo — Complete Campus Placement Preparation Platform
-          </h2>
-        </motion.div>
-
-        <div style={{ display:"flex", flexDirection:"column", gap:28, fontSize:15.5, color:"var(--slate-600)", lineHeight:1.85 }}>
-          <section>
-            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>What Is PlacementDo?</h3>
-            <p>
-              PlacementDo is an AI-powered placement preparation platform for engineering graduates, MBA students, and freshers preparing for campus recruitment drives across India. Hiring formats and competition vary by college, role, employer, and year. PlacementDo provides a convenient place to rehearse answers, practise coding and aptitude topics, and review structured feedback without presenting itself as an employer or coaching guarantee.
-            </p>
-            <p>
-              Our platform combines language and voice models to create an interactive mock interview. Unlike a static question bank, a session can respond to the answer you provide, ask follow-up questions, and vary the pace of practice. It remains a simulation: model output can be incomplete, and an employer's process may be different.
-            </p>
-          </section>
-
-          <section>
-            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>How Campus Placement Preparation Works</h3>
-            <p>
-            The campus placement process in India often follows a multi-stage funnel that varies by company and role: an online aptitude or reasoning test, a technical or coding assessment, one or more interviews, and a final HR conversation. Because the format changes, early preparation helps you diagnose gaps and adapt your plan. Check each employer's current assessment notice rather than relying on a generic pattern.
-            </p>
-            <p>
-              PlacementDo offers practice activities for common parts of this funnel. Aptitude exercises can cover quantitative aptitude, logical reasoning, and verbal ability. Coding sessions can prompt you to explain your approach, code quality, and complexity. Behavioral practice can use the STAR framework (Situation, Task, Action, Result) to organise feedback on structure, specificity, and delivery. Features and scoring depend on the selected session and account plan.
-            </p>
-          </section>
-
-          <section>
-            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Key Features for Placement Preparation</h3>
-            <p>
-              CV-contextual questioning is one part of PlacementDo. When you upload a resume, the AI can use the educational background, project experience, technical skills, and career details you share to generate relevant practice questions. If you list a machine learning project, for example, a session may ask about model selection, training data, evaluation metrics, or deployment challenges. Review prompts for accuracy and remove confidential information before uploading.
-            </p>
-            <p>
-              The platform offers six AI interviewer personas, each designed to exercise a different dimension of interview performance. The Friendly Peer can surface oversharing and rambling. The Empath focuses on self-awareness. The Stress-Tester introduces rapid follow-ups, while the Stoic Veteran uses pauses to test composure. The Devil's Advocate asks for precise reasoning, and the Silent Analyst probes consistency between your resume and your answers. Trying more than one style can broaden your practice, but no simulation can predict an employer's exact interview.
-            </p>
-            <p>
-              After every session, PlacementDo generates a comprehensive performance report scored across ten critical dimensions: technical depth, communication clarity, STAR method adherence, response structure, filler word frequency, speaking pace, confidence level, answer specificity, time management, and overall impression. Each dimension receives a numerical score along with actionable improvement suggestions, giving you a clear roadmap for what to work on before your next practice session or actual interview.
-            </p>
-          </section>
-
-          <section>
-            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Company-Specific Interview Preparation</h3>
-            <p>
-              Every company evaluates candidates differently. TCS focuses on foundational communication skills and basic coding ability through its NQT (National Qualifier Test). Infosys values clean code and algorithmic thinking through InfyTQ and Hackwithinfy. Wipro's Elite NTHrive programme tests written communication alongside technical aptitude. Accenture's assessment emphasizes cognitive ability and problem-solving speed. PlacementDo calibrates its interview sessions to match the specific evaluation criteria of each target company, ensuring your practice sessions are directly relevant to the company you are preparing for.
-            </p>
-            <p>
-              For product companies like Google, Amazon, and Microsoft, PlacementDo adjusts the difficulty and focus of technical rounds to match the higher bar these companies set. System design questions, advanced data structure problems, and leadership principle alignment become the primary focus when you configure your session for a product company role.
-            </p>
-          </section>
-
-          <section>
-            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Why AI Mock Interviews Outperform Traditional Preparation</h3>
-            <p>
-              Deliberate practice is most useful when you work under realistic conditions, receive specific feedback, and revisit a known weakness. Question banks, videos, mentors, and mock interviews each serve different purposes; combine them instead of treating one tool as a complete replacement for the others.
-            </p>
-            <p>
-              PlacementDo is designed to add repeatable practice: it can introduce follow-up questions, provide structured feedback, and adapt prompts to the context you share. Use the report as a starting point for your next exercise, then compare your own answers over time. It is a coaching aid, not a measurement of hiring potential or a guarantee of improvement.
-            </p>
-          </section>
-
-          <section>
-            <h3 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>Getting Started with PlacementDo</h3>
-            <p>
-              To get started, create an account, upload a resume in PDF format if you want contextual prompts, select a target role, choose an interviewer persona, and begin a practice session. The AI can ask an opening question and follow-ups based on the context provided. After the session, review the report, choose one or two dimensions to work on, and repeat the exercise at a sustainable pace. Combine the tool with current employer guidance, human feedback, and your own judgement.
-            </p>
-          </section>
-        </div>
-      </div>
-    </section>
-
-    {/* WAITLIST CTA */}
-    <section id="waitlist-section" style={{ padding:"96px clamp(20px,5vw,60px) 112px", background:"var(--slate)", position:"relative", overflow:"hidden" }}>
-      {/* Animated background blobs */}
-      <div style={{ position:"absolute", top:"20%", left:"10%", width:400, height:400, background:"radial-gradient(circle,rgba(13,148,136,.14) 0%,transparent 70%)", pointerEvents:"none", animation:"float-anim 8s ease-in-out infinite" }}/>
-      <div style={{ position:"absolute", bottom:"10%", right:"8%", width:300, height:300, background:"radial-gradient(circle,rgba(124,58,237,.1) 0%,transparent 70%)", pointerEvents:"none", animation:"float-anim 10s ease-in-out infinite reverse" }}/>
-      <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:900, height:600, background:"radial-gradient(ellipse,rgba(13,148,136,.18) 0%,transparent 65%)", pointerEvents:"none" }}/>
-
-      <motion.div initial={{ opacity:0,y:24 }} whileInView={{ opacity:1,y:0 }} transition={{ duration:0.65 }} viewport={{ once:true }}
-        style={{ position:"relative", zIndex:1, maxWidth:660, margin:"0 auto" }}>
-
-        {/* Top-center icon */}
-        <div style={{ textAlign:"center", marginBottom:28 }}>
-          <motion.div whileHover={{ scale:1.1, rotate:8 }} transition={{ type:"spring", stiffness:300, damping:15 }}
-            style={{ width:64, height:64, borderRadius:18, background:"rgba(13,148,136,.2)", border:"1px solid rgba(13,148,136,.35)", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px" }}>
-            <Bell size={28} style={{ color:"var(--teal-mid)" }}/>
-          </motion.div>
-          <Tag color="teal"><Sparkles size={11}/> Be First. Get Early Access.</Tag>
-          <h2 className="brig" style={{ fontSize:"clamp(26px,5vw,54px)", fontWeight:800, letterSpacing:"-0.035em", color:"#fff", marginTop:20, marginBottom:14, lineHeight:1.05 }}>
-            Build interview confidence<br/>one practice at a time
-          </h2>
-          <p style={{ fontSize:"clamp(14px,2vw,16px)", color:"rgba(255,255,255,.55)", marginBottom:38, lineHeight:1.68 }}>
-            Join the early-access waitlist for launch updates and preparation resources.
-          </p>
-        </div>
-
-        {/* Email box — elevated card feel */}
-        <div style={{ background:"rgba(255,255,255,.05)", border:"1px solid rgba(255,255,255,.12)", borderRadius:20, padding:"32px 36px", backdropFilter:"blur(12px)", boxShadow:"0 24px 64px rgba(0,0,0,.3)" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:20 }}>
-            <div style={{ width:8, height:8, borderRadius:"50%", background:"var(--teal-mid)" }} className="dot-live"/>
-            <span style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,.5)", letterSpacing:"0.07em", textTransform:"uppercase" }}>Secure your spot</span>
-          </div>
-          <div style={{ display:"flex", justifyContent:"flex-start" }}><WaitlistForm size="lg" dark={true}/></div>
-          <p style={{ fontSize:12, color:"rgba(255,255,255,.22)", marginTop:14, display:"flex", alignItems:"center", gap:5 }}>
-            <span>🔒</span> No spam. No credit card. Unsubscribe anytime.
-          </p>
-        </div>
-
-        {/* Trust badges */}
-        <div style={{ display:"flex", gap:20, justifyContent:"center", marginTop:36, flexWrap:"wrap" }}>
-          {[
-            { icon:<CheckCircle2 size={14}/>, label:"Free beta access" },
-            { icon:<CheckCircle2 size={14}/>, label:"30% launch discount" },
-            { icon:<CheckCircle2 size={14}/>, label:"Priority onboarding" },
-          ].map(({ icon, label }, i) => (
-            <motion.div key={label} initial={{ opacity:0, y:8 }} whileInView={{ opacity:1, y:0 }} transition={{ delay:i*0.1, duration:0.4 }} viewport={{ once:true }}
-              style={{ display:"flex", alignItems:"center", gap:7 }}>
-              <span style={{ color:"var(--teal-mid)" }}>{icon}</span>
-              <span style={{ fontSize:13, color:"rgba(255,255,255,.5)", fontWeight:500 }}>{label}</span>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
-    </section>
-
-    {/* FOOTER */}
     <SiteFooter />
-  </div>
+  </>
 );
 
 /* ── Sign In ── */
@@ -3286,7 +2879,7 @@ const PUBLIC_ROUTES = ["landing","about","contact","privacy-policy","terms-of-se
 const DASH_VIEWS = ["dashboard","reports","progress","avatars","settings","support"];
 
 const SEO_META = {
-  "landing":             { title:"PlacementDo — AI Mock Interview Coach for Campus Placements", desc:"Practice technical and behavioural interviews with AI-powered mock sessions. Get structured feedback on STAR answers, system design, and more." },
+  "landing": { title:homeTitle, desc:homeDescription },
   "signin":              { title:"Sign In — PlacementDo AI Interview Platform", desc:"Sign in to your PlacementDo account to access your AI interview dashboard, reports, and progress tracker." },
   "interview":           { title:"Live AI Interview Session — PlacementDo", desc:"You are in a live AI mock interview. Focus and answer concisely. Your performance is being analyzed in real-time." },
   "report":              { title:"Your Interview Report & Score — PlacementDo", desc:"Review your detailed AI-generated interview report. See your scores across 10 dimensions: technical depth, STAR clarity, communication, and more." },
@@ -3372,22 +2965,8 @@ export default function App() {
     const pathForView = Object.entries(PATH_MAP).find(([,v]) => v === view)?.[0] ?? "";
     canonical.href = `${BASE_URL}/${pathForView}`;
 
-    // JSON-LD: FAQPage schema on landing & faq pages
-    let ldScript = document.getElementById("ld-faq");
-    if (view === "landing" || view === "faq") {
-      if (!ldScript) { ldScript = document.createElement("script"); ldScript.id = "ld-faq"; ldScript.type = "application/ld+json"; document.head.appendChild(ldScript); }
-      ldScript.text = JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          { "@type":"Question", "name":"How is PlacementDo different from practicing with a friend?", "acceptedAnswer":{ "@type":"Answer", "text":"Friends are too nice. PlacementDo's AI has no social contract — it interrupts, follows up on every weak answer, and scores you honestly across 10 dimensions that friends won't evaluate." } },
-          { "@type":"Question", "name":"Can the AI replicate a real interview?", "acceptedAnswer":{ "@type":"Answer", "text":"The Stress-Tester persona can introduce interruptions, rapid follow-ups, and pauses to make practice more demanding. A simulation is still a practice tool, so use it alongside employer research and feedback from people who know your target role." } },
-          { "@type":"Question", "name":"Does PlacementDo work for non-technical roles?", "acceptedAnswer":{ "@type":"Answer", "text":"Yes. You can configure any role — Product Manager, Consultant, Investment Banker, or Engineer. Choose Behavioral/STAR, Case Study, or Balanced sessions. The AI adapts its questioning style and scoring criteria accordingly." } },
-        ]
-      });
-    } else if (ldScript) {
-      ldScript.remove();
-    }
+    // Do not publish FAQ claims that are absent from the visible page.
+    document.getElementById("ld-faq")?.remove();
   }, [view]);
 
   const go = v => {

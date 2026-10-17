@@ -168,7 +168,7 @@ export const TermsOfService = ({ onNav }) => (
       <div className="card" style={{ padding:32, display:"flex", flexDirection:"column", gap:20 }}>
         <div>
           <h2 className="brig" style={{ fontSize:20, fontWeight:700, color:"var(--slate)", marginBottom:10 }}>1. Service Usage</h2>
-          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>PlacementDo provides AI-driven interview simulation and coaching. Our service is designed to help you practice and improve. We do not guarantee job placement, interview opportunities, or specific career outcomes. You agree to use the service only for lawful purposes.</p>
+          <p style={{ fontSize:15, color:"var(--slate-600)", lineHeight:1.7 }}>PlacementDo currently provides written preparation resources and a product demonstration with sample data. Live AI interviews, personal assessment, and purchases are not connected. We do not guarantee job placement, interview opportunities, or specific career outcomes. You agree to use the service only for lawful purposes.</p>
         </div>
         
         <div>
@@ -192,7 +192,7 @@ export const About = ({ onNav }) => (
           PlacementDo is being developed to make technical and behavioral interview practice easier to access. The product focuses on guided rehearsal, role-aware prompts, and feedback that helps candidates decide what to practise next. It is an educational tool, not a recruiting agency or a substitute for human coaching.
         </p>
         <p style={{ fontSize:16, color:"var(--slate-600)", lineHeight:1.8 }}>
-          The product combines language and voice models to create interactive practice sessions. Personas can vary the tone and follow-up style, but no simulation can reproduce every employer's process or ensure readiness for a particular interview. Pair practice with the current job description, official employer guidance, and human feedback.
+          Today, the public guides and self-review exercises are available without an account. The dashboard is a demonstration with sample questions, transcripts, credits, and scores. Live AI interviews, personal assessments, and payments are not connected. The demo is not evidence of a working account or measured learning outcomes.
         </p>
       </div>
   </ComplianceLayout>

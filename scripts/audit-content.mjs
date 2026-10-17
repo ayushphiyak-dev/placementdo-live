@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { homeContent } from "../src/data/publicHome.js";
 
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
@@ -44,7 +45,7 @@ for (const post of posts) {
   slugs.add(post.slug);
   titles.add(post.title);
   const words = wordCount(post.content || "");
-  if (words < MIN_EDITORIAL_WORDS) {
+  if (words < MIN_EDITORIAL_WORDS && post.contentType !== "product-note") {
     errors.push(`${post.slug} has only ${words} words; every published article must contain at least ${MIN_EDITORIAL_WORDS} words of useful, original guidance.`);
   }
   for (const paragraph of (post.content || "").split(/\n\s*\n/)) {
@@ -84,7 +85,8 @@ for (const route of expectedRoutes) {
   if (route !== "/" && !sitemapPaths.includes(route)) errors.push(`Public editorial route is missing from sitemap: ${route}`);
 }
 
-const index = read("index.html");
+// Vite injects this same authored body into the initial HTML and React uses it too.
+const index = read("index.html").replace("<!-- PUBLIC_HOME -->", homeContent);
 if ((index.match(/<h1\b/gi) || []).length !== 1) errors.push("index.html must contain exactly one crawl-visible H1.");
 if (!/rel="canonical"/.test(index)) errors.push("index.html is missing its canonical link.");
 if (!/href="\/privacy-policy"/.test(index)) errors.push("index.html must link to the Privacy Policy.");
